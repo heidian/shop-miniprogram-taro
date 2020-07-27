@@ -1,3 +1,8 @@
+var path = require('path')
+function resolve(dir) {
+  return path.join(__dirname, '..', dir)
+}
+
 const config = {
   projectName: 'erp_taro_wxapp',
   date: '2020-7-27',
@@ -9,6 +14,12 @@ const config = {
   },
   sourceRoot: 'src',
   outputRoot: 'dist',
+  alias: {
+    // ~ 好像被 taro 给强制定义了 (比如 ~taro-ui/xxx.scss), 但找不到在哪, 为了 js 和 scss 引入方式统一, 就都用 @
+    // '~': resolve('src')
+    '@/components': resolve('src/components'),
+    '@/utils': resolve('src/utils'),
+  },
   plugins: [],
   defineConstants: {
   },
