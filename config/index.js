@@ -19,6 +19,7 @@ const config = {
     // '~': resolve('src')
     '@/components': resolve('src/components'),
     '@/utils': resolve('src/utils'),
+    '@/mixins': resolve('src/mixins'),
   },
   plugins: [],
   defineConstants: {
