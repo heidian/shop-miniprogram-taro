@@ -3,6 +3,7 @@ module.exports = {
     NODE_ENV: '"production"'
   },
   defineConstants: {
+    API_URL: '"https://api.erpjing.com/api/"'
   },
   mini: {},
   h5: {

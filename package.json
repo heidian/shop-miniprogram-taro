@@ -35,12 +35,14 @@
   "license": "MIT",
   "dependencies": {
     "@babel/runtime": "^7.7.7",
+    "@tarojs/components": "3.0.5",
     "@tarojs/runtime": "3.0.5",
     "@tarojs/taro": "3.0.5",
-    "@tarojs/components": "3.0.5",
-    "vuex": "^3.0.0",
+    "lodash": "^4.17.19",
+    "moment": "^2.27.0",
+    "vue": "^2.5.0",
     "vue-template-compiler": "^2.5.0",
-    "vue": "^2.5.0"
+    "vuex": "^3.0.0"
   },
   "devDependencies": {
     "@types/webpack-env": "^1.13.6",
