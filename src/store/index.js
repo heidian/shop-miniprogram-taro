@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import listStores from './lists/index'
 
 Vue.use(Vuex)
 
@@ -26,6 +27,9 @@ const getters = {
 }
 
 export default new Vuex.Store({
+  modules: {
+    lists: listStores
+  },
   state,
   mutations,
   actions,
