@@ -1,8 +1,8 @@
 {
 	"miniprogramRoot": "dist/",
-	"projectname": "erp_taro_wxapp",
-	"description": "鲸管家小程序",
-	"appid": "wx177779c6d1ffb1b4",
+	"projectname": "mini_heyshop_taro",
+	"description": "HeyShop国货商城小程序",
+	"appid": "wx0ebd63bd0a26f767",
 	"setting": {
 		"urlCheck": true,
 		"es6": false,

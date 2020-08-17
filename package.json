@@ -1,8 +1,8 @@
 {
-  "name": "erp_taro_wxapp",
+  "name": "mini_heyshop_taro",
   "version": "1.0.0",
   "private": true,
-  "description": "鲸管家小程序",
+  "description": "HeyShop国货商城小程序",
   "templateInfo": {
     "name": "vuex",
     "typescript": false,
