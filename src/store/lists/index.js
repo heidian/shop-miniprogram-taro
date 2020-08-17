@@ -1,8 +1,8 @@
-import inventoryItems from './inventoryItems'
+import products from './products'
 
 export default {
   namespaced: true,
   modules: {
-    inventoryItems
+    products
   }
 }

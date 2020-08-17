@@ -1,41 +1,41 @@
 export default {
   pages: [
     'pages/index/index',
-    'pages/inventory/index',
-    'pages/leases/index',
-    'pages/customers/index',
+    'pages/search/index',
+    'pages/membership/index',
+    'pages/cart/index',
     'pages/account/index'
   ],
   tabBar: {
     list: [
       {
         'pagePath': 'pages/index/index',
-        'iconPath': 'assets/images/tabbar/home@2x.png',
-        'selectedIconPath': 'assets/images/tabbar/home-active@2x.png',
+        'iconPath': 'assets/images/tabbar/home.png',
+        'selectedIconPath': 'assets/images/tabbar/home-active.png',
         'text': '首页'
       },
       {
-        'pagePath': 'pages/inventory/index',
-        'iconPath': 'assets/images/tabbar/inventory@2x.png',
-        'selectedIconPath': 'assets/images/tabbar/inventory-active@2x.png',
-        'text': '库存'
+        'pagePath': 'pages/search/index',
+        'iconPath': 'assets/images/tabbar/category.png',
+        'selectedIconPath': 'assets/images/tabbar/category-active.png',
+        'text': '商品'
       },
       {
-        'pagePath': 'pages/leases/index',
-        'iconPath': 'assets/images/tabbar/contract@2x.png',
-        'selectedIconPath': 'assets/images/tabbar/contract-active@2x.png',
-        'text': '合同'
+        'pagePath': 'pages/membership/index',
+        'iconPath': 'assets/images/tabbar/member.png',
+        'selectedIconPath': 'assets/images/tabbar/member.png',
+        'text': '会员'
       },
       {
-        'pagePath': 'pages/customers/index',
-        'iconPath': 'assets/images/tabbar/customer@2x.png',
-        'selectedIconPath': 'assets/images/tabbar/customer-active@2x.png',
-        'text': '客户'
+        'pagePath': 'pages/cart/index',
+        'iconPath': 'assets/images/tabbar/cart.png',
+        'selectedIconPath': 'assets/images/tabbar/cart-active.png',
+        'text': '购物车'
       },
       {
         'pagePath': 'pages/account/index',
-        'iconPath': 'assets/images/tabbar/profile@2x.png',
-        'selectedIconPath': 'assets/images/tabbar/profile-active@2x.png',
+        'iconPath': 'assets/images/tabbar/profile.png',
+        'selectedIconPath': 'assets/images/tabbar/profile-active.png',
         'text': '我的'
       }
     ],
