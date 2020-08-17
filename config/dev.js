@@ -3,7 +3,8 @@ module.exports = {
     NODE_ENV: '"development"'
   },
   defineConstants: {
-    API_URL: `"${process.env.API_URL || 'https://api.erpjing.com/api/'}"`
+    API_URL: `"${process.env.API_URL || 'https://heidianapi.com/api/'}"`,
+    SHOP_NAME: '"normal"'
   },
   mini: {},
   h5: {}

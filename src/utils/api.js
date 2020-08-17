@@ -2,18 +2,30 @@ import Taro from '@tarojs/taro'
 import combineURLs from './combineURLs'
 import buildURL from './buildURL'
 
+// config/dev.js 里面定义了 API_URL
+const APIRoot = API_URL
+const DefaultHeaders = {
+  'X-Shop': SHOP_NAME,
+  'Accept-Language': 'zh'
+}
+
 const interceptor = async function (chain) {
   const requestParams = chain.requestParams
+  requestParams.header = {
+    ...requestParams.header,
+    ...DefaultHeaders
+  }
   try {
-    const { data: token } = await Taro.getStorage({ key: 'access-token' })
+    // getStorage 找不到 key 会抛出异常, 这个片段的单独 try catch
+    const { data: token } = await Taro.getStorage({ key: 'customertoken' })
     const { header } = requestParams
-    header['Authorization'] = `Bearer ${token}`
+    header['Authorization'] = `CustomerToken ${token}`
   } catch (e) {}
   return chain.proceed(requestParams).then((response) => {
     if (response.statusCode >= 200 && response.statusCode < 300) {
       return response
     } else {
-      const error = new Error()
+      const error = new Error('Request Error')
       error.response = response
       throw error
     }
@@ -21,9 +33,6 @@ const interceptor = async function (chain) {
 }
 Taro.addInterceptor(interceptor)
 
-
-// config/dev.js 里面定义了 API_URL
-const APIRoot = API_URL
 
 const API = {
   post: (path, data = {}, options = {}) => {

@@ -9,7 +9,8 @@
 <script>
 import ListTable from '@/mixins/ListTable'
 
-const listTableMixin = ListTable('products', { storeName: 'lists/products' })
+// const listTableMixin = ListTable('products', { storeName: 'lists/products' })
+const listTableMixin = ListTable('products', { urlRoot: '/shopfront/product/' })
 
 export default {
   name: 'Search',
@@ -18,7 +19,7 @@ export default {
   ],
   components: {},
   async mounted() {
-    await this.$store.dispatch('lists/products/list')
+    this.fetchList()
   }
 }
 </script>

@@ -1,6 +1,8 @@
+import Taro from '@tarojs/taro'
 import _ from 'lodash'
 import moment from 'moment'
 import { mapState } from 'vuex'
+import { API } from '@/utils/api'
 
 function filterValueToString(value, type) {
   if (_.isNil(value) || value === '') {
@@ -88,35 +90,39 @@ function StoreListTable(propertyName, storeName) {
         try {
           await this.$store.dispatch(`${storeName}/list`)
         } catch(error) {
-          const message = _.get(error, 'response.data', '列表参数错误')
-          this.$message({ type: 'error', message })
+          const message = _.get(error, 'response.data.detail', '列表参数错误') + ''
+          Taro.showToast({ title: message, icon: 'none', duration: 2000 })
         }
       },
       async createOne(data) {
         // 创建的错误交给调用者去处理
         const res = await this.$store.dispatch(`${storeName}/create`, { data })
-        this.$message({ type: 'success', message: '创建成功!' })
+        Taro.showToast({ title: '创建成功!', icon: 'success', duration: 2000 })
         await this.fetchList()
         return res
       },
       async removeOne(id, { message = '确定删除?' } = {}) {
-        const confirm = await this.$confirm(message, '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).catch(() => {})
-        if (!confirm) {
-          return
-        }
-        try {
-          await this.$store.dispatch(`${storeName}/remove`, { id })
-        } catch(error) {
-          const message = _.get(error, 'response.data.detail', '无法删除')
-          this.$message({ type: 'error', message })
-          return
-        }
-        this.$message({ type: 'success', message: '删除成功!' })
-        await this.fetchList()
+        // TODO 这个方法现在有点问题, 需要把 showModal 后面的代码放进 success 里面
+        // Taro.showModal({
+        //   title: '提示',
+        //   content: message,
+        //   success: (res) => {
+        //     if (res.confirm) {
+        //       console.log('用户点击确定')
+        //     } else if (res.cancel) {
+        //       //
+        //     }
+        //   }
+        // })
+        // try {
+        //   await this.$store.dispatch(`${storeName}/remove`, { id })
+        // } catch(error) {
+        //   const message = _.get(error, 'response.data.detail', '无法删除') + ''
+        //   Taro.showToast({ title: message, icon: 'none', duration: 2000 })
+        //   return
+        // }
+        // Taro.showToast({ title: '删除成功!', icon: 'success', duration: 2000 })
+        // await this.fetchList()
       }
     }
   }
@@ -189,7 +195,7 @@ function LocalListTable(propertyName, urlRoot) {
           this[propertyName].pending = true
           this[propertyName].error = {}
           const { filter, page, pageSize, orderBy } = this[propertyName]
-          const { data } = await this.$axios.get(urlRoot, {
+          const { data } = await API.get(urlRoot, {
             params: {
               ...filter,
               page,
@@ -214,46 +220,50 @@ function LocalListTable(propertyName, urlRoot) {
           const errorData = _.get(error, 'response.data')
           this[propertyName].pending = false
           this[propertyName].error = _.cloneDeep(errorData || {})
-          const message = _.get(error, 'response.data', '列表参数错误')
-          this.$message({ type: 'error', message })
+          const message = _.get(error, 'response.data.detail', '列表参数错误' + error) + ''
+          Taro.showToast({ title: message, icon: 'none', duration: 2000 })
         }
       },
       async createOne(data) {
         this[propertyName].pending = true
         let res
         try {
-          res = await this.$axios.post(urlRoot, { data })
+          res = await API.post(urlRoot, { data })
           this[propertyName].pending = false
         } catch(error) {
           this[propertyName].pending = false
           throw error
           // 创建的错误交给调用者去处理
         }
-        this.$message({ type: 'success', message: '创建成功!' })
+        Taro.showToast({ title: '创建成功!', icon: 'success', duration: 2000 })
         await this.fetchList()
         return res
       },
       async removeOne(id, { message = '确定删除?' } = {}) {
-        const confirm = await this.$confirm(message, '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).catch(() => {})
-        if (!confirm) {
-          return
-        }
-        this[propertyName].pending = true
-        try {
-          await this.$store.dispatch(`${storeName}/remove`, { id })
-          this[propertyName].pending = false
-        } catch(error) {
-          const message = _.get(error, 'response.data.detail', '无法删除')
-          this[propertyName].pending = false
-          this.$message({ type: 'error', message })
-          return
-        }
-        this.$message({ type: 'success', message: '删除成功!' })
-        await this.fetchList()
+        // TODO 这个方法现在有点问题, 需要把 showModal 后面的代码放进 success 里面
+        // Taro.showModal({
+        //   title: '提示',
+        //   content: message,
+        //   success: (res) => {
+        //     if (res.confirm) {
+        //       console.log('用户点击确定')
+        //     } else if (res.cancel) {
+        //       //
+        //     }
+        //   }
+        // })
+        // this[propertyName].pending = true
+        // try {
+        //   await this.$store.dispatch(`${storeName}/remove`, { id })
+        //   this[propertyName].pending = false
+        // } catch(error) {
+        //   const message = _.get(error, 'response.data.detail', '无法删除') + ''
+        //   this[propertyName].pending = false
+        //   Taro.showToast({ title: message, icon: 'none', duration: 2000 })
+        //   return
+        // }
+        // Taro.showToast({ title: '删除成功!', icon: 'success', duration: 2000 })
+        // await this.fetchList()
       }
     }
   }

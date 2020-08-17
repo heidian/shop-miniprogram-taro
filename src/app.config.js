@@ -39,9 +39,9 @@ export default {
         'text': '我的'
       }
     ],
-    backgroundColor: '#222c3c',
-    color: '#b7c0cd',
-    selectedColor: '#009cfe'
+    backgroundColor: '#ffffff',
+    color: '#000000',
+    selectedColor: '#000000'
   },
   window: {
     backgroundTextStyle: 'light',
