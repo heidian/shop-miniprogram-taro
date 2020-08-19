@@ -21,6 +21,14 @@ const config = {
     '@/utils': resolve('src/utils'),
     '@/mixins': resolve('src/mixins'),
   },
+  sass: {
+    resource: [
+      'src/styles/_variables.scss',
+      'src/styles/_mixins.scss',
+      'src/styles/app.scss'
+    ],
+    projectDirectory: path.resolve(__dirname, '..')
+  },
   plugins: [],
   defineConstants: {
   },
