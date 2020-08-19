@@ -86,9 +86,18 @@ function StoreListTable(propertyName, storeName) {
           await this.fetchList()
         }
       },
-      async fetchList() {
+      async fetchMore() {
+        const { count, pending, page, pageSize } = this[propertyName]
+        if (pending || page * pageSize >= count) {
+          // 正在加载或者没有更多数据了, 就停止; 初始条件下 page, pageSize, count 都是 0, 这个条件也满足
+          return { count, data: [] }
+        }
+        this.$store.commit(`${storeName}/setPage`, page + 1)
+        await this.fetchList({ append: true })
+      },
+      async fetchList({ append = false } = {}) {
         try {
-          await this.$store.dispatch(`${storeName}/list`)
+          await this.$store.dispatch(`${storeName}/list`, { append })
         } catch(error) {
           const message = _.get(error, 'response.data.detail', '列表参数错误') + ''
           Taro.showToast({ title: message, icon: 'none', duration: 2000 })
@@ -190,7 +199,16 @@ function LocalListTable(propertyName, urlRoot) {
           await this.fetchList()
         }
       },
-      async fetchList() {
+      async fetchMore() {
+        const { count, pending, page, pageSize } = this[propertyName]
+        if (pending || page * pageSize >= count) {
+          // 正在加载或者没有更多数据了, 就停止; 初始条件下 page, pageSize, count 都是 0, 这个条件也满足
+          return { count, data: [] }
+        }
+        this[propertyName].page = page + 1
+        await this.fetchList({ append: true })
+      },
+      async fetchList({ append = false } = {}) {
         try {
           this[propertyName].pending = true
           this[propertyName].error = {}
@@ -212,10 +230,12 @@ function LocalListTable(propertyName, urlRoot) {
           }
           this[propertyName] = {
             ...this[propertyName],
-            ...payload,
+            count: payload.count,
+            data: append ? [ ...this[propertyName].data, ...payload.data ] : payload.data,
             pending: false,
             error: {}
           }
+          return payload  // 只 return 本次请求取的数据
         } catch(error) {
           const errorData = _.get(error, 'response.data')
           this[propertyName].pending = false

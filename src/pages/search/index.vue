@@ -4,12 +4,13 @@
       <text>{{ product.id }}</text>
     </view> -->
     <virtual-list
-      :height="1214"
+      :height="listHeight"
       :item-data="listData"
       :item-count="listLength"
       :item-size="itemHeight"
       :item="ProductItem"
       width="100%"
+      @scroll="onScroll"
     ></virtual-list>
   </view>
 </template>
@@ -20,8 +21,8 @@ import Taro from '@tarojs/taro'
 import ProductItem from './ProductItem'
 import ListTable from '@/mixins/ListTable'
 
-// const listTableMixin = ListTable('products', { storeName: 'lists/products' })
-const listTableMixin = ListTable('products', { urlRoot: '/shopfront/product/' })
+const listTableMixin = ListTable('products', { storeName: 'lists/products' })
+// const listTableMixin = ListTable('products', { urlRoot: '/shopfront/product/' })
 
 export default {
   name: 'Search',
@@ -54,6 +55,24 @@ export default {
   },
   async mounted() {
     this.fetchList()
+  },
+  methods: {
+    listReachBottom() {
+      this.fetchMore()
+    },
+    onScroll({ scrollDirection, scrollOffset }) {
+      // console.log(scrollDirection, this.listHeight, scrollOffset, this.listLength * this.itemHeight)
+      if (
+        // 避免重复加载数据
+        !this.products.pending &&
+        // 只有往前滚动才触发
+        scrollDirection === 'forward' &&
+        // 100 = 滚动提前加载量
+        this.listHeight + scrollOffset > (this.listLength * this.itemHeight - 100)
+      ) {
+        this.listReachBottom()
+      }
+    }
   }
 }
 </script>

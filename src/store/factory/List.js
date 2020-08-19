@@ -61,12 +61,13 @@ export default (urlRoot) => {
   const actions = {
     listNext() {},
     listPrev() {},
-    list({ commit, state }, params) {
-      if (params) {
-        /* TODO 这是为了兼容 */
-        // const { filter, page, pageSize, orderBy } = params
-        commit('setParams', params)
-      }
+    // list({ commit, state }, params) {
+    //   if (params) {
+    //     /* TODO 这是为了兼容 */
+    //     // const { filter, page, pageSize, orderBy } = params
+    //     commit('setParams', params)
+    //   }
+    list({ commit, state }, { append = false } = {}) {
       const { filter, page, pageSize, orderBy } = state
       commit('REQUEST_STARTED')
       const promise = API.get(urlRoot, {
@@ -87,8 +88,11 @@ export default (urlRoot) => {
           data: data.results
         }
         commit('REQUEST_SUCCEEDED')
-        commit('setData', payload)
-        return payload
+        commit('setData', {
+          count: payload.count,
+          data: append ? [ ...state.data, ...payload.data ] : payload.data,
+        })
+        return payload  // 只 return 本次请求取的数据
       }).catch((err) => {
         const error = _.get(err, 'response.data') || err
         commit('REQUEST_FAILED', { error })
