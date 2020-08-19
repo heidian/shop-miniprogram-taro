@@ -1,7 +1,14 @@
 import Vue from 'vue'
 import store from './store/index'
+import VirtualList from '@tarojs/components/virtual-list'
 
 // Vue.config.productionTip = false
+
+/*
+ * 使用长列表组件
+ * https://nervjs.github.io/taro/docs/virtual-list
+ */
+Vue.use(VirtualList)
 
 const App = new Vue({
   store,
