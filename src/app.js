@@ -1,5 +1,7 @@
 import Vue from 'vue'
 import store from './store/index'
+import { formatCurrency, formatDate, formatDateTime } from './utils/formatters'
+import { optimizeImage } from './utils/image'
 import VirtualList from '@tarojs/components/virtual-list'
 
 // Vue.config.productionTip = false
@@ -9,6 +11,16 @@ import VirtualList from '@tarojs/components/virtual-list'
  * https://nervjs.github.io/taro/docs/virtual-list
  */
 Vue.use(VirtualList)
+
+/*
+ * 定义全局 filters
+ * TODO, 之后把这一段放进单独的文件里
+ */
+Vue.filter('date', (value) => formatDate(value))
+Vue.filter('datetime', (value) => formatDateTime(value))
+Vue.filter('currency', (value) => formatCurrency(value))
+Vue.filter('imageUrl', (value) => optimizeImage(value))
+
 
 const App = new Vue({
   store,
