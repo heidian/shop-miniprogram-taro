@@ -4,7 +4,8 @@ export default {
     'pages/search/index',
     'pages/membership/index',
     'pages/cart/index',
-    'pages/account/index'
+    'pages/account/index',
+    'pages/product/index'
   ],
   tabBar: {
     list: [

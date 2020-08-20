@@ -3,6 +3,7 @@
     <view
       v-for="product in products" :key="product.id"
       class="product-grid"
+      @tap="goToProduct(product.name)"
     >
       <view class="product-image-wrapper">
         <image class="product-image" mode="aspectFill" :src="optimizeImage(product.image)"></image>
@@ -13,6 +14,7 @@
 </template>
 
 <script>
+import Taro from '@tarojs/taro'
 import { optimizeImage } from '@/utils/image'
 /*
  * virtual-list 固定传入的 props 的 key 是 data, 包含了列表所有数据
@@ -29,7 +31,11 @@ export default {
     }
   },
   methods: {
-    optimizeImage
+    optimizeImage,
+    goToProduct(productName) {
+      /* 没有特别原因不要用 wx 的方法, 全部用 Taro 上的方法 */
+      Taro.navigateTo({ url: `/pages/product/index?name=${productName}` })
+    }
   }
 }
 </script>
