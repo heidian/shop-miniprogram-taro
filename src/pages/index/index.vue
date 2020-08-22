@@ -6,8 +6,8 @@
 </template>
 
 <script>
-import NumberDisplay from '@/components/NumberDisplay.vue'
-import NumberSubmit from '@/components/NumberSubmit.vue'
+import NumberDisplay from '@/components/example/NumberDisplay.vue'
+import NumberSubmit from '@/components/example/NumberSubmit.vue'
 
 export default {
   name: 'Index',

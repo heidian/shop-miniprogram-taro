@@ -17,7 +17,7 @@ export default {
   },
   methods: {
     addNumber() {
-      this.$store.dispatch('addNumber', Number(this.number))
+      this.$store.dispatch('example/addNumber', Number(this.number))
     }
   }
 }

@@ -19,6 +19,11 @@ export default {
       code: ''
     }
   },
+  computed: {
+    appid() {
+      return this.$store.state.config.appid
+    }
+  },
   async mounted() {
     // 获取 wx.login 的 js_code 一定要在 getPhoneNumber 回调的外面
     const { code } = await Taro.login()
@@ -26,7 +31,7 @@ export default {
   },
   methods: {
     async getPhoneNumber(e) {
-      console.log(e.detail)
+      // console.log(e.detail)
       const { errMsg, encryptedData, iv } = e.detail || {}
       if (!encryptedData || !iv) {
         // TODO 处理错误
@@ -35,7 +40,7 @@ export default {
       }
       try {
         const res = await this.$store.dispatch('customer/login', {
-          appid: 'wx0ebd63bd0a26f767',
+          appid: this.appid,
           js_code: this.code,
           encryptedData: encryptedData,
           iv: iv,

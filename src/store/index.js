@@ -1,36 +1,36 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import Taro from '@tarojs/taro'
+
 import listStores from './lists/index'
 import customerStore from './customer'
+import exampleStore from './example'
 
 Vue.use(Vuex)
 
-const state = {
-  numbers: [1, 2, 3]
-}
+const extConfig = Taro.getExtConfigSync()
 
-const mutations = {
-  ADD_NUMBER(state, payload) {
-    state.numbers.push(payload)
+const state = () => {
+  const { extAppid, apiroot, shopname, shopid } = extConfig
+  return {
+    config: {
+      appid: extAppid,
+      apiroot,
+      shopname,
+      shopid
+    }
   }
 }
 
-const actions = {
-  addNumber(context, number) {
-    context.commit('ADD_NUMBER', number)
-  }
-}
-
-const getters = {
-  getNumbers(state) {
-    return state.numbers
-  }
-}
+const mutations = {}
+const actions = {}
+const getters = {}
 
 export default new Vuex.Store({
   modules: {
     lists: listStores,
-    customer: customerStore
+    customer: customerStore,
+    example: exampleStore
   },
   state,
   mutations,

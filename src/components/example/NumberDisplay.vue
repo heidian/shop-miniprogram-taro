@@ -9,7 +9,7 @@ export default {
   name: 'NumberDisplay',
   computed: {
     getNumbers() {
-      return this.$store.getters.getNumbers;
+      return this.$store.getters['example/getNumbers']
     }
   }
 }

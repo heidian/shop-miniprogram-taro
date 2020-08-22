@@ -5,16 +5,22 @@ import store from '../store/index'
 
 // config/dev.js 里面定义了 API_URL
 const APIRoot = API_URL
-const DefaultHeaders = {
-  'X-Shop': SHOP_NAME,
-  'Accept-Language': 'zh'
+const getAPIRoot = () => {
+  return store.state.config.apiroot  // || APIRoot
+}
+
+const getDefaultHeaders = () => {
+  return {
+    'X-Shop': store.state.config.shopname,
+    'Accept-Language': 'zh'
+  }
 }
 
 const interceptor = async function (chain) {
   const requestParams = chain.requestParams
   requestParams.header = {
     ...requestParams.header,
-    ...DefaultHeaders
+    ...getDefaultHeaders()
   }
   try {
     // getStorage 找不到 key 会抛出异常, 这个片段的单独 try catch
@@ -42,7 +48,7 @@ const API = {
   post: (path, data = {}, options = {}) => {
     const params = options.params || {}
     const headers = options.headers || {}
-    const url = combineURLs(APIRoot, buildURL(path, params))
+    const url = combineURLs(getAPIRoot(), buildURL(path, params))
     return Taro.request({
       url: url,
       data: data,
@@ -53,7 +59,7 @@ const API = {
   get: (path, options = {}) => {
     const params = options.params || {}
     const headers = options.headers || {}
-    const url = combineURLs(APIRoot, buildURL(path, params))
+    const url = combineURLs(getAPIRoot(), buildURL(path, params))
     return Taro.request({
       url: url,
       method: 'GET',
