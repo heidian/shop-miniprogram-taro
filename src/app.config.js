@@ -1,16 +1,17 @@
 export default {
   pages: [
-    'pages/index/index',
+    'pages/home/index',
     'pages/search/index',
     'pages/membership/index',
     'pages/cart/index',
     'pages/account/index',
-    'pages/product/index'
+    'pages/product/index',
+    'pages/index/index'
   ],
   tabBar: {
     list: [
       {
-        'pagePath': 'pages/index/index',
+        'pagePath': 'pages/home/index',
         'iconPath': 'assets/images/tabbar/home.png',
         'selectedIconPath': 'assets/images/tabbar/home-active.png',
         'text': '首页'
