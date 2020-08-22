@@ -51,15 +51,16 @@ const actions = {
       ...payload
     }, {
       headers: { 'Authorization': '' }
-    }).then((res) => {
-      const customerToken = res.data.token
+    }).then(({ data }) => {
+      const customerToken = data.token
       Taro.setStorageSync('customertoken', customerToken)
       commit('setCustomer', {
         customerToken: customerToken,
         isAuthenticated: true
       })
+      return data
     }).catch((err) => {
-      console.log('登录失败', _.get(err, 'response.data.detail'))
+      console.log('登录失败', _.get(err, 'response.data'))
       throw err
     })
   },
@@ -71,12 +72,11 @@ const actions = {
     })
   },
   getCustomer({ commit }) {
-    return API.get('/customers/customer/').then((res) => {
-      commit('setCustomer', {
-        data: res.data
-      })
+    return API.get('/customers/customer/').then(({ data }) => {
+      commit('setCustomer', { data: data })
+      return data
     }).catch((err) => {
-      console.log('获取用户信息失败', _.get(err, 'response.data.detail'))
+      console.log('获取用户信息失败', _.get(err, 'response.data'))
       throw err
     })
   }

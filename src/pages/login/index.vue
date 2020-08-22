@@ -26,8 +26,7 @@ export default {
   },
   async mounted() {
     // 获取 wx.login 的 js_code 一定要在 getPhoneNumber 回调的外面
-    const { code } = await Taro.login()
-    this.code = code
+    this.getJsCode()
   },
   methods: {
     async getPhoneNumber(e) {
@@ -41,7 +40,7 @@ export default {
       try {
         const res = await this.$store.dispatch('customer/login', {
           appid: this.appid,
-          js_code: this.code,
+          js_code: this.getJsCode(),
           encryptedData: encryptedData,
           iv: iv,
           grant_type: 'wechat_mini_phone',
@@ -52,8 +51,16 @@ export default {
         })
         console.log('登录成功', res)
       } catch(err) {
-        console.log('登录失败', _.get(err, 'response.data.detail'))
+        console.log('登录失败', _.get(err, 'response.data'))
       }
+    },
+    getJsCode() {
+      const code = this.code
+      // 取完以后得换一个
+      Taro.login({
+        success: ({ code }) => { this.code = code }
+      })
+      return code
     }
   }
 }
