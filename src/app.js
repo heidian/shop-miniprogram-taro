@@ -33,6 +33,7 @@ const App = new Vue({
     } catch(err) {
       console.log(err)
     }
+    this.$store.dispatch('customer/initCustomerAuth')
   },
   onShow(options) {
   },

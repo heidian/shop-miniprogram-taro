@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import listStores from './lists/index'
+import customerStore from './customer'
 
 Vue.use(Vuex)
 
@@ -28,7 +29,8 @@ const getters = {
 
 export default new Vuex.Store({
   modules: {
-    lists: listStores
+    lists: listStores,
+    customer: customerStore
   },
   state,
   mutations,

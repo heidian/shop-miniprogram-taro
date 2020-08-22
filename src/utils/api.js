@@ -1,6 +1,7 @@
 import Taro from '@tarojs/taro'
 import combineURLs from './combineURLs'
 import buildURL from './buildURL'
+import store from '../store/index'
 
 // config/dev.js 里面定义了 API_URL
 const APIRoot = API_URL
@@ -17,9 +18,12 @@ const interceptor = async function (chain) {
   }
   try {
     // getStorage 找不到 key 会抛出异常, 这个片段的单独 try catch
-    const { data: token } = await Taro.getStorage({ key: 'customertoken' })
     const { header } = requestParams
-    header['Authorization'] = `CustomerToken ${token}`
+    // const { data: token } = await Taro.getStorage({ key: 'customertoken' })
+    const token = store.state.customer.customerToken
+    if (typeof header['Authorization'] === 'undefined' && token) {
+      header['Authorization'] = `CustomerToken ${token}`
+    }
   } catch (e) {}
   return chain.proceed(requestParams).then((response) => {
     if (response.statusCode >= 200 && response.statusCode < 300) {
