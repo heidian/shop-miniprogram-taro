@@ -6,6 +6,7 @@ export default {
     'pages/cart/index',
     'pages/account/index',
     'pages/product/index',
+    'pages/login/index',
     'pages/index/index'
   ],
   tabBar: {

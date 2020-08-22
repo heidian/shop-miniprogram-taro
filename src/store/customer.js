@@ -46,9 +46,9 @@ const actions = {
       isAuthenticated: !!token
     })
   },
-  login({ commit, dispatch }, { mobile, code }) {
+  login({ commit, dispatch }, payload) {
     return API.post('/customers/login/', {
-      mobile, code
+      ...payload
     }, {
       headers: { 'Authorization': '' }
     }).then((res) => {
@@ -67,7 +67,7 @@ const actions = {
     Taro.removeStorageSync('customertoken')
     commit('setCustomer', {
       customerToken: '',
-      isAuthenticated: true
+      isAuthenticated: false
     })
   },
   getCustomer({ commit }) {

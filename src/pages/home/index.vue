@@ -20,11 +20,7 @@ export default {
   },
   mounted() {
     // console.log(this.$store.state.customer)
-    // this.$store.dispatch('customer/login', {
-    //   mobile: '18621761807',
-    //   code: '32yd5he8pt'
-    // })
-    this.$store.dispatch('customer/getCustomer')
+    // this.$store.dispatch('customer/getCustomer')
   }
 }
 </script>
