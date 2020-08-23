@@ -32,11 +32,13 @@ const interceptor = async function (chain) {
     }
   } catch (e) {}
   return chain.proceed(requestParams).then((response) => {
-    if (response.statusCode >= 200 && response.statusCode < 300) {
-      return response
+    // 这里改成和 axios 类似的格式
+    const { statusCode, data } = response
+    if (statusCode >= 200 && statusCode < 300) {
+      return { data, status: statusCode }
     } else {
       const error = new Error('Request Error')
-      error.response = response
+      error.response = { data, status: statusCode }
       throw error
     }
   })
