@@ -1,9 +1,9 @@
 <template>
   <view>
     <!-- Taro 是先用 vue 完全编译好输出节点再一次性填充到一个 wxml 模板里, 这里的 key 写法和 vue 一样 -->
-    <view
-      v-for="variant in variants" :key="variant.id"
-    >({{ variant.id }})</view>
+    <view v-for="variant in variants" :key="variant.id">
+      <text>({{ variant.id }})</text> <button @tap="addToCart(variant.id, 1)">add</button>
+    </view>
     <!-- 闭合标签尽量和文本内容紧贴, 避免出现前后空格, 内部元素是标签就随意 -->
   </view>
 </template>
@@ -30,6 +30,12 @@ export default {
   },
   mounted() {
     console.log('variants', this.variants)
+  },
+  methods: {
+    async addToCart(variantId, quantity) {
+      await this.$store.dispatch('cart/add', { variantId, quantity })
+      // console.log(this.$store.state.cart)
+    }
   }
 }
 </script>

@@ -69,13 +69,53 @@ const actions = {
       await dispatch('_create')
     } else {}
   },
-  async add({ state, commit, dispatch }, { variantId, attributes, quantity }) {
+  async add({ state, commit, dispatch }, { variantId, quantity, attributes = {} } = {}) {
+    /* 调用 add 的时候如果 attributes 是空的, 也会覆盖之前的已有数据,
+    这是和 setQuantity 不同的地方, add 一定要传完整的数据 */
     if (!state.cartToken) {
       await dispatch('_create')
     }
+    const items = [ ...state.items ]
+    const index = _.findIndex(items, (item) => _.get(item, 'variant.id') == variantId)
+    let item = items[index]
+    if (!item) {
+      const variant = { id: variantId }
+      item = { variant, quantity, attributes }
+      items.push(item)
+    } else {
+      quantity = item.quantity + quantity
+      items[index] = { ...item, quantity, attributes }
+    }
+    commit('setData', { items })
+    // TODO, 这里要处理一下库存不足之类的问题
+    await API.post(`/customers/cart/${state.cartToken}/item/`, {
+      variant_id: item.variant.id,
+      quantity: quantity,
+      attributes: item.attributes
+    })
+    dispatch('fetch')
   },
-  async setQuantity({ state, commit }) {
-    //
+  async setQuantity({ state, commit, dispatch }, { itemId, quantity } = {}) {
+    if (!state.cartToken) {
+      await dispatch('_create')
+    }
+    const index = _.findIndex(state.items, { id: itemId })
+    const item = state.items[index]
+    if (!item) {
+      throw new Error('Invalid itemId')
+    }
+    const items = [
+      ...state.items.slice(0, index),
+      { ...item, quantity: quantity },
+      ...state.items.slice(index + 1)
+    ]
+    commit('setData', { items })
+    // TODO, 这里要处理一下库存不足之类的问题
+    await API.post(`/customers/cart/${state.cartToken}/item/`, {
+      variant_id: item.variant.id,
+      quantity: quantity
+    })
+    dispatch('fetch')
   }
 }
 
