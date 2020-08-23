@@ -1,6 +1,6 @@
 /*
 如果没有设置初始值, 也就是 state = () => ({})
-那第一次 setCustomer 好像 Vue 检测不到变化,
+那第一次 setData 好像 Vue 检测不到变化,
 于是不会触发更新的回路
 */
 
@@ -9,7 +9,7 @@ import Taro from '@tarojs/taro'
 import { API } from '@/utils/api'
 
 /*
- * onLaunch 会在每次打开网页的时候调用 initCustomerToken action,
+ * onLaunch 会在每次打开网页的时候调用 initClient action 来读取 storate 里面的 customerToken,
  * 判断 customerToken 是否有效然后设置 isAuthenticated
  * 其他地方使用 isAuthenticated 来判断当前用户是否登录
  */
@@ -24,7 +24,7 @@ const state = () => {
 const getters = {}
 
 const mutations = {
-  setCustomer(state, { customerToken, isAuthenticated, data } = {}) {
+  setData(state, { customerToken, isAuthenticated, data } = {}) {
     if (typeof customerToken !== 'undefined') {
       state.customerToken = customerToken
     }
@@ -38,14 +38,6 @@ const mutations = {
 }
 
 const actions = {
-  initCustomerAuth({ commit }) {
-    // 这里一定要用 sync, 确保 onLaunch 里面调用 initCustomerAuth 的时候, 可以在其他所有方法之前
-    const token = Taro.getStorageSync('customerToken')
-    commit('setCustomer', {
-      customerToken: token || '',
-      isAuthenticated: !!token
-    })
-  },
   login({ commit, dispatch }, payload) {
     return API.post('/customers/login/', {
       ...payload
@@ -54,7 +46,7 @@ const actions = {
     }).then(({ data }) => {
       const customerToken = data.token
       Taro.setStorageSync('customerToken', customerToken)
-      commit('setCustomer', {
+      commit('setData', {
         customerToken: customerToken,
         isAuthenticated: true
       })
@@ -66,14 +58,14 @@ const actions = {
   },
   logout({ commit }) {
     Taro.removeStorageSync('customerToken')
-    commit('setCustomer', {
+    commit('setData', {
       customerToken: '',
       isAuthenticated: false
     })
   },
   getCustomer({ commit }) {
     return API.get('/customers/customer/').then(({ data }) => {
-      commit('setCustomer', { data: data })
+      commit('setData', { data: data })
       return data
     }).catch((err) => {
       console.log('获取用户信息失败', _.get(err, 'response.data'))

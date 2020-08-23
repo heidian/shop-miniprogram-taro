@@ -9,12 +9,16 @@ import exampleStore from './example'
 
 Vue.use(Vuex)
 
-const extConfig = Taro.getExtConfigSync()
-
 const state = () => {
-  const { extAppid, apiroot, shopname, shopid } = extConfig
   return {
-    config: {
+    config: {}
+  }
+}
+
+const mutations = {
+  setExtConfig(state, payload) {
+    const { extAppid, apiroot, shopname, shopid } = payload
+    state.config = {
       appid: extAppid,
       apiroot,
       shopname,
@@ -23,8 +27,22 @@ const state = () => {
   }
 }
 
-const mutations = {}
-const actions = {}
+const actions = {
+  initClient({ commit }) {
+    const extConfig = Taro.getExtConfigSync()
+    commit('setExtConfig', extConfig)
+    // 这里一定要用 sync, 确保 onLaunch 里面调用 initCustomerAuth 的时候, 可以在其他所有方法之前
+    const customerToken = Taro.getStorageSync('customerToken')
+    commit('customer/setData', {
+      customerToken: customerToken || '',
+      isAuthenticated: !!customerToken
+    })
+    const cartToken = Taro.getStorageSync('cartToken')
+    commit('cart/setData', {
+      cartToken: cartToken || ''
+    })
+  }
+}
 const getters = {}
 
 export default new Vuex.Store({

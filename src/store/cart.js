@@ -2,10 +2,12 @@ import _ from 'lodash'
 import Taro from '@tarojs/taro'
 import { API } from '@/utils/api'
 
-
+/*
+ * onLaunch 会在每次打开网页的时候调用 initClient action 来读取 storate 里面的 customerToken,
+ */
 const state = () => {
   return {
-    token: null,
+    cartToken: '',
     totalPrice: '0.00',
     totalCount: 0,
     items: []
@@ -15,9 +17,9 @@ const state = () => {
 const getters = {}
 
 const mutations = {
-  setData(state, { items, token } = {}) {
-    if (typeof token !== 'undefined') {
-      state.token = token
+  setData(state, { items, cartToken } = {}) {
+    if (typeof cartToken !== 'undefined') {
+      state.cartToken = cartToken
     }
     if (typeof items !== 'undefined') {
       state.items = items
@@ -31,38 +33,33 @@ const actions = {
   async _flushCartOnError({ commit, dispatch }, error) {
     // TODO
     // wx.removeStorageSync('cartToken')
-    // // this.token = null
+    // // this.cartToken = null
     // this.create().then(() => this.fetch(callback))
-    console.log(err)
-    if (!err.response) {
-      throw err
+    if (!error.response) {
+      throw error
     }
-    const { status } = err.response
+    const { status } = error.response
     if (status == 404 || status == 403 || status == 401) {
       Taro.removeStorageSync('cartToken')
-      commit('setData', { token: null, items: [] })
+      commit('setData', { cartToken: '', items: [] })
     }
   },
   async _create({ state, commit, dispatch }) {
-    const token = Taro.getStorageSync('cartToken')
-    if (token) {
-      commit('setData', { token })
-      dispatch('fetch')
-      return
-    }
-    try {
-      const { data: { items, token } } = await API.post('/customers/cart/')
-      Taro.setStorageSync('cartToken', token)
-      commit('setData', { items, token })
-    } catch(err) {
-      // 这里按理来说是不会遇到的, 只可能是 CustomerToken 错误导致 401/403
-      dispatch('_flushCartOnError', err)
+    if (!state.cartToken) {
+      try {
+        const { data: { items, token: cartToken } } = await API.post('/customers/cart/')
+        Taro.setStorageSync('cartToken', cartToken)
+        commit('setData', { items, cartToken })
+      } catch(err) {
+        // 这里按理来说是不会遇到的, 只可能是 CustomerToken 错误导致 401/403
+        dispatch('_flushCartOnError', err)
+      }
     }
   },
-  async fetch({ rootState, state, commit }) {
-    if (state.token) {
+  async fetch({ rootState, state, commit, dispatch }) {
+    if (state.cartToken) {
       try {
-        const { data: { items } } = await API.get(`/customers/cart/${state.token}/`)
+        const { data: { items } } = await API.get(`/customers/cart/${state.cartToken}/`)
         commit('setData', { items })
       } catch(err) {
         dispatch('_flushCartOnError', err)
@@ -73,7 +70,7 @@ const actions = {
     }
   },
   async add({ state, commit, dispatch }, { variantId, attributes, quantity }) {
-    if (!state.token) {
+    if (!state.cartToken) {
       await dispatch('_create')
     }
   },

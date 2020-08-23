@@ -1,7 +1,7 @@
 <template>
   <view>
     <view v-for="item in cart.items" :key="item.variant_id">
-      <text>{{ item.variant_id }} {{ item.quantity }}</text>
+      <text>{{ item.variant.id }} {{ item.quantity }}</text>
     </view>
   </view>
 </template>
