@@ -40,7 +40,7 @@ const mutations = {
 const actions = {
   initCustomerAuth({ commit }) {
     // 这里一定要用 sync, 确保 onLaunch 里面调用 initCustomerAuth 的时候, 可以在其他所有方法之前
-    const token = Taro.getStorageSync('customertoken')
+    const token = Taro.getStorageSync('customerToken')
     commit('setCustomer', {
       customerToken: token || '',
       isAuthenticated: !!token
@@ -53,7 +53,7 @@ const actions = {
       headers: { 'Authorization': '' }
     }).then(({ data }) => {
       const customerToken = data.token
-      Taro.setStorageSync('customertoken', customerToken)
+      Taro.setStorageSync('customerToken', customerToken)
       commit('setCustomer', {
         customerToken: customerToken,
         isAuthenticated: true
@@ -65,7 +65,7 @@ const actions = {
     })
   },
   logout({ commit }) {
-    Taro.removeStorageSync('customertoken')
+    Taro.removeStorageSync('customerToken')
     commit('setCustomer', {
       customerToken: '',
       isAuthenticated: false
