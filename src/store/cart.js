@@ -30,51 +30,36 @@ const mutations = {
 }
 
 const actions = {
-  async _flushCartOnError({ commit, dispatch }, error) {
-    // TODO
-    // wx.removeStorageSync('cartToken')
-    // // this.cartToken = null
-    // this.create().then(() => this.fetch(callback))
-    if (!error.response) {
-      throw error
-    }
-    const { status } = error.response
-    if (status == 404 || status == 403 || status == 401) {
+  _set({ commit }, payload) {
+    const cartToken = payload.token || ''
+    const items = payload.items || []
+    commit('setData', { cartToken, items })
+    if (cartToken) {
+      Taro.setStorageSync('cartToken', cartToken)
+    } else {
       Taro.removeStorageSync('cartToken')
-      commit('setData', { cartToken: '', items: [] })
     }
   },
-  async _create({ state, commit, dispatch }) {
-    if (!state.cartToken) {
-      try {
-        const { data: { items, token: cartToken } } = await API.post('/customers/cart/')
-        Taro.setStorageSync('cartToken', cartToken)
-        commit('setData', { items, cartToken })
-      } catch(err) {
-        // 这里按理来说是不会遇到的, 只可能是 CustomerToken 错误导致 401/403
-        dispatch('_flushCartOnError', err)
+  async _postVariant({ state, dispatch }, payload) {
+    // TODO, 这里要处理一下库存不足之类的问题
+    const res = await API.post('/shopfront/cart/', payload, {
+      headers: {
+        'X-Heidian-Cart-Token': state.cartToken
       }
-    }
+    })
+    dispatch('_set', res.data)
   },
-  async fetch({ rootState, state, commit, dispatch }) {
-    if (state.cartToken) {
-      try {
-        const { data: { items } } = await API.get(`/customers/cart/${state.cartToken}/`)
-        commit('setData', { items })
-      } catch(err) {
-        dispatch('_flushCartOnError', err)
+  async fetch({ state, dispatch }) {
+    const res = await API.get('/shopfront/cart/', {
+      headers: {
+        'X-Heidian-Cart-Token': state.cartToken
       }
-    } else if (rootState.customer.isAuthenticated) {
-      // 如果没登录, 就不要 create, 因为 create 了也是一个空的, 需要的时候再 create
-      await dispatch('_create')
-    } else {}
+    })
+    dispatch('_set', res.data)
   },
   async add({ state, commit, dispatch }, { variantId, quantity, attributes = {} } = {}) {
     /* 调用 add 的时候如果 attributes 是空的, 也会覆盖之前的已有数据,
     这是和 setQuantity 不同的地方, add 一定要传完整的数据 */
-    if (!state.cartToken) {
-      await dispatch('_create')
-    }
     const items = [ ...state.items ]
     const index = _.findIndex(items, (item) => _.get(item, 'variant.id') == variantId)
     let item = items[index]
@@ -87,18 +72,15 @@ const actions = {
       items[index] = { ...item, quantity, attributes }
     }
     commit('setData', { items })
-    // TODO, 这里要处理一下库存不足之类的问题
-    await API.post(`/customers/cart/${state.cartToken}/item/`, {
+    const payload = {
       variant_id: item.variant.id,
       quantity: quantity,
       attributes: item.attributes
-    })
-    dispatch('fetch')
-  },
-  async setQuantity({ state, commit, dispatch }, { itemId, quantity } = {}) {
-    if (!state.cartToken) {
-      await dispatch('_create')
     }
+    await dispatch('_postVariant', payload)
+  },
+  async setItemQuantity({ state, commit, dispatch }, { itemId, quantity } = {}) {
+    /* cartToken 不存在不需要报错, items 是空的, 本来就会报错 */
     const index = _.findIndex(state.items, { id: itemId })
     const item = state.items[index]
     if (!item) {
@@ -110,12 +92,26 @@ const actions = {
       ...state.items.slice(index + 1)
     ]
     commit('setData', { items })
-    // TODO, 这里要处理一下库存不足之类的问题
-    await API.post(`/customers/cart/${state.cartToken}/item/`, {
+    const payload = {
       variant_id: item.variant.id,
       quantity: quantity
-    })
-    dispatch('fetch')
+    }
+    await dispatch('_postVariant', payload)
+  },
+  async removeItem({ state, commit, dispatch }, { itemId } = {}) {
+    /* cartToken 不存在不需要报错, items 是空的, 本来就会报错 */
+    const index = _.findIndex(state.items, { id: itemId })
+    const item = state.items[index]
+    if (!item) {
+      throw new Error('Invalid itemId')
+    }
+    const items = _.filter(state.items, item => item.id != itemId)
+    commit('setData', { items })
+    const payload = {
+      variant_id: item.variant.id,
+      quantity: 0
+    }
+    await dispatch('_postVariant', payload)
   }
 }
 

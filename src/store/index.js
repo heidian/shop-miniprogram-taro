@@ -28,19 +28,26 @@ const mutations = {
 }
 
 const actions = {
-  initClient({ commit }) {
+  initClient({ commit, dispatch }) {
     const extConfig = Taro.getExtConfigSync()
     commit('setExtConfig', extConfig)
     // 这里一定要用 sync, 确保 onLaunch 里面调用 initCustomerAuth 的时候, 可以在其他所有方法之前
     const customerToken = Taro.getStorageSync('customerToken')
-    commit('customer/setData', {
-      customerToken: customerToken || '',
-      isAuthenticated: !!customerToken
-    })
+    if (customerToken) {
+      commit('customer/setData', {
+        customerToken: customerToken,
+        isAuthenticated: true
+      })
+    }
     const cartToken = Taro.getStorageSync('cartToken')
-    commit('cart/setData', {
-      cartToken: cartToken || ''
-    })
+    if (cartToken) {
+      commit('cart/setData', {
+        cartToken: cartToken
+      })
+    }
+    /* 如果一开始没有 fetch 一下 cart, 会出现的问题是 add 了以后, quantity 覆盖服务器上的 quantity
+    这里不需要判断 customerToken 或 cartToken 是否存在, 如果是没登录也没创建过 cartToken, fetch 也没问题 */
+    dispatch('cart/fetch')
   }
 }
 const getters = {}

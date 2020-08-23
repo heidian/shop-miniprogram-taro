@@ -2,7 +2,8 @@
   <view>
     <view v-for="item in cart.items" :key="item.variant_id">
       <text>{{ item.variant.id }} {{ item.quantity }}</text>
-      <input type='text' placeholder='输入金额' @input="(e) => setQuantity(e, item.id)"></Input>
+      <input type='text' placeholder='输入数字' @input="(e) => setItemQuantity(e, item.id)"></Input>
+      <button @tap="removeItem(item.id)">删除</button>
     </view>
   </view>
 </template>
@@ -24,10 +25,13 @@ export default {
   },
   methods: {
     // cart store 里面不做限制, 但是这里 debounce 一下, 防止一边输入一边发请求
-    setQuantity: _.debounce(function(e, itemId) {
-      const quantity = +e.detail.value || 1
-      this.$store.dispatch('cart/setQuantity', { itemId, quantity })
-    }, 500)
+    setItemQuantity: _.debounce(function(e, itemId) {
+      const quantity = +e.detail.value
+      this.$store.dispatch('cart/setItemQuantity', { itemId, quantity })
+    }, 500),
+    removeItem(itemId) {
+      this.$store.dispatch('cart/removeItem', { itemId })
+    }
   }
 }
 </script>
