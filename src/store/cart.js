@@ -64,10 +64,10 @@ const actions = {
       } catch(err) {
         dispatch('_flushCartOnError', err)
       }
-    } else {
-      // 如果没登录, 就不要 fetch
-      console.log(rootState)
-    }
+    } else if (rootState.customer.isAuthenticated) {
+      // 如果没登录, 就不要 create, 因为 create 了也是一个空的, 需要的时候再 create
+      await dispatch('_create')
+    } else {}
   },
   async add({ state, commit, dispatch }, { variantId, attributes, quantity }) {
     if (!state.cartToken) {
