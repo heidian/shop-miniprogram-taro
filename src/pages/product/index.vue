@@ -1,24 +1,58 @@
 <template>
-  <view>
-    <view>{{ product.title }}</view>
+  <view class="page page--product">
+    <view class="page__section">
+      <swiper
+        class="product__images"
+        indicatorColor='#999'
+        indicatorActiveColor='#333'
+        circular
+        :indicatorDots="true"
+        interval="5000"
+        autoplay
+      >
+        <swiper-item class="product__images__swiper-item" v-for="image in product.images" :key="image.id">
+          <image class="product__images__swiper-item__image" mode="aspectFit" :src="optimizeImage(image)"></image>
+        </swiper-item>
+      </swiper>
+      <!-- 商品价格和添加心愿单 -->
+      <view class="product__header">
+        <view class="product__price-wrapper">
+          <view class="product__price">
+            <text class="product__price__currency">￥</text>
+            <text class="product__price__value">{{ product.price }}</text>
+          </view>
+          <view class="product__compare-at-price" v-if="product.compare_at_price && product.compare_at_price > product.price">
+            <text class="product__compare-at-price__currency">￥</text>
+            <text class="product__compare-at-price__value">{{ product.compare_at_price }}</text>
+          </view>
+        </view>
+        <view class="product__add-to-wishlist">
+          心愿单
+        </view>
+      </view>
+      <!-- 商品标题和描述 -->
+      <view class="product__title">{{ product.title }}</view>
+      <view class="product__description">{{ product.description }}</view>
+    </view>
 
-    <view>{{ product.image|imageUrl }}</view>  <!-- filter 写法 -->
-    <image mode="aspectFit" :src="optimizeImage(product.image)"></image> <!-- 方法写法 -->
+    <view class="page__section">
+      <view class="cell" @tap="onToggleSelectVariant">
+        <view class="cell__label">已选</view>
+        <view class="cell__value">{{ currentVariant.title }}</view>
+        <view class="cell__ft">
+          <image class="cell__ft__icon" src="https://up.img.heidiancdn.com/o_1egfmehbs19vhj4p7cn1ko4kqi0next.png" mode="aspectFill"></image>
+        </view>
+      </view>
+    </view>
 
-    <!-- 用 backgroundImageUrl 方法代替字符串拼接, 可以处理 ur 中的引号等问题 -->
-    <view
-      class="product-image-bg"
-      :style="{'backgroundImage': backgroundImageUrl(product.image)}"
-    ></view>
+    <view class="page__section">
 
-    <view>{{ product.created_at|datetime }}</view>
-    <view>{{ product.created_at|date }}</view>
-
-    <!-- currency filter 可以处理负数金额等, 订单和结算里面游泳, 商品的划线价格等显示不需要用 currency 这个 filter -->
-    <view>{{ product.price|currency }}</view>
-
-    <!-- template 里面标签不要用大写, 全部用小写+减号 -->
-    <product-variants :variants="product.variants"></product-variants>
+    </view>
+    <select-variants
+      :product="product"
+      :currentVariant="currentVariant"
+      :drawerOpened="drawerOpened"
+      @onToggleDrawer="onToggleSelectVariant"/>
   </view>
 </template>
 
@@ -27,12 +61,14 @@ import { getCurrentInstance } from '@tarojs/taro'
 import { API } from '@/utils/api'
 import { optimizeImage, backgroundImageUrl } from '@/utils/image'
 import ProductVariants from './ProductVariants'
+import SelectVariants from './SelectVariants'
 
 export default {
   name: 'Product',
   components: {
     /* 组件名称用首字母大写, template 里面标签不能用大写, 全部用小写+减号 */
-    ProductVariants
+    ProductVariants,
+    SelectVariants
   },
   data() {
     /* getCurrentInstance 只在生命周期方法里用, 一般在 created() 或者 data() 方法里面用 */
@@ -45,7 +81,9 @@ export default {
       productName: name,
       product: {
         variants: []
-      }
+      },
+      drawerOpened: false,
+      currentVariant: {}
     }
   },
   created() {},
@@ -75,9 +113,14 @@ export default {
       }
       if (product) {
         this.product = product
+        const variant = _.find(product.variants || [], { is_available: true }) || product.variants[0]
+        this.currentVariant = variant
       } else {
         // 抛出异常
       }
+    },
+    onToggleSelectVariant (status) {
+      this.drawerOpened = status === undefined ? !this.drawerOpened : status
     }
   }
 }
@@ -93,5 +136,82 @@ export default {
   background-size: contain;
   background-position: center;
   background-repeat: no-repeat;
+}
+
+/* Images Swiper */
+.product__images {
+  width: 100vw;
+  height: 100vw;
+}
+.product__images__swiper-item__image {
+  width: 100%;
+  height: 100%;
+}
+
+.product__header {
+  width: 100%;
+  padding: 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.product__price-wrapper {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+.product__price,
+.product__compare-at-price {
+  display: flex;
+  justify-content: flex-start;
+  align-items: baseline;
+}
+.product__price {
+  color: red;
+  &__currency {
+    font-size: 24px;
+    line-height: 1;
+  }
+  &__value {
+    font-size: 40px;
+    line-height: 1;
+    font-weight: bold;
+  }
+}
+.product__compare-at-price {
+  color: #999999;
+  text-decoration: line-through;
+  margin-left: 6px;
+  &__currency {
+    font-size: 22px;
+    line-height: 1;
+  }
+  &__value {
+    font-size: 28px;
+    line-height: 1;
+    font-weight: bold;
+  }
+}
+.product__add-to-wishlist {
+  font-size: 22px;
+}
+
+/* 标题和描述 */
+.product__title {
+  padding: 10px 30px;
+  font-size: 30px;
+  font-weight: bolder;
+  text-align: justify;
+  line-height: 1.6;
+}
+.product__description {
+  padding: 10px 30px;
+  font-size: 24px;
+  color: #999999;
+  text-align: justify;
+}
+.cell__ft__icon {
+  width: 20px;
+  height: 24px;
 }
 </style>
