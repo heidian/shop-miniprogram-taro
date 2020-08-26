@@ -19,7 +19,7 @@ Vue.use(VirtualList)
 Vue.filter('date', (value) => formatDate(value))
 Vue.filter('datetime', (value) => formatDateTime(value))
 Vue.filter('currency', (value) => formatCurrency(value))
-Vue.filter('imageUrl', (value) => optimizeImage(value))
+Vue.filter('imageUrl', (value, width, height) => optimizeImage(value, width, height))
 
 
 const App = new Vue({
