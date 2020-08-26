@@ -11,7 +11,7 @@
         autoplay
       >
         <swiper-item class="product__images__swiper-item" v-for="image in product.images" :key="image.id">
-          <image class="product__images__swiper-item__image" mode="aspectFit" :src="optimizeImage(image)"></image>
+          <image class="product__images__swiper-item__image" mode="aspectFit" :src="optimizeImage(image, 800)"></image>
         </swiper-item>
       </swiper>
       <!-- 商品价格和添加心愿单 -->
@@ -52,7 +52,8 @@
       :product="product"
       :currentVariant="currentVariant"
       :drawerOpened="drawerOpened"
-      @onToggleDrawer="onToggleSelectVariant"/>
+      @onToggleDrawer="onToggleSelectVariant"
+      @onSelectVariant="onSelectVariant"/>
   </view>
 </template>
 
@@ -120,7 +121,11 @@ export default {
       }
     },
     onToggleSelectVariant (status) {
-      this.drawerOpened = status === undefined ? !this.drawerOpened : status
+      this.drawerOpened = (typeof status === 'boolean') ? status : !this.drawerOpened
+    },
+    onSelectVariant (variantId) {
+      if (!variantId || variantId === this.currentVariant.id) return
+      this.currentVariant = _.find(this.product.variants || [], { id: variantId })
     }
   }
 }
