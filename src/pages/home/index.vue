@@ -1,27 +1,35 @@
 <template>
-  <view class="index">
-    <view>{{ customer.isAuthenticated }}</view>
-    <view>{{ customer.customerToken }}</view>
-    <view>{{ customer.data.id }}</view>
-    <view>{{ customer.data.mobile }}</view>
+  <view>
+    <component
+      v-for="(block, index) in blocks" :key="index"
+      :is="block.componentClass"
+      :styleData="block.style" :settingsData="block.settings_data"
+    ></component>
   </view>
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import _ from 'lodash'
+import Taro from '@tarojs/taro'
+import ThemeBlocks from '@/mixins/ThemeBlocks'
+import ListTable from '@/mixins/ListTable'
 
 export default {
   name: 'Home',
-  components: {},
-  computed: {
-    ...mapState('customer', {
-      customer: (state) => state
-    })
+  mixins: [
+    ThemeBlocks('blocks', { pageType: 'home'})
+  ],
+  components: {
+    //
   },
-  mounted() {
-    // console.log(this.$store.state.config)
-    // console.log(this.$store.state.customer)
-    // this.$store.dispatch('customer/getCustomer')
+  computed: {
+    //
+  },
+  async mounted() {
+    await this.fetchPageConfig()
+  },
+  methods: {
+    //
   }
 }
 </script>
