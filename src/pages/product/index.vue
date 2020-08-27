@@ -133,6 +133,40 @@ export default {
 
 <style lang="scss">
 /* Taro vue 版本不支持 scoped, 只能用 cssModule, 这里不要写 scoped, 平时注意 class 冲突 */
+.page {
+  min-height: 100vh;
+  background-color: #f8f8f8;
+}
+.page__section {
+  background-color: #ffffff;
+  & + & {
+    margin-top: 20px;
+  }
+}
+.cell {
+  width: 100%;
+  padding: 30px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  font-size: 24px;
+  &__label {
+    margin-right: 40px;
+  }
+  &__value {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  &__ft {
+    margin-left: 40px;
+  }
+  & + & {
+    border-top: 2px solid #f8f8f8;
+  }
+}
+
 .product-image-bg {
   /* 没特殊原因全部用 px, Taro 会转成 rpx, 按照 750px 的设计稿实际像素尺寸来写
   除非是要结合 js 计算尺寸, 比如使用屏幕宽度等, 这时候需要禁用 px 到 rpx 的转换 (可以参考 search.vue), 这时候 px 按照逻辑尺寸来写 */

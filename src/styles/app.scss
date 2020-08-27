@@ -23,37 +23,3 @@ audio, audio:before, audio:after,
 video, video:before, video:after {
   box-sizing: border-box;
 }
-.page {
-  min-height: 100vh;
-  background-color: #f8f8f8;
-}
-.page__section {
-  background-color: #ffffff;
-  & + & {
-    margin-top: 20px;
-  }
-}
-
-.cell {
-  width: 100%;
-  padding: 30px;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  font-size: 24px;
-  &__label {
-    margin-right: 40px;
-  }
-  &__value {
-    flex: 1;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-  &__ft {
-    margin-left: 40px;
-  }
-  & + & {
-    border-top: 2px solid #f8f8f8;
-  }
-}
