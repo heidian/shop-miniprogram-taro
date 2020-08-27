@@ -5,6 +5,7 @@
       :is="block.componentClass"
       :styleData="block.style" :settingsData="block.settings_data"
     ></component>
+    <products ref="products"></products>
   </view>
 </template>
 
@@ -13,6 +14,7 @@ import _ from 'lodash'
 import Taro from '@tarojs/taro'
 import ThemeBlocks from '@/mixins/ThemeBlocks'
 import ListTable from '@/mixins/ListTable'
+import Products from './Products'
 
 export default {
   name: 'Home',
@@ -20,10 +22,13 @@ export default {
     ThemeBlocks('blocks', { pageType: 'home'})
   ],
   components: {
-    //
+    Products
   },
   computed: {
     //
+  },
+  onReachBottom() {
+    this.$refs.products.fetchMore()
   },
   async mounted() {
     await this.fetchPageConfig()

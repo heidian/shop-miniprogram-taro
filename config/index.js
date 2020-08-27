@@ -20,11 +20,10 @@ const config = {
     '@/components': resolve('src/components'),
     '@/utils': resolve('src/utils'),
     '@/mixins': resolve('src/mixins'),
+    '@/styles': resolve('src/styles'),
   },
   sass: {
     resource: [
-      'src/styles/_variables.scss',
-      'src/styles/_mixins.scss',
       'src/styles/app.scss'
     ],
     projectDirectory: path.resolve(__dirname, '..')
