@@ -1,25 +1,20 @@
-view, view:before, view:after,
-text, text:before, text:after,
-image, image:before, image:after,
-scroll-view, scroll-view:before, scroll-view:after,
-movable-area, movable-area:before, movable-area:after,
-cover-view, cover-view:before, cover-view:after,
-icon, icon:before, icon:after,
-rich-text, rich-text:before, rich-text:after,
-progress, progress:before, progress:after,
-button, button:before, button:after,
-checkbox, checkbox:before, checkbox:after,
-form, form:before, form:after,
-input, input:before, input:after,
-label, label:before, label:after,
-picker, picker:before, picker:after,
-picker-view, picker-view:before, picker-view:after,
-radio, radio:before, radio:after,
-slider, slider:before, slider:after,
-switch, switch:before, switch:after,
-textarea, textarea:before, textarea:after,
-navigator, navigator:before, navigator:after,
-audio, audio:before, audio:after,
-video, video:before, video:after {
-  box-sizing: border-box;
+/* global css start */
+
+page, view, text, image, scroll-view, movable-area, cover-view, icon, rich-text,
+progress, button, checkbox, form, input, label, picker, picker-view, radio,
+slider, switch, textarea, navigator, audio, video {
+  &, &::before, &::after {
+    box-sizing: border-box;
+  }
 }
+
+// * 会导致 wxss 报错
+// *, *::before, *::after {
+//   box-sizing: border-box;
+// }
+
+html, body, page {
+  font-size: 28px;
+}
+
+/* global css end */
