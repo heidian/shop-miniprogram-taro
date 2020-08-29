@@ -1,4 +1,5 @@
 import _ from 'lodash'
+import Taro from '@tarojs/taro'
 import { backgroundImageUrl } from '@/utils/image'
 import Carousel from '@/components/blocks/Carousel'
 import Image from '@/components/blocks/Image'
@@ -30,6 +31,11 @@ export default (propertyName, { pageType, pageName } = {}) => {
           if (_.isObject(block.css.backgroundImage)) {
             block.css.backgroundImage = backgroundImageUrl(block.css.backgroundImage, 600)
           }
+          _.forEach(['paddingTop', 'paddingBottom', 'paddingRight', 'paddingLeft'], (prop) => {
+            if (block.css[prop] && /^\d+(\.\d+)?(px)?$/.test(block.css[prop])) {
+              block.css[prop] = Taro.pxTransform(block.css[prop])
+            }
+          })
           block.componentClass = BLOCKS_MAP[block.name]
         })
         this[propertyName] = blocks

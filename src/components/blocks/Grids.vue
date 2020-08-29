@@ -14,6 +14,7 @@
 </template>
 
 <script>
+import Taro from '@tarojs/taro'
 import { optimizeImage, backgroundImageUrl } from '@/utils/image'
 
 export default {
@@ -44,7 +45,7 @@ export default {
       const textAlign = this.settingsData.textAlign || 'left'
       const widthPercent = (100 / columns).toFixed(6)
       style['width'] = `${widthPercent}%`
-      style['padding'] = `${parseInt(gridGap/2)}px`
+      style['padding'] = Taro.pxTransform(`${parseInt(gridGap/2)}px`)
       style['textAlign'] = textAlign
       return style
     },

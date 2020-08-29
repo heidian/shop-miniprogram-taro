@@ -27,7 +27,8 @@ export default function getTestPageConfig() {
       }, {
         "name": "blocks/text",
         "css": {
-          "padding": "10px 0"
+          "paddingTop": "10px",
+          "paddingBottom": "10px"
         },
         "settings_data": {
           "textAlign": "center",
@@ -57,7 +58,10 @@ export default function getTestPageConfig() {
       }, {
         "name": "blocks/image",
         "css": {
-          "padding": "30px 80px 20px"
+          "paddingTop": "30px",
+          "paddingBottom": "20px",
+          "paddingLeft": "80px",
+          "paddingRight": "80px"
         },
         "settings_data": {
           "image": {
@@ -67,7 +71,10 @@ export default function getTestPageConfig() {
       }, {
         "name": "blocks/grids",
         "css": {
-          "padding": "6px 6px 20px"
+          "paddingTop": "6px",
+          "paddingBottom": "20px",
+          "paddingLeft": "6px",
+          "paddingRight": "6px"
         },
         "settings_data": {
           "grids": [{
@@ -93,7 +100,10 @@ export default function getTestPageConfig() {
       }, {
         "name": "blocks/image",
         "css": {
-          "padding": "30px 20px 10px",
+          "paddingTop": "30px",
+          "paddingBottom": "10px",
+          "paddingLeft": "20px",
+          "paddingRight": "20px",
           "backgroundColor": "#E5E5E5"
         },
         "settings_data": {
@@ -104,7 +114,10 @@ export default function getTestPageConfig() {
       }, {
         "name": "blocks/carousel",
         "css": {
-          "padding": "30px",
+          "paddingTop": "30px",
+          "paddingBottom": "30px",
+          "paddingLeft": "30px",
+          "paddingRight": "30px",
           "backgroundColor": "#FF0000"
         },
         "settings_data": {
@@ -113,7 +126,10 @@ export default function getTestPageConfig() {
       }, {
         "name": "blocks/text",
         "css": {
-          "padding": "20px 50px",
+          "paddingTop": "20px",
+          "paddingBottom": "20px",
+          "paddingLeft": "50px",
+          "paddingRight": "50px",
           "backgroundColor": "#FFFFFF"
         },
         "settings_data": {

@@ -1,10 +1,23 @@
 import Vue from 'vue'
+import Taro from '@tarojs/taro'
 import store from './store/index'
 import { formatCurrency, formatDate, formatDateTime } from './utils/formatters'
 import { optimizeImage } from './utils/image'
 import VirtualList from '@tarojs/components/virtual-list'
 
 // Vue.config.productionTip = false
+
+/*
+ * 初始化 Taro 的 pxTransform
+ */
+const { windowWidth } = Taro.getSystemInfoSync()
+const designWidth = 750
+Taro.initPxTransform({
+ designWidth: windowWidth,
+ deviceRatio: {
+   [windowWidth]: windowWidth / designWidth
+ }
+})
 
 /*
  * 使用长列表组件

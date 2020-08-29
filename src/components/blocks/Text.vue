@@ -33,7 +33,7 @@ export default {
       textId: `T${parseInt((1 + Math.random()) * 100000)}`,
       animationStyle: {
         transition: 'none',
-        left: '5px'
+        left: Taro.pxTransform('5px')
       }
     }
   },
@@ -71,13 +71,13 @@ export default {
         distance = windowWidth
         this.animationStyle = {
           transition: 'none',
-          left: `${distance}px`
+          left: Taro.pxTransform(`${distance}px`)
         }
         setTimeout(() => this.slideLeft(distance - step, textWidth, windowWidth), 200)
       } else {
         this.animationStyle = {
           transition: 'left 3s linear',
-          left: `${distance}px`
+          left: Taro.pxTransform(`${distance}px`)
         }
         setTimeout(() => this.slideLeft(distance - step, textWidth, windowWidth), 3000)
       }
