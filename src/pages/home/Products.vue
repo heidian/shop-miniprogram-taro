@@ -37,7 +37,7 @@ export default {
   async mounted() {
     // await this.updatePageSize(100)
     await this.updateFilter({
-      vendor: 1479,
+      // vendor: 1479,
       fields: ['id', 'name', 'title', 'description', 'image', 'price'].join(',')
     })
     // await this.fetchList()
