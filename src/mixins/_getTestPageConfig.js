@@ -43,16 +43,66 @@ export default function getTestPageConfig() {
       }, {
         "name": "blocks/image",
         "css": {
-          "paddingTop": "15px",
-          "paddingRight": "15px",
-          "paddingBottom": "15px",
-          "paddingLeft": "15px",
-          "backgroundColor": "#000000"
+          // "paddingTop": "15px",
+          // "paddingRight": "15px",
+          // "paddingBottom": "15px",
+          // "paddingLeft": "15px",
+          // "backgroundColor": "#000000"
         },
         "settings_data": {
           "image": {
-            "src": "https://up.img.heidiancdn.com/o_1eepfu0ou1avbgh2u4v1g9r150l0G1093.jpeg"
+            "src": "https://up.img.heidiancdn.com/o_1egsrse8caag1comocmr01hn80p9Copy.jpg"
           }
+        }
+      }, {
+        "name": "blocks/image",
+        "css": {
+          "padding": "30px 80px 20px"
+        },
+        "settings_data": {
+          "image": {
+            "src": "https://up.img.heidiancdn.com/o_1egsruku5tu1t5kcgceli48v0roup32.png"
+          }
+        }
+      }, {
+        "name": "blocks/grids",
+        "css": {
+          "padding": "10px"
+        },
+        "settings_data": {
+          "grids": [{
+            "image": {
+              "src": "https://up.img.heidiancdn.com/o_1egsmgnhqv33120o15791qd21iov0Bitmap.jpg"
+            },
+            "text": {
+              "value": "哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈"
+            }
+          }, {
+            "image": {
+              "src": "https://up.img.heidiancdn.com/o_1eepfu0ou1avbgh2u4v1g9r150l0G1093.jpeg"
+            },
+            "text": {
+              "value": "哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈"
+            }
+          }, {
+            "image": {
+              "src": "https://up.img.heidiancdn.com/o_1eepfu0ou1avbgh2u4v1g9r150l0G1093.jpeg"
+            },
+            "text": {
+              "value": "哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈"
+            }
+          }, {
+            "image": {
+              "src": "https://up.img.heidiancdn.com/o_1eepfu0ou1avbgh2u4v1g9r150l0G1093.jpeg"
+            },
+            "text": {
+              "value": "哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈"
+            }
+          }],
+          "gridGap": "10",
+          "imageRatio": "0.75",
+          "textAlign": "left",
+          "columns": 3
         }
       }, {
         "name": "blocks/carousel",

@@ -33,7 +33,7 @@ export default {
   },
   computed: {
     paddingTop() {
-      const percent = (100 / (this.settingsData.ratio || 1)).toFixed(6)
+      const percent = (100 / (+this.settingsData.ratio || 1)).toFixed(6)
       return `${percent}%`
     }
   },

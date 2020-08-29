@@ -83,18 +83,7 @@ export default {
       }
     }
   },
-  filters: {
-    text(textObj) {
-      // 这个没用到
-      if (_.isString(textObj)) {
-        return textObj
-      } else if (_.isObject(textObj)) {
-        return _.get(textObj, 'value')
-      } else {
-        return '' + textObj
-      }
-    }
-  }
+  filters: {}
 }
 </script>
 
