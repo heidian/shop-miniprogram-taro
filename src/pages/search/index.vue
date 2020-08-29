@@ -31,9 +31,7 @@ export default {
   ],
   components: {},
   data() {
-    const config = wx.getSystemInfoSync()
-    const windowHeight = config.windowHeight
-    const windowWidth = config.windowWidth
+    const { windowHeight, windowWidth } = Taro.getSystemInfoSync()
     const listHeight = windowHeight - 40
     const ratio = 375 / windowWidth  // 这个项目的设计尺寸是 375, Taro 那里也是配置了 375 为设计尺寸, 而不是默认的 750
     const itemHeight = ((windowWidth - 3 * (10 / ratio)) / 2) + (32 + 10) / ratio

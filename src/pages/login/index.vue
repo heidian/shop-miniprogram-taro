@@ -25,7 +25,7 @@ export default {
     }
   },
   async mounted() {
-    // 获取 wx.login 的 js_code 一定要在 getPhoneNumber 回调的外面
+    // 获取 Taro.login 的 js_code 一定要在 getPhoneNumber 回调的外面
     this.getJsCode()
   },
   methods: {

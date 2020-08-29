@@ -58,9 +58,9 @@ export default {
   },
   methods: {
     async startAnimation() {
-      const query = wx.createSelectorQuery().select(`#${this.textId}`)
+      const query = Taro.createSelectorQuery().select(`#${this.textId}`)
       query.boundingClientRect((rect) => {
-        const windowWidth = wx.getSystemInfoSync().windowWidth
+        const windowWidth = Taro.getSystemInfoSync().windowWidth
         const textWidth = rect.width
         this.slideLeft(0, textWidth, windowWidth)
       }).exec()
