@@ -4,6 +4,7 @@ export default function getTestPageConfig() {
       "components": [{
         "name": "blocks/carousel",
         "css": {
+          // component 下面的 css 只支持 padding 和 background !!
           "paddingTop": "17%",
           "paddingBottom": "36%",
           "paddingRight": "10%",
@@ -24,12 +25,29 @@ export default function getTestPageConfig() {
           }]
         }
       }, {
+        "name": "blocks/text",
+        "css": {
+          "padding": "10px 0"
+        },
+        "settings_data": {
+          "textAlign": "center",
+          "text": {
+            "value": "JOIN US NOW! · JOIN US NOW! · JOIN US NOW! · JOIN US NOW! · JOIN US NOW! · JOIN US NOW!",
+            "style": {
+              "fontSize": "0.8em",
+              "fontWeight": "bold"
+            }
+          },
+          "animation": "slideLeft"
+        }
+      }, {
         "name": "blocks/image",
         "css": {
           "paddingTop": "15px",
           "paddingRight": "15px",
           "paddingBottom": "15px",
-          "paddingLeft": "15px"
+          "paddingLeft": "15px",
+          "backgroundColor": "#000000"
         },
         "settings_data": {
           "image": {
@@ -49,8 +67,6 @@ export default function getTestPageConfig() {
         "name": "blocks/text",
         "css": {
           "padding": "20px 50px",
-          "color": "#0000FF",
-          "textAlign": "center",
           "backgroundColor": "#FFFFFF"
         },
         "settings_data": {
