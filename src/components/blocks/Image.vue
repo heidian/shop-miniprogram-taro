@@ -1,5 +1,5 @@
 <template>
-  <view class="block--image" :style="styleData">
+  <view class="block--image" :style="css">
     <image class="image" :src="optimizeImage(settingsData.image)" mode="widthFix"></image>
   </view>
 </template>
@@ -9,7 +9,7 @@ import { optimizeImage } from '@/utils/image'
 
 export default {
   props: {
-    styleData: {
+    css: {
       type: Object,
       default: () => ({})
     },

@@ -1,5 +1,5 @@
 <template>
-  <view class="block--carousel" :style="styleData">
+  <view class="block--carousel" :style="css">
     <view class="carousel"></view>
   </view>
 </template>
@@ -7,7 +7,7 @@
 <script>
 export default {
   props: {
-    styleData: {
+    css: {
       type: Object,
       default: () => ({})
     },

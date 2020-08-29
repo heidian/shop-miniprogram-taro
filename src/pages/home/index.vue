@@ -3,7 +3,7 @@
     <component
       v-for="(block, index) in blocks" :key="index"
       :is="block.componentClass"
-      :styleData="block.style" :settingsData="block.settings_data"
+      :css="block.css" :settingsData="block.settings_data"
     ></component>
     <products ref="products"></products>
   </view>

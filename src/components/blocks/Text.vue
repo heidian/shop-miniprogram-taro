@@ -1,5 +1,5 @@
 <template>
-  <view class="block--text" :style="styleData">
+  <view class="block--text" :style="css">
     <view class="text">{{ settingsData.text|text }}</view>
   </view>
 </template>
@@ -9,7 +9,7 @@ import _ from 'lodash'
 
 export default {
   props: {
-    styleData: {
+    css: {
       type: Object,
       default: () => ({})
     },

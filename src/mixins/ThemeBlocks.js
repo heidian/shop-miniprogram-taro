@@ -5,19 +5,19 @@ function getTestPageConfig() {
     "settings_data": {
       "components": [{
         "name": "blocks/carousel",
-        "style": {
+        "css": {
           "paddingTop": "10%",
           "paddingRight": "5%",
           "paddingBottom": "10%",
           "paddingLeft": "5%",
-          "backgroundColor": "#000000"
+          "backgroundColor": "#000000",
+          "backgroundImage": "https://up.img.heidiancdn.com/o_1egsjlkra4r6fpr1ie6afj1ts70Group2.png"
         },
         "settings_data": {
-          //
         }
       }, {
         "name": "blocks/image",
-        "style": {
+        "css": {
           "paddingTop": "15px",
           "paddingRight": "15px",
           "paddingBottom": "15px",
@@ -30,7 +30,7 @@ function getTestPageConfig() {
         }
       }, {
         "name": "blocks/carousel",
-        "style": {
+        "css": {
           "padding": "30px",
           "backgroundColor": "#FF0000"
         },
@@ -39,7 +39,7 @@ function getTestPageConfig() {
         }
       }, {
         "name": "blocks/text",
-        "style": {
+        "css": {
           "padding": "20px 50px",
           "color": "#0000FF",
           "textAlign": "center",
