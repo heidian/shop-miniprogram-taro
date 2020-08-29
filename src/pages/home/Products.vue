@@ -52,35 +52,35 @@ export default {
 @import '@/styles/_mixins';
 .products--rainfall {
   @include clearfix();
-  padding: 20px 10px;
+  padding: 10px 5px;
   .column {
     float: left;
     width: 50%;
-    padding-left: 10px;
-    padding-right: 10px;
+    padding-left: 5px;
+    padding-right: 5px;
   }
   .product-item {
     width: 100%;
-    margin-bottom: 20px;
-    border-radius: 10px;
-    box-shadow: 0 5px 10px rgba(#000, 0.2);
+    margin-bottom: 10px;
+    border-radius: 5px;
+    box-shadow: 0 3px 5px rgba(#000, 0.2);
     overflow: hidden;
   }
   .product-text {
-    padding: 15px 15px 20px;
+    padding: 7px 7px 10px;
   }
   .product-title,
   .product-description {
     overflow: hidden;
-    font-size: 24px;
-    line-height: 30px;
+    font-size: 12px;
+    line-height: 15px;
     letter-spacing: 1px;
     word-break: break-all;
     text-overflow: ellipsis;
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
-    margin-bottom: 10px;
+    margin-bottom: 5px;
   }
   .product-title {
     font-weight: 500;

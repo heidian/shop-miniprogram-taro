@@ -140,18 +140,18 @@ export default {
 .page__section {
   background-color: #ffffff;
   & + & {
-    margin-top: 20px;
+    margin-top: 10px;
   }
 }
 .cell {
   width: 100%;
-  padding: 30px;
+  padding: 15px;
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  font-size: 24px;
+  font-size: 12px;
   &__label {
-    margin-right: 40px;
+    margin-right: 20px;
   }
   &__value {
     flex: 1;
@@ -160,18 +160,16 @@ export default {
     white-space: nowrap;
   }
   &__ft {
-    margin-left: 40px;
+    margin-left: 20px;
   }
   & + & {
-    border-top: 2px solid #f8f8f8;
+    border-top: 1px solid #f8f8f8;
   }
 }
 
 .product-image-bg {
-  /* 没特殊原因全部用 px, Taro 会转成 rpx, 按照 750px 的设计稿实际像素尺寸来写
-  除非是要结合 js 计算尺寸, 比如使用屏幕宽度等, 这时候需要禁用 px 到 rpx 的转换 (可以参考 search.vue), 这时候 px 按照逻辑尺寸来写 */
-  width: 200px;
-  height: 200px;
+  width: 100px;
+  height: 100px;
   background-size: contain;
   background-position: center;
   background-repeat: no-repeat;
@@ -189,7 +187,7 @@ export default {
 
 .product__header {
   width: 100%;
-  padding: 30px;
+  padding: 15px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -208,11 +206,11 @@ export default {
 .product__price {
   color: red;
   &__currency {
-    font-size: 24px;
+    font-size: 12px;
     line-height: 1;
   }
   &__value {
-    font-size: 40px;
+    font-size: 20px;
     line-height: 1;
     font-weight: bold;
   }
@@ -220,37 +218,37 @@ export default {
 .product__compare-at-price {
   color: #999999;
   text-decoration: line-through;
-  margin-left: 6px;
+  margin-left: 3px;
   &__currency {
-    font-size: 22px;
+    font-size: 11px;
     line-height: 1;
   }
   &__value {
-    font-size: 28px;
+    font-size: 14px;
     line-height: 1;
     font-weight: bold;
   }
 }
 .product__add-to-wishlist {
-  font-size: 22px;
+  font-size: 11px;
 }
 
 /* 标题和描述 */
 .product__title {
-  padding: 10px 30px;
-  font-size: 30px;
+  padding: 5px 15px;
+  font-size: 15px;
   font-weight: bolder;
   text-align: justify;
   line-height: 1.6;
 }
 .product__description {
-  padding: 10px 30px;
-  font-size: 24px;
+  padding: 5px 15px;
+  font-size: 12px;
   color: #999999;
   text-align: justify;
 }
 .cell__ft__icon {
-  width: 20px;
-  height: 24px;
+  width: 10px;
+  height: 12px;
 }
 </style>

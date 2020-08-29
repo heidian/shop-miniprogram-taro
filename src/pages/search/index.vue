@@ -35,8 +35,8 @@ export default {
     const windowHeight = config.windowHeight
     const windowWidth = config.windowWidth
     const listHeight = windowHeight - 40
-    const itemHeight = ((windowWidth - 3 * 10) / 2) + 32 + 10
-    // console.log((windowWidth - 3 * 10) / 2, itemHeight)
+    const ratio = 375 / windowWidth  // 这个项目的设计尺寸是 375, Taro 那里也是配置了 375 为设计尺寸, 而不是默认的 750
+    const itemHeight = ((windowWidth - 3 * (10 / ratio)) / 2) + (32 + 10) / ratio
     /* virtual-list 会根据 listHeight/itemHeight 判断首屏幕渲染几个 item */
     return {
       listHeight: listHeight,
@@ -78,8 +78,9 @@ export default {
 </script>
 
 <style lang="scss">
-/*postcss-pxtransform disable*/
+/* --------- postcss-pxtransform disable*/
 /* 禁止 px 到 rpx 转换, 这里因为用到了 systemInfo 里面的尺寸来计算每一个商品的高度, 所以全部用 px */
+/* 之前 pxTransform 初始化有问题, 现在修复了, 所以这一页现在 js 里可以正常计算 rpx */
 .product-row {
   display: flex;
   align-items: top;
