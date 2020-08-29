@@ -10,13 +10,11 @@ import VirtualList from '@tarojs/components/virtual-list'
 /*
  * 初始化 Taro 的 pxTransform
  */
-const { windowWidth } = Taro.getSystemInfoSync()
-const designWidth = 750
 Taro.initPxTransform({
- designWidth: windowWidth,
- deviceRatio: {
-   [windowWidth]: windowWidth / designWidth
- }
+  designWidth: 375,
+  deviceRatio: {
+    375: 1 / 2
+  }
 })
 
 /*
