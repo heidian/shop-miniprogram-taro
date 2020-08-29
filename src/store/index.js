@@ -5,6 +5,7 @@ import Taro from '@tarojs/taro'
 import listStores from './lists/index'
 import customerStore from './customer'
 import cartStore from './cart'
+import checkoutStore from './checkout'
 import exampleStore from './example'
 
 Vue.use(Vuex)
@@ -57,6 +58,7 @@ export default new Vuex.Store({
     lists: listStores,
     customer: customerStore,
     cart: cartStore,
+    checkout: checkoutStore,
     example: exampleStore
   },
   state,
