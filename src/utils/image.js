@@ -12,7 +12,7 @@ export const optimizeImage = (url, width, height) => {
     return url
   }
   if (!width) {
-    width = 1200
+    width = 600
   }
   // const ratio = Math.ceil(global.devicePixelRatio || 1)
   // 小程序的 devicePixelRatio 不是这么取的, 先固定成 2
