@@ -4,7 +4,7 @@ function resolve(dir) {
 }
 
 const config = {
-  projectName: 'erp_taro_wxapp',
+  projectName: 'mini_heyshop_taro',
   date: '2020-7-27',
   designWidth: 375,
   deviceRatio: {
@@ -34,22 +34,17 @@ const config = {
   },
   copy: {
     patterns: [
-      {
-        from: 'ext.json',
-        to: 'dist/ext.json'
-      }
+      { from: 'src/ext.json', to: 'dist/ext.json' },
+      { from: 'src/sitemap.json', to: 'dist/sitemap.json' }
     ],
-    options: {
-    }
+    options: {}
   },
   framework: 'vue',
   mini: {
     postcss: {
       pxtransform: {
         enable: true,
-        config: {
-
-        }
+        config: {}
       },
       url: {
         enable: true,
@@ -72,8 +67,7 @@ const config = {
     postcss: {
       autoprefixer: {
         enable: true,
-        config: {
-        }
+        config: {}
       },
       cssModules: {
         enable: false, // 默认为 false，如需使用 css modules 功能，则设为 true
