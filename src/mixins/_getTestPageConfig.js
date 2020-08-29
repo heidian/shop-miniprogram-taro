@@ -67,42 +67,39 @@ export default function getTestPageConfig() {
       }, {
         "name": "blocks/grids",
         "css": {
-          "padding": "10px"
+          "padding": "6px 6px 20px"
         },
         "settings_data": {
           "grids": [{
             "image": {
-              "src": "https://up.img.heidiancdn.com/o_1egsmgnhqv33120o15791qd21iov0Bitmap.jpg"
+              "src": "https://up.img.heidiancdn.com/o_1egt6q067cjvif16aq1bmj14420roup12.jpg"
             },
             "text": {
-              "value": "哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈"
+              "value": ""
             }
           }, {
             "image": {
-              "src": "https://up.img.heidiancdn.com/o_1eepfu0ou1avbgh2u4v1g9r150l0G1093.jpeg"
+              "src": "https://up.img.heidiancdn.com/o_1egt6q06816fc1s151l0a3ot54i012Copy.jpg"
             },
             "text": {
-              "value": "哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈"
-            }
-          }, {
-            "image": {
-              "src": "https://up.img.heidiancdn.com/o_1eepfu0ou1avbgh2u4v1g9r150l0G1093.jpeg"
-            },
-            "text": {
-              "value": "哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈"
-            }
-          }, {
-            "image": {
-              "src": "https://up.img.heidiancdn.com/o_1eepfu0ou1avbgh2u4v1g9r150l0G1093.jpeg"
-            },
-            "text": {
-              "value": "哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈"
+              "value": ""
             }
           }],
-          "gridGap": "10",
-          "imageRatio": "0.75",
+          "gridGap": "6",
+          "imageRatio": "1.333333",
           "textAlign": "left",
-          "columns": 3
+          "columns": 2
+        }
+      }, {
+        "name": "blocks/image",
+        "css": {
+          "padding": "30px 20px 10px",
+          "backgroundColor": "#E5E5E5"
+        },
+        "settings_data": {
+          "image": {
+            "src": "https://up.img.heidiancdn.com/o_1egsvog87d2vf6j1t5m4lf1sp00roup42.png"
+          }
         }
       }, {
         "name": "blocks/carousel",

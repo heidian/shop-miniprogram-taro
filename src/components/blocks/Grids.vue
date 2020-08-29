@@ -8,7 +8,7 @@
         'paddingTop': paddingTop,
         'backgroundImage': backgroundImageUrl(item.image, 600)
       }"></view>
-      <text class="grid__text">{{ item.text|text }}</text>
+      <text class="grid__text" v-if="textValue(item.text)">{{ textValue(item.text) }}</text>
     </view>
   </view>
 </template>
@@ -24,7 +24,13 @@ export default {
     },
     settingsData: {
       type: Object,
-      default: () => ({})
+      default: () => ({
+        grids: [],  // { image, text }
+        gridGap: 0,  // px 整数
+        imageRatio: 1,  // 宽高比
+        textAlign: 'left',
+        columns: 2
+      })
     }
   },
   data() {
@@ -49,11 +55,8 @@ export default {
   },
   methods: {
     optimizeImage,
-    backgroundImageUrl
-  },
-  filters: {
-    text(textObj) {
-      // 这个没用到
+    backgroundImageUrl,
+    textValue(textObj) {
       if (_.isString(textObj)) {
         return textObj
       } else if (_.isObject(textObj)) {
@@ -62,6 +65,17 @@ export default {
         return '' + textObj
       }
     }
+  },
+  filters: {
+    // text(textObj) {
+    //   if (_.isString(textObj)) {
+    //     return textObj
+    //   } else if (_.isObject(textObj)) {
+    //     return _.get(textObj, 'value')
+    //   } else {
+    //     return '' + textObj
+    //   }
+    // }
   }
 }
 </script>
@@ -81,7 +95,10 @@ export default {
     background-position: center;
     background-size: cover;
     background-repeat: no-repeat;
-    margin-bottom: 0.5em;
+  }
+  .grid__text {
+    display: block;
+    margin-top: 0.5em;
   }
 }
 </style>
