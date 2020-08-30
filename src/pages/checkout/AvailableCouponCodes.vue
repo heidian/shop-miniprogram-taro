@@ -23,7 +23,7 @@
 import _ from 'lodash'
 import { mapState } from 'vuex'
 import { optimizeImage, backgroundImageUrl } from '@/utils/image'
-import DrawerBottom from './DrawerBottom'
+import DrawerBottom from '@/components/DrawerBottom'
 
 export default {
   props: {
