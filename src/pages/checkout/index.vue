@@ -96,7 +96,7 @@ export default {
       this.couponCodesDrawerVisible = true
     },
     goToAddress() {
-      Taro.navigateTo({ url: '/pages/checkout/address' })
+      Taro.navigateTo({ url: '/pages/addresses/index?intent=checkout' })
     }
   }
 }

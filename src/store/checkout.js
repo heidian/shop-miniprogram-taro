@@ -88,6 +88,16 @@ const actions = {
       throw err
     }
     dispatch('fetch')
+  },
+  async updateAddress({ commit, state, dispatch }, { customerAddressId } = {}) {
+    const paylod = { customer_address_id: customerAddressId }
+    const url = `/checkout/${state.checkoutToken}/update_address/`
+    try {
+      await API.post(url, paylod)
+    } catch(err) {
+      throw err
+    }
+    dispatch('fetch')
   }
 }
 
