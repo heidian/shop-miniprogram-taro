@@ -14,23 +14,21 @@ const state = () => {
   return {
     checkoutToken: '',
     pending: true,
-    data: {}
+    data: {},
+    availableCouponCodes: [],
+    availableVouchers: []
   }
 }
 
 const getters = {}
 
 const mutations = {
-  setData(state, { data, pending, checkoutToken } = {}) {
-    if (typeof checkoutToken !== 'undefined') {
-      state.checkoutToken = checkoutToken
-    }
-    if (typeof data !== 'undefined') {
-      state.data = data
-    }
-    if (typeof pending !== 'undefined') {
-      state.pending = pending
-    }
+  setData(state, { data, pending, checkoutToken, availableCouponCodes, availableVouchers } = {}) {
+    if (typeof checkoutToken !== 'undefined') { state.checkoutToken = checkoutToken }
+    if (typeof data !== 'undefined') { state.data = data }
+    if (typeof pending !== 'undefined') { state.pending = pending }
+    if (typeof availableCouponCodes !== 'undefined') { state.availableCouponCodes = availableCouponCodes }
+    if (typeof availableVouchers !== 'undefined') { state.availableVouchers = availableVouchers }
   }
 }
 
@@ -59,10 +57,22 @@ const actions = {
     try {
       const { data } = await promise
       commit('setData', { data, pending: false })
+      return data
     } catch(err) {
       commit('setData', { pending: false })
       throw err
     }
+  },
+  async fetchAvailableCouponCodes({ commit, state }) {
+    commit('setData', { pending: true })
+    const url = `/checkout/${state.checkoutToken}/available_coupon_codes/`
+    return API.get(url).then((res) => {
+      commit('setData', { availableCouponCodes: res.data, pending: false })
+      return res.data
+    }).catch((err) => {
+      commit('setData', { pending: false })
+      throw err
+    })
   }
 }
 

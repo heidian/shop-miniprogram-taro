@@ -1,6 +1,6 @@
 <template>
   <view class="page--checkout">
-    <!-- <view class="section">drawerVisible: {{ drawerVisible }}</view> -->
+    <!-- <view class="section">drawerVisible: {{ couponCodesDrawerVisible }}</view> -->
     <view class="section shipping-address-summary">
       <view v-if="getField('shipping_address')">
         <view class="area">{{ getField('shipping_address.province') }} {{ getField('shipping_address.city') }} {{ getField('shipping_address.district') }}</view>
@@ -44,9 +44,7 @@
       <view>实付金额: <text class="text--highlight text--bold">{{ finalPrice|currency }}</text></view>
       <button class="button--payfororder button--round button--primary" type="primary">立即支付</button>
     </view>
-    <drawer-bottom :visible.sync="drawerVisible" header="这是头部">
-      <view>哈哈哈</view>
-    </drawer-bottom>
+    <available-coupon-codes :visible.sync="couponCodesDrawerVisible"></available-coupon-codes>
   </view>
 </template>
 
@@ -56,17 +54,17 @@ import { mapState } from 'vuex'
 import { getCurrentInstance } from '@tarojs/taro'
 // import { API } from '@/utils/api'
 import { optimizeImage, backgroundImageUrl } from '@/utils/image'
-import DrawerBottom from './DrawerBottom'
+import AvailableCouponCodes from './AvailableCouponCodes'
 import './index.scss'
 
 export default {
   name: 'Checkout',
   components: {
-    DrawerBottom
+    AvailableCouponCodes
   },
   data() {
     return {
-      drawerVisible: false
+      couponCodesDrawerVisible: false
     }
   },
   computed: {
@@ -92,12 +90,10 @@ export default {
       return _.get(this.checkout.data, path, defaultValue)
     },
     showLinesDrawer() {
-      this.drawerVisible = true
       console.log('showLinesDrawer')
     },
     showCouponCodesDrawer() {
-      this.drawerVisible = true
-      console.log('showCouponCodesDrawer')
+      this.couponCodesDrawerVisible = true
     }
   }
 }
