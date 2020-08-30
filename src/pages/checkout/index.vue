@@ -1,7 +1,7 @@
 <template>
   <view class="page--checkout">
     <!-- <view class="section">drawerVisible: {{ couponCodesDrawerVisible }}</view> -->
-    <view class="section shipping-address-summary">
+    <view class="section shipping-address-summary" @tap="goToAddress">
       <view v-if="getField('shipping_address')">
         <view class="area">{{ getField('shipping_address.province') }} {{ getField('shipping_address.city') }} {{ getField('shipping_address.district') }}</view>
         <view class="address">{{ getField('shipping_address.address1') }}{{ getField('shipping_address.address2') }}</view>
@@ -51,7 +51,7 @@
 <script>
 import _ from 'lodash'
 import { mapState } from 'vuex'
-import { getCurrentInstance } from '@tarojs/taro'
+import Taro, { getCurrentInstance } from '@tarojs/taro'
 // import { API } from '@/utils/api'
 import { optimizeImage, backgroundImageUrl } from '@/utils/image'
 import AvailableCouponCodes from './AvailableCouponCodes'
@@ -94,6 +94,9 @@ export default {
     },
     showCouponCodesDrawer() {
       this.couponCodesDrawerVisible = true
+    },
+    goToAddress() {
+      Taro.navigateTo({ url: '/pages/checkout/address' })
     }
   }
 }

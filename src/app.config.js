@@ -8,6 +8,7 @@ export default {
     'pages/product/index',
     'pages/login/index',
     'pages/checkout/index',
+    'pages/addresses/index',
     'pages/index/index'
   ],
   tabBar: {
