@@ -3,17 +3,22 @@
     <form class="form">
       <view class="form-control">
         <view class="label">收货人</view>
+        <input v-model="address.data.full_name" type="text"/>
       </view>
       <view class="form-control">
         <view class="label">联系电话</view>
+        <input v-model="address.data.mobile" type="digit"/>
       </view>
       <view class="form-control">
         <view class="label">所在区域</view>
       </view>
       <view class="form-control">
         <view class="label">详细地址</view>
+        <input v-model="address.data.address1" type="text"/>
       </view>
+      <!-- <view>设为默认地址</view> -->
     </form>
+    <button @tap="submitForm">保存</button>
   </view>
 </template>
 
@@ -26,8 +31,6 @@ export default {
   data() {
     return {
       address: {
-        id: null,
-        pending: false,
         data: {
           province: '',
           city: '',
@@ -36,7 +39,9 @@ export default {
           address2: '',
           full_name: '',
           mobile: ''
-        }
+        },
+        id: null,
+        pending: false
       }
     }
   },
@@ -57,6 +62,13 @@ export default {
         Taro.showToast({ title: '读取地址信息失败', icon: 'none', duration: 1000 })
       }
       this.address.pending = false
+    },
+    async submitForm() {
+      try {
+        const { data } = await API.put(`/customers/address/${this.address.id}/`, this.address.data)
+      } catch(err) {
+        Taro.showToast({ title: '保存失败', icon: 'none', duration: 1000 })
+      }
     }
   }
 }
@@ -75,12 +87,19 @@ $color-divider: #f0f0f0;
     display: block;
     overflow: hidden;
     background-color: #fff;
+    padding-bottom: 20px;
   }
   .form-control {
     height: 44px;
     position: relative;
     margin-left: 100px;
     border-bottom: 1px solid $color-divider;
+    padding: 10px 0;
+    input {
+      display: block;
+      height: 24px;
+      line-height: 24px;
+    }
   }
   .label {
     position: absolute;
@@ -90,6 +109,9 @@ $color-divider: #f0f0f0;
     width: 80px;
     left: -80px;
     color: $color-text-light;
+  }
+  .form-control:nth-child(4) .label {
+    border-bottom: 1px solid $color-divider;
   }
 }
 </style>

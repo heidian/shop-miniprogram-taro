@@ -67,6 +67,17 @@ const API = {
       method: 'GET',
       header: headers
     })
+  },
+  put: (path, data = {}, options = {}) => {
+    const params = options.params || {}
+    const headers = options.headers || {}
+    const url = combineURLs(getAPIRoot(), buildURL(path, params))
+    return Taro.request({
+      url: url,
+      data: data,
+      method: 'PUT',
+      header: headers
+    })
   }
 }
 
