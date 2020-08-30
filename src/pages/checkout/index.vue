@@ -1,5 +1,6 @@
 <template>
   <view class="page--checkout">
+    <!-- <view class="section">drawerVisible: {{ drawerVisible }}</view> -->
     <view class="section shipping-address-summary">
       <view v-if="getField('shipping_address')">
         <view class="area">{{ getField('shipping_address.province') }} {{ getField('shipping_address.city') }} {{ getField('shipping_address.district') }}</view>
@@ -31,7 +32,7 @@
         <view class="caret-right"></view>
       </view>
     </view>
-    <view class="section"></view>
+    <!-- <view class="section">支付方式, 因为没法选择, 这个不显示</view> -->
     <view class="section">
       <view class="price-line"><text>商品金额</text><text>{{ getField('total_line_items_price')|currency }}</text></view>
       <view class="price-line"><text>运费</text><text>{{ getField('shipping_cost')|currency }}</text></view>
@@ -43,20 +44,31 @@
       <view>实付金额: <text class="text--highlight text--bold">{{ finalPrice|currency }}</text></view>
       <button class="button--payfororder button--round button--primary" type="primary">立即支付</button>
     </view>
+    <drawer-bottom :visible.sync="drawerVisible" header="这是头部">
+      <view>哈哈哈</view>
+    </drawer-bottom>
   </view>
 </template>
 
 <script>
 import _ from 'lodash'
+import { mapState } from 'vuex'
 import { getCurrentInstance } from '@tarojs/taro'
 // import { API } from '@/utils/api'
 import { optimizeImage, backgroundImageUrl } from '@/utils/image'
-import { mapState } from 'vuex'
+import DrawerBottom from './DrawerBottom'
 import './index.scss'
 
 export default {
   name: 'Checkout',
-  components: {},
+  components: {
+    DrawerBottom
+  },
+  data() {
+    return {
+      drawerVisible: false
+    }
+  },
   computed: {
     ...mapState('checkout', {
       checkout: (state) => state
@@ -80,9 +92,11 @@ export default {
       return _.get(this.checkout.data, path, defaultValue)
     },
     showLinesDrawer() {
+      this.drawerVisible = true
       console.log('showLinesDrawer')
     },
     showCouponCodesDrawer() {
+      this.drawerVisible = true
       console.log('showCouponCodesDrawer')
     }
   }

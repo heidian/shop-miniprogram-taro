@@ -1,4 +1,5 @@
 $color-text: #222;
+$color-bg-gray: #f8f8f8;
 $color-text-light: #aaa;
 $color-primary: #ff5a00;
 $color-accent: #ff5a00;
@@ -6,7 +7,7 @@ $color-divider: #f8f8f8;
 
 .page--checkout {
   min-height: 100vh;
-  background-color: #f8f8f8;
+  background-color: $color-bg-gray;
   overflow: hidden;
   /* section */
   > .section {
@@ -81,6 +82,7 @@ $color-divider: #f8f8f8;
     //
   }
 }
+
 /* 一些通用样式, 暂时先不移动到全局 app.scss 里面, 目前很多基础样式还没定
 页面之间的样式在小程序里不会冲突, 只要同一个页面的组件之间区分好 class 就行 */
 button {
