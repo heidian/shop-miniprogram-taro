@@ -1,6 +1,13 @@
 <template>
   <view class="page--checkout">
-    <view class="section"></view>
+    <view class="section shipping-address-summary">
+      <view v-if="getField('shipping_address')">
+        <view class="area">{{ getField('shipping_address.province') }} {{ getField('shipping_address.city') }} {{ getField('shipping_address.district') }}</view>
+        <view class="address">{{ getField('shipping_address.address1') }}{{ getField('shipping_address.address2') }}</view>
+        <view class="contact">{{ getField('shipping_address.full_name') }} {{ getField('shipping_address.mobile') }}</view>
+      </view>
+      <view class="caret-right" style="margin-left: auto;"></view>
+    </view>
     <view class="section">
       <!-- <view class="section__header">商品</view> -->
       <view class="lines-summary" @tap="showLinesDrawer">
@@ -11,7 +18,15 @@
         ></image>
         <view style="margin-left: auto; margin-right: 0.5em; text-align: center;">
           <view>共 {{ (getField('lines') || []).length }} 件</view>
-          <view class="text--light" style="font-size: 0.8em;">(可选配送方式)</view>
+          <view class="text--tip">(可选配送方式)</view>
+        </view>
+        <view class="caret-right"></view>
+      </view>
+      <view class="coupon-codes-summary" @tap="showCouponCodesDrawer">
+        <view>优惠券</view>
+        <view style="margin-left: auto; margin-right: 0.5em;">
+          <text v-if="(getField('coupon_codes') || []).length"></text>
+          <text v-else class="text--tip">选择优惠券</text>
         </view>
         <view class="caret-right"></view>
       </view>
@@ -66,6 +81,9 @@ export default {
     },
     showLinesDrawer() {
       console.log('showLinesDrawer')
+    },
+    showCouponCodesDrawer() {
+      console.log('showCouponCodesDrawer')
     }
   }
 }

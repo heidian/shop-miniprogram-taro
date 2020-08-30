@@ -1,4 +1,4 @@
-// $color-text: #222;
+$color-text: #222;
 $color-text-light: #aaa;
 $color-primary: #ff5a00;
 $color-accent: #ff5a00;
@@ -28,6 +28,21 @@ $color-divider: #f8f8f8;
       margin-top: 10px;
     }
   }
+  /* address */
+  .shipping-address-summary {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    .area, .contact {
+      font-size: 0.9em;
+      color: lignten($color-text, 30%);
+    }
+    .address {
+      font-size: 1.1em;
+      font-weight: bold;
+      margin: 0.2em auto;
+    }
+  }
   /* lines */
   .lines-summary {
     display: flex;
@@ -40,6 +55,15 @@ $color-divider: #f8f8f8;
       overflow: hidden;
       margin-right: 10px;
     }
+    padding-bottom: 12px;
+    border-bottom: 1px solid $color-divider;
+  }
+  .coupon-codes-summary {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 16px 0;
+    margin-bottom: -12px;
   }
   /* footer */
   > .footer {
@@ -91,12 +115,13 @@ button.button--primary {
 .text--bold {
   font-weight: bold;
 }
-.text--light {
+.text--tip {
+  font-size: 0.85em;
   color: $color-text-light;
 }
 .caret-right {
-  width: 8px;
-  height: 8px;
+  width: 7px;
+  height: 7px;
   display: inline-block;
   transform: rotate(45deg);
   border-top: 1px solid $color-text-light;
