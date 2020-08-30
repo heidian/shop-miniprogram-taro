@@ -11,6 +11,9 @@
           <view class="caption">
             <view class="title">{{ couponCode.title }}{{ couponCode.title }}{{ couponCode.title }}</view>
             <view class="verbose_title">{{ couponCode.verbose_title }}</view>
+            <view class="start-end">
+              {{ couponCode.ends_at ? formatDateTime(couponCode.ends_at) : '无截止时间' }}
+            </view>
           </view>
           <view class="check"></view>
         </view>
@@ -23,6 +26,7 @@
 import _ from 'lodash'
 import { mapState } from 'vuex'
 import { optimizeImage, backgroundImageUrl } from '@/utils/image'
+import { formatDateTime } from '@/utils/formatters'
 import DrawerBottom from '@/components/DrawerBottom'
 
 export default {
@@ -47,6 +51,7 @@ export default {
     })
   },
   methods: {
+    formatDateTime,
     onClose() {
       // 这个组件不需要触发 open/close 事件, 纯粹把 visible 状态和页面同步就行
       this.$emit('update:visible', false)
@@ -86,15 +91,21 @@ export default {
       background-color: #aaa;
     }
     .caption {
-      >.title, >.verbose_title {
+      height: 100%;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: flex-start;
+      >.title, >.verbose_title, >.start-end {
         overflow: hidden;
         white-space: nowrap;
-        // max-width: 100%;
+        max-width: 100%;
         text-overflow: ellipsis;
       }
-      .verbose_title {
+      >.verbose_title, >.start-end {
         color: $color-text-light;
-        font-size: 0.95em;
+        font-size: 0.8em;
       }
     }
     .check {
