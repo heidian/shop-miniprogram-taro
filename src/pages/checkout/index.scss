@@ -114,13 +114,13 @@ button.button--primary {
 }
 .text--tip {
   font-size: 0.85em;
-  color: $color-text-light;
+  color: $color-text-lighter;
 }
 .caret-right {
   width: 7px;
   height: 7px;
   display: inline-block;
   transform: rotate(45deg);
-  border-top: 1px solid $color-text-light;
-  border-right: 1px solid $color-text-light;
+  border-top: 1px solid $color-text-lighter;
+  border-right: 1px solid $color-text-lighter;
 }

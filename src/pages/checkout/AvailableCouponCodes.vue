@@ -100,7 +100,7 @@ export default {
   .loading-text {
     padding: 20px;
     text-align: center;
-    color: $color-text-light;
+    color: $color-text-lighter;
   }
   .coupon-codes-list {
     height: 60vh;
@@ -135,7 +135,7 @@ export default {
         text-overflow: ellipsis;
       }
       >.verbose_title, >.start-end {
-        color: $color-text-light;
+        color: $color-text-lighter;
         font-size: 0.8em;
       }
     }

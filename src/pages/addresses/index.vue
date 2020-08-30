@@ -10,7 +10,7 @@
         <view class="address">{{ address.address1 }} {{ address.address2 }}</view>
         <view class="contact">{{ address.full_name }} {{ address.mobile }}</view>
       </view>
-      <text class="edit">编辑</text>
+      <text class="edit" @tap="() => goToEdit(address)">编辑</text>
     </view>
   </view>
 </template>
@@ -42,6 +42,16 @@ export default {
     this.fetchAddresses()
   },
   methods: {
+    async fetchAddresses() {
+      this.addresses.pending = true
+      try {
+        const { data } = await API.get('/customers/address/')
+        this.addresses.data = data
+      } catch(err) {
+        Taro.showToast({ title: '地址列表获取失败', icon: 'none', duration: 1000 })
+      }
+      this.addresses.pending = false
+    },
     handleSelect(address) {
       if (this.intent === 'checkout') {
         Taro.showLoading({})
@@ -58,15 +68,8 @@ export default {
         //
       }
     },
-    async fetchAddresses() {
-      this.addresses.pending = true
-      try {
-        const { data } = await API.get('/customers/address/')
-        this.addresses.data = data
-      } catch(err) {
-        Taro.showToast({ title: '地址列表获取失败', icon: 'none', duration: 1000 })
-      }
-      this.addresses.pending = false
+    goToEdit(address) {
+      Taro.navigateTo({ url: '/pages/addresses/edit?id=' + address.id })
     }
   }
 }
@@ -74,8 +77,7 @@ export default {
 
 <style lang="scss">
 $color-text: #222;
-// $color-text-light: #aaa;
-$color-divider: #f8f8f8;
+$color-divider: #f0f0f0;
 .page--addresses {
   .address-item {
     display: flex;

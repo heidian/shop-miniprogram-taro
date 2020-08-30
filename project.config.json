@@ -100,6 +100,13 @@
 					"pathName": "pages/addresses/index",
 					"query": "",
 					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "pages/addresses/edit",
+					"pathName": "pages/addresses/edit",
+					"query": "id=365116",
+					"scene": null
 				}
 			]
 		}
