@@ -3,18 +3,23 @@
     <form class="form">
       <view class="form-control">
         <view class="label">收货人</view>
-        <input v-model="address.data.full_name" type="text"/>
+        <input class="input" v-model="address.data.full_name" type="text"/>
       </view>
       <view class="form-control">
         <view class="label">联系电话</view>
-        <input v-model="address.data.mobile" type="digit"/>
+        <input class="input" v-model="address.data.mobile" type="digit"/>
       </view>
       <view class="form-control">
         <view class="label">所在区域</view>
+        <picker class="picker" mode="region" @change="onRegionChange" :value="regionValue">
+          <view class="picker">
+            {{address.data.province}} {{address.data.city}} {{address.data.district}}
+          </view>
+        </picker>
       </view>
       <view class="form-control">
         <view class="label">详细地址</view>
-        <input v-model="address.data.address1" type="text"/>
+        <input class="input" v-model="address.data.address1" type="text"/>
       </view>
       <!-- <view>设为默认地址</view> -->
     </form>
@@ -32,6 +37,7 @@ export default {
     return {
       address: {
         data: {
+          place_code: null,
           province: '',
           city: '',
           district: '',
@@ -43,6 +49,12 @@ export default {
         id: null,
         pending: false
       }
+    }
+  },
+  computed: {
+    regionValue() {
+      const { province, city, district } = this.address.data
+      return [province, city, district]
     }
   },
   mounted() {
@@ -69,6 +81,16 @@ export default {
       } catch(err) {
         Taro.showToast({ title: '保存失败', icon: 'none', duration: 1000 })
       }
+    },
+    onRegionChange(e) {
+      const { code, value } = e.detail
+      this.address.data = {
+        ...this.address.data,
+        province: value[0] || '',
+        city: value[1] || '',
+        district: value[2] || '',
+        place_code: code[2] || null
+      }
     }
   }
 }
@@ -90,15 +112,22 @@ $color-divider: #f0f0f0;
     padding-bottom: 20px;
   }
   .form-control {
-    height: 44px;
     position: relative;
     margin-left: 100px;
+    height: 44px;
     border-bottom: 1px solid $color-divider;
-    padding: 10px 0;
-    input {
+    padding: 2px 0 1px;  // 因为有一个 border-bottom, 所以 padding-bottom 是 1px, 这样内容高度是 40px
+    .input {
       display: block;
+      margin: 8px 0;
       height: 24px;
       line-height: 24px;
+    }
+    .picker {
+      display: block;
+      height: 40px;
+      line-height: 40px;
+      margin: 0;
     }
   }
   .label {
