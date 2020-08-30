@@ -1,6 +1,9 @@
+// $color-text: #222;
+$color-text-light: #aaa;
 $color-primary: #ff5a00;
 $color-accent: #ff5a00;
 $color-divider: #f8f8f8;
+
 .page--checkout {
   min-height: 100vh;
   background-color: #f8f8f8;
@@ -23,6 +26,19 @@ $color-divider: #f8f8f8;
     align-items: center;
     & + .price-line {
       margin-top: 10px;
+    }
+  }
+  /* lines */
+  .lines-summary {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    .line-image {
+      width: 60px;
+      height: 60px;
+      border-radius: 6px;
+      overflow: hidden;
+      margin-right: 10px;
     }
   }
   /* footer */
@@ -69,9 +85,20 @@ button.button--primary {
     background-color: lighten($color-primary, 5%);
   }
 }
-.highlight {
+.text--highlight {
   color: $color-accent;
 }
-.bold {
+.text--bold {
   font-weight: bold;
+}
+.text--light {
+  color: $color-text-light;
+}
+.caret-right {
+  width: 8px;
+  height: 8px;
+  display: inline-block;
+  transform: rotate(45deg);
+  border-top: 1px solid $color-text-light;
+  border-right: 1px solid $color-text-light;
 }

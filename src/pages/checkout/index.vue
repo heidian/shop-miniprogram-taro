@@ -2,7 +2,19 @@
   <view class="page--checkout">
     <view class="section"></view>
     <view class="section">
-      <text class="section__header">商品</text>
+      <!-- <view class="section__header">商品</view> -->
+      <view class="lines-summary" @tap="showLinesDrawer">
+        <image
+          v-for="(line, index) in (getField('lines') || [])" :key="line.id"
+          class="line-image" mode="aspectFill"
+          :src="optimizeImage(line.image, 200)"
+        ></image>
+        <view style="margin-left: auto; margin-right: 0.5em; text-align: center;">
+          <view>共 {{ (getField('lines') || []).length }} 件</view>
+          <view class="text--light" style="font-size: 0.8em;">(可选配送方式)</view>
+        </view>
+        <view class="caret-right"></view>
+      </view>
     </view>
     <view class="section"></view>
     <view class="section">
@@ -13,7 +25,7 @@
       </view>
     </view>
     <view class="footer">
-      <view>实付金额: <text class="highlight bold">{{ finalPrice|currency }}</text></view>
+      <view>实付金额: <text class="text--highlight text--bold">{{ finalPrice|currency }}</text></view>
       <button class="button--payfororder button--round button--primary" type="primary">立即支付</button>
     </view>
   </view>
@@ -47,8 +59,13 @@ export default {
     this.$store.dispatch('checkout/fetch')
   },
   methods: {
+    optimizeImage,
+    backgroundImageUrl,
     getField(path, defaultValue) {
       return _.get(this.checkout.data, path, defaultValue)
+    },
+    showLinesDrawer() {
+      console.log('showLinesDrawer')
     }
   }
 }
