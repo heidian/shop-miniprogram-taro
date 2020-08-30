@@ -10,7 +10,7 @@
           <image class="image"></image>
           <view class="caption">
             <view class="title">{{ couponCode.title }}{{ couponCode.title }}{{ couponCode.title }}</view>
-            <view class="verbose_title text--tip">{{ couponCode.verbose_title }}</view>
+            <view class="verbose_title">{{ couponCode.verbose_title }}</view>
           </view>
           <view class="check"></view>
         </view>
@@ -65,6 +65,7 @@ export default {
 </script>
 
 <style lang="scss">
+@import "_variables";
 .checkout__coupon_codes {
   .coupon-codes-list {
     height: 60vh;
@@ -90,6 +91,10 @@ export default {
         white-space: nowrap;
         // max-width: 100%;
         text-overflow: ellipsis;
+      }
+      .verbose_title {
+        color: $color-text-light;
+        font-size: 0.95em;
       }
     }
     .check {
