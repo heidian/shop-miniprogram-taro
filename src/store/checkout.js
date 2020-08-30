@@ -66,13 +66,28 @@ const actions = {
   async fetchAvailableCouponCodes({ commit, state }) {
     commit('setData', { pending: true })
     const url = `/checkout/${state.checkoutToken}/available_coupon_codes/`
-    return API.get(url).then((res) => {
-      commit('setData', { availableCouponCodes: res.data, pending: false })
-      return res.data
-    }).catch((err) => {
+    try {
+      const { data } = await API.get(url)
+      commit('setData', { availableCouponCodes: data, pending: false })
+      return data
+    } catch(err) {
       commit('setData', { pending: false })
       throw err
-    })
+    }
+  },
+  async addCoupon({ commit, state, dispatch }, { code, codePrefix } = {}) {
+    const payload = codePrefix ? { codePrefix } : { code }
+    const url = `/checkout/${state.checkoutToken}/add_coupon/`
+    // commit('setData', { pending: true })
+    try {
+      await API.post(url, payload)
+      // res 是 204 状态, 没数据需要 return
+      // commit('setData', { pending: false })
+    } catch(err) {
+      // commit('setData', { pending: false })
+      throw err
+    }
+    dispatch('fetch')
   }
 }
 

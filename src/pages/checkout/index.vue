@@ -25,9 +25,9 @@
       </view>
       <view class="coupon-codes-summary" @tap="showCouponCodesDrawer">
         <view>优惠券</view>
-        <view style="margin-left: auto; margin-right: 0.5em;">
-          <text v-if="(getField('coupon_codes') || []).length"></text>
-          <text v-else class="text--tip">选择优惠券</text>
+        <view style="margin-left: auto; margin-right: 0.5em;" class="text--tip">
+          <template v-if="getField('coupon_codes[0]')">已选择优惠券: {{ getField('coupon_codes[0].title') }}</template>
+          <template v-else>选择优惠券</template>
         </view>
         <view class="caret-right"></view>
       </view>

@@ -4,18 +4,24 @@
     header="优惠券" class="checkout__coupon_codes"
   >
     <scroll-view :scrollY="true" :scrollWithAnimation="true" class="coupon-codes-list">
-      <view v-if="pending">正在加载</view>
+      <view v-if="pending" class="loading-text">正在加载</view>
       <template v-else>
-        <view v-for="(couponCode, index) in availableCouponCodes" :key="index" class="coupon-codes-item">
+        <view
+          v-for="(couponCode, index) in availableCouponCodes" :key="`${couponCode.id}-${index}`"
+          class="coupon-codes-item" @tap="() => handleSelect(couponCode.code)"
+        >
           <image class="image"></image>
           <view class="caption">
-            <view class="title">{{ couponCode.title }}{{ couponCode.title }}{{ couponCode.title }}</view>
+            <view class="title">{{ couponCode.title }}</view>
             <view class="verbose_title">{{ couponCode.verbose_title }}</view>
             <view class="start-end">
-              {{ couponCode.ends_at ? formatDateTime(couponCode.ends_at) : '无截止时间' }}
+              {{ couponCode.ends_at ? `截止 ${formatDateTime(couponCode.ends_at)}` : '无截止时间' }}
             </view>
           </view>
-          <view class="check"></view>
+          <icon
+            v-if="usedCode === couponCode.code"
+            type="success" size="20" color="#ff5a00" class="check"
+          ></icon>
         </view>
       </template>
     </scroll-view>
@@ -24,6 +30,7 @@
 
 <script>
 import _ from 'lodash'
+import Taro from '@tarojs/taro'
 import { mapState } from 'vuex'
 import { optimizeImage, backgroundImageUrl } from '@/utils/image'
 import { formatDateTime } from '@/utils/formatters'
@@ -46,8 +53,14 @@ export default {
   },
   computed: {
     ...mapState('checkout', {
-      availableCouponCodes: (state) => [...state.availableCouponCodes, ...state.availableCouponCodes, ...state.availableCouponCodes, ...state.availableCouponCodes],
-      pending: (state) => state.pending
+      availableCouponCodes: (state) => [
+        // ...state.availableCouponCodes,
+        // ...state.availableCouponCodes,
+        // ...state.availableCouponCodes,
+        ...state.availableCouponCodes
+      ],
+      pending: (state) => state.pending,
+      usedCode: (state) => _.get(state.data, 'coupon_codes[0].code')
     })
   },
   methods: {
@@ -58,7 +71,19 @@ export default {
     },
     onOpen() {
       this.$emit('update:visible', true)
+      // 可以考虑优化下, 不要每次 open 的时候都取, 但这个问题也不是太大
       this.$store.dispatch('checkout/fetchAvailableCouponCodes')
+    },
+    handleSelect(code) {
+      Taro.showLoading({})
+      this.$store.dispatch('checkout/addCoupon', { code }).then(() => {
+        this.isVisible = false
+        Taro.hideLoading()
+      }).catch((err) => {
+        // console.log('使用优惠券失败', err)
+        Taro.hideLoading()
+        Taro.showToast({ title: '使用优惠券失败', icon: 'none', duration: 2000 })
+      })
     }
   },
   watch: {
@@ -72,12 +97,18 @@ export default {
 <style lang="scss">
 @import "_variables";
 .checkout__coupon_codes {
+  .loading-text {
+    padding: 20px;
+    text-align: center;
+    color: $color-text-light;
+  }
   .coupon-codes-list {
     height: 60vh;
   }
   .coupon-codes-item {
     height: 80px;
     border-radius: 8px;
+    overflow: hidden;
     background-color: #fff;
     margin: 10px;
     padding: 10px 50px 10px 90px;
@@ -111,10 +142,7 @@ export default {
     .check {
       position: absolute;
       right: 10px;
-      top: 25px;
-      width: 30px;
-      height: 30px;
-      background-color: red;
+      top: 30px;
     }
   }
 }
