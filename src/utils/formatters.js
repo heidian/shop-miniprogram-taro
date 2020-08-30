@@ -1,14 +1,15 @@
 import moment from 'moment'
 
-export const formatCurrency = (value) => {
-  value = '' + value
-  if (!+value && +value !== 0) {
+export const formatCurrency = (value, { removeTrailingZero=false } = {}) => {
+  const decimalValue = +value
+  if (!decimalValue && decimalValue !== 0) {
     return '-'
-  } else if (+value < 0) {
-    return '-¥' + value.substr(1)
-  } else {
-    return '¥' + value
   }
+  let formatted = Math.abs(decimalValue).toFixed(2)
+  if (removeTrailingZero) {
+    formatted = +formatted
+  }
+  return `${decimalValue < 0 ? '-' : ''}¥${formatted}`
 }
 
 export const formatDate = (value) => {

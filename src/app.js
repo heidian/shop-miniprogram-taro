@@ -29,7 +29,7 @@ Vue.use(VirtualList)
  */
 Vue.filter('date', (value) => formatDate(value))
 Vue.filter('datetime', (value) => formatDateTime(value))
-Vue.filter('currency', (value) => formatCurrency(value))
+Vue.filter('currency', (value, options) => formatCurrency(value, options))
 Vue.filter('imageUrl', (value, width, height) => optimizeImage(value, width, height))
 
 
