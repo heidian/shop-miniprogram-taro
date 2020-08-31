@@ -46,7 +46,7 @@
     </view>
     <view class="page__section">
       <view class="page__section__title">图文详情</view>
-      <view v-html="product.body_html_mobile || product.body_html"></view>
+      <view v-if="body_html" class="taro_html" v-html="body_html"></view>
     </view>
     <view class="page__footer">
       <view class="page__footer__left">
@@ -80,6 +80,7 @@
 
 <script>
 import Taro, { getCurrentInstance } from '@tarojs/taro'
+import '@tarojs/taro/html.css'
 import { mapState } from 'vuex'
 import { API } from '@/utils/api'
 import { optimizeImage, backgroundImageUrl } from '@/utils/image'
@@ -121,7 +122,10 @@ export default {
   computed: {
     ...mapState('cart', {
       cart: (state) => state
-    })
+    }),
+    body_html () {
+      return _.get(this.product, 'body_html_mobile') || _.get(this.product, 'body_html')
+    }
   },
   methods: {
     optimizeImage,
@@ -145,6 +149,7 @@ export default {
         }).catch(err => {
           console.log(err)
         })
+        console.log(res.data)
         /* res.data.results 一定是数组不会有问题, 只需要看长度就行 */
         product = res.data.results[0]
       }
@@ -182,6 +187,101 @@ $color-border: #ecf0f1;
 .page {
   min-height: 100vh;
   background-color: #f6f6f6;
+  padding-bottom: 50px;
+  &__footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 50px;
+    width: 100%;
+    padding: 7px 10px;
+    background-color: #ffffff;
+    box-shadow: 0 -1px 0 0 $color-border;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+  &__footer__left,
+  &__footer__right {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+  &__footer__left {
+  }
+  &__footer__right {
+    margin-left: 15px;
+    flex: 1;
+  }
+  &__footer__icon-btn {
+    padding: 0;
+    margin: 0;
+    background-color: transparent;
+    outline: none;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-width: 40px;
+    position: relative;
+  }
+  &__footer__icon-btn::after {
+    display: none;
+  }
+  &__footer__icon-btn + &__footer__icon-btn {
+    margin-left: 10px;
+  }
+  &__footer__icon-btn__icon {
+    width: 16px;
+    height: 16px;
+  }
+  &__footer__icon-btn__text {
+    font-size: 10px;
+    margin-top: 4px;
+    line-height: 10px;
+    white-space: nowrap;
+  }
+  &__footer__icon-btn--cart__count {
+    font-size: 10px;
+    background-color: $color-orange;
+    color: #ffffff;
+    line-height: 10px;
+    padding: 2px;
+    min-width: 14px;
+    text-align: center;
+    border-radius: 7px;
+    position: absolute;
+    top: -5px;
+    left: 55%;
+  }
+  &__footer__btn {
+    width: 48%;
+    height: 36px;
+    line-height: 36px;
+    padding: 0;
+    margin: 0;
+    border: none;
+    outline: none;
+    color: #ffffff;
+    border-radius: 18px;
+  }
+  &__footer__btn.btn--orange {
+    background-color: $btn-orange;
+  }
+  &__footer__btn.btn--blue {
+    background-color: $btn-blue;
+  }
+  &__footer__btn:hover,
+  &__footer__btn:active {
+    opacity: 0.9;
+  }
+  &__footer__btn__text {
+    font-size: 13px;
+  }
 }
 .page__section {
   background-color: #ffffff;
@@ -190,8 +290,8 @@ $color-border: #ecf0f1;
   }
   &__title {
     text-align: center;
-    line-height: 24px;
-    font-size: 16px;
+    line-height: 40px;
+    font-size: 15px;
   }
 }
 .cell {
