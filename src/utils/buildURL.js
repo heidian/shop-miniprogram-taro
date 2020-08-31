@@ -19,27 +19,21 @@ function encode(val) {
  * @returns {string} The formatted url
  */
 export default function buildURL(url, params) {
-
   if (!params) {
     return url
   }
-
   var serializedParams
   var parts = []
-
   _.forEach(params, function serialize(val, key) {
     if (val === null || typeof val === 'undefined') {
       return
     }
-
     if (_.isArray(val)) {
       key = key + '[]'
     }
-
     if (!_.isArray(val)) {
       val = [val]
     }
-
     _.forEach(val, function parseValue(v) {
       if (_.isDate(v)) {
         v = v.toISOString()
@@ -49,13 +43,9 @@ export default function buildURL(url, params) {
       parts.push(encode(key) + '=' + encode(v))
     })
   })
-
   serializedParams = parts.join('&')
-
   if (serializedParams) {
     url += (url.indexOf('?') === -1 ? '?' : '&') + serializedParams
   }
-
   return url
-
 }
