@@ -1,6 +1,7 @@
 import _ from 'lodash'
 import Taro from '@tarojs/taro'
 import { backgroundImageUrl } from '@/utils/image'
+import FeaturedProducts from '@/components/blocks/FeaturedProducts'
 import Carousel from '@/components/blocks/Carousel'
 import Image from '@/components/blocks/Image'
 import Grids from '@/components/blocks/Grids'
@@ -9,6 +10,7 @@ import Text from '@/components/blocks/Text'
 import getTestPageConfig from './_getTestPageConfig'
 
 const BLOCKS_MAP = {
+  'blocks/featured_products': FeaturedProducts,
   'blocks/carousel': Carousel,
   'blocks/image': Image,
   'blocks/grids': Grids,

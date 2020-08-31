@@ -25,7 +25,10 @@ export default {
     },
     settingsData: {
       type: Object,
-      default: () => ({})
+      default: () => ({
+        grids: [],  // { image }
+        imageRatio: 1  // 宽高比
+      })
     }
   },
   data() {
@@ -33,7 +36,7 @@ export default {
   },
   computed: {
     paddingTop() {
-      const percent = (100 / (+this.settingsData.ratio || 1)).toFixed(6)
+      const percent = (100 / (+this.settingsData.imageRatio || 1)).toFixed(6)
       return `${percent}%`
     }
   },

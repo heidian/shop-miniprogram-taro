@@ -25,7 +25,11 @@ export default {
     },
     settingsData: {
       type: Object,
-      default: () => ({})
+      default: () => ({
+        textAlign: 'left',
+        animation: null,
+        text: {'value': ''}
+      })
     }
   },
   data() {

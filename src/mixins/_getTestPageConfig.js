@@ -23,11 +23,11 @@ export default function getTestPageConfig() {
           }
         },
         "settings_data": {
-          "ratio": "0.75",
+          "imageRatio": "0.75",
           "images": [{
             "src": "https://up.img.heidiancdn.com/o_1egsmgnhqv33120o15791qd21iov0Bitmap.jpg"
           }, {
-            "src": "https://up.img.heidiancdn.com/o_1eepfu0ou1avbgh2u4v1g9r150l0G1093.jpeg"
+            "src": "https://up.img.heidiancdn.com/o_1egsmgnhqv33120o15791qd21iov0Bitmap.jpg"
           }]
         }
       }, {
@@ -118,16 +118,51 @@ export default function getTestPageConfig() {
           }
         }
       }, {
-        "name": "blocks/carousel",
+        "name": "blocks/featured_products",
         "css": {
-          "paddingTop": "30px",
+          "paddingTop": "0",
           "paddingBottom": "30px",
-          "paddingLeft": "30px",
-          "paddingRight": "30px",
-          "backgroundColor": "#FF0000"
+          "paddingLeft": "15px",
+          "paddingRight": "15px",
+          "backgroundColor": "#E5E5E5"
         },
         "settings_data": {
-          //
+          "gridGap": "8",
+          "imageRatio": "1",
+          "columns": 3,
+          "productsQuery": {
+            "page_size": 6
+          }
+        }
+      }, {
+        "name": "blocks/image",
+        "css": {},
+        "settings_data": {
+          "image": {
+            "src": "https://up.img.heidiancdn.com/o_1eh1m60avec4ot71gnm1m2q1gcj0roup35.jpg"
+          }
+        }
+      }, {
+        "name": "blocks/carousel",
+        "css": {
+          "paddingTop": "46%",
+          "paddingBottom": "36%",
+          "paddingRight": "15%",
+          "paddingLeft": "15%",
+          "backgroundColor": "#000000",
+          "backgroundSize": "cover",
+          "backgroundPosition": "center",
+          "backgroundImage": {
+            "src": "https://up.img.heidiancdn.com/o_1eh1l2h65v7g19io9du4bp1nau0roup42.jpg"
+          }
+        },
+        "settings_data": {
+          "imageRatio": "0.6279",
+          "images": [{
+            "src": "https://up.img.heidiancdn.com/o_1eh1lffgq11nj1hqlcpqp64s5p0alHome.jpg"
+          }, {
+            "src": "https://up.img.heidiancdn.com/o_1eh1lffgq11nj1hqlcpqp64s5p0alHome.jpg"
+          }]
         }
       }, {
         "name": "blocks/text",
