@@ -19,13 +19,13 @@
         ></image>
         <view style="margin-left: auto; margin-right: 0.5em; text-align: center;">
           <view>共 {{ (getField('lines') || []).length }} 件</view>
-          <view class="text--tip">(可选配送方式)</view>
+          <view class="text-tip">(可选配送方式)</view>
         </view>
         <view class="caret-right"></view>
       </view>
       <view class="coupon-codes-summary" @tap="showCouponCodesDrawer">
         <view>优惠券</view>
-        <view style="margin-left: auto; margin-right: 0.5em;" class="text--tip">
+        <view style="margin-left: auto; margin-right: 0.5em;" class="text-tip">
           <template v-if="getField('coupon_codes[0]')">已选择优惠券: {{ getField('coupon_codes[0].title') }}</template>
           <template v-else>选择优惠券</template>
         </view>
@@ -41,8 +41,8 @@
       </view>
     </view>
     <view class="footer">
-      <view>实付金额: <text class="text--highlight text--bold">{{ finalPrice|currency }}</text></view>
-      <button class="button--payfororder button--round button--primary" type="primary">立即支付</button>
+      <view>实付金额: <text class="text-price--accent text-bold">{{ finalPrice|currency }}</text></view>
+      <button class="button--payfororder button--round button--orange" type="primary">立即支付</button>
     </view>
     <available-coupon-codes :visible.sync="couponCodesDrawerVisible"></available-coupon-codes>
   </view>

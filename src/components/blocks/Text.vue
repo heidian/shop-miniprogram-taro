@@ -6,7 +6,7 @@
       <!-- 走马灯叫做 marquee -->
       <text
         v-if="animation === 'slideLeft'"
-        :id="textId" class="text--animation" :style="animationStyle"
+        :id="textId" class="text-animation" :style="animationStyle"
       >{{ textValue }}</text>
       <template v-else>{{ textValue }}</template>
     </view>
@@ -94,7 +94,7 @@ export default {
     width: 100%;
     overflow: hidden;
   }
-  .text--animation {
+  .text-animation {
     position: relative;
     white-space: nowrap;
   }

@@ -98,21 +98,21 @@ button.button--round {
   padding-left: 16px;
   padding-right: 16px;
 }
-button.button--primary {
+button.button--orange {
   color: #fff;
-  background-color: $color-primary;
+  background-color: $color-orange;
   &.button-hover {
     color: rgba(#fff, 0.9);
-    background-color: lighten($color-primary, 5%);
+    background-color: lighten($color-orange, 5%);
   }
 }
-.text--highlight {
-  color: $color-accent;
+.text-price--accent {
+  color: $color-orange;
 }
-.text--bold {
+.text-bold {
   font-weight: bold;
 }
-.text--tip {
+.text-tip {
   font-size: 0.85em;
   color: $color-text-lighter;
 }
