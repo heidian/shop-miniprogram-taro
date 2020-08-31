@@ -1,5 +1,5 @@
 <template>
-  <view class="drawer" :class="{'opened': drawerOpened}">
+  <view class="drawer" :class="{'opened': !!drawerOpenedType}">
     <view class="drawer__mask"
       @tap="onToggleDrawer">
       </view>
@@ -45,21 +45,25 @@
           </view>
         </view>
       </view>
-      <view class="drawer__footer"></view>
+      <view class="drawer__footer">
+        <button v-if="drawerOpenedType == 'add_to_cart'" class="drawer__btn btn--blue" @tap="onClickAddToCart"><text class="drawer__btn__text">加入购物车</text></button>
+        <button v-if="drawerOpenedType == 'buy_now'" class="drawer__btn btn--orange" @tap="onClickBuyNow"><text class="drawer__btn__text">立即购买</text></button>
+      </view>
     </view>
   </view>
 </template>
 <script>
 import Taro from '@tarojs/taro'
+import { API } from '@/utils/api'
 import './index.scss'
 
 export default {
   name: 'SelectVariant',
   props: {
-    drawerOpened: {
-      type: Boolean,
+    drawerOpenedType: {
+      type: String,
       default: () => {
-        return false
+        return ''
       }
     },
     product: {
@@ -159,6 +163,63 @@ export default {
     }
   },
   methods: {
+    onClickAddToCart () {
+      if (!this.quantity || !this.currentVariant || !this.currentVariant.id) {
+        Taro.showModal({
+          title: '下单失败',
+          content: '商品规格或者库存有误，请稍后重试',
+          showCancel: false
+        })
+        return
+      }
+      const lines = [{
+        quantity: this.quantity,
+        variant_id: this.currentVariant.id
+      }]
+      this.$store.dispatch('cart/add', {
+        variantId: this.currentVariant.id,
+        quantity: this.quantity || 1,
+        attributes: {}
+      }).then(() => {
+        Taro.vibrateShort()
+        this.onToggleDrawer()
+      }).catch(err => {
+        API.handlerErr(err)
+      })
+    },
+    onClickBuyNow () {
+      if (!this.quantity || !this.currentVariant || !this.currentVariant.id) {
+        Taro.showModal({
+          title: '下单失败',
+          content: '商品规格或者库存有误，请稍后重试',
+          showCancel: false
+        })
+        return
+      }
+      const lines = [{
+        quantity: this.quantity,
+        variant_id: this.currentVariant.id
+      }]
+      Taro.showLoading({ title: '正在下单中' })
+      setTimeout(() => {
+        Taro.hideLoading()
+      }, 10000)
+      API.post('/checkout/', { source_name: 'miniprogram', lines: lines }, {
+        headers: {
+          accept: 'application/json;version=2.0'
+        }
+      }).then(res => {
+        const token = res.data.token
+        setTimeout(() => {
+          Taro.navigateTo({
+            url: `/pages/checkout/index?token=${token}`
+          })
+          Taro.hideLoading()
+        }, 200);
+      }).catch(err => {
+        API.handleErr(err)
+      })
+    },
     onInputQuantity (e) {
       const value = e.detail.value
       if (value > this.maxInventoryQuantity) {
@@ -204,7 +265,7 @@ export default {
       }
     },
     onToggleDrawer () {
-      this.$emit('onToggleDrawer', false)
+      this.$emit('onToggleDrawer', '')
     },
   },
 }
