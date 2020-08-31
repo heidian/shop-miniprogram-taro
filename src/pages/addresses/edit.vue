@@ -97,8 +97,8 @@ export default {
 </script>
 
 <style lang="scss">
-$color-text: #222;
-$color-bg-gray: #f8f8f8;
+$color-text: #262626;
+$color-bg-gray: #f6f6f6;
 $color-text-light: #555;
 // $color-text-lighter: #aaa;
 $color-divider: #f0f0f0;

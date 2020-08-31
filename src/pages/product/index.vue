@@ -135,7 +135,7 @@ export default {
 /* Taro vue 版本不支持 scoped, 只能用 cssModule, 这里不要写 scoped, 平时注意 class 冲突 */
 .page {
   min-height: 100vh;
-  background-color: #f8f8f8;
+  background-color: #f6f6f6;
 }
 .page__section {
   background-color: #ffffff;
@@ -163,7 +163,7 @@ export default {
     margin-left: 20px;
   }
   & + & {
-    border-top: 1px solid #f8f8f8;
+    border-top: 1px solid #f6f6f6;
   }
 }
 

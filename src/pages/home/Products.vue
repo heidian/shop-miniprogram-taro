@@ -50,9 +50,11 @@ export default {
 
 <style lang="scss">
 @import '@/styles/_mixins';
+$color-bg-gray: #f6f6f6;
 .products--rainfall {
   @include clearfix();
   padding: 10px 5px;
+  background-color: $color-bg-gray;
   .column {
     float: left;
     width: 50%;
@@ -63,7 +65,8 @@ export default {
     width: 100%;
     margin-bottom: 10px;
     border-radius: 5px;
-    box-shadow: 0 3px 5px rgba(#000, 0.2);
+    // box-shadow: 0 3px 5px rgba(#000, 0.2);
+    background-color: #fff;
     overflow: hidden;
   }
   .product-text {

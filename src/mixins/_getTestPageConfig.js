@@ -171,7 +171,7 @@ export default function getTestPageConfig() {
           "paddingBottom": "20px",
           "paddingLeft": "50px",
           "paddingRight": "50px",
-          "backgroundColor": "#FFFFFF"
+          "backgroundColor": "#f6f6f6"
         },
         "settings_data": {
           "text": {
