@@ -32,7 +32,9 @@ Vue.filter('datetime', (value) => formatDateTime(value))
 Vue.filter('currency', (value, options) => formatCurrency(value, options))
 Vue.filter('imageUrl', (value, width, height) => optimizeImage(value, width, height))
 
-
+/*
+ * Vue 渲染入口
+ */
 const App = new Vue({
   store,
   onLaunch() {

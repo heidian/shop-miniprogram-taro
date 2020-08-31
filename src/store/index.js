@@ -13,7 +13,11 @@ Vue.use(Vuex)
 
 const state = () => {
   return {
-    config: {}
+    config: {},
+    globalColors: {
+      '--color-bg': '#ff0000',
+      '--color-text': '#000000'
+    }
   }
 }
 
@@ -26,6 +30,9 @@ const mutations = {
       shopname,
       shopid
     }
+  },
+  setGlobalColors(state, payload) {
+    state.globalColors = payload
   }
 }
 
