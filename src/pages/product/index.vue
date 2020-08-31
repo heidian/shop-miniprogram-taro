@@ -46,7 +46,11 @@
     </view>
     <view class="page__section">
       <view class="page__section__title">图文详情</view>
-      <view v-if="body_html" class="taro_html" v-html="body_html"></view>
+      <view v-if="body_html" class="taro_html product__html" v-html="body_html"></view>
+    </view>
+    <view class="page__section" v-if="productId">
+      <view class="page__section__title">猜你喜欢</view>
+      <related-products :productId="productId"/>
     </view>
     <view class="page__footer">
       <view class="page__footer__left">
@@ -84,7 +88,7 @@ import '@tarojs/taro/html.css'
 import { mapState } from 'vuex'
 import { API } from '@/utils/api'
 import { optimizeImage, backgroundImageUrl } from '@/utils/image'
-import ProductVariants from './ProductVariants'
+import RelatedProducts from './RelatedProducts'
 import SelectVariants from './SelectVariants'
 
 const ICON_CUSTOMER_SERVIDE = "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iaXNvLTg4NTktMSI/Pg0KPCEtLSBHZW5lcmF0b3I6IEFkb2JlIElsbHVzdHJhdG9yIDE5LjAuMCwgU1ZHIEV4cG9ydCBQbHVnLUluIC4gU1ZHIFZlcnNpb246IDYuMDAgQnVpbGQgMCkgIC0tPg0KPHN2ZyB2ZXJzaW9uPSIxLjEiIGlkPSJDYXBhXzEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHg9IjBweCIgeT0iMHB4Ig0KCSB2aWV3Qm94PSIwIDAgNDIyLjEzOSA0MjIuMTM5IiBzdHlsZT0iZW5hYmxlLWJhY2tncm91bmQ6bmV3IDAgMCA0MjIuMTM5IDQyMi4xMzk7IiB4bWw6c3BhY2U9InByZXNlcnZlIj4NCjxnPg0KCTxnPg0KCQk8cGF0aCBkPSJNMzYzLjYzMSwxNzQuNDk4aC0xLjA0NXYtMjUuNkMzNjIuNTg2LDY2LjY2NCwyOTUuOTIzLDAsMjEzLjY4OCwwUzY0Ljc5LDY2LjY2NCw2NC43OSwxNDguODk4djI1LjZoLTYuMjY5DQoJCQljLTIyLjk4OCwwLTQwLjc1MSwyMC4zNzUtNDAuNzUxLDQzLjg4NnY2NS4zMDZjLTAuNTc5LDIyLjc4NywxNy40MjUsNDEuNzI5LDQwLjIxMiw0Mi4zMDhjMC4xOCwwLjAwNSwwLjM1OSwwLjAwOCwwLjUzOSwwLjAxDQoJCQloMzguNjYxYzUuNDc2LTAuMjU3LDkuNzA3LTQuOTA2LDkuNDQ5LTEwLjM4MmMtMC4wMDktMC4xOTctMC4wMjQtMC4zOTQtMC4wNDUtMC41OXYtMTI4YzAtNi4yNjktMy42NTctMTIuNTM5LTkuNDA0LTEyLjUzOQ0KCQkJSDg1LjY4OHYtMjUuNmMwLTcwLjY5Miw1Ny4zMDgtMTI4LDEyOC0xMjhzMTI4LDU3LjMwOCwxMjgsMTI4djI1LjZoLTExLjQ5NGMtNS43NDcsMC05LjQwNCw2LjI2OS05LjQwNCwxMi41Mzl2MTI4DQoJCQljLTAuNTgzLDUuNDUxLDMuMzYzLDEwLjM0Myw4LjgxNCwxMC45MjZjMC4xOTYsMC4wMjEsMC4zOTMsMC4wMzYsMC41OSwwLjA0NWgxMi4wMTZsLTEuMDQ1LDEuNTY3DQoJCQljLTE1LjY3NywyMC44MzUtNDAuMjc3LDMzLjAzOC02Ni4zNTEsMzIuOTE0Yy01LjcwOC0yNy45ODktMzMuMDI2LTQ2LjA1Mi02MS4wMTUtNDAuMzQzDQoJCQljLTIzLjkzNSw0Ljg4MS00MS4xOTIsMjUuODQzLTQxLjM4NSw1MC4yN2MwLjI4NiwyOC42NSwyMy41OTQsNTEuNzI0LDUyLjI0NSw1MS43MjJjMTQuMTgzLTAuMjMsMjcuNzAyLTYuMDUsMzcuNjE2LTE2LjE5Ng0KCQkJYzYuNjg5LTYuODUsMTEuMDcyLTE1LjYxNywxMi41MzktMjUuMDc4YzMyLjY1MiwwLjEyNCw2My40NDUtMTUuMTc2LDgzLjA2OS00MS4yNzNsOS45MjctMTQuNjI5DQoJCQljMjIuNDY1LTEuNTY3LDM2LjU3MS0xNS42NzMsMzYuNTcxLTM2LjA0OXYtNjUuMzA2QzQwNC4zODIsMjAxLjE0MywzODcuNjY0LDE3NC40OTgsMzYzLjYzMSwxNzQuNDk4eiBNODUuNjg4LDMwNS4xMUg1OC41MjENCgkJCWMtMTEuMjUtMC4yNzQtMjAuMTQ4LTkuNjE1LTE5Ljg3NC0yMC44NjVjMC4wMDUtMC4xODUsMC4wMTItMC4zNywwLjAyMS0wLjU1NnYtNjUuMzA2YzAtMTIuMDE2LDguMzU5LTIyLjk4OCwxOS44NTMtMjIuOTg4DQoJCQloMjcuMTY3VjMwNS4xMXogTTI0Ny4xMjUsMzkxLjMxNGMtNS43OSw2LjI3OC0xMy45MjUsOS44NzMtMjIuNDY1LDkuOTI3Yy0xNi45OTgtMC4yNy0zMC43OTItMTMuODM0LTMxLjM0Ny0zMC44MjUNCgkJCWMtMC4wMDctMTcuMDI0LDEzLjc4OC0zMC44MywzMC44MTItMzAuODM3YzE3LjAyNC0wLjAwNywzMC44MywxMy43ODgsMzAuODM3LDMwLjgxMmMwLDAuMDA4LDAsMC4wMTcsMCwwLjAyNQ0KCQkJQzI1NS4zOTcsMzc4LjE3MywyNTIuNTUzLDM4NS43NTYsMjQ3LjEyNSwzOTEuMzE0eiBNMzgzLjQ4NCwyODguOTE0YzAsMTQuMTA2LTEzLjU4NCwxNi4xOTYtMTkuODUzLDE2LjE5NmgtMjEuOTQzVjE5NS4zOTYNCgkJCWgyMS45NDNjMTEuNDk0LDAsMTkuODUzLDE2LjE5NiwxOS44NTMsMjguMjEyVjI4OC45MTR6Ii8+DQoJPC9nPg0KPC9nPg0KPGc+DQo8L2c+DQo8Zz4NCjwvZz4NCjxnPg0KPC9nPg0KPGc+DQo8L2c+DQo8Zz4NCjwvZz4NCjxnPg0KPC9nPg0KPGc+DQo8L2c+DQo8Zz4NCjwvZz4NCjxnPg0KPC9nPg0KPGc+DQo8L2c+DQo8Zz4NCjwvZz4NCjxnPg0KPC9nPg0KPGc+DQo8L2c+DQo8Zz4NCjwvZz4NCjxnPg0KPC9nPg0KPC9zdmc+DQo="
@@ -93,7 +97,7 @@ export default {
   name: 'Product',
   components: {
     /* 组件名称用首字母大写, template 里面标签不能用大写, 全部用小写+减号 */
-    ProductVariants,
+    RelatedProducts,
     SelectVariants
   },
   data() {
@@ -149,12 +153,12 @@ export default {
         }).catch(err => {
           console.log(err)
         })
-        console.log(res.data)
         /* res.data.results 一定是数组不会有问题, 只需要看长度就行 */
         product = res.data.results[0]
       }
       if (product) {
         this.product = product
+        this.productId = product.id
         const variant = _.find(product.variants || [], { is_available: true }) || product.variants[0]
         this.currentVariant = variant
       } else {
@@ -289,9 +293,11 @@ $color-border: #ecf0f1;
     margin-top: 10px;
   }
   &__title {
+    padding: 10px;
     text-align: center;
     line-height: 40px;
     font-size: 15px;
+    font-weight: bold;
   }
 }
 .cell {
@@ -401,5 +407,8 @@ $color-border: #ecf0f1;
 .cell__ft__icon {
   width: 10px;
   height: 12px;
+}
+.product__html {
+  padding: 0 15px;
 }
 </style>
