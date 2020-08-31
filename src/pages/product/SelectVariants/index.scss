@@ -1,0 +1,199 @@
+$color-red: #e74c3c;
+$color-border: #ecf0f1;
+$color-black: #353a36;
+$color-label-bg: #f5f5f5;
+$color-disabled-bg: #f8f8f8;
+
+.drawer {
+  &__mask {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: none;
+    z-index: 110;
+  }
+  &__content {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 400px;
+    overflow: hidden;
+    background-color: #ffffff;
+    z-index: 120;
+    padding: 110px 10px 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-start;
+    transform: translate3d(0, 100%, 0);
+    transition: transform .25s ease-in-out;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+  }
+  &__header {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 110px;
+    width: 100%;
+    padding: 10px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    // box-shadow: 0 0 0 1px $color-border;
+  }
+  &__variant__image {
+    width: 90px;
+    height: 80px;
+    border-radius: 4px;
+    margin-right: 10px;
+  }
+  &__variant__caption {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  &__variant__price {
+    color: $color-black;
+    font-size: 18px;
+    font-weight: bold;
+    line-height: 1.6;
+  }
+  &__variant__title {
+    font-size: 12px;
+    width: 100%;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+  &__footer {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: 40px;
+    width: 100%;
+    background-color: rgb(0, 194, 58);
+  }
+  &__body {
+    width: 100%;
+    flex: 1;
+    overflow: auto;
+    padding-top: 10px;
+  }
+  &.opened &__mask {
+    display: block;
+  }
+  &.opened &__content {
+    transform: translate3d(0, 0, 0);
+  }
+
+  /* options */
+  &__option {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+  &__option--row {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+  &__option--row &__option__title {
+    margin-bottom: 0;
+  }
+  &__option + &__option {
+    margin-top: 15px;
+  }
+  &__option__title {
+    font-size: 13px;
+    margin-bottom: 10px;
+    font-weight: bold;
+  }
+  &__option__values {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  &__option__label {
+    margin: 0 10px 10px 0;
+  }
+  &__option__ratio {
+    display: none;
+  }
+  &__option__fake-radio {
+    min-width: 40px;
+    text-align: center;
+    font-size: 12px;
+    line-height: 14px;
+    padding: 5px 9px;
+    background-color: $color-label-bg;
+    border: 2px solid $color-label-bg;
+    border-radius: 13px;
+  }
+  &__option__fake-radio.disabled {
+    background-color: $color-disabled-bg;
+    color: #777777;
+  }
+  &__option__fake-radio.checked {
+    background-color: transparent;
+    color: $color-black;
+    border-color: $color-black;
+  }
+
+  &__adjust-qty {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+  }
+  &__adjust-qty__btn {
+    padding: 0;
+    margin: 0;
+    width: 30px;
+    height: 26px;
+    text-align: center;
+    border: none;
+    position: relative;
+    background-color: transparent;
+  }
+  &__adjust-qty__btn::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 15px;
+    height: 15px;
+    margin-left: -7px;
+    margin-top: -7px;
+    background-color: #f0f0f0;
+    border-radius: 50%;
+  }
+  &__adjust-qty__btn__text {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    margin-left: -6px;
+    line-height: 26px;
+    font-size: 12px;
+    width: 12px;
+    text-align: center;
+  }
+  &__adjust-qty__btn::after {
+    display: none;
+  }
+  &__adjust-qty__input {
+    max-width: 30px;
+    min-width: 14px;
+    text-align: center;
+    font-size: 12px;
+    border: none;
+    outline: none;
+  }
+}
