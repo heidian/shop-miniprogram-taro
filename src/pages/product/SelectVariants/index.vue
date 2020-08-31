@@ -55,6 +55,7 @@
 <script>
 import Taro from '@tarojs/taro'
 import { API } from '@/utils/api'
+import { handleErr } from '@/utils/errHelper'
 import './index.scss'
 
 export default {
@@ -217,7 +218,7 @@ export default {
           Taro.hideLoading()
         }, 200);
       }).catch(err => {
-        API.handleErr(err)
+        handleErr(err)
       })
     },
     onInputQuantity (e) {
