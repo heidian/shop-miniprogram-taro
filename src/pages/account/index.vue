@@ -23,7 +23,7 @@
       <view class="account__customer__level-progress">
         <view class="account__customer__level__hint">
           <view class="account__customer__level__hint__text">当前成长值{{ points }}（达{{ pointsMax }}即可升级）</view>
-          <view class="account__customer__level__hint__number">{{ points }}/{{ pointsMax }} <view class="account__customer__level__hint__caret"></view></view>
+          <view class="account__customer__level__hint__number">{{ points }}/{{ pointsMax }} <view class="account__text__caret"></view></view>
         </view>
         <view class="account__customer__level__progress">
           <view class="account__customer__level__progress__inner" :style="levelProgressStyle"></view>
@@ -34,6 +34,35 @@
     <view class="account__partner">
       <text class="account__partner__text">成为合伙人获取收益</text>
       <text class="account__partner__btn__text">立即升级</text>
+    </view>
+
+    <view class="account__balance">
+      <view class="account__balance__main">
+        <view class="account__balance__values">
+          <text class="account__balance__values__label">账户余额（元）</text>
+          <text class="account__balance__values__number">{{ balance }}</text>
+          <text class="account__balance__values__hint">自购返利￥0+邀请收益￥0</text>
+        </view>
+        <view class="account__balance__btns">
+          <view class="account__balance__btns__withdraw-history">提现记录 <view class="account__text__caret"></view></view>
+          <navigator class="account__balance__btns__bind-alipay" url="/pages/bind-alipay/index" open-type="navigate" hover-class="none">绑定支付宝</navigator>
+        </view>
+      </view>
+      <view class="account__balance__divider"></view>
+      <view class="account__balance__summary">
+        <view class="account__balance__summary__item">
+          <view class="account__balance__summary__item__label">今日预估奖励</view>
+          <view class="account__balance__summary__item__value">0</view>
+        </view>
+        <view class="account__balance__summary__item">
+          <view class="account__balance__summary__item__label">本月预估奖励</view>
+          <view class="account__balance__summary__item__value">0</view>
+        </view>
+        <view class="account__balance__summary__item">
+          <view class="account__balance__summary__item__label">已邀请粉丝</view>
+          <view class="account__balance__summary__item__value">0</view>
+        </view>
+      </view>
     </view>
     <navigator
       target="self" open-type="navigate"
@@ -72,6 +101,9 @@ export default {
       return {
         width: `${width}%`
       }
+    },
+    balance () {
+      return '0.00'
     }
   },
   methods: {
