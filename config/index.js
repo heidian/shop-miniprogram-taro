@@ -42,11 +42,44 @@ const config = {
   },
   framework: 'vue',
   mini: {
-    // webpackChain(chain, webpack) {
-    //   // https://cnodejs.org/topic/5846b2883ebad99b336b1e06
-    //   // 这么做是可以的, 再配合上面的 copy, 但是要处理一下 global 变量
-    //   chain.externals({lodash: 'require("npm/lodash/lodash.min.js")'})
-    // },
+    webpackChain(chain, webpack) {
+      // https://cnodejs.org/topic/5846b2883ebad99b336b1e06
+      // 这么做是可以的, 再配合上面的 copy, 但是要处理一下 global 变量
+      // chain.externals({lodash: 'require("npm/lodash/lodash.min.js")'})
+      chain.plugin('lodash-webpack-plugin').use(require('lodash-webpack-plugin'))
+      chain.merge({
+        optimization: {
+          splitChunks: {
+            cacheGroups: {
+              lodash: {
+                name: 'lodash',
+                priority: 1000,
+                test(module) {
+                  return /node_modules[\\/]lodash/.test(module.context)
+                }
+              }
+            }
+          }
+        }
+      })
+      // chain.merge({
+      //   module: {
+      //     'rules': [{
+      //       'use': 'babel-loader',
+      //       'test': /\.js$/,
+      //       'exclude': /node_modules/,
+      //       'options': {
+      //         'plugins': ['lodash'],
+      //         'presets': [['env', { 'modules': false, 'targets': { 'node': 4 } }]]
+      //       }
+      //     }]
+      //   }
+      // })
+    },
+    commonChunks(commonChunks) {
+      commonChunks.push('lodash')
+      return commonChunks
+    },
     postcss: {
       pxtransform: {
         enable: true,
