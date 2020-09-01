@@ -20,6 +20,7 @@
 </template>
 
 <script>
+import _ from 'lodash'
 import Taro from '@tarojs/taro'
 import { API } from '@/utils/api'
 import { optimizeImage, backgroundImageUrl } from '@/utils/image'

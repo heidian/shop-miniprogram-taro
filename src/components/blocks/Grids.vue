@@ -14,6 +14,7 @@
 </template>
 
 <script>
+import _ from 'lodash'
 import Taro from '@tarojs/taro'
 import { optimizeImage, backgroundImageUrl } from '@/utils/image'
 
