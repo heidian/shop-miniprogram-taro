@@ -10,7 +10,7 @@ import checkoutStore from './checkout'
 import exampleStore from './example'
 
 Vue.use(Vuex)
-console.log(Taro)
+
 const state = () => {
   return {
     config: {},
