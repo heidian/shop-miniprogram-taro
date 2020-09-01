@@ -46,7 +46,16 @@ const config = {
       // https://cnodejs.org/topic/5846b2883ebad99b336b1e06
       // 这么做是可以的, 再配合上面的 copy, 但是要处理一下 global 变量
       // chain.externals({lodash: 'require("npm/lodash/lodash.min.js")'})
-      chain.plugin('lodash-webpack-plugin').use(require('lodash-webpack-plugin'))
+      chain.plugin('lodash-webpack-plugin').use(
+        require('lodash-webpack-plugin')
+      ).init((Plugin, args) => {
+        return new Plugin({
+          'paths': true,
+          // 支持 deep path, 比如 _.get(obj, 'a.b.c')
+          'collections': true
+          // 支持 collection 方法, 比如 _.forEach 不光可以循环一个 Array 还可以循环一个 Object, 不然 Object 就只能用 _.forIn
+        })
+      });
       chain.merge({
         optimization: {
           splitChunks: {
@@ -62,19 +71,7 @@ const config = {
           }
         }
       })
-      // chain.merge({
-      //   module: {
-      //     'rules': [{
-      //       'use': 'babel-loader',
-      //       'test': /\.js$/,
-      //       'exclude': /node_modules/,
-      //       'options': {
-      //         'plugins': ['lodash'],
-      //         'presets': [['env', { 'modules': false, 'targets': { 'node': 4 } }]]
-      //       }
-      //     }]
-      //   }
-      // })
+      // lodash plugin end
     },
     commonChunks(commonChunks) {
       commonChunks.push('lodash')
