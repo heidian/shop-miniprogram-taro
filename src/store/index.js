@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import createLogger from 'vuex/dist/logger'
 import Taro from '@tarojs/taro'
 
 import listStores from './lists/index'
@@ -64,5 +65,6 @@ export default new Vuex.Store({
   state,
   mutations,
   actions,
-  getters
+  getters,
+  plugins: process.env.NODE_ENV === 'development' ? [createLogger()] : []
 })
