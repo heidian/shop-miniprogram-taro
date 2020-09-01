@@ -1,0 +1,75 @@
+$color-bg: #1a1a1a;
+$color-bg-dark: #000000;
+$color-text: #ffffff;
+$color-text-light: rgba(#ffffff, 0.6);
+$color-golden: #e7cba7;
+
+.page {
+  min-height: 100vh;
+}
+.page--account {
+  background-color: $color-bg;
+  color: $color-text;
+  padding: 25px 20px;
+}
+.account {
+  &__customer {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+  }
+  &__customer__avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 25px;
+    overflow: hidden;
+  }
+  &__customer__caption {
+    flex: 1;
+    padding: 0 0 0 15px;
+    font-size: 12px;
+  }
+  &__customer__caption__name {
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: baseline;
+  }
+  &__customer__caption__referral {
+    margin-top: 5px;
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+  }
+  &__customer__full-name {
+    font-size: 15px;
+  }
+  &__customer__level {
+    margin-left: 10px;
+    color: $color-text-light;
+  }
+  &__customer__navigator--text {
+    margin-left: 10px;
+    color: $color-golden;
+  }
+  &__customer__referral-code {
+    line-height: 1;
+    padding: 4px 6px;
+    background-color: $color-bg-dark;
+    border-radius: 2px;
+  }
+  &__customer__btn--copy-referral-code {
+    background-color: transparent;
+    font-size: 12px !important;
+    padding: 3px 6px;
+    margin: 0;
+    margin-left: 10px;
+    line-height: 1;
+    color: $color-golden;
+    border: 1px solid $color-golden;
+    border-radius: 2px;
+  }
+}

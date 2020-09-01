@@ -109,6 +109,13 @@
 					"pathName": "pages/addresses/edit",
 					"query": "id=365116",
 					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "pages/account/index",
+					"pathName": "pages/account/index",
+					"query": "",
+					"scene": null
 				}
 			]
 		}
