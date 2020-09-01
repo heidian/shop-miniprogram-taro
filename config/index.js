@@ -52,8 +52,10 @@ const config = {
         return new Plugin({
           'paths': true,
           // 支持 deep path, 比如 _.get(obj, 'a.b.c')
-          'collections': true
+          'collections': true,
           // 支持 collection 方法, 比如 _.forEach 不光可以循环一个 Array 还可以循环一个 Object, 不然 Object 就只能用 _.forIn
+          'shorthands': true
+          // 支持 shorthands, 也就是 _.property 或 _.matchesProperty 这种, 这样在 _.find 的时候, 可以传一个 object 作为搜索条件
         })
       });
       chain.merge({
