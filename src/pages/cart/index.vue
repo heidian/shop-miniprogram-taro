@@ -1,25 +1,33 @@
 <template>
   <view class="page--cart">
     <view class="cart-group">
-      <view
-        v-for="item in cart.items" :key="item.variant_id"
-        class="cart-item"
-      >
-        <view class="cart__check" @tap="checkItem(item.id, item.checked ? false : true)">
-          <icon v-if="item.checked" type="success" size="20" color="#ff5a00"></icon>
-          <icon v-else type="circle" size="20"></icon>
-        </view>
-        <image class="cart__image" :src="optimizeImage(item.variant.image)" mode="aspectFill"></image>
-        <view class="cart__product">{{ item.product.title }}</view>
-        <view class="cart__variant">{{ item.variant|variantTitle }}</view>
-        <view class="cart__bottom">
-          <view class="cart__price">{{ item.variant.price|currency({ removeTrailingZero: true }) }}</view>
-          <input-number
-            class="cart__quantity"  type='number' placeholder='输入数字'
-            :min="1" :value="item.quantity" @change="(quantity) => setItemQuantity(quantity, item.id)"
-          ></input-number>
-        </view>
-        <!-- <button @tap="removeItem(item.id)">删除</button> -->
+      <view class="cart-item" v-for="item in cart.items" :key="item.variant_id">
+        <view class="cart__delete" @tap="removeItem(item.id)">删除</view>
+        <movable-area class="movable-area">
+          <movable-view
+            class="movable-view"
+            out-of-bounds="true" direction="horizontal" :inertia="true"
+            :x="movable.x[item.id]"
+            @change="(e) => handleMovableChange(e, item.id)"
+            @touchstart="(e) => handleTouchStart(e, item.id)"
+            @touchend="(e) => handleTouchEnd(e, item.id)"
+          >
+            <view class="cart__check" @tap="checkItem(item.id, item.checked ? false : true)">
+              <icon v-if="item.checked" type="success" size="20" color="#ff5a00"></icon>
+              <icon v-else type="circle" size="20"></icon>
+            </view>
+            <image class="cart__image" :src="optimizeImage(item.variant.image)" mode="aspectFill"></image>
+            <view class="cart__product">{{ item.product.title }}</view>
+            <view class="cart__variant">{{ item.variant|variantTitle }}</view>
+            <view class="cart__bottom">
+              <view class="cart__price">{{ item.variant.price|currency({ removeTrailingZero: true }) }}</view>
+              <input-number
+                class="cart__quantity"  type='number' placeholder='输入数字'
+                :min="1" :value="item.quantity" @change="(quantity) => setItemQuantity(quantity, item.id)"
+              ></input-number>
+            </view>
+          </movable-view>
+        </movable-area>
       </view>
     </view>
   </view>
@@ -39,7 +47,10 @@ export default {
   },
   data() {
     return {
-      //
+      movable: {
+        realX: {},
+        x: {}
+      }
     }
   },
   computed: {
@@ -54,8 +65,8 @@ export default {
       backgroundColorBottom: '#f6f6f6'
     })
   },
-  mounted() {
-    this.$store.dispatch('cart/fetch')
+  async mounted() {
+    await this.$store.dispatch('cart/fetch')
   },
   methods: {
     optimizeImage,
@@ -72,6 +83,32 @@ export default {
     }, 500),
     removeItem(itemId) {
       this.$store.dispatch('cart/removeItem', { itemId })
+    },
+    showDeleteButton(itemId) {
+      this.movable.x = {
+        ...this.movable.x,
+        [itemId]: -60 - (Math.random() / 10)
+        // 加一个随机数确保脏数据检查的时候永远不相等
+      }
+    },
+    hideDeleteButton(itemId) {
+      this.movable.x = {
+        ...this.movable.x,
+        [itemId]: 0 + (Math.random() / 10)
+        // 加一个随机数确保脏数据检查的时候永远不相等
+      }
+    },
+    handleMovableChange(e, itemId) {
+      const { x, source } = e.detail
+      this.movable.realX[itemId] = x
+    },
+    handleTouchStart(e, itemId) {},
+    handleTouchEnd(e, itemId) {
+      if (this.movable.realX[itemId] < -30) {
+        this.showDeleteButton(itemId)
+      } else {
+        this.hideDeleteButton(itemId)
+      }
     }
   },
   filters: {
@@ -95,14 +132,27 @@ page {
 .page--cart {
   padding: 10px;
   .cart-group {
-    background-color: #fff;
     border-radius: 6px;
   }
   .cart-item {
-    padding: 10px 10px 10px 135px;
     height: 100px;
+    width: 100%;
     position: relative;
+    padding-right: hidden;
     // font-size: 13px;
+    padding-right: 60px;
+    .movable-area {
+      height: 100%;
+      width: 100%;
+      position: relative;
+    }
+    .movable-view {
+      padding: 10px 10px 10px 135px;
+      background-color: #fff;
+      height: 100%;
+      width: calc(100% + 60px);
+      position: relative;
+    }
   }
   .cart__check {
     position: absolute;
@@ -149,6 +199,18 @@ page {
       height: 20px;
       font-size: 13px;
     }
+  }
+  .cart__delete {
+    position: absolute;
+    right: 0;
+    top: 0;
+    height: 100%;
+    width: 100px;
+    background-color: red;
+    line-height: 100px;
+    padding-left: 100px - 60px;
+    text-align: center;
+    color: #fff;
   }
 }
 </style>

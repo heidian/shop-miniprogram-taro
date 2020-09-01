@@ -1,8 +1,8 @@
 /* global css start */
 
-page, view, text, image, scroll-view, movable-area, cover-view, icon, rich-text,
-progress, button, checkbox, form, input, label, picker, picker-view, radio,
-slider, switch, textarea, navigator, audio, video {
+page, view, icon, rich-text, progress, slider, switch, navigator, radio, checkbox,
+text, image, button, form, input, label, textarea, audio, video,
+scroll-view, movable-area, movable-view, cover-view, picker, picker-view {
   &, &::before, &::after {
     box-sizing: border-box;
   }
