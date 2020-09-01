@@ -1,11 +1,11 @@
 <template>
   <view class="input-number">
-    <view class="input-number__btn input-number__minus" @tap="changeInputValue(inputValue - 1)">-</view>
+    <view class="input-number__btn input-number__minus" @tap="changeInputValue(+inputValue - 1)">-</view>
     <input
       class="input-number__input" type='number'
-      v-model="inputValue" @input="(e) => changeInputValue(+e.detail.value)"
+      v-model="inputValue" @input="onInput" @blur="onBlur"
     />
-    <view class="input-number__btn input-number__add" @tap="changeInputValue(inputValue + 1)">+</view>
+    <view class="input-number__btn input-number__add" @tap="changeInputValue(+inputValue + 1)">+</view>
   </view>
 </template>
 
@@ -31,7 +31,7 @@ export default {
   },
   data() {
     return {
-      inputValue: +this.value || 0
+      inputValue: '' + (+this.value || 0)  // 确保 inputValue 是个字符串
     }
   },
   methods: {
@@ -39,8 +39,28 @@ export default {
       quantity = +quantity || 0
       quantity = Math.max(quantity, this.min)
       quantity = Math.min(quantity, this.max)
-      this.inputValue = quantity
+      this.inputValue = '' + quantity
       this.$emit('change', quantity)
+    },
+    onInput(e) {
+      // const value = '' + e.detail.value
+      const value = '' + this.inputValue
+      if (value !== '') {
+        this.changeInputValue(value)
+      }
+    },
+    onBlur() {
+      if (!+this.inputValue) {
+        // 如果清空了 input, 就恢复原来的值
+        this.changeInputValue(this.value)
+      }
+    }
+  },
+  watch: {
+    value(newValue, oldValue) {
+      if (+newValue != +oldValue) {
+        this.inputValue = '' + (+this.value || 0)
+      }
     }
   }
 }
