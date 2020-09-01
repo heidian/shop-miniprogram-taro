@@ -112,6 +112,24 @@ const actions = {
       quantity: 0
     }
     await dispatch('_postVariant', payload)
+  },
+  async checkItem({ state, commit, dispatch }, { itemId, checked=true } = {}) {
+    const index = _.findIndex(state.items, { id: itemId })
+    const item = state.items[index]
+    if (!item) {
+      throw new Error('Invalid itemId')
+    }
+    const items = [
+      ...state.items.slice(0, index),
+      { ...item, checked: checked },
+      ...state.items.slice(index + 1)
+    ]
+    commit('setData', { items })
+    const payload = {
+      variant_id: item.variant.id,
+      checked: checked
+    }
+    await dispatch('_postVariant', payload)
   }
 }
 
