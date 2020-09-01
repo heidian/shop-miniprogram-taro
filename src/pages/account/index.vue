@@ -30,6 +30,11 @@
         </view>
       </view>
     </view>
+
+    <view class="account__partner">
+      <text class="account__partner__text">成为合伙人获取收益</text>
+      <text class="account__partner__btn__text">立即升级</text>
+    </view>
     <navigator
       target="self" open-type="navigate"
       url="/pages/login/index"

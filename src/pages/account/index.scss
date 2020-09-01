@@ -4,6 +4,7 @@ $color-text: #ffffff;
 $color-text-light: rgba(#ffffff, 0.6);
 $color-golden: #e7cba7;
 $color-bg-progress: #272727;
+$color-brown: #5c411a;
 
 .page {
   min-height: 100vh;
@@ -134,5 +135,31 @@ $color-bg-progress: #272727;
     width: 0;
     height: 100%;
     background-color: $color-golden;
+  }
+
+  /* partner */
+  &__partner {
+    width: 100%;
+    height: 34px;
+    margin-top: 15px;
+    border-radius: 17px;
+    background: linear-gradient(135deg, #020202 66.7%, $color-golden 33.3%);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  &__partner__text {
+    font-size: 15px;
+    width: 64%;
+    text-align: center;
+    color: $color-golden;
+    font-weight: normal;
+  }
+  &__partner__btn__text {
+    width: 32%;
+    font-size: 14px;
+    font-weight: bold;
+    text-align: center;
+    color: $color-brown;
   }
 }
