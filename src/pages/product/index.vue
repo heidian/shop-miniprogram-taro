@@ -86,6 +86,7 @@
 import Taro, { getCurrentInstance } from '@tarojs/taro'
 import '@tarojs/taro/html.css'
 import { mapState } from 'vuex'
+import _ from 'lodash'
 import { API } from '@/utils/api'
 import { optimizeImage, backgroundImageUrl } from '@/utils/image'
 import RelatedProducts from './RelatedProducts'
