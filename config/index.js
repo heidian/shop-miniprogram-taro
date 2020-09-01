@@ -34,6 +34,7 @@ const config = {
   },
   copy: {
     patterns: [
+      // { from: 'node_modules/lodash/lodash.min.js', to: 'dist/npm/lodash/lodash.min.js' },
       { from: 'src/ext.json', to: 'dist/ext.json' },
       { from: 'src/sitemap.json', to: 'dist/sitemap.json' }
     ],
@@ -41,6 +42,11 @@ const config = {
   },
   framework: 'vue',
   mini: {
+    // webpackChain(chain, webpack) {
+    //   // https://cnodejs.org/topic/5846b2883ebad99b336b1e06
+    //   // 这么做是可以的, 再配合上面的 copy, 但是要处理一下 global 变量
+    //   chain.externals({lodash: 'require("npm/lodash/lodash.min.js")'})
+    // },
     postcss: {
       pxtransform: {
         enable: true,
