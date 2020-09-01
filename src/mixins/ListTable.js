@@ -68,7 +68,8 @@ function StoreListTable(propertyName, storeName) {
       },
       async updateFilter(filter, { partial = true, fetch = true } = {}) {
         const page = 1  // 修改 filter 以后重置 page
-        filter = _.chain(filter).toPairs().map(([name, _value]) => {
+        filter = _.toPairs(filter)
+        filter = _.map(filter, ([name, _value]) => {
           if (_.isPlainObject(_value) && _.has(_value, 'value') && _.has(_value, 'type')) {
             const { value, type } = _value
             return [name, filterValueToString(value, type)]
@@ -76,7 +77,8 @@ function StoreListTable(propertyName, storeName) {
             const value = _value
             return [name, filterValueToString(value, '')]
           }
-        }).fromPairs().value()
+        })
+        filter = _.fromPairs(filter)
         if (partial) {
           filter = { ...this[propertyName].filter, ...filter }
         }
@@ -178,7 +180,8 @@ function LocalListTable(propertyName, urlRoot) {
       },
       async updateFilter(filter, { partial = true, fetch = true } = {}) {
         const page = 1  // 修改 filter 以后重置 page
-        filter = _.chain(filter).toPairs().map(([name, _value]) => {
+        filter = _.toPairs(filter)
+        filter = _.map(filter, ([name, _value]) => {
           if (_.isPlainObject(_value) && _.has(_value, 'value') && _.has(_value, 'type')) {
             const { value, type } = _value
             return [name, filterValueToString(value, type)]
@@ -186,7 +189,8 @@ function LocalListTable(propertyName, urlRoot) {
             const value = _value
             return [name, filterValueToString(value, '')]
           }
-        }).fromPairs().value()
+        })
+        filter = _.fromPairs(filter)
         if (partial) {
           filter = { ...this[propertyName].filter, ...filter }
         }

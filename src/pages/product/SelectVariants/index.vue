@@ -239,17 +239,27 @@ export default {
       this.quantity = (this.quantity || 0) + value
     },
     updateAvailableOptions () {
-      const res = _.chain(this.allOptionPairs || [])
-              .filter(this.selectedOptions || {})
-              // .map(item => _.omit(item, _.keys(this.selectedOptions)))
-              .reduce((result, item) => {
-                _.forEach(item, (value, key) => {
-                  if (!result.hasOwnProperty(key)) result[key] = [];
-                  result[key].push(value)
-                })
-                return result
-              }, {})
-              .value()
+      let res = _.filter(this.allOptionPairs, this.selectedOptions)
+      // res = _.map(res, item => _.omit(item, _.keys(this.selectedOptions)))
+      res = _.reduce(res, (result, item) => {
+        _.forEach(item, (value, key) => {
+          if (!result.hasOwnProperty(key)) result[key] = [];
+          result[key].push(value)
+        })
+        return result
+      }, {})
+      // chain 在 lodash plugin 里不能用, chain 一定要引入完整的 lodash 才能使用
+      // const res = _.chain(this.allOptionPairs || [])
+      //              .filter(this.selectedOptions || {})
+      //              // .map(item => _.omit(item, _.keys(this.selectedOptions)))
+      //              .reduce((result, item) => {
+      //                _.forEach(item, (value, key) => {
+      //                  if (!result.hasOwnProperty(key)) result[key] = [];
+      //                  result[key].push(value)
+      //                })
+      //                return result
+      //              }, {})
+      //              .value()
       this.availableOptions = res
     },
     onClickOptionValue (item, optionTitle) {
