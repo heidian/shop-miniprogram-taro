@@ -13,7 +13,6 @@
 import _ from 'lodash'
 import Taro from '@tarojs/taro'
 import ThemeBlocks from '@/mixins/ThemeBlocks'
-import ListTable from '@/mixins/ListTable'
 import Products from './Products'
 
 export default {

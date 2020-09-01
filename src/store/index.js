@@ -59,6 +59,7 @@ const actions = {
     dispatch('cart/fetch')
   }
 }
+
 const getters = {}
 
 export default new Vuex.Store({
@@ -73,5 +74,6 @@ export default new Vuex.Store({
   mutations,
   actions,
   getters,
+  strict: true,  // any mutations to Vuex state outside of mutation handlers will throw an Error
   plugins: process.env.NODE_ENV === 'development' ? [createLogger()] : []
 })
