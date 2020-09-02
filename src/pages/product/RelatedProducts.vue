@@ -21,6 +21,7 @@
 
 <script>
 import Taro from '@tarojs/taro'
+import _ from 'lodash'
 import { API } from '@/utils/api'
 import { optimizeImage, backgroundImageUrl } from '@/utils/image'
 /* 页面私有组件放在页面同一个目录下,

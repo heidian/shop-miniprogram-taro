@@ -54,6 +54,7 @@
 </template>
 <script>
 import Taro from '@tarojs/taro'
+import _ from 'lodash'
 import { API } from '@/utils/api'
 import { handleErr } from '@/utils/errHelper'
 import './index.scss'
