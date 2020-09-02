@@ -30,6 +30,7 @@
         </movable-area>
       </view>
     </view>
+    <infinite-products ref="infiniteProducts"></infinite-products>
   </view>
 </template>
 
@@ -39,11 +40,13 @@ import Taro from '@tarojs/taro'
 import { mapState } from 'vuex'
 import { optimizeImage } from '@/utils/image'
 import InputNumber from '@/components/InputNumber'
+import InfiniteProducts from '@/components/InfiniteProducts/InfiniteProducts'
 
 export default {
   name: 'Cart',
   components: {
-    InputNumber
+    InputNumber,
+    InfiniteProducts
   },
   data() {
     return {
@@ -68,6 +71,9 @@ export default {
   async mounted() {
     // 好像不需要 fetch, cart 在 store 里, 打开小程序 fetch 一次, 之后任何地方操作都会更新 store
     // await this.$store.dispatch('cart/fetch')
+  },
+  onReachBottom() {
+    this.$refs.infiniteProducts.onReachBottom()
   },
   methods: {
     optimizeImage,
@@ -131,15 +137,20 @@ page {
   background-color: $color-bg-gray;
 }
 .page--cart {
-  padding: 10px;
+  // padding: 10px;
+  overflow: hidden;
   .cart-group {
+    background-color: #fff;
     border-radius: 6px;
+    overflow: hidden;
+    margin: 10px;
+    padding: 10px 0;
   }
   .cart-item {
     height: 100px;
     width: 100%;
     position: relative;
-    padding-right: hidden;
+    overflow: hidden;
     // font-size: 13px;
     padding-right: 60px;
     .movable-area {
