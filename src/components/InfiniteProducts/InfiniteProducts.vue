@@ -29,6 +29,7 @@ import ListTable from '@/mixins/ListTable'
 import InfiniteProductItem from './InfiniteProductItem'
 
 export default {
+  name: 'InfiniteProduct',
   mixins: [
     ListTable('products', { urlRoot: '/shopfront/product/' })
   ],
@@ -67,6 +68,8 @@ export default {
 
 <style lang="scss">
 @import '@/styles/_mixins';
+$color-text: #262626;
+$color-text-light: #555;
 .infinite-products {
   @include clearfix();
   padding: 10px 5px;
@@ -102,10 +105,10 @@ export default {
   }
   .product-title {
     font-weight: 500;
-    opacity: 0.9;
+    color: $color-text;
   }
   .product-description {
-    opacity: 0.7;
+    color: $color-text-light;
   }
   .product-image {
     display: block;

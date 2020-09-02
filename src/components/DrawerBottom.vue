@@ -13,6 +13,7 @@
 
 <script>
 export default {
+  name: 'DrawerBottom',
   props: {
     header: {
       type: String,

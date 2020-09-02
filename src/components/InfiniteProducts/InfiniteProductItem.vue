@@ -19,6 +19,7 @@ import { optimizeImage } from '@/utils/image'
  * 为了避免混淆, 定义一个名字是 product 的 computed, 在 template 里用 product 不用 data
  */
 export default {
+  name: 'InfiniteProductItem',
   props: {
     product: {
       type: Object,

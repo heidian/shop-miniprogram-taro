@@ -11,6 +11,7 @@
 
 <script>
 export default {
+  name: 'InputNumber',
   model: {
     prop: 'value',
     event: 'change'
