@@ -5,6 +5,7 @@ export default {
     'pages/membership/index',
     'pages/cart/index',
     'pages/account/index',
+    'pages/bind-alipay/index',
     'pages/profile/index',
     'pages/product/index',
     'pages/login/index',
