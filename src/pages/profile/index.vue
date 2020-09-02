@@ -1,18 +1,32 @@
 <template>
   <view class="page page--profile">
     <view class="profile__navigators">
-      <navigator class="cell" v-for="item in navigators" :key="item.label">
-        <view class="cell__label">{{ item.label }}</view>
-        <view class="cell__value"></view>
-        <view class="cell__ft">
-          <image v-if="item.hasCaret" class="cell__ft__icon" src="https://up.img.heidiancdn.com/o_1egfmehbs19vhj4p7cn1ko4kqi0next.png" mode="aspectFill"></image>
-        </view>
-      </navigator>
+      <template v-for="item in navigators">
+        <button v-if="item.openType" class="cell" :key="item.label" openType="contact">
+          <view class="cell__label">{{ item.label }}</view>
+          <view class="cell__value"></view>
+          <view class="cell__ft">
+            <image v-if="item.hasCaret" class="cell__ft__icon" src="https://up.img.heidiancdn.com/o_1egfmehbs19vhj4p7cn1ko4kqi0next.png" mode="aspectFill"></image>
+          </view>
+        </button>
+        <navigator v-else class="cell" :key="item.label">
+          <view class="cell__label">{{ item.label }}</view>
+          <view class="cell__value"></view>
+          <view class="cell__ft">
+            <image v-if="item.hasCaret" class="cell__ft__icon" src="https://up.img.heidiancdn.com/o_1egfmehbs19vhj4p7cn1ko4kqi0next.png" mode="aspectFill"></image>
+          </view>
+        </navigator>
+      </template>
     </view>
+    <button v-if="isAuthenticated" class="page__btn page__btn--red" @tap="onLogout">登出</button>
+    <navigator v-else class="page__btn page__btn--golden" url="/pages/login/index">登录</navigator>
   </view>
 </template>
 
 <script>
+import Taro from '@tarojs/taro'
+import { mapState } from 'vuex'
+
 export default {
   data() {
     return {
@@ -20,9 +34,20 @@ export default {
         { label: '微信号', value: '', hasCaret: true, url: '' },
         { label: '个人信息', value: '', hasCaret: true, url: '' },
         { label: '账户安全', value: '', hasCaret: true, url: '' },
-        { label: '联系客服', value: '', hasCaret: true, url: '' },
+        { label: '联系客服', value: '', hasCaret: true, url: '', openType: 'contact' },
         { label: '关于', value: '', hasCaret: true, url: '' },
       ]
+    }
+  },
+  computed: {
+    ...mapState('customer', {
+      customer: (state) => state.data || {},
+      isAuthenticated: (state) => state.isAuthenticated || false
+    }),
+  },
+  methods: {
+    onLogout () {
+      this.$store.dispatch('customer/logout')
     }
   },
 }
@@ -33,9 +58,12 @@ $color-bg: #f0f0f0;
 $color-bg-white: #ffffff;
 $color-divider: rgba(#979797, 0.1);
 $color-text: #262626;
+$color-red: #e74c3c;
+$color-golden: #e7cba7;
 
 .page {
   min-height: 100vh;
+  padding-bottom: 90px;
 }
 .page--profile {
   background-color: $color-bg;
@@ -46,6 +74,10 @@ $color-text: #262626;
   }
 }
 .cell {
+  background-color: transparent;
+  margin-left: auto;
+  margin-right: auto;
+  outline: none;
   width: 100%;
   padding: 15px;
   display: flex;
@@ -53,6 +85,10 @@ $color-text: #262626;
   align-items: center;
   font-size: 12px;
   position: relative;
+  line-height: 2.2;
+  &::after {
+    display: none;
+  }
   &__label {
     margin-right: 20px;
     font-size: 15px;
@@ -70,7 +106,7 @@ $color-text: #262626;
   // & + & {
   //   border-top: 1px solid $color-divider;
   // }
-  &:not(:last-child)::after {
+  &:not(:last-child)::before {
     content: '';
     position: absolute;
     left: 15px;
@@ -82,6 +118,24 @@ $color-text: #262626;
     width: 10px;
     height: 12px;
     opacity: 0.2;
+  }
+}
+.page__btn {
+  position: fixed;
+  bottom: 30px;
+  left: 20px;
+  right: 20px;
+  padding: 10px 0;
+  text-align: center;
+  line-height: 28px;
+  margin-left: auto;
+  margin-right: auto;
+  color: #ffffff;
+  background-color: $color-red;
+  font-size: 16px;
+  border-radius: 0;
+  &.page__btn--golden {
+    background-color: $color-golden;
   }
 }
 </style>

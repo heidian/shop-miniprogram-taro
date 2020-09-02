@@ -7,20 +7,23 @@
           class="account__customer__avatar"
           mode="aspectFill"
           :src="customer.avatar || 'https://up.img.heidiancdn.com/o_1cm7ccaoirfi1tdiutsn6s1odj0rofile.png?imageView2/2/w/360/ignore-error/1'"></image>
-        <view class="account__customer__caption">
+        <view class="account__customer__caption" v-if="isAuthenticated">
           <view class="account__customer__caption__name">
             <text class="account__customer__full-name">{{ customer.full_name || '未命名' }}</text>
             <text class="account__customer__level__title">{{ levelTitle }}</text>
-            <navigator v-if="isAuthenticated" class="account__customer__navigator--text" url="/pages/profile/index" open-type="navigate" hover-class="none">填写微信号</navigator>
+            <navigator class="account__customer__navigator--text" url="/pages/profile/index" open-type="navigate" hover-class="none">填写微信号</navigator>
           </view>
-          <view v-if="isAuthenticated" class="account__customer__caption__referral">
+          <view class="account__customer__caption__referral">
             <text class="account__customer__referral-code">邀请ID：{{ customer.referral_code }}</text>
             <button class="account__customer__btn--copy-referral-code" @tap="onCopyToClipboard(customer.referral_code)">复制</button>
           </view>
         </view>
-        <navigator v-if="isAuthenticated" class="account__customer__caret" url="/pages/profile/index" open-type="navigate" hover-class="none"></navigator>
+        <view v-else class="account__customer__caption">
+          <navigator url="/pages/login/index" class="account__customer__login">登录</navigator>
+        </view>
+        <navigator class="account__customer__caret" url="/pages/profile/index" open-type="navigate" hover-class="none"></navigator>
       </view>
-      <view class="account__customer__level-progress" v-if="isAuthenticated">
+      <view class="account__customer__level-progress">
         <view class="account__customer__level__hint">
           <view class="account__customer__level__hint__text">当前成长值{{ points }}（达{{ pointsMax }}即可升级）</view>
           <view class="account__customer__level__hint__number">{{ points }}/{{ pointsMax }} <view class="account__text__caret"></view></view>
@@ -31,7 +34,7 @@
       </view>
     </view>
 
-    <template v-if="isAuthenticated">
+    <template>
 
       <view class="account__partner">
         <text class="account__partner__text">成为合伙人获取收益</text>
@@ -114,10 +117,11 @@
       </view>
     </template>
 
-    <view class="account__auth-btns">
+    <!-- <view class="account__auth-btns">
       <button v-if="isAuthenticated"  class="account__auth__btn account__auth__btn--red" @tap="logout">登出</button>
-      <navigator v-else class="account__auth__btn account__auth__btn--golden" target="self" open-type="navigate" url="/pages/login/index">登录</navigator>
-    </view>
+    </view> -->
+
+    <!-- <infinite-products ref="infiniteProducts"></infinite-products> -->
   </view>
 </template>
 
@@ -126,6 +130,9 @@ import Taro from '@tarojs/taro'
 import { mapState } from 'vuex'
 import _ from 'lodash'
 import { handleErr } from '@/utils/errHelper'
+
+// import InfiniteProducts from '@/components/InfiniteProducts/InfiniteProducts'
+
 import './index.scss'
 
 export default {
@@ -201,6 +208,9 @@ export default {
       ]
     }
   },
+  components: {
+    // InfiniteProducts,
+  },
   computed: {
     ...mapState('customer', {
       customer: (state) => state.data || {},
@@ -240,6 +250,9 @@ export default {
       this.$store.dispatch('customer/logout')
     }
   },
+  // onReachBottom() {
+  //   this.$refs.infiniteProducts.onReachBottom()
+  // },
 }
 </script>
 
