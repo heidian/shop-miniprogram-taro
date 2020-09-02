@@ -1,7 +1,9 @@
 $color-bg: #1a1a1a;
 $color-bg-light: #373737;
+$color-bg-lighter: #f0f0f0;
 $color-bg-dark: #000000;
 $color-text: #ffffff;
+$color-text-dark: #000000;
 $color-text-light: rgba(#ffffff, 0.6);
 $color-golden: #e7cba7;
 $color-red: #e74c3c;
@@ -13,12 +15,13 @@ $color-divider: rgba(#ffffff, 0.1);
 .page {
   min-height: 100vh;
 }
-.page--account {
-  background-color: $color-bg;
-  color: $color-text;
-  padding: 25px 20px;
-}
+
 .account {
+  &__dark {
+    background-color: $color-bg;
+    color: $color-text;
+    padding: 25px 20px 50px;
+  }
   &__customer__main {
     width: 100%;
     display: flex;
@@ -344,5 +347,38 @@ $color-divider: rgba(#ffffff, 0.1);
   &__auth__btn--red {
     color: #ffffff;
     background-color: $color-red;
+  }
+  &__light {
+    padding: 20px 5px;
+    background-color: $color-bg-lighter;
+  }
+  &__infinite-products {
+
+  }
+  &__infinite-products__head {
+    width: 100%;
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+  &__infinite-products__logo {
+    width: 216px;
+    height: 72px;
+  }
+  &__infinite-products__navigator {
+    display: flex;
+    align-items: center;
+  }
+  &__infinite-products__navigator__text {
+    color: $color-text-dark;
+    font-size: 12px;
+    line-height: 22px;
+    border-bottom: 1px solid;
+  }
+  &__infinite-products__navigator__arrow {
+    margin-left: 4px;
+    width: 22px;
+    height: 6px;
   }
 }
