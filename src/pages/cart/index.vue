@@ -66,7 +66,8 @@ export default {
     })
   },
   async mounted() {
-    await this.$store.dispatch('cart/fetch')
+    // 好像不需要 fetch, cart 在 store 里, 打开小程序 fetch 一次, 之后任何地方操作都会更新 store
+    // await this.$store.dispatch('cart/fetch')
   },
   methods: {
     optimizeImage,
