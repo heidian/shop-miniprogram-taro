@@ -65,7 +65,8 @@ const actions = {
     let item = items[index]
     if (!item) {
       const variant = { id: variantId }
-      item = { variant, quantity, attributes }
+      const product = {}
+      item = { variant, product, quantity, attributes }
       items.push(item)
     } else {
       quantity = item.quantity + quantity
