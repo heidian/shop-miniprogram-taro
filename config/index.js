@@ -25,7 +25,7 @@ const config = {
   },
   sass: {
     resource: [
-      'src/styles/app.scss'
+      // 'src/styles/main.scss'
     ],
     projectDirectory: path.resolve(__dirname, '..')
   },

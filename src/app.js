@@ -5,6 +5,12 @@ import { formatCurrency, formatDate, formatDateTime } from './utils/formatters'
 import { optimizeImage } from './utils/image'
 import VirtualList from '@tarojs/components/virtual-list'
 
+/*
+ * Global styles
+ * 这里如果不引入, 全局样式和通用的组件样式都不会生效
+ */
+import './app.scss'
+
 // Vue.config.productionTip = false
 
 /*
