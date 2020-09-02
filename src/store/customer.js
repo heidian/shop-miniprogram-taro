@@ -60,6 +60,7 @@ const actions = {
     Taro.removeStorageSync('customerToken')
     commit('setData', {
       customerToken: '',
+      data: {},
       isAuthenticated: false
     })
   },
