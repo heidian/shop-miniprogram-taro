@@ -1,17 +1,18 @@
 export default {
   pages: [
     'pages/home/index',
-    'pages/search/index',
+    'pages/categories/index',
     'pages/membership/index',
     'pages/cart/index',
     'pages/account/index',
-    'pages/bind-alipay/index',
     'pages/profile/index',
+    'pages/search/index',
     'pages/product/index',
     'pages/login/index',
     'pages/checkout/index',
     'pages/addresses/index',
     'pages/addresses/edit',
+    'pages/bind-alipay/index',
     'pages/index/index'
   ],
   tabBar: {
@@ -23,10 +24,10 @@ export default {
         'text': '首页'
       },
       {
-        'pagePath': 'pages/search/index',
+        'pagePath': 'pages/categories/index',
         'iconPath': 'assets/images/tabbar/category.png',
         'selectedIconPath': 'assets/images/tabbar/category-active.png',
-        'text': '商品'
+        'text': '分类'
       },
       {
         'pagePath': 'pages/membership/index',

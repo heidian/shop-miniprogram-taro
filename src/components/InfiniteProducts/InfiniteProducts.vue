@@ -16,7 +16,7 @@
     </view>
     <navigator
       v-if="viewMore"
-      url="/pages/search/index" open-type="switchTab"
+      url="/pages/search/index" open-type="navigateTo"
       class="view-more"
     >点击查看更多</navigator>
   </view>
