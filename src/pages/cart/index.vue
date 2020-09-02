@@ -1,6 +1,6 @@
 <template>
   <view class="page--cart">
-    <view class="cart-group">
+    <view class="cart-group" v-if="cart.items.length">
       <view class="cart-item" v-for="item in cart.items" :key="item.variant_id">
         <view class="cart__delete" @tap="removeItem(item.id)">删除</view>
         <movable-area class="movable-area">
@@ -30,6 +30,7 @@
         </movable-area>
       </view>
     </view>
+    <view v-else class="empty-cart-text">购物车是空的</view>
     <infinite-products ref="infiniteProducts"></infinite-products>
   </view>
 </template>
@@ -223,6 +224,11 @@ page {
     padding-left: 100px - 60px;
     text-align: center;
     color: #fff;
+  }
+  .empty-cart-text {
+    padding: 40px 20px;
+    text-align: center;
+    color: $color-text-light;
   }
 }
 </style>
