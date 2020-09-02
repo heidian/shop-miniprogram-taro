@@ -1,19 +1,24 @@
 <template>
-  <view class="products--rainfall">
+  <view class="infinite-products">
     <view class="column">
-      <product-item
+      <infinite-product-item
         v-for="(product, index) in products.data" :key="product.id"
         v-if="index % 2 === 1"
         :product="product"
-      ></product-item>
+      ></infinite-product-item>
     </view>
     <view class="column">
-      <product-item
+      <infinite-product-item
         v-for="(product, index) in products.data" :key="product.id"
         v-if="index % 2 === 0"
         :product="product"
-      ></product-item>
+      ></infinite-product-item>
     </view>
+    <navigator
+      v-if="viewMore"
+      url="/pages/search/index" open-type="switchTab"
+      class="view-more"
+    >点击查看更多</navigator>
   </view>
 </template>
 
@@ -21,15 +26,19 @@
 import _ from 'lodash'
 import Taro from '@tarojs/taro'
 import ListTable from '@/mixins/ListTable'
-import ProductItem from './ProductItem'
+import InfiniteProductItem from './InfiniteProductItem'
 
 export default {
-  name: 'Home',
   mixins: [
     ListTable('products', { urlRoot: '/shopfront/product/' })
   ],
   components: {
-    ProductItem
+    InfiniteProductItem
+  },
+  data() {
+    return {
+      viewMore: false
+    }
   },
   computed: {
     //
@@ -43,18 +52,24 @@ export default {
     // await this.fetchList()
   },
   methods: {
-    //
+    onReachBottom() {
+      const { data, page, pageSize, count } = this.products
+      if (data.length < 30 && page * pageSize < count) {
+        this.fetchMore()
+      } else {
+        // 显示 "点击查看更多" 进入全部商品列表
+        this.viewMore = true
+      }
+    }
   }
 }
 </script>
 
 <style lang="scss">
 @import '@/styles/_mixins';
-$color-bg-gray: #f6f6f6;
-.products--rainfall {
+.infinite-products {
   @include clearfix();
   padding: 10px 5px;
-  background-color: $color-bg-gray;
   .column {
     float: left;
     width: 50%;
@@ -95,6 +110,11 @@ $color-bg-gray: #f6f6f6;
   .product-image {
     display: block;
     width: 100%;
+  }
+  .view-more {
+    clear: both;
+    text-align: center;
+    padding: 15px;
   }
 }
 </style>

@@ -1,11 +1,11 @@
 <template>
-  <view>
+  <view class="page--home">
     <component
       v-for="(block, index) in blocks" :key="index"
       :is="block.componentClass"
       :css="block.css" :settingsData="block.settings_data"
     ></component>
-    <products ref="products"></products>
+    <infinite-products ref="infiniteProducts"></infinite-products>
   </view>
 </template>
 
@@ -13,7 +13,7 @@
 import _ from 'lodash'
 import Taro from '@tarojs/taro'
 import ThemeBlocks from '@/mixins/ThemeBlocks'
-import Products from './Products'
+import InfiniteProducts from '@/components/InfiniteProducts/InfiniteProducts'
 
 export default {
   name: 'Home',
@@ -21,13 +21,21 @@ export default {
     ThemeBlocks('blocks', { pageType: 'home'})
   ],
   components: {
-    Products
+    InfiniteProducts
   },
   computed: {
     //
   },
+  created() {
+    // TODO, 这里的颜色需要配置, 而不是写死
+    Taro.setBackgroundColor({
+      backgroundColor: '#f6f6f6',
+      backgroundColorTop: '#ffffff',
+      backgroundColorBottom: '#f6f6f6'
+    })
+  },
   onReachBottom() {
-    this.$refs.products.fetchMore()
+    this.$refs.infiniteProducts.onReachBottom()
   },
   async mounted() {
     await this.fetchPageConfig()
@@ -38,4 +46,12 @@ export default {
 }
 </script>
 
-<style lang="scss"></style>
+<style lang="scss">
+$color-bg-gray: #f6f6f6;
+page {
+  background-color: $color-bg-gray;
+}
+.page--home {
+  //
+}
+</style>
