@@ -133,9 +133,10 @@
 					"scene": null
 				},
 				{
-					"id": -1,
+					"id": 10,
 					"name": "pages/orders/index",
 					"pathName": "pages/orders/index",
+					"query": "filter=paid",
 					"scene": null
 				}
 			]

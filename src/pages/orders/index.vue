@@ -1,5 +1,14 @@
 <template>
   <view :class="$style['page']">
+    <view :class="$style['tabs']">
+      <view
+        v-for="[value, title] in [
+          ['all', '全部'], ['unpaid', '待付款'], ['paid', '待收货'], ['closed', '已完成'], ['cancelled', '已取消']
+        ]" :key="title"
+        :class="{ [$style['tab']]: true, [$style['active']]: filterName === value }"
+        @tap="onChangeTab(value)"
+      >{{ title }}</view>
+    </view>
     <view
       v-for="order in orders.data" :key="order.id"
       :class="$style['orderItem']"
@@ -35,16 +44,25 @@
       </view>
       <view :class="$style['footer']"></view>
     </view>
+    <view v-if="!orders.count" :class="$style['emptyOrdersText']">您还没有相关订单</view>
   </view>
 </template>
 
 <script>
 import _ from 'lodash'
-import Taro from '@tarojs/taro'
+import Taro, { getCurrentInstance } from '@tarojs/taro'
 import { API } from '@/utils/api'
 import { optimizeImage } from '@/utils/image'
 import ListTable from '@/mixins/ListTable'
 import { OrderStatus, OrderFinancialStatus, OrderFulfillmentStatus } from './constants'
+
+const FiltersOfTab = {
+  'all': {},
+  'unpaid': { order_status: 'open', financial_status__in: 'pending,partially_paid' },
+  'paid': { order_status: 'open', financial_status__in: 'paid,refunded,partially_refunded' },
+  'closed': { order_status: 'closed' },
+  'cancelled': { order_status: 'cancelled' },
+}
 
 export default {
   name: 'Orders',
@@ -52,7 +70,10 @@ export default {
     ListTable('orders', { urlRoot: '/customers/order/' })
   ],
   data() {
+    const { filter } = getCurrentInstance().router.params
+    const filterName = FiltersOfTab[filter] ? filter : 'all'
     return {
+      filterName,
       OrderStatus,
       OrderFinancialStatus,
       OrderFulfillmentStatus,
@@ -61,14 +82,12 @@ export default {
   created() {
     Taro.setBackgroundColor({
       backgroundColor: '#f6f6f6',
-      backgroundColorTop: '#f6f6f6',
+      backgroundColorTop: '#ffffff',
       backgroundColorBottom: '#f6f6f6',
     })
   },
-  async onReachBottom() {
-    Taro.showNavigationBarLoading()
-    await this.fetchMore()
-    Taro.hideNavigationBarLoading()
+  onReachBottom() {
+    this.fetchOrders({ more: true })
   },
   async mounted() {
     this.updateDefaultParams({
@@ -76,12 +95,25 @@ export default {
                  'lines', 'total_price', 'created_at'].join(','),
       'fields[lines]': ['id', 'image', 'title'].join(','),
     }, { fetch: false })
-    Taro.showNavigationBarLoading()
-    await this.fetchList()
-    Taro.hideNavigationBarLoading()
+    this.fetchOrders()
   },
   methods: {
     optimizeImage,
+    async fetchOrders({ more=false } = {}) {
+      Taro.showNavigationBarLoading()
+      if (more) {
+        await this.fetchMore()
+      } else {
+        const filters = FiltersOfTab[this.filterName] || {}
+        this.updateFilter(filters, { fetch: false, partial: false })
+        await this.fetchList()
+      }
+      Taro.hideNavigationBarLoading()
+    },
+    onChangeTab(value) {
+      this.filterName = value
+      this.fetchOrders()
+    }
   }
 }
 </script>
@@ -97,7 +129,26 @@ $color-bg-gray: #f6f6f6;
 page {
   background-color: $color-bg-gray;
 }
-.page {}
+.page {
+  padding-top: 40px;
+}
+.tabs {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  background-color: #fff;
+  padding: 5px 10px 0;
+  .tab {
+    padding: 10px 10px 5px;
+    &.active {
+      border-bottom: 2px solid $color-text;
+    }
+  }
+}
 .orderItem {
   font-size: 13px;
   margin: 10px;
@@ -157,5 +208,10 @@ page {
     font-size: 0.85em;
     color: $color-text-light;
   }
+}
+.emptyOrdersText {
+  padding: 40px 20px;
+  text-align: center;
+  color: $color-text-light;
 }
 </style>
