@@ -38,23 +38,24 @@ const mutations = {
 }
 
 const actions = {
-  login({ commit, dispatch }, payload) {
-    return API.post('/customers/login/', {
-      ...payload
-    }, {
-      headers: { 'Authorization': '' }
-    }).then(({ data }) => {
+  async login({ commit, dispatch }, payload) {
+    try {
+      const { data } = await API.post('/customers/login/', {
+        ...payload
+      }, {
+        headers: { 'Authorization': '' }
+      })
       const customerToken = data.token
       Taro.setStorageSync('customerToken', customerToken)
       commit('setData', {
         customerToken: customerToken,
         isAuthenticated: true
       })
-      return data
-    }).catch((err) => {
+    } catch(err) {
       console.log('登录失败', _.get(err, 'response.data'))
       throw err
-    })
+    }
+    await dispatch('getCustomer')
   },
   logout({ commit }) {
     Taro.removeStorageSync('customerToken')

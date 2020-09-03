@@ -246,9 +246,7 @@ export default {
   },
   mounted () {
   },
-  onShow () {
-    this.$store.dispatch('customer/getCustomer')
-  },
+  onShow () {},
   methods: {
     onCopyToClipboard (content) {
       if (!content) return

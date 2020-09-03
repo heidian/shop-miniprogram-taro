@@ -30,7 +30,7 @@ export default {
   mounted() {
     // console.log(this.$store.state.config)
     // console.log(this.$store.state.customer)
-    this.$store.dispatch('customer/getCustomer')
+    // this.$store.dispatch('customer/getCustomer')
     this.switchGlobalColors(0)
   },
   methods: {
