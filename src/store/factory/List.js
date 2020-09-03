@@ -8,6 +8,7 @@ export default (urlRoot) => {
   const namespaced = true
 
   const state = () => ({
+    defaultParams: {},
     filter: {},
     orderBy: null,
     page: 1,
@@ -25,12 +26,16 @@ export default (urlRoot) => {
       state.count = count || 0
       state.data = _.cloneDeep(data || [])
     },
-    setParams(state, { filter, page, pageSize, orderBy } = {}) {
+    setParams(state, { defaultParams, filter, page, pageSize, orderBy } = {}) {
       /* 不传任何参数就是 reset */
+      state.defaultParams = _.cloneDeep(defaultParams || {})
       state.filter = _.cloneDeep(filter || {})
       state.page = page || 1
       state.pageSize = pageSize || 10
       state.orderBy = orderBy || null
+    },
+    setDefaultParams(state, defaultParams) {
+      state.defaultParams = _.cloneDeep(defaultParams || {})
     },
     setFilter(state, filter) {
       state.filter = _.cloneDeep(filter || {})
@@ -68,16 +73,16 @@ export default (urlRoot) => {
     //     commit('setParams', params)
     //   }
     list({ commit, state }, { append = false } = {}) {
-      const { filter, page, pageSize, orderBy } = state
+      const { defaultParams, filter, page, pageSize, orderBy } = state
       commit('REQUEST_STARTED')
-      const promise = API.get(urlRoot, {
-        params: {
-          ...filter,
-          page,
-          page_size: pageSize,
-          order_by: orderBy
-        }
-      })
+      const params = {
+        ...defaultParams,
+        ...filter,
+        page: page,
+        page_size: pageSize,
+        order_by: orderBy
+      }
+      const promise = API.get(urlRoot, { params })
       return promise.then((res) => {
         const data = res.data
         const payload = _.isArray(data)? {

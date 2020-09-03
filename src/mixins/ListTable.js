@@ -44,6 +44,12 @@ function StoreListTable(propertyName, storeName) {
       })
     },
     methods: {
+      async updateDefaultParams(defaultParams, { fetch = true } = {}) {
+        this.$store.commit(`${storeName}/setDefaultParams`, defaultParams)
+        if (fetch) {
+          await this.fetchList()
+        }
+      },
       async updatePage(page, { fetch = true } = {}) {
         this.$store.commit(`${storeName}/setPage`, page)
         if (fetch) {
@@ -144,6 +150,7 @@ function LocalListTable(propertyName, urlRoot) {
     data() {
       return {
         [propertyName]: {
+          defaultParams: {},
           filter: {},
           orderBy: null,
           page: 1,
@@ -156,6 +163,12 @@ function LocalListTable(propertyName, urlRoot) {
       }
     },
     methods: {
+      async updateDefaultParams(defaultParams, { fetch = true } = {}) {
+        this[propertyName].defaultParams = defaultParams || {}
+        if (fetch) {
+          await this.fetchList()
+        }
+      },
       async updatePage(page, { fetch = true } = {}) {
         this[propertyName].page = page || 1
         if (fetch) {
@@ -216,15 +229,15 @@ function LocalListTable(propertyName, urlRoot) {
         try {
           this[propertyName].pending = true
           this[propertyName].error = {}
-          const { filter, page, pageSize, orderBy } = this[propertyName]
-          const { data } = await API.get(urlRoot, {
-            params: {
-              ...filter,
-              page,
-              page_size: pageSize,
-              order_by: orderBy
-            }
-          })
+          const { defaultParams, filter, page, pageSize, orderBy } = this[propertyName]
+          const params = {
+            ...defaultParams,
+            ...filter,
+            page,
+            page_size: pageSize,
+            order_by: orderBy
+          }
+          const { data } = await API.get(urlRoot, { params })
           const payload = _.isArray(data)? {
             count: data.length,
             data
