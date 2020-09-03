@@ -43,7 +43,7 @@ export default {
     }
   },
   mounted() {
-    console.log(this.$style) //, styles)
+    // console.log(this.$style) //, styles)
   },
   methods: {
     changeInputValue(quantity) {

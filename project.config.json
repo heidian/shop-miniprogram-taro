@@ -131,6 +131,12 @@
 					"pathName": "pages/bind-alipay/index",
 					"query": "",
 					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "pages/orders/index",
+					"pathName": "pages/orders/index",
+					"scene": null
 				}
 			]
 		}

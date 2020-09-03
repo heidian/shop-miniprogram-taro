@@ -13,6 +13,8 @@ export default {
     'pages/checkout/index',
     'pages/addresses/index',
     'pages/addresses/edit',
+    'pages/orders/index',
+    'pages/orders/detail',
     'pages/index/index'
   ],
   tabBar: {
