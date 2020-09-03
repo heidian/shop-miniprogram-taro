@@ -40,7 +40,7 @@ import _ from 'lodash'
 import Taro from '@tarojs/taro'
 import { mapState } from 'vuex'
 import { optimizeImage } from '@/utils/image'
-import InputNumber from '@/components/InputNumber'
+import InputNumber from '@/components/InputNumber/InputNumber'
 import InfiniteProducts from '@/components/InfiniteProducts/InfiniteProducts'
 
 export default {

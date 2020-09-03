@@ -1,3 +1,4 @@
+var _ = require('lodash')
 var path = require('path')
 function resolve(dir) {
   return path.join(__dirname, '..', dir)
@@ -73,7 +74,28 @@ const config = {
           }
         }
       })
-      // lodash plugin end
+      const value0 = { ...chain.toConfig().module.rules[1].oneOf[0].use }
+      const value1 = { ...chain.toConfig().module.rules[1].oneOf[1].use }
+      chain.module.rule('scss').oneOf(2)
+        .use(0).loader(value1[0].loader).options(value1[0].options).end()
+        .use(1).loader(value1[1].loader).options(value1[1].options).end()
+        .use(2).loader(value1[2].loader).options(value1[2].options).end()
+        .use(3).loader(value1[3].loader).options(value1[3].options).end()
+      chain.module.rule('scss').oneOf(1).resourceQuery(/module/)
+        .use(0).loader(value0[0].loader).options(value0[0].options).end()
+        .use(1).loader(value0[1].loader).options(value0[1].options).end()
+        .use(2).loader(value0[2].loader).options(value0[2].options).end()
+        .use(3).loader(value0[3].loader).options(value0[3].options).end()
+      // chain.module.rule('scss').oneOf(1).use('1').loader('css-loader').tap((options) => {
+      //   return {
+      //     ...options,
+      //     // modules: true,
+      //     modules: {
+      //       localIdentName: "[name]__[local]___[hash:base64:5]",
+      //     }
+      //   }
+      // })
+      // console.log(chain.toConfig().module.rules[1].oneOf)
     },
     commonChunks(commonChunks) {
       commonChunks.push('lodash')
@@ -91,7 +113,7 @@ const config = {
         }
       },
       cssModules: {
-        enable: false, // 默认为 false，如需使用 css modules 功能，则设为 true
+        enable: true, // 默认为 false，如需使用 css modules 功能，则设为 true
         config: {
           namingPattern: 'module', // 转换模式，取值为 global/module
           generateScopedName: '[name]__[local]___[hash:base64:5]'
@@ -108,7 +130,7 @@ const config = {
         config: {}
       },
       cssModules: {
-        enable: false, // 默认为 false，如需使用 css modules 功能，则设为 true
+        enable: true, // 默认为 false，如需使用 css modules 功能，则设为 true
         config: {
           namingPattern: 'module', // 转换模式，取值为 global/module
           generateScopedName: '[name]__[local]___[hash:base64:5]'

@@ -1,15 +1,21 @@
 <template>
-  <view class="input-number">
-    <view class="input-number__btn input-number__minus" @tap="changeInputValue(+inputValue - 1)">-</view>
+  <view :class="$style.inputNumber">
+    <view :class="[$style.btn, $style.minus]" @tap="changeInputValue(+inputValue - 1)">-</view>
     <input
-      class="input-number__input" type='number'
+      :class="$style.input" type='number'
       v-model="inputValue" @input="onInput" @blur="onBlur"
     />
-    <view class="input-number__btn input-number__add" @tap="changeInputValue(+inputValue + 1)">+</view>
+    <view :class="[$style.btn, $style.add]" @tap="changeInputValue(+inputValue + 1)">+</view>
   </view>
 </template>
 
 <script>
+import styles from './InputNumber.module.scss'
+/* 有两种方式可以引入 cssModules,
+ * 一个是在下面的 style 上加 module, 然后直接在 template 里使用 $style
+ * 另一个是直接从 xxx.module.scss 文件 import, 但是要把这个 styles 变量放进 data 里
+ */
+
 export default {
   name: 'InputNumber',
   model: {
@@ -32,8 +38,12 @@ export default {
   },
   data() {
     return {
+      // styles,
       inputValue: '' + (+this.value || 0)  // 确保 inputValue 是个字符串
     }
+  },
+  mounted() {
+    console.log(this.$style) //, styles)
   },
   methods: {
     changeInputValue(quantity) {
@@ -67,34 +77,34 @@ export default {
 }
 </script>
 
-<style lang="scss">
-$color-divider: #f0f0f0;
-.input-number {
-  border: 1px solid $color-divider;
+<style lang="scss" module>
+/*$color-divider: #f0f0f0;*/
+.inputNumber {
+  /*border: 1px solid $color-divider;*/
   position: relative;
   padding-left: 30px;
   padding-right: 30px;
-  &__input {
-    text-align: center;
-  }
-  &__input, &__btn {
-    height: 30px;
-    line-height: 30px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  &__btn {
-    text-align: center;
-    width: 30px;
-    position: absolute;
-    top: 0;
-  }
-  &__minus {
-    left: 0;
-  }
-  &__add {
-    right: 0;
-  }
+}
+.input {
+  text-align: center;
+}
+.input, .btn {
+  height: 30px;
+  line-height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.btn {
+  text-align: center;
+  width: 30px;
+  position: absolute;
+  top: 0;
+}
+.minus {
+  left: 0;
+}
+.add {
+  right: 0;
 }
 </style>
