@@ -76,26 +76,24 @@ const config = {
       })
       const value0 = { ...chain.toConfig().module.rules[1].oneOf[0].use }
       const value1 = { ...chain.toConfig().module.rules[1].oneOf[1].use }
-      chain.module.rule('scss').oneOf(2)
+      chain.module.rule('scss').oneOf('2')
         .use(0).loader(value1[0].loader).options(value1[0].options).end()
         .use(1).loader(value1[1].loader).options(value1[1].options).end()
         .use(2).loader(value1[2].loader).options(value1[2].options).end()
         .use(3).loader(value1[3].loader).options(value1[3].options).end()
-      chain.module.rule('scss').oneOf(1).resourceQuery(/module/)
+      chain.module.rule('scss').oneOf('1').resourceQuery(/module/)
         .use(0).loader(value0[0].loader).options(value0[0].options).end()
         .use(1).loader(value0[1].loader).options(value0[1].options).end()
         .use(2).loader(value0[2].loader).options(value0[2].options).end()
         .use(3).loader(value0[3].loader).options(value0[3].options).end()
-      // chain.module.rule('scss').oneOf(1).use('1').loader('css-loader').tap((options) => {
-      //   return {
-      //     ...options,
-      //     // modules: true,
-      //     modules: {
-      //       localIdentName: "[name]__[local]___[hash:base64:5]",
-      //     }
-      //   }
+      // const localIdentName = '[path][name]__[local]___[hash:base64:5]'
+      // chain.module.rule('scss').oneOf('0').use('1').loader('css-loader').tap((options) => {
+      //   return { ...options, modules: { localIdentName } }
       // })
-      // console.log(chain.toConfig().module.rules[1].oneOf)
+      // chain.module.rule('scss').oneOf('1').use('1').loader('css-loader').tap((options) => {
+      //   return { ...options, modules: { localIdentName } }
+      // })
+      // console.log(chain.toConfig().module.rules[1].oneOf[1].use)
     },
     commonChunks(commonChunks) {
       commonChunks.push('lodash')

@@ -9,7 +9,7 @@ module.exports = {
     sassLoaderOption: {
       sassOptions: {
         // 这么配置让生产环境编译 sass 前不要去除注释, 不然 /*postcss-pxtransform disable*/ 会失效
-        outputStyle: 'expanded'
+        // outputStyle: 'expanded'
       }
     }
   },
