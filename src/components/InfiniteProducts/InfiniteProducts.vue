@@ -1,6 +1,9 @@
 <template>
   <view :class="$style['container']">
-    <view :class="$style['column']">
+    <view v-for="(product, index) in products.data" :key="product.id" :class="$style['grid']">
+      <infinite-product-item :product="product"></infinite-product-item>
+    </view>
+    <!-- <view :class="$style['column']">
       <infinite-product-item
         v-for="(product, index) in products.data" :key="product.id"
         v-if="index % 2 === 1"
@@ -13,7 +16,7 @@
         v-if="index % 2 === 0"
         :product="product"
       ></infinite-product-item>
-    </view>
+    </view> -->
     <navigator
       v-if="viewMore"
       url="/pages/search/index" open-type="navigateTo"
@@ -68,13 +71,21 @@ export default {
 @import '@/styles/_mixins';
 .container {
   @include clearfix();
-  padding: 10px 5px;
+  padding: 5px 5px;
 }
-.column {
+// .column {
+//   float: left;
+//   width: 50%;
+//   padding-left: 5px;
+//   padding-right: 5px;
+// }
+.grid {
   float: left;
   width: 50%;
-  padding-left: 5px;
-  padding-right: 5px;
+  padding: 5px;
+  &:nth-child(2n+1) {
+    clear: both;
+  }
 }
 .viewMore {
   clear: both;

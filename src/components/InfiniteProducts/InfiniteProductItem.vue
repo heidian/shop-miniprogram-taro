@@ -1,12 +1,14 @@
 <template>
   <view :class="$style['item']" @tap="goToProduct(product.name)">
-    <image
-      :class="$style['image']" mode="widthFix" :lazy-load="true"
-      :src="optimizeImage(product.image)"
-    ></image>
+    <view :class="$style['imageWrapper']">
+      <image
+        :class="$style['image']" mode="widthFix" :lazy-load="true"
+        :src="optimizeImage(product.image)"
+      ></image>
+    </view>
     <view :class="$style['text']">
       <view :class="$style['title']">{{ product.title }}</view>
-      <view :class="$style['description']" v-if="product.description">{{ product.description }}</view>
+      <view :class="$style['description']">{{ product.description }}</view>
     </view>
   </view>
 </template>
@@ -41,11 +43,11 @@ export default {
 </script>
 
 <style lang="scss" module>
+@import '@/styles/_mixins';
 $color-text: #262626;
 $color-text-light: #555;
 .item {
   width: 100%;
-  margin-bottom: 10px;
   border-radius: 5px;
   // box-shadow: 0 3px 5px rgba(#000, 0.2);
   background-color: #fff;
@@ -56,15 +58,12 @@ $color-text-light: #555;
 }
 .title,
 .description {
-  overflow: hidden;
   font-size: 12px;
   line-height: 15px;
+  height: 30px;
   letter-spacing: 1px;
   word-break: break-all;
-  text-overflow: ellipsis;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
+  @include ellipsis(2);
   margin-bottom: 5px;
 }
 .title {
@@ -74,8 +73,17 @@ $color-text-light: #555;
 .description {
   color: $color-text-light;
 }
+.imageWrapper {
+  width: 100%;
+  padding-top: 100%;
+  position: relative;
+}
 .image {
   display: block;
+  position: absolute;
+  left: 0;
+  top: 0;
   width: 100%;
+  height: 100%;
 }
 </style>
