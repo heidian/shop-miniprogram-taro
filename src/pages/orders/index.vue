@@ -6,11 +6,24 @@
     >
       <!-- <view class="btn">text</view> -->
       <view :class="$style['header']">
-        <text>下单时间: {{ order.created_at | date }}</text>
+        <text :class="$style['time']">下单时间: {{ order.created_at | date }}</text>
+        <view
+          v-if="order.order_status !== 'open'"
+          :class="$style['status']"
+        >{{ OrderStatus[order.order_status] }}</view>
+        <template v-else>
+          <view
+            :class="$style['status']"
+          >{{ OrderFinancialStatus[order.financial_status] }}</view>
+          <view
+            v-if="order.financial_status !== 'pending'"
+            :class="$style['status']"
+          >{{ OrderFulfillmentStatus[order.fulfillment_status] }}</view>
+        </template>
       </view>
       <view :class="$style['lines']">
         <image
-          v-for="line in order.lines" :key="line.id"
+          v-for="line in order.lines.slice(0,3)" :key="line.id"
           :class="$style['lineImage']"
           :src="optimizeImage(line.image, 80)"
         ></image>
@@ -31,6 +44,7 @@ import Taro from '@tarojs/taro'
 import { API } from '@/utils/api'
 import { optimizeImage } from '@/utils/image'
 import ListTable from '@/mixins/ListTable'
+import { OrderStatus, OrderFinancialStatus, OrderFulfillmentStatus } from './constants'
 
 export default {
   name: 'Orders',
@@ -38,17 +52,33 @@ export default {
     ListTable('orders', { urlRoot: '/customers/order/' })
   ],
   data() {
-    return {}
+    return {
+      OrderStatus,
+      OrderFinancialStatus,
+      OrderFulfillmentStatus,
+    }
   },
   created() {
     Taro.setBackgroundColor({
       backgroundColor: '#f6f6f6',
       backgroundColorTop: '#f6f6f6',
-      backgroundColorBottom: '#f6f6f6'
+      backgroundColorBottom: '#f6f6f6',
     })
   },
-  mounted() {
-    this.fetchList()
+  async onReachBottom() {
+    Taro.showNavigationBarLoading()
+    await this.fetchMore()
+    Taro.hideNavigationBarLoading()
+  },
+  async mounted() {
+    this.updateDefaultParams({
+      'fields': ['id', 'order_status', 'financial_status', 'fulfillment_status',
+                 'lines', 'total_price', 'created_at'].join(','),
+      'fields[lines]': ['id', 'image', 'title'].join(','),
+    }, { fetch: false })
+    Taro.showNavigationBarLoading()
+    await this.fetchList()
+    Taro.hideNavigationBarLoading()
   },
   methods: {
     optimizeImage,
@@ -79,7 +109,23 @@ page {
     color: red;
   }
 }
-.header, .footer {
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  .time {
+    margin-right: auto;
+  }
+  .status {
+    color: $color-text-light;
+    & + .status::before {
+      content: '/';
+      display: inline-block;
+      margin: 0 5px;
+    }
+  }
+}
+.footer {
   //
 }
 .lines {
@@ -92,6 +138,7 @@ page {
   width: 80px;
   height: 80px;
   margin-right: 10px;
+  border-radius: 4px;
 }
 .lineTitle {
   flex: 1;

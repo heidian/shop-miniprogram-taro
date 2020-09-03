@@ -45,12 +45,10 @@ export default {
     //
   },
   async mounted() {
-    // await this.updatePageSize(100)
-    await this.updateFilter({
-      // vendor: 1479,
+    this.updateDefaultParams({
       fields: ['id', 'name', 'title', 'description', 'image', 'price'].join(',')
-    })
-    // await this.fetchList()
+    }, { fetch: false })
+    await this.fetchList()
   },
   methods: {
     onReachBottom() {
