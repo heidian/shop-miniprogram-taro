@@ -21,6 +21,7 @@ import Taro, { getCurrentInstance } from '@tarojs/taro'
 import { API } from '@/utils/api'
 
 export default {
+  name: 'Addresses',
   data() {
     const { intent } = getCurrentInstance().router.params
     return {

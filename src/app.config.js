@@ -5,6 +5,7 @@ export default {
     'pages/membership/index',
     'pages/cart/index',
     'pages/account/index',
+    'pages/account/bind-alipay',
     'pages/profile/index',
     'pages/search/index',
     'pages/product/index',
@@ -12,7 +13,6 @@ export default {
     'pages/checkout/index',
     'pages/addresses/index',
     'pages/addresses/edit',
-    'pages/bind-alipay/index',
     'pages/index/index'
   ],
   tabBar: {

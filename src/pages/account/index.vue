@@ -51,7 +51,7 @@
             </view>
             <view class="account__balance__btns">
               <view class="account__balance__btns__withdraw-history">提现记录 <view class="account__text__caret"></view></view>
-              <navigator class="account__balance__btns__bind-alipay" url="/pages/bind-alipay/index" open-type="navigate" hover-class="none">绑定支付宝</navigator>
+              <navigator class="account__balance__btns__bind-alipay" url="/pages/account/bind-alipay" open-type="navigate" hover-class="none">绑定支付宝</navigator>
             </view>
           </view>
           <view class="account__balance__divider"></view>

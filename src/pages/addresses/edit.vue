@@ -33,6 +33,7 @@ import Taro, { getCurrentInstance } from '@tarojs/taro'
 import { API } from '@/utils/api'
 
 export default {
+  name: 'AddresseEdit',
   data() {
     return {
       address: {
