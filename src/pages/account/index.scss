@@ -1,6 +1,6 @@
 $color-bg: #1a1a1a;
 $color-bg-light: #373737;
-$color-bg-lighter: #f0f0f0;
+$color-bg-lighter: #f6f6f6;
 $color-bg-dark: #000000;
 $color-text: #ffffff;
 $color-text-dark: #000000;
@@ -349,11 +349,8 @@ $color-divider: rgba(#ffffff, 0.1);
     background-color: $color-red;
   }
   &__light {
-    padding: 20px 5px;
+    padding: 20px 0;
     background-color: $color-bg-lighter;
-  }
-  &__infinite-products {
-
   }
   &__infinite-products__head {
     width: 100%;

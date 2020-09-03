@@ -221,34 +221,36 @@ export default {
     }
   },
   components: {
-    InfiniteProducts,
+    InfiniteProducts
   },
   computed: {
     ...mapState('customer', {
       customer: (state) => state.data || {},
       isAuthenticated: (state) => state.isAuthenticated || false
     }),
-    levelTitle () {
+    levelTitle() {
       return _.get(this.customer, 'level.title')
     },
-    points () {
+    points() {
       return _.get(this.customer, 'points', 0)
     },
-    levelProgressStyle () {
+    levelProgressStyle() {
       const width = (this.points || 0) * 100 / this.pointsMax
       return {
         width: `${width}%`
       }
     },
-    balance () {
+    balance() {
       return '0.00'
-    },
+    }
   },
-  mounted () {
+  mounted() {},
+  onShow() {},
+  onReachBottom() {
+    this.$refs.infiniteProducts.onReachBottom()
   },
-  onShow () {},
   methods: {
-    onCopyToClipboard (content) {
+    onCopyToClipboard(content) {
       if (!content) return
       Taro.setClipboardData({ data: content }).then(() => {
         Taro.showToast({ title: "复制成功" })
@@ -259,10 +261,7 @@ export default {
     logout() {
       this.$store.dispatch('customer/logout')
     }
-  },
-  // onReachBottom() {
-  //   this.$refs.infiniteProducts.onReachBottom()
-  // },
+  }
 }
 </script>
 
