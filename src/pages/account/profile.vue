@@ -28,6 +28,7 @@ import Taro from '@tarojs/taro'
 import { mapState } from 'vuex'
 
 export default {
+  name: 'Profile',
   data() {
     return {
       navigators: [

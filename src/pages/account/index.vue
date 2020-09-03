@@ -12,7 +12,7 @@
             <view class="account__customer__caption__name">
               <text class="account__customer__full-name">{{ customer.full_name || '未命名' }}</text>
               <text class="account__customer__level__title">{{ levelTitle }}</text>
-              <navigator class="account__customer__navigator--text" url="/pages/profile/index" open-type="navigate" hover-class="none">填写微信号</navigator>
+              <navigator class="account__customer__navigator--text" url="/pages/account/profile" open-type="navigate" hover-class="none">填写微信号</navigator>
             </view>
             <view class="account__customer__caption__referral">
               <text class="account__customer__referral-code">邀请ID：{{ customer.referral_code }}</text>
@@ -22,7 +22,7 @@
           <view v-else class="account__customer__caption">
             <navigator url="/pages/login/index" class="account__customer__login">登录</navigator>
           </view>
-          <navigator class="account__customer__caret" url="/pages/profile/index" open-type="navigate" hover-class="none"></navigator>
+          <navigator class="account__customer__caret" url="/pages/account/profile" open-type="navigate" hover-class="none"></navigator>
         </view>
         <view class="account__customer__level-progress">
           <view class="account__customer__level__hint">

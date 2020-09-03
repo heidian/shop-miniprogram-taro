@@ -44,7 +44,7 @@
 
 <script>
 export default {
-  name: 'BindAlipay'
+  name: 'BindAlipay',
   data() {
     return {
       form: {},
