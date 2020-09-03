@@ -56,14 +56,17 @@ const actions = {
       throw err
     }
     await dispatch('getCustomer')
+    dispatch('cart/fetch', null, { root: true })  // 登录以后重新获取 cart
   },
-  logout({ commit }) {
+  logout({ commit, dispatch }) {
     Taro.removeStorageSync('customerToken')
     commit('setData', {
       customerToken: '',
       data: {},
       isAuthenticated: false
     })
+    dispatch('cart/fetch', null, { root: true })
+    // 登出以后重新获取 cart, 这时 header 里的 carttoken 是错的, 但是没关系, 接口会直接忽略并返回空数据
   },
   getCustomer({ commit }) {
     return API.get('/customers/customer/').then(({ data }) => {

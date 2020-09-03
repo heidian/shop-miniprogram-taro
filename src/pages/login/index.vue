@@ -9,6 +9,7 @@
 </template>
 
 <script>
+import _ from 'lodash'
 import Taro from '@tarojs/taro'
 
 export default {
@@ -49,9 +50,8 @@ export default {
             // ...analytics.apiCampaignContext()
           }
         })
-        console.log('登录成功', res)
       } catch(err) {
-        console.log('登录失败', _.get(err, 'response.data'))
+        console.log('登录失败', _.get(err, 'response.data', ('' + err)))
       }
     },
     getJsCode() {
