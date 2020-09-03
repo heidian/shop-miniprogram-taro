@@ -19,7 +19,7 @@
     </view> -->
     <navigator
       v-if="viewMore"
-      url="/pages/search/index" open-type="navigateTo"
+      url="/pages/search/index" open-type="navigate"
       :class="$style['viewMore']"
     >点击查看更多</navigator>
   </view>

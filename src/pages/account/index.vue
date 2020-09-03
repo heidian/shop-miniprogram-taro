@@ -91,10 +91,12 @@
           </view>
           <view class="account__grid">
             <navigator
-              v-for="item in orderNavigators" :key="item.text"
+              v-for="(item, index) in orderNavigators" :key="index"
               class="account__grid__item account__grid__navigator account__grid__navigator--divider"
               open-type="navigate"
-              hover-class="none">
+              hover-class="none"
+              :url="item.url"
+            >
               <image class="account__grid__item__icon" :src="item.icon" mode="aspectFit"></image>
               <text class="account__grid__item__text">{{ item.text }}</text>
             </navigator>
@@ -176,25 +178,25 @@ export default {
       ],
       orderNavigators: [
         {
-          url: '',
+          url: '/pages/orders/index?filter=unpaid',
           icon: 'https://up.img.heidiancdn.com/o_1eh4ipmqg17erq8ufi5un71lj50opay2x.png',
           text: '待付款'
         },
         {
-          url: '',
+          url: '/pages/orders/index?filter=paid',
           icon: 'https://up.img.heidiancdn.com/o_1eh4ipmqg1ads6g21aba1bhn1e870paid2x.png',
           text: '已付款'
         },
         {
-          url: '',
+          url: '/pages/orders/index?filter=closed',
+          icon: 'https://up.img.heidiancdn.com/o_1eh4ipmqg1mnck81cve1gf6asd0shed2x.png',
+          text: '已完成'
+        },
+        {
+          url: '/pages/orders/index?filter=cancelled',
           icon: 'https://up.img.heidiancdn.com/o_1eh4ipmqf1112btg1f3jjdden0eled2x.png',
           text: '已取消'
         },
-        {
-          url: '',
-          icon: 'https://up.img.heidiancdn.com/o_1eh4ipmqg1mnck81cve1gf6asd0shed2x.png',
-          text: '已完成'
-        }
       ],
       otherNavigators: [
         {
