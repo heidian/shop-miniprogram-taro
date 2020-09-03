@@ -1,13 +1,13 @@
 <template>
-  <view class="infinite-products">
-    <view class="column">
+  <view :class="$style['container']">
+    <view :class="$style['column']">
       <infinite-product-item
         v-for="(product, index) in products.data" :key="product.id"
         v-if="index % 2 === 1"
         :product="product"
       ></infinite-product-item>
     </view>
-    <view class="column">
+    <view :class="$style['column']">
       <infinite-product-item
         v-for="(product, index) in products.data" :key="product.id"
         v-if="index % 2 === 0"
@@ -17,7 +17,7 @@
     <navigator
       v-if="viewMore"
       url="/pages/search/index" open-type="navigateTo"
-      class="view-more"
+      :class="$style['viewMore']"
     >点击查看更多</navigator>
   </view>
 </template>
@@ -66,58 +66,21 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" module>
 @import '@/styles/_mixins';
-$color-text: #262626;
-$color-text-light: #555;
-.infinite-products {
+.container {
   @include clearfix();
   padding: 10px 5px;
-  .column {
-    float: left;
-    width: 50%;
-    padding-left: 5px;
-    padding-right: 5px;
-  }
-  .product-item {
-    width: 100%;
-    margin-bottom: 10px;
-    border-radius: 5px;
-    // box-shadow: 0 3px 5px rgba(#000, 0.2);
-    background-color: #fff;
-    overflow: hidden;
-  }
-  .product-text {
-    padding: 7px 7px 10px;
-  }
-  .product-title,
-  .product-description {
-    overflow: hidden;
-    font-size: 12px;
-    line-height: 15px;
-    letter-spacing: 1px;
-    word-break: break-all;
-    text-overflow: ellipsis;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    margin-bottom: 5px;
-  }
-  .product-title {
-    font-weight: 500;
-    color: $color-text;
-  }
-  .product-description {
-    color: $color-text-light;
-  }
-  .product-image {
-    display: block;
-    width: 100%;
-  }
-  .view-more {
-    clear: both;
-    text-align: center;
-    padding: 15px;
-  }
+}
+.column {
+  float: left;
+  width: 50%;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+.viewMore {
+  clear: both;
+  text-align: center;
+  padding: 15px;
 }
 </style>
