@@ -133,7 +133,7 @@
 					"scene": null
 				},
 				{
-					"id": 10,
+					"id": -1,
 					"name": "pages/orders/index",
 					"pathName": "pages/orders/index",
 					"query": "filter=paid",
@@ -144,6 +144,13 @@
 					"name": "pages/misc/share",
 					"pathName": "pages/misc/share",
 					"query": "product=77044",
+          "scene": null
+        },
+        {
+          "id": -1,
+					"name": "pages/product/index",
+					"pathName": "pages/product/index",
+					"query": "name=p_1eh9be5hj1rbm1qt",
 					"scene": null
 				}
 			]

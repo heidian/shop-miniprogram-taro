@@ -1,5 +1,5 @@
 <template>
-  <view class="drawer drawer--bottom drawer--coupons" :class="{'drawer--visible': isVisible}">
+  <view class="drawer drawer--bottom" :class="{'drawer--visible': isVisible}">
     <view class="drawer__mask" @tap="handleClose"></view>
     <view class="drawer__body">
       <view class="drawer__header">

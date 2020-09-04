@@ -57,7 +57,7 @@ import Taro from '@tarojs/taro'
 import _ from 'lodash'
 import { API } from '@/utils/api'
 import { handleErr } from '@/utils/errHelper'
-import './index.scss'
+import DrawerBottom from '@/components/DrawerBottom/'
 
 export default {
   name: 'SelectVariant',
@@ -282,4 +282,7 @@ export default {
   },
 }
 </script>
-<style lang="scss"></style>
+
+<style lang="scss" module>
+@import './SelectVariant.scss'
+</style>

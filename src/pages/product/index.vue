@@ -37,7 +37,7 @@
     <!-- 待删除 -->
     <!-- 待删除 -->
     <view class="page__section">
-      <view class="cell" @tap="() => onToggleSelectVariant('add_to_cart')">
+      <view class="cell" @tap="() => showVariantsDrawer('add_to_cart')">
         <view class="cell__label">已选</view>
         <view class="cell__value">{{ currentVariant.title }}</view>
         <view class="cell__ft">
@@ -66,10 +66,10 @@
         </navigator>
       </view>
       <view class="page__footer__right">
-        <button class="page__footer__btn btn--blue" @tap="() => onToggleSelectVariant('add_to_cart')">
+        <button class="page__footer__btn btn--blue" @tap="() => showVariantsDrawer('add_to_cart')">
           <text class="page__footer__btn__text">加入购物车</text>
         </button>
-        <button class="page__footer__btn btn--orange" @tap="() => onToggleSelectVariant('buy_now')">
+        <button class="page__footer__btn btn--orange" @tap="() => showVariantsDrawer('buy_now')">
           <text class="page__footer__btn__text">立即购买</text>
         </button>
       </view>
@@ -77,12 +77,13 @@
     <navigator :url="`/pages/misc/share?product=${product.id}`" class="product__share">
       <image class="product__share__icon" src="data:image/svg+xml;base64,PHN2ZyBpZD0iQ2FwYV8xIiBlbmFibGUtYmFja2dyb3VuZD0ibmV3IDAgMCA1NTEuMTMgNTUxLjEzIiBoZWlnaHQ9IjUxMiIgdmlld0JveD0iMCAwIDU1MS4xMyA1NTEuMTMiIHdpZHRoPSI1MTIiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0ibTQ2NS4wMTYgMTcyLjIyOGgtNTEuNjY4djM0LjQ0NmgzNC40NDZ2MzEwLjAxMWgtMzQ0LjQ1N3YtMzEwLjAxMWgzNC40NDZ2LTM0LjQ0NmgtNTEuNjY5Yy05LjUyIDAtMTcuMjIzIDcuNzAzLTE3LjIyMyAxNy4yMjN2MzQ0LjQ1NmMwIDkuNTIgNy43MDMgMTcuMjIzIDE3LjIyMyAxNy4yMjNoMzc4LjkwMmM5LjUyIDAgMTcuMjIzLTcuNzAzIDE3LjIyMy0xNy4yMjN2LTM0NC40NTZjMC05LjUyLTcuNzAzLTE3LjIyMy0xNy4yMjMtMTcuMjIzeiIvPjxwYXRoIGQ9Im0yNTguMzQyIDY1LjkzMXYyNDQuMDhoMzQuNDQ2di0yNDQuMDhsNzMuOTM3IDczLjkzNyAyNC4zNTQtMjQuMzU0LTExNS41MTQtMTE1LjUxNC0xMTUuNTE0IDExNS41MTQgMjQuMzU0IDI0LjM1NHoiLz48L3N2Zz4=" mode="aspectFit" lazy-load="false"></image>
     </navigator>
-    <select-variants
+    <select-variant
+      :visible="variantsDrawer.visible"
+      :openType="variantsDrawer.openType"
       :product="product"
-      :currentVariant="currentVariant"
-      :drawerOpenedType="drawerOpenedType"
-      @onToggleDrawer="onToggleSelectVariant"
-      @onSelectVariant="onSelectVariant"/>
+      :variant="currentVariant"
+      @onSelectVariant="onSelectVariant"
+    ></select-variant>
   </view>
 </template>
 
@@ -93,8 +94,8 @@ import { mapState } from 'vuex'
 import _ from 'lodash'
 import { API } from '@/utils/api'
 import { optimizeImage, backgroundImageUrl } from '@/utils/image'
+import SelectVariant from '@/components/SelectVariant/SelectVariant'
 import RelatedProducts from './RelatedProducts'
-import SelectVariants from './SelectVariants'
 import { setTimeout } from 'timers';
 
 const ICON_CUSTOMER_SERVIDE = "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iaXNvLTg4NTktMSI/Pg0KPCEtLSBHZW5lcmF0b3I6IEFkb2JlIElsbHVzdHJhdG9yIDE5LjAuMCwgU1ZHIEV4cG9ydCBQbHVnLUluIC4gU1ZHIFZlcnNpb246IDYuMDAgQnVpbGQgMCkgIC0tPg0KPHN2ZyB2ZXJzaW9uPSIxLjEiIGlkPSJDYXBhXzEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHg9IjBweCIgeT0iMHB4Ig0KCSB2aWV3Qm94PSIwIDAgNDIyLjEzOSA0MjIuMTM5IiBzdHlsZT0iZW5hYmxlLWJhY2tncm91bmQ6bmV3IDAgMCA0MjIuMTM5IDQyMi4xMzk7IiB4bWw6c3BhY2U9InByZXNlcnZlIj4NCjxnPg0KCTxnPg0KCQk8cGF0aCBkPSJNMzYzLjYzMSwxNzQuNDk4aC0xLjA0NXYtMjUuNkMzNjIuNTg2LDY2LjY2NCwyOTUuOTIzLDAsMjEzLjY4OCwwUzY0Ljc5LDY2LjY2NCw2NC43OSwxNDguODk4djI1LjZoLTYuMjY5DQoJCQljLTIyLjk4OCwwLTQwLjc1MSwyMC4zNzUtNDAuNzUxLDQzLjg4NnY2NS4zMDZjLTAuNTc5LDIyLjc4NywxNy40MjUsNDEuNzI5LDQwLjIxMiw0Mi4zMDhjMC4xOCwwLjAwNSwwLjM1OSwwLjAwOCwwLjUzOSwwLjAxDQoJCQloMzguNjYxYzUuNDc2LTAuMjU3LDkuNzA3LTQuOTA2LDkuNDQ5LTEwLjM4MmMtMC4wMDktMC4xOTctMC4wMjQtMC4zOTQtMC4wNDUtMC41OXYtMTI4YzAtNi4yNjktMy42NTctMTIuNTM5LTkuNDA0LTEyLjUzOQ0KCQkJSDg1LjY4OHYtMjUuNmMwLTcwLjY5Miw1Ny4zMDgtMTI4LDEyOC0xMjhzMTI4LDU3LjMwOCwxMjgsMTI4djI1LjZoLTExLjQ5NGMtNS43NDcsMC05LjQwNCw2LjI2OS05LjQwNCwxMi41Mzl2MTI4DQoJCQljLTAuNTgzLDUuNDUxLDMuMzYzLDEwLjM0Myw4LjgxNCwxMC45MjZjMC4xOTYsMC4wMjEsMC4zOTMsMC4wMzYsMC41OSwwLjA0NWgxMi4wMTZsLTEuMDQ1LDEuNTY3DQoJCQljLTE1LjY3NywyMC44MzUtNDAuMjc3LDMzLjAzOC02Ni4zNTEsMzIuOTE0Yy01LjcwOC0yNy45ODktMzMuMDI2LTQ2LjA1Mi02MS4wMTUtNDAuMzQzDQoJCQljLTIzLjkzNSw0Ljg4MS00MS4xOTIsMjUuODQzLTQxLjM4NSw1MC4yN2MwLjI4NiwyOC42NSwyMy41OTQsNTEuNzI0LDUyLjI0NSw1MS43MjJjMTQuMTgzLTAuMjMsMjcuNzAyLTYuMDUsMzcuNjE2LTE2LjE5Ng0KCQkJYzYuNjg5LTYuODUsMTEuMDcyLTE1LjYxNywxMi41MzktMjUuMDc4YzMyLjY1MiwwLjEyNCw2My40NDUtMTUuMTc2LDgzLjA2OS00MS4yNzNsOS45MjctMTQuNjI5DQoJCQljMjIuNDY1LTEuNTY3LDM2LjU3MS0xNS42NzMsMzYuNTcxLTM2LjA0OXYtNjUuMzA2QzQwNC4zODIsMjAxLjE0MywzODcuNjY0LDE3NC40OTgsMzYzLjYzMSwxNzQuNDk4eiBNODUuNjg4LDMwNS4xMUg1OC41MjENCgkJCWMtMTEuMjUtMC4yNzQtMjAuMTQ4LTkuNjE1LTE5Ljg3NC0yMC44NjVjMC4wMDUtMC4xODUsMC4wMTItMC4zNywwLjAyMS0wLjU1NnYtNjUuMzA2YzAtMTIuMDE2LDguMzU5LTIyLjk4OCwxOS44NTMtMjIuOTg4DQoJCQloMjcuMTY3VjMwNS4xMXogTTI0Ny4xMjUsMzkxLjMxNGMtNS43OSw2LjI3OC0xMy45MjUsOS44NzMtMjIuNDY1LDkuOTI3Yy0xNi45OTgtMC4yNy0zMC43OTItMTMuODM0LTMxLjM0Ny0zMC44MjUNCgkJCWMtMC4wMDctMTcuMDI0LDEzLjc4OC0zMC44MywzMC44MTItMzAuODM3YzE3LjAyNC0wLjAwNywzMC44MywxMy43ODgsMzAuODM3LDMwLjgxMmMwLDAuMDA4LDAsMC4wMTcsMCwwLjAyNQ0KCQkJQzI1NS4zOTcsMzc4LjE3MywyNTIuNTUzLDM4NS43NTYsMjQ3LjEyNSwzOTEuMzE0eiBNMzgzLjQ4NCwyODguOTE0YzAsMTQuMTA2LTEzLjU4NCwxNi4xOTYtMTkuODUzLDE2LjE5NmgtMjEuOTQzVjE5NS4zOTYNCgkJCWgyMS45NDNjMTEuNDk0LDAsMTkuODUzLDE2LjE5NiwxOS44NTMsMjguMjEyVjI4OC45MTR6Ii8+DQoJPC9nPg0KPC9nPg0KPGc+DQo8L2c+DQo8Zz4NCjwvZz4NCjxnPg0KPC9nPg0KPGc+DQo8L2c+DQo8Zz4NCjwvZz4NCjxnPg0KPC9nPg0KPGc+DQo8L2c+DQo8Zz4NCjwvZz4NCjxnPg0KPC9nPg0KPGc+DQo8L2c+DQo8Zz4NCjwvZz4NCjxnPg0KPC9nPg0KPGc+DQo8L2c+DQo8Zz4NCjwvZz4NCjxnPg0KPC9nPg0KPC9zdmc+DQo="
@@ -104,7 +105,7 @@ export default {
   components: {
     /* 组件名称用首字母大写, template 里面标签不能用大写, 全部用小写+减号 */
     RelatedProducts,
-    SelectVariants
+    SelectVariant
   },
   data() {
     /* getCurrentInstance 只在生命周期方法里用, 一般在 created() 或者 data() 方法里面用 */
@@ -120,7 +121,10 @@ export default {
       product: {
         variants: []
       },
-      drawerOpenedType: '',
+      variantsDrawer: {
+        visible: false,
+        openType: ''
+      },
       currentVariant: {},
       miniqrUrl: ''
     }
@@ -147,7 +151,7 @@ export default {
     /* 方法名称用驼峰 */
     async fetchProduct() {
       // TODO 要处理 404
-      const fields = _.join(['id', 'title', 'image', 'variants', 'price', 'created_at'], ',')
+      const fields = ['id', 'title', 'image', 'variants', 'options', 'price', 'created_at'].join(',')
       let product = null
       if (this.productId) {
         const res = await API.get(`/shopfront/product/${this.productId}/`, {
@@ -175,8 +179,11 @@ export default {
         // 抛出异常
       }
     },
-    onToggleSelectVariant (status) {
-      this.drawerOpenedType = (typeof status === 'undefined') ? 'add_to_cart' : status
+    showVariantsDrawer(openType) {
+      this.variantsDrawer = {
+        visible: true,
+        openType
+      }
     },
     onSelectVariant (variantId) {
       if (!variantId || variantId === this.currentVariant.id) return
