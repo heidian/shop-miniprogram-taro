@@ -74,16 +74,15 @@
         </button>
       </view>
     </view>
-    <view class="product__share" v-if="miniqrUrl" @tap="onGenerateShareImage">
+    <navigator :url="`/pages/misc/share?product=${product.id}`" class="product__share">
       <image class="product__share__icon" src="data:image/svg+xml;base64,PHN2ZyBpZD0iQ2FwYV8xIiBlbmFibGUtYmFja2dyb3VuZD0ibmV3IDAgMCA1NTEuMTMgNTUxLjEzIiBoZWlnaHQ9IjUxMiIgdmlld0JveD0iMCAwIDU1MS4xMyA1NTEuMTMiIHdpZHRoPSI1MTIiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0ibTQ2NS4wMTYgMTcyLjIyOGgtNTEuNjY4djM0LjQ0NmgzNC40NDZ2MzEwLjAxMWgtMzQ0LjQ1N3YtMzEwLjAxMWgzNC40NDZ2LTM0LjQ0NmgtNTEuNjY5Yy05LjUyIDAtMTcuMjIzIDcuNzAzLTE3LjIyMyAxNy4yMjN2MzQ0LjQ1NmMwIDkuNTIgNy43MDMgMTcuMjIzIDE3LjIyMyAxNy4yMjNoMzc4LjkwMmM5LjUyIDAgMTcuMjIzLTcuNzAzIDE3LjIyMy0xNy4yMjN2LTM0NC40NTZjMC05LjUyLTcuNzAzLTE3LjIyMy0xNy4yMjMtMTcuMjIzeiIvPjxwYXRoIGQ9Im0yNTguMzQyIDY1LjkzMXYyNDQuMDhoMzQuNDQ2di0yNDQuMDhsNzMuOTM3IDczLjkzNyAyNC4zNTQtMjQuMzU0LTExNS41MTQtMTE1LjUxNC0xMTUuNTE0IDExNS41MTQgMjQuMzU0IDI0LjM1NHoiLz48L3N2Zz4=" mode="aspectFit" lazy-load="false"></image>
-    </view>
+    </navigator>
     <select-variants
       :product="product"
       :currentVariant="currentVariant"
       :drawerOpenedType="drawerOpenedType"
       @onToggleDrawer="onToggleSelectVariant"
       @onSelectVariant="onSelectVariant"/>
-    <canvas id="productCanvas" type="2d" class="product__canvas"></canvas>
   </view>
 </template>
 
@@ -94,7 +93,6 @@ import { mapState } from 'vuex'
 import _ from 'lodash'
 import { API } from '@/utils/api'
 import { optimizeImage, backgroundImageUrl } from '@/utils/image'
-import { generateProductImage } from '@/utils/generateShareImg'
 import RelatedProducts from './RelatedProducts'
 import SelectVariants from './SelectVariants'
 import { setTimeout } from 'timers';
@@ -130,9 +128,7 @@ export default {
   created() {
   },
   async mounted() {
-    await this.$store.dispatch('customer/getCustomer')
     await this.fetchProduct()
-    await this.getProductQr()
   },
   computed: {
     ...mapState('cart', {
@@ -151,7 +147,7 @@ export default {
     /* 方法名称用驼峰 */
     async fetchProduct() {
       // TODO 要处理 404
-      const fields = ['id', 'title', 'image', 'variants', 'price', 'created_at']
+      const fields = _.join(['id', 'title', 'image', 'variants', 'price', 'created_at'], ',')
       let product = null
       if (this.productId) {
         const res = await API.get(`/shopfront/product/${this.productId}/`, {
@@ -179,22 +175,6 @@ export default {
         // 抛出异常
       }
     },
-    async getProductQr () {
-      if (!this.product.id) {
-        return
-      }
-      const { extAppid } = Taro.getExtConfigSync()
-      const scene = `r=pdt&id=${this.product.id}&s=share`
-      const res = await API.post('/weixin/wacode/', {
-        appid: extAppid,
-        page: 'pages/home',
-        scene: scene
-      }).catch(err => {
-        console.log(1234, err)
-      })
-      const miniqrUrl = _.get(res.data, 'src', '') ? optimizeImage(_.get(res.data, 'src', ''), 400) : ''
-      this.miniqrUrl = miniqrUrl
-    },
     onToggleSelectVariant (status) {
       this.drawerOpenedType = (typeof status === 'undefined') ? 'add_to_cart' : status
     },
@@ -205,16 +185,6 @@ export default {
     onNavigateToCart () {
       Taro.switchTab({ url: '/pages/cart/index' })
     },
-    async onGenerateShareImage () {
-      console.log(1234)
-      await generateProductImage({
-        canvasId: '#productCanvas',
-        customer: this.customer,
-        product: this.product,
-        miniqrUrl: this.miniqrUrl,
-        isDark: true
-      })
-    }
   }
 }
 </script>
@@ -452,13 +422,7 @@ $color-border: #ecf0f1;
 .product__html {
   padding: 0 15px;
 }
-.product__canvas {
-  width: 375px;
-  height: 815px;
-  position: absolute;
-  left: 1000px;
-  top: 0;
-}
+
 .product__share {
   position: absolute;
   top: 15px;

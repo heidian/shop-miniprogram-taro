@@ -15,6 +15,7 @@ export default {
     'pages/addresses/edit',
     'pages/orders/index',
     'pages/orders/detail',
+    'pages/misc/share',
     'pages/index/index'
   ],
   tabBar: {

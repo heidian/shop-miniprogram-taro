@@ -9,7 +9,7 @@
 		"enhance": false,
 		"postcss": false,
 		"preloadBackgroundData": false,
-		"minified": false,
+		"minified": true,
 		"newFeature": true,
 		"coverView": true,
 		"nodeModules": false,
@@ -137,6 +137,13 @@
 					"name": "pages/orders/index",
 					"pathName": "pages/orders/index",
 					"query": "filter=paid",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "pages/misc/share",
+					"pathName": "pages/misc/share",
+					"query": "product=77044",
 					"scene": null
 				}
 			]
