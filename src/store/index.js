@@ -8,6 +8,7 @@ import customerStore from './customer'
 import cartStore from './cart'
 import checkoutStore from './checkout'
 import exampleStore from './example'
+import categoryStore from './category'
 
 Vue.use(Vuex)
 
@@ -58,6 +59,8 @@ const actions = {
     /* 如果一开始没有 fetch 一下 cart, 会出现的问题是 add 了以后, quantity 覆盖服务器上的 quantity
     这里不需要判断 customerToken 或 cartToken 是否存在, 如果是没登录也没创建过 cartToken, fetch 接口会返回空的 */
     dispatch('cart/fetch')
+
+    dispatch('category/list')
   }
 }
 
@@ -69,7 +72,8 @@ export default new Vuex.Store({
     customer: customerStore,
     cart: cartStore,
     checkout: checkoutStore,
-    example: exampleStore
+    example: exampleStore,
+    category: categoryStore,
   },
   state,
   mutations,
