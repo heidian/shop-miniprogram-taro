@@ -1,6 +1,6 @@
 <template>
   <drawer-bottom
-    :visible="isVisible" @close="onClose" @open="onOpen"
+    :visible="isVisible" @close="onDrawerClose" @open="onDrawerOpen"
     header="选择" :class="$style['drawerBody']"
   >
     <view :class="$style['header']">
@@ -88,19 +88,21 @@ export default {
       variants: [],
       options: [],
       selectedVariant: {},
-      maxInventoryQuantity: 1000,
       quantity: 1,
+      pending: true
     }
   },
   computed: {},
   methods: {
-    onClose() {
+    onDrawerClose() {
+      this.isVisible = false
       if (this.selectedVariant.id) {
         this.$emit('selectVariant', this.selectedVariant.id)
       }
       this.$emit('close')
     },
-    onOpen() {
+    onDrawerOpen() {
+      this.isVisible = true
       this.selectedVariant = { ...this.variant }
       this.variants = _.map(this.product.variants, variant => ({ ...variant }))
       this.options = _.map(this.product.options, (option) => {
@@ -138,10 +140,46 @@ export default {
       this.options = { ...options }
     },
     onClickAddToCart() {
-      //
+      if (!this.selectedVariant.id) {
+        Taro.showModal({
+          title: '加入购物车失败',
+          content: '请先选择商品规格',
+          showCancel: false
+        })
+        return
+      }
+      this.$store.dispatch('cart/add', {
+        variantId: this.selectedVariant.id,
+        quantity: this.quantity,
+        attributes: {}
+      }).then(() => {
+        Taro.vibrateShort()
+        Taro.showToast({ title: '成功加入购物车', icon: 'none', duration: 1000 })
+        this.isVisible = false  // 这个执行了以后自动会调用 onDrawerClose
+      }).catch(handleErr)
     },
     onClickBuyNow() {
-      //
+      if (!this.selectedVariant.id) {
+        Taro.showModal({
+          title: '购买失败',
+          content: '请先选择商品规格',
+          showCancel: false
+        })
+        return
+      }
+      Taro.showLoading({ title: '正在下单中' })
+      this.$store.dispatch('checkout/create', {
+        lines: [{
+          quantity: this.quantity,
+          variant_id: this.selectedVariant.id
+        }]
+      }).then(({ token }) => {
+        Taro.hideLoading()
+        Taro.navigateTo({ url: `/pages/checkout/index?token=${token}` })
+      }).catch((err) => {
+        Taro.hideLoading()
+        handleErr(err)
+      })
     },
   },
   watch: {

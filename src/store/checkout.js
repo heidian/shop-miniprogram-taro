@@ -13,7 +13,7 @@ const headers = {
 const state = () => {
   return {
     checkoutToken: '',
-    pending: true,
+    pending: false,
     data: {},
     availableCouponCodes: [],
     availableVouchers: []
@@ -33,6 +33,24 @@ const mutations = {
 }
 
 const actions = {
+  async create({ state, commit }, { lines }) {
+    if (state.pending) {
+      throw new Error('请稍后重试')  // 避免点太快重复创建 checkout
+    }
+    commit('setData', { pending: true })
+    try {
+      const { data } = await API.post('/checkout/', {
+        lines: lines
+      }, {
+        headers: { accept: 'application/json;version=2.0' }
+      })
+      commit('setData', { checkoutToken: data.token, pending: false })
+      return data
+    } catch(err) {
+      commit('setData', { pending: false })
+      throw err
+    }
+  },
   async fetch({ state, commit }) {
     const promise = new Promise((resolve, reject) => {
       const fetch = (count) => {
