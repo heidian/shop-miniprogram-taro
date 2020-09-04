@@ -1,9 +1,22 @@
 import Vue from 'vue'
 import Taro from '@tarojs/taro'
+import qs from 'qs'
 import store from './store/index'
 import { formatCurrency, formatDate, formatDateTime } from './utils/formatters'
 import { optimizeImage } from './utils/image'
 import VirtualList from '@tarojs/components/virtual-list'
+
+/*
+ * 处理旧的路由, 重定向到新的路由
+ */
+Taro.onPageNotFound(function({ isEntryPage, path, query }) {
+  console.log('PageNotFound', isEntryPage, path, query)
+  if (/^pages\/product$/.test(path)) {
+    Taro.redirectTo({ url: path + '/index?' + qs.stringify(query) })
+  } else if (/^pages\/home$/.test(path)) {
+    Taro.switchTab({ url: '/pages/home/index' })
+  }
+})
 
 /*
  * Global styles
