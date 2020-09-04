@@ -104,7 +104,7 @@ export default class ProductCanvas {
         this.canvas = res[0].node
         ctx = this.canvas.getContext('2d')
         const canvas_width = 375
-        const canvas_height = 785
+        const canvas_height = 820
         this.canvas.width = canvas_width * dpr
         this.canvas.height = canvas_height * dpr
         ctx.scale(dpr, dpr)
@@ -267,43 +267,56 @@ export default class ProductCanvas {
         ctx.textAlign = 'left'
         ctx.fillText('进入HeyShop', canvas_width / 2 + miniqrRadius + 10, tipsOffsetHeight)
 
-        this.dataURL = this.canvas.toDataURL()
-        resolve(this.dataURL)
+        setTimeout(() => {
+          Taro.canvasToTempFilePath({
+            canvas: this.canvas,
+            success: (res) => {
+              this.tempFilePath = res.tempFilePath
+              resolve(res.tempFilePath)
+            },
+            fail: (err) => {
+              console.log('canvasToTempFilePath err: ', err)
+            }
+          })
+        }, 1500)
+
       })
     })
   }
 
   saveCanvasToAlbum () {
+    if (!this.tempFilePath) return;
     Taro.showLoading({title: '正在保存'})
     setTimeout(() => { Taro.hideLoading() }, 10000)
-    Taro.canvasToTempFilePath({
-      canvas: this.canvas,
-      success: (res) => {
-        Taro.saveImageToPhotosAlbum({
-          filePath: res.tempFilePath,
-          success: (saverRes) => {
-            Taro.showModal({
-              title: '海报已保存到相册',
-              content: '快去分享给好友或朋友圈，让更多小伙伴看到吧',
-              showCancel: false,
-              confirmText: '我知道了'
-            })
-          },
-          complete: (res) => {
-            Taro.hideLoading()
-          }
-        })
-      },
-      fail: (err) => {
-        Taro.hideLoading()
+    Taro.saveImageToPhotosAlbum({
+      filePath: this.tempFilePath,
+      success: () => {
         Taro.showModal({
-          title: '海报未保存',
-          content: '保存过程出了点问题，请稍后重试',
+          title: '海报已保存到相册',
+          content: '快去分享给好友或朋友圈，让更多小伙伴看到吧',
           showCancel: false,
           confirmText: '我知道了'
         })
+      },
+      complete: (res) => {
+        Taro.hideLoading()
       }
     })
+    // Taro.canvasToTempFilePath({
+    //   canvas: this.canvas,
+    //   success: (res) => {
+
+    //   },
+    //   fail: (err) => {
+    //     Taro.hideLoading()
+    //     Taro.showModal({
+    //       title: '海报未保存',
+    //       content: '保存过程出了点问题，请稍后重试',
+    //       showCancel: false,
+    //       confirmText: '我知道了'
+    //     })
+    //   }
+    // })
   }
 }
 

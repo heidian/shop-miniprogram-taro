@@ -6,13 +6,13 @@
     <view v-if="!isReady" :class="$style['pending']">
       <view :class="$style['pending_text']">正在生成...</view>
     </view>
-    <view v-else-if="type == 'product'" :class="$style['canvasImageWrapper']" :style="{backgroundImage: backgroundImageUrl(productCanvasImage)}">
-      <!-- <image :src="productCanvasImage" mode="widthFix" :class="$style['canvasImage']" @longtap="onLongTapImage" show-menu-by-longpress></image> -->
+    <view v-else-if="type == 'product'" :class="$style['canvasImageWrapper']">
+      <image :src="productCanvasImage" mode="widthFix" :class="{[$style['canvasImage']]: true, [$style['productCanvasImage']]: true}" @longtap="onLongTapImage" :show-menu-by-longpress="true"></image>
     </view>
     <view v-else-if="type == 'shop'" :class="$style['canvasImageWrapper']">
-      <image :src="shopCanvasImage" mode="widthFix" :class="$style['canvasImage']" @longtap="onLongTapImage" show-menu-by-longpress></image>
+      <image :src="shopCanvasImage" mode="widthFix" :class="$style['canvasImage']" @longtap="onLongTapImage" :show-menu-by-longpress="true"></image>
     </view>
-
+    <button v-if="isReady" :class="$style['btnSave']" @tap="onSaveImageToAblum">保存图片</button>
     <canvas id="productCanvas" type="2d" :class="$style['productCanvas']"></canvas>
     <canvas id="shopCanvas" type="2d" :class="$style['shopCanvas']"></canvas>
   </view>
@@ -36,7 +36,9 @@ export default {
       productId: product,
       product: {},
       miniqrUrl: '',
+      productCanvas: null,
       productCanvasImage: '',
+      shopCanvas: null,
       shopCanvasImage: ''
     }
   },
@@ -93,14 +95,22 @@ export default {
           miniqrUrl: this.miniqrUrl,
           isDark: false
         })
-        this.productCanvas.initialize().then((dataURL) => {
+        this.productCanvas.initialize().then((tempFilePath) => {
           this.isReady = true
-          this.productCanvasImage = dataURL
+          this.productCanvasImage = tempFilePath
         }).catch(err => {
 
         })
       } catch (err) {
 
+      }
+    },
+    onSaveImageToAblum () {
+      if (this.productCanvas && this.productCanvas.saveCanvasToAlbum) {
+        this.productCanvas.saveCanvasToAlbum()
+      }
+      if (this.productCanvas && this.productCanvas.saveCanvasToAlbum) {
+        this.productCanvas.saveCanvasToAlbum()
       }
     },
     onLongTapImage (e) {
@@ -121,11 +131,15 @@ $color-text: #262626;
 $color-text-light: #666666;
 $color-divider: #f0f0f0;
 $color-bg-gray: #f6f6f6;
+$color-border: #bbbbbb;
+$btn-orange: #ff5a00;
+
 page {
   background-color: $color-bg-gray;
 }
 .page {
   height: 100vh;
+  width: 100%;
 }
 .disableScroll {
   overflow: hidden;
@@ -148,16 +162,15 @@ page {
 .canvasImageWrapper {
   background-color: orange;
   width: 75vw;
-  padding-top: 163vw;
   margin: 0 auto;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
+  border: 10px solid $color-border;
 }
 .productCanvas {
-  display: none;
+  position: fixed;
+  left: 1000px;
+  top: 0;
   width: 375px;
-  height: 815px;
+  height: 820px;
 }
 .canvasImage{
   display: block;
@@ -167,6 +180,20 @@ page {
   display: none;
   width: 375px;
   height: 785px;
+}
+.btnSave {
+  width: 180px;
+  height: 40px;
+  margin: 30px auto;
+  line-height: 20px;
+  padding: 10px 0;
+  text-align: center;
+  background-color: $btn-orange;
+  font-size: 14px;
+  color: #ffffff;
+  &::after {
+    display: none;
+  }
 }
 
 </style>
