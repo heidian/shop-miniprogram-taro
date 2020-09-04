@@ -285,9 +285,13 @@ export default class ProductCanvas {
   }
 
   saveCanvasToAlbum () {
-    if (!this.tempFilePath) return;
+    if (!this.tempFilePath || this.isSaving) return;
     Taro.showLoading({title: '正在保存'})
-    setTimeout(() => { Taro.hideLoading() }, 10000)
+    this.isSaving = true
+    setTimeout(() => {
+      Taro.hideLoading()
+      this.isSaving = false
+    }, 10000)
     Taro.saveImageToPhotosAlbum({
       filePath: this.tempFilePath,
       success: () => {
@@ -299,24 +303,10 @@ export default class ProductCanvas {
         })
       },
       complete: (res) => {
+        this.isSaving = false
         Taro.hideLoading()
       }
     })
-    // Taro.canvasToTempFilePath({
-    //   canvas: this.canvas,
-    //   success: (res) => {
-
-    //   },
-    //   fail: (err) => {
-    //     Taro.hideLoading()
-    //     Taro.showModal({
-    //       title: '海报未保存',
-    //       content: '保存过程出了点问题，请稍后重试',
-    //       showCancel: false,
-    //       confirmText: '我知道了'
-    //     })
-    //   }
-    // })
   }
 }
 
