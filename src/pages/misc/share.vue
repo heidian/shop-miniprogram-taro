@@ -78,7 +78,7 @@ export default {
       if (!this.productId) {
         return
       }
-      const scene = `r=pdt&id=${this.productId}&s=share`
+      const scene = `r=pdt&id=${this.productId}&s=share&c=${this.referralCode}`
       try {
         const res = await API.post('/weixin/wacode/', {
           appid: this.appid,
