@@ -1,6 +1,5 @@
+import qs from 'qs'
 import Taro from '@tarojs/taro'
-import combineURLs from './combineURLs'
-import buildURL from './buildURL'
 import store from '../store/index'
 
 // config/dev.js 里面定义了 API_URL
@@ -45,12 +44,18 @@ const interceptor = async function (chain) {
 }
 Taro.addInterceptor(interceptor)
 
+function combineURLs(baseURL, relativeURL, searchQuery) {
+  const fullURL = relativeURL ?
+    baseURL.replace(/\/+$/, '') + '/' + relativeURL.replace(/^\/+/, '') :
+    baseURL
+  return fullURL + (fullURL.indexOf('?') === -1 ? '?' : '&') + qs.stringify(searchQuery)
+}
 
 const API = {
   post: (path, data = {}, options = {}) => {
     const params = options.params || {}
     const headers = options.headers || {}
-    const url = combineURLs(getAPIRoot(), buildURL(path, params))
+    const url = combineURLs(getAPIRoot(), path, params)
     return Taro.request({
       url: url,
       data: data,
@@ -61,7 +66,7 @@ const API = {
   get: (path, options = {}) => {
     const params = options.params || {}
     const headers = options.headers || {}
-    const url = combineURLs(getAPIRoot(), buildURL(path, params))
+    const url = combineURLs(getAPIRoot(), path, params)
     return Taro.request({
       url: url,
       method: 'GET',
@@ -71,7 +76,7 @@ const API = {
   put: (path, data = {}, options = {}) => {
     const params = options.params || {}
     const headers = options.headers || {}
-    const url = combineURLs(getAPIRoot(), buildURL(path, params))
+    const url = combineURLs(getAPIRoot(), path, params)
     return Taro.request({
       url: url,
       data: data,
