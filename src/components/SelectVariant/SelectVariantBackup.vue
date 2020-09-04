@@ -283,6 +283,117 @@ export default {
 }
 </script>
 
-<style lang="scss" module>
-@import './SelectVariant.scss'
+<style lang="scss">
+$btn-blue: #284179;
+$btn-orange: #ff5a00;
+$btn-color: #ffffff;
+$color-border: #ecf0f1;
+$color-black: #353a36;
+$color-disabled-bg: #f8f8f8;
+.drawer {
+  &__body {
+    width: 100%;
+    flex: 1;
+    overflow: auto;
+    padding-top: 10px;
+  }
+  &.opened &__mask {
+    display: block;
+  }
+  &.opened &__content {
+    transform: translate3d(0, 0, 0);
+  }
+
+  &__option--row {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+  &__option--row &__option__title {
+    margin-bottom: 0;
+  }
+  /* options */
+  &__adjust-qty {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+  }
+  &__adjust-qty__btn {
+    padding: 0;
+    margin: 0;
+    width: 30px;
+    height: 26px;
+    text-align: center;
+    border: none;
+    position: relative;
+    background-color: transparent;
+  }
+  &__adjust-qty__btn::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 15px;
+    height: 15px;
+    margin-left: -7px;
+    margin-top: -7px;
+    background-color: #f0f0f0;
+    border-radius: 50%;
+  }
+  &__adjust-qty__btn__text {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    margin-left: -6px;
+    line-height: 26px;
+    font-size: 12px;
+    width: 12px;
+    text-align: center;
+  }
+  &__adjust-qty__btn::after {
+    display: none;
+  }
+  &__adjust-qty__input {
+    max-width: 30px;
+    min-width: 14px;
+    text-align: center;
+    font-size: 12px;
+    border: none;
+    outline: none;
+  }
+  /* footer */
+  &__footer {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: 50px;
+    width: 100%;
+    padding: 7px 10px;
+    box-shadow: 0 -1px 0 0 $color-border;
+  }
+  &__btn {
+    width: 100%;
+    height: 36px;
+    line-height: 36px;
+    padding: 0;
+    border: none;
+    outline: none;
+    color: $btn-color;
+    border-radius: 18px;
+  }
+  &__btn:hover,
+  &__btn:active {
+    opacity: 0.9;
+  }
+  &__btn__text {
+    font-size: 13px;
+  }
+  &__btn.btn--orange {
+    background-color: $btn-orange;
+  }
+  &__btn.btn--blue {
+    background-color: $btn-blue;
+  }
+}
 </style>

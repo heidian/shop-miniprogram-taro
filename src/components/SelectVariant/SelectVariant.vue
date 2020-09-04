@@ -1,7 +1,7 @@
 <template>
   <drawer-bottom
     :visible="isVisible" @close="onClose" @open="onOpen"
-    header="选择" :class="$style['drawerVariants']"
+    header="选择" :class="$style['drawerBody']"
   >
     <view :class="$style['header']">
       <image :class="$style['variantImage']" :src="selectedVariant.image|imageUrl(200)" mode="aspectFill"></image>
@@ -10,7 +10,7 @@
         <view :class="$style['variantTitle']">已选择 {{ selectedVariant.title }}</view>
       </view>
     </view>
-    <view :class="$style['options']">
+    <view :class="$style['optionsWrapper']">
       <view v-for="option in options" :key="option.title" :class="$style['optionGroup']">
         <view :class="$style['optionTitle']">{{ option.title }}</view>
         <view :class="$style['optionValues']">
@@ -21,46 +21,43 @@
         </view>
       </view>
     </view>
-    <view>
-      <view class="drawer__option drawer__option--row">
-        <view class="drawer__option__title">数量</view>
-        <view class="drawer__adjust-qty">
-          <button :disabled="quantity <= 1"
-            class="drawer__adjust-qty__btn drawer__adjust-qty__minus"
-            @tap="onChangeQuantity(-1)">
-            <text class="drawer__adjust-qty__btn__text">-</text>
-          </button>
-          <input
-            type="number"
-            class="drawer__adjust-qty__input"
-            :value="quantity"
-            :maxValue="maxInventoryQuantity"
-            @input="onInputQuantity"/>
-          <button :disabled="quantity >= maxInventoryQuantity"
-            class="drawer__adjust-qty__btn drawer__adjust-qty__add"
-            @tap="onChangeQuantity(1)">
-            <text class="drawer__adjust-qty__btn__text">+</text>
-          </button>
-        </view>
-      </view>
+    <view :class="$style['quantityWrapper']">
+      <view>数量</view>
+      <input-number :class="$style['quantityInput']" :min="1" v-model="quantity"></input-number>
     </view>
-    <view class="drawer__footer1">
-      <button v-if="openType == 'add_to_cart'" class="drawer__btn btn--blue" @tap="onClickAddToCart"><text class="drawer__btn__text">加入购物车</text></button>
-      <button v-if="openType == 'buy_now'" class="drawer__btn btn--orange" @tap="onClickBuyNow"><text class="drawer__btn__text">立即购买</text></button>
+    <view :class="$style['buttonsWrapper']">
+      <button v-if="openType !== 'buy_now'"
+        :class="[$style['button'], $style['buttonBlue']]"
+        @tap="onClickAddToCart"
+      >加入购物车</button>
+      <button v-if="openType !== 'add_to_cart'"
+        :class="[$style['button'], $style['buttonOrange']]"
+        @tap="onClickBuyNow"
+      >立即购买</button>
     </view>
   </drawer-bottom>
 </template>
+
 <script>
+// import styles from './SelectVariant.module.scss'
+/*
+ * 有两种方式可以引入 cssModules,
+ * 一个是在下面的 style 上加 module, 然后直接在 template 里使用 $style
+ * 另一个是直接从 xxx.module.scss 文件 import, 但是要把这个 styles 变量放进 data 里
+ */
+
 import Taro from '@tarojs/taro'
 import _ from 'lodash'
 import { API } from '@/utils/api'
 import { handleErr } from '@/utils/errHelper'
+import InputNumber from '@/components/InputNumber'
 import DrawerBottom from '@/components/DrawerBottom/'
 
 export default {
   name: 'SelectVariant',
   components: {
-    DrawerBottom
+    DrawerBottom,
+    InputNumber
   },
   props: {
     // 通过 props 里的 visible 来控制 open 和 close, 首次 mounted 的时候就是 visible 也会触发 open 事件
@@ -98,7 +95,9 @@ export default {
   computed: {},
   methods: {
     onClose() {
-      this.$emit('selectVariant', this.selectedVariant.id)
+      if (this.selectedVariant.id) {
+        this.$emit('selectVariant', this.selectedVariant.id)
+      }
       this.$emit('close')
     },
     onOpen() {
@@ -117,13 +116,26 @@ export default {
       })
     },
     onClickOptionValue(title, value) {
-      //
-    },
-    onChangeQuantity(value) {
-      this.quantity = (this.quantity || 0) + (+value)
-    },
-    onInputQuantity() {
-      //
+      const options = _.cloneDeep(this.options)
+      const selectResult = {}
+      _.forEach(options, (option) => {
+        _.forEach(option.items, (item) => {
+          if (option.title === title) {
+            item.selected = (item.value === value) ? !item.selected : false
+          }
+          if (item.selected) {
+            selectResult[option.title] = item.value
+          }
+          if (option.title !== title) {
+            // 不是当前选择的那一项, 需要处理下 disable
+          }
+        })
+      })
+      const selectedVariant = _.find(this.variants, (variant) => {
+        return _.every(variant.options, (option) => selectResult[option.title] === option.value)
+      })
+      this.selectedVariant = selectedVariant || {}
+      this.options = { ...options }
     },
     onClickAddToCart() {
       //

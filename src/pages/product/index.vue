@@ -19,11 +19,11 @@
         <view class="product__price-wrapper">
           <view class="product__price">
             <text class="product__price__currency">￥</text>
-            <text class="product__price__value">{{ product.price }}</text>
+            <text class="product__price__value">{{ currentVariant.price }}</text>
           </view>
-          <view class="product__compare-at-price" v-if="product.compare_at_price && product.compare_at_price > product.price">
+          <view class="product__compare-at-price" v-if="+currentVariant.compare_at_price > +currentVariant.price">
             <text class="product__compare-at-price__currency">￥</text>
-            <text class="product__compare-at-price__value">{{ product.compare_at_price }}</text>
+            <text class="product__compare-at-price__value">{{ currentVariant.compare_at_price }}</text>
           </view>
         </view>
         <view class="product__add-to-wishlist">
@@ -37,7 +37,7 @@
     <!-- 待删除 -->
     <!-- 待删除 -->
     <view class="page__section">
-      <view class="cell" @tap="() => showVariantsDrawer('add_to_cart')">
+      <view class="cell" @tap="() => showVariantsDrawer('')">
         <view class="cell__label">已选</view>
         <view class="cell__value">{{ currentVariant.title }}</view>
         <view class="cell__ft">
@@ -82,7 +82,8 @@
       :openType="variantsDrawer.openType"
       :product="product"
       :variant="currentVariant"
-      @onSelectVariant="onSelectVariant"
+      @selectVariant="onSelectVariant"
+      @close="onCloseVariantsDrawer"
     ></select-variant>
   </view>
 </template>
@@ -151,7 +152,7 @@ export default {
     /* 方法名称用驼峰 */
     async fetchProduct() {
       // TODO 要处理 404
-      const fields = ['id', 'title', 'image', 'variants', 'options', 'price', 'created_at'].join(',')
+      const fields = ['id', 'title', 'image', 'images', 'variants', 'options', 'created_at'].join(',')
       let product = null
       if (this.productId) {
         const res = await API.get(`/shopfront/product/${this.productId}/`, {
@@ -185,9 +186,13 @@ export default {
         openType
       }
     },
-    onSelectVariant (variantId) {
+    onSelectVariant(variantId) {
       if (!variantId || variantId === this.currentVariant.id) return
       this.currentVariant = _.find(this.product.variants || [], { id: variantId })
+    },
+    onCloseVariantsDrawer() {
+      // 这里一定要监听 close 然后把 visible 变成 false, 不然再点击打开, 组件检测不到变化
+      this.variantsDrawer = { visible: false, openType: '' }
     },
     onNavigateToCart () {
       Taro.switchTab({ url: '/pages/cart/index' })

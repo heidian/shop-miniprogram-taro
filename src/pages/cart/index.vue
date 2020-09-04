@@ -22,7 +22,7 @@
             <view class="cart__bottom">
               <view class="cart__price">{{ item.variant.price|currency({ removeTrailingZero: true }) }}</view>
               <input-number
-                class="cart__quantity"  type='number' placeholder='输入数字'
+                class="cart__quantity"
                 :min="1" :value="item.quantity" @change="(quantity) => setItemQuantity(quantity, item.id)"
               ></input-number>
             </view>
@@ -40,7 +40,7 @@ import _ from 'lodash'
 import Taro from '@tarojs/taro'
 import { mapState } from 'vuex'
 import { optimizeImage } from '@/utils/image'
-import InputNumber from '@/components/InputNumber/InputNumber'
+import InputNumber from '@/components/InputNumber'
 import InfiniteProducts from '@/components/InfiniteProducts/InfiniteProducts'
 
 export default {
