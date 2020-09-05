@@ -55,7 +55,7 @@ import { API } from '@/utils/api'
 import { handleErr } from '@/utils/errHelper'
 import Price from '@/components/Price'
 import InputNumber from '@/components/InputNumber'
-import DrawerBottom from '@/components/DrawerBottom/'
+import DrawerBottom from '@/components/DrawerBottom'
 
 export default {
   name: 'SelectVariant',
