@@ -34,8 +34,8 @@ export default {
     }
   },
   computed: {
-    ...mapState('category', {
-      items: (state) => state.data || []
+    ...mapState('categories', {
+      items: (state) => state.data
     })
   },
   methods: {

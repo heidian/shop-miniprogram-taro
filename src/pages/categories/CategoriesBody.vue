@@ -27,7 +27,7 @@
           >
             <view
               :class="$style['childImage']"
-              :style="{'backgroundImage': backgroundImageUrl(subItem.image, 400)}"></view>
+              :style="{'backgroundImage': backgroundImageUrl(subItem.image, 100)}"></view>
             <view :class="$style['childTitle']">{{ subItem.title }}</view>
           </view>
         </view>
@@ -52,8 +52,8 @@ export default {
     }
   },
   computed: {
-    ...mapState('category', {
-      items: (state) => state.data || []
+    ...mapState('categories', {
+      items: (state) => state.data
     })
   },
   methods: {

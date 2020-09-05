@@ -27,6 +27,9 @@ export default {
       current: 0
     }
   },
+  mounted() {
+    this.$store.dispatch('categories/list')
+  },
   methods: {
     onChangeCurrent (index) {
       this.current = index
