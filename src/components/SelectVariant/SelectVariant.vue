@@ -6,7 +6,10 @@
     <view :class="$style['header']">
       <image :class="$style['variantImage']" :src="selectedVariant.image|imageUrl(200)" mode="aspectFill"></image>
       <view :class="$style['headerCaption']">
-        <view :class="$style['variantPrice']">{{ selectedVariant.price|currency({keepZero: true}) }}</view>
+        <price
+          :class="$style['variantPrice']" :highlight="true" :keepZero="true"
+          :price="selectedVariant.price" :compareAtPrice="selectedVariant.compare_at_price"
+        ></price>
         <view :class="$style['variantTitle']">已选择 {{ selectedVariant.title }}</view>
       </view>
     </view>
@@ -50,6 +53,7 @@ import Taro from '@tarojs/taro'
 import _ from 'lodash'
 import { API } from '@/utils/api'
 import { handleErr } from '@/utils/errHelper'
+import Price from '@/components/Price'
 import InputNumber from '@/components/InputNumber'
 import DrawerBottom from '@/components/DrawerBottom/'
 
@@ -57,6 +61,7 @@ export default {
   name: 'SelectVariant',
   components: {
     DrawerBottom,
+    Price,
     InputNumber
   },
   props: {

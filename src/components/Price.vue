@@ -50,6 +50,8 @@ export default {
   },
   data() {
     return {
+      _price: this.price,
+      _compareAtPrice: this.compareAtPrice,
       priceValue: [],
       compareValue: null
     }
@@ -59,6 +61,8 @@ export default {
   },
   methods: {
     parseValues() {
+      this._price = this.price
+      this._compareAtPrice = this.compareAtPrice
       const priceValue = formatCurrency(this.price, { keepZero: this.keepZero })
       const compareValue = formatCurrency(this.compareAtPrice, { keepZero: this.keepZero })
       this.priceValue = priceValue,
@@ -67,10 +71,15 @@ export default {
   },
   watch: {
     price(newValue, oldValue) {
-      this.parseValues()
+      // 这么判断一下可以确保 price 和 compareAtPrice 一起变化的时候只执行一次 parseValues
+      if (newValue != this._price) {
+        this.parseValues()
+      }
     },
     compareAtPrice(newValue, oldValue) {
-      this.parseValues()
+      if (newValue != this._compareAtPrice) {
+        this.parseValues()
+      }
     }
   }
 }
@@ -78,7 +87,7 @@ export default {
 
 <style lang="scss">
 $color-text: #262626;
-$color-text-light: #555;
+$color-text-lighter: #aaa;
 $color-orange: #ff5a00;
 .price-wrapper {
   display: inline-block;
@@ -90,13 +99,17 @@ $color-orange: #ff5a00;
   .price {
     &.highlight {
       color: $color-orange;
+      font-weight: bold;
     }
-    .price__rmb, .price__points {
+    .price__rmb {
+      font-size: 0.75em;
+    }
+    .price__points {
       font-size: 0.8em;
     }
   }
   .price--compare {
-    color: $color-text-light;
+    color: $color-text-lighter;
     text-decoration: line-through;
     font-size: 0.8em;
   }

@@ -36,21 +36,21 @@
     <view class="section">
       <view class="price-line">
         <text>商品金额</text>
-        <text>{{ getField('total_line_items_price')|currency({keepZero: true}) }}</text>
+        <price :price="getField('total_line_items_price')" :keepZero="true"></price>
       </view>
       <view class="price-line">
         <text>运费</text>
-        <text>{{ getField('shipping_cost')|currency({keepZero: true}) }}</text>
+        <price :price="getField('shipping_cost')" :keepZero="true"></price>
       </view>
       <view class="price-line" v-for="discount in getField('discounts')" :key="discount.id">
         <text>{{ discount.description }}</text>
-        <text>{{ (-discount.discount_price)|currency({keepZero: true}) }}</text>
+        <price :price="-discount.discount_price" :keepZero="true"></price>
       </view>
     </view>
     <view class="footer">
       <view>
         <text>实付金额:</text>
-        <text class="text-price--accent text-bold">{{ finalPrice|currency({keepZero: true}) }}</text>
+        <price :price="finalPrice" :highlight="true" :keepZero="true"></price>
       </view>
       <button class="button--payfororder button--round button--orange" type="primary">立即支付</button>
     </view>
@@ -65,11 +65,13 @@ import Taro, { getCurrentInstance } from '@tarojs/taro'
 // import { API } from '@/utils/api'
 import { optimizeImage, backgroundImageUrl } from '@/utils/image'
 import AvailableCouponCodes from './AvailableCouponCodes'
+import Price from '@/components/Price'
 import './index.scss'
 
 export default {
   name: 'Checkout',
   components: {
+    Price,
     AvailableCouponCodes
   },
   data() {
