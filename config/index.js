@@ -74,21 +74,11 @@ const config = {
           }
         }
       })
-      // const value0 = { ...chain.toConfig().module.rules[1].oneOf[0].use }
-      // const value1 = { ...chain.toConfig().module.rules[1].oneOf[1].use }
-      // chain.module.rule('scss').oneOf('2')
-      //   .use(0).loader(value1[0].loader).options(value1[0].options).end()
-      //   .use(1).loader(value1[1].loader).options(value1[1].options).end()
-      //   .use(2).loader(value1[2].loader).options(value1[2].options).end()
-      //   .use(3).loader(value1[3].loader).options(value1[3].options).end()
-      // chain.module.rule('scss').oneOf('1').resourceQuery(/module/)
-      //   .use(0).loader(value0[0].loader).options(value0[0].options).end()
-      //   .use(1).loader(value0[1].loader).options(value0[1].options).end()
-      //   .use(2).loader(value0[2].loader).options(value0[2].options).end()
-      //   .use(3).loader(value0[3].loader).options(value0[3].options).end()
+
+      /* 加一条 scss loader, 支持 vuejs 中 <style lang="scss" module> 这种形式的 css modules */
       const ruleStore = chain.module.rule('scss').oneOfs.store
-      const oneOf0 = ruleStore.get('0')  // xxx.module.scss 文件
-      const oneOf1 = ruleStore.get('1')  // 其他 scss 文件
+      const oneOf0 = ruleStore.get('0')  // import 'xxx.module.scss' 方式的 css modules 配置, 下面的 postcss.cssModules.enable 开启后会自动生成
+      const oneOf1 = ruleStore.get('1')  // 其他 scss 文件, 常规的 scss loader
       ruleStore.set('2', oneOf1)
       // 删掉确保下面的 chain.module.rule('scss').oneOf('1') 会创建一个新的对象, 避免 resourceQuery 操作影响了一个共用的 store
       ruleStore.delete('1')

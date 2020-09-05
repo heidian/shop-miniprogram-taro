@@ -42,13 +42,6 @@
 </template>
 
 <script>
-// import styles from './SelectVariant.module.scss'
-/*
- * 有两种方式可以引入 cssModules,
- * 一个是在下面的 style 上加 module, 然后直接在 template 里使用 $style
- * 另一个是直接从 xxx.module.scss 文件 import, 但是要把这个 styles 变量放进 data 里
- */
-
 import Taro from '@tarojs/taro'
 import _ from 'lodash'
 import { API } from '@/utils/api'
