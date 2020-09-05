@@ -1,7 +1,8 @@
 import moment from 'moment'
 
 export const formatCurrency = (value, { removeTrailingZero=false } = {}) => {
-  const decimalValue = +value
+  /* parseFloat 和 + 不同, parseFloat 不会把 null, '' 和 [] 变成 0, 但是 + 会 */
+  const decimalValue = parseFloat(value)
   if (!decimalValue && decimalValue !== 0) {
     return '-'
   }
