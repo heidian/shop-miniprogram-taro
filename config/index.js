@@ -74,18 +74,37 @@ const config = {
           }
         }
       })
-      const value0 = { ...chain.toConfig().module.rules[1].oneOf[0].use }
-      const value1 = { ...chain.toConfig().module.rules[1].oneOf[1].use }
-      chain.module.rule('scss').oneOf('2')
-        .use(0).loader(value1[0].loader).options(value1[0].options).end()
-        .use(1).loader(value1[1].loader).options(value1[1].options).end()
-        .use(2).loader(value1[2].loader).options(value1[2].options).end()
-        .use(3).loader(value1[3].loader).options(value1[3].options).end()
+      // const value0 = { ...chain.toConfig().module.rules[1].oneOf[0].use }
+      // const value1 = { ...chain.toConfig().module.rules[1].oneOf[1].use }
+      // chain.module.rule('scss').oneOf('2')
+      //   .use(0).loader(value1[0].loader).options(value1[0].options).end()
+      //   .use(1).loader(value1[1].loader).options(value1[1].options).end()
+      //   .use(2).loader(value1[2].loader).options(value1[2].options).end()
+      //   .use(3).loader(value1[3].loader).options(value1[3].options).end()
+      // chain.module.rule('scss').oneOf('1').resourceQuery(/module/)
+      //   .use(0).loader(value0[0].loader).options(value0[0].options).end()
+      //   .use(1).loader(value0[1].loader).options(value0[1].options).end()
+      //   .use(2).loader(value0[2].loader).options(value0[2].options).end()
+      //   .use(3).loader(value0[3].loader).options(value0[3].options).end()
+      const ruleStore = chain.module.rule('scss').oneOfs.store
+      const oneOf0 = ruleStore.get('0')  // xxx.module.scss 文件
+      const oneOf1 = ruleStore.get('1')  // 其他 scss 文件
+      ruleStore.set('2', oneOf1)
+      // 删掉确保下面的 chain.module.rule('scss').oneOf('1') 会创建一个新的对象, 避免 resourceQuery 操作影响了一个共用的 store
+      ruleStore.delete('1')
+      const usesStore = oneOf0.uses.store
+      const uses = _.map(['0', '1', '2', '3'], key => {
+        const store = usesStore.get(key).store
+        return {
+          loader: store.get('loader'),
+          options: _.cloneDeep(store.get('options'))
+        }
+      })
       chain.module.rule('scss').oneOf('1').resourceQuery(/module/)
-        .use(0).loader(value0[0].loader).options(value0[0].options).end()
-        .use(1).loader(value0[1].loader).options(value0[1].options).end()
-        .use(2).loader(value0[2].loader).options(value0[2].options).end()
-        .use(3).loader(value0[3].loader).options(value0[3].options).end()
+        .use(0).loader(uses[0]['loader']).options(uses[0]['options']).end()
+        .use(1).loader(uses[1]['loader']).options(uses[1]['options']).end()
+        .use(2).loader(uses[2]['loader']).options(uses[2]['options']).end()
+        .use(3).loader(uses[3]['loader']).options(uses[3]['options']).end()
       // const localIdentName = '[path][name]__[local]___[hash:base64:5]'
       // chain.module.rule('scss').oneOf('0').use('1').loader('css-loader').tap((options) => {
       //   return { ...options, modules: { localIdentName } }
@@ -93,7 +112,9 @@ const config = {
       // chain.module.rule('scss').oneOf('1').use('1').loader('css-loader').tap((options) => {
       //   return { ...options, modules: { localIdentName } }
       // })
-      // console.log(chain.toConfig().module.rules[1].oneOf[1].use)
+      // console.log(chain.toConfig().module.rules[1].oneOf[0])
+      // console.log(chain.toConfig().module.rules[1].oneOf[1])
+      // console.log(chain.toConfig().module.rules[1].oneOf[2])
     },
     commonChunks(commonChunks) {
       commonChunks.push('lodash')
