@@ -24,8 +24,8 @@
 
 <script>
 import _ from 'lodash'
-import Taro from '@tarojs/taro'
-import { mapState } from 'vuex'
+import Taro, { getCurrentInstance } from '@tarojs/taro'
+import { mapState, mapGetters } from 'vuex'
 import ProductItem from './ProductItem'
 import ListTable from '@/mixins/ListTable'
 
@@ -69,6 +69,9 @@ export default {
   },
   computed: {
     ...mapState(['categories']),
+    ...mapGetters('categories', [
+      'getRootCategory'  // 这个暂时用不到
+    ]),
     listData() {
       return _.chunk(this.products.data, 2)
     },
@@ -77,19 +80,25 @@ export default {
       return parseInt((this.products.data.length + 1) / 2)
     }
   },
-  mounted() {
-    this.$store.dispatch('categories/list')
-    this.updateDefaultParams({
+  created() {
+    // 初始化过滤参数
+    const defaultParams = {
       fields: ['id', 'name', 'title', 'description', 'image', 'price', 'compare_at_price'].join(',')
-    }, { fetch: false })
-    this.fetchList()
+    }
+    const filter = {}
+    const { category } = getCurrentInstance().router.params
+    filter.category = category
+    this.$store.commit('lists/products/setParams', {
+      filter, defaultParams
+    })
+  },
+  async mounted() {
+    // 因为要处理 activeCategory, 这里先 await 一下, categories 全局只取一次, 这样问题不大
+    await this.$store.dispatch('categories/list')
+    this.fetchProducts()
   },
   methods: {
-    async listReachBottom() {
-      Taro.showNavigationBarLoading()
-      await this.fetchMore()
-      Taro.hideNavigationBarLoading()
-    },
+    // listReachBottom() {},
     onScroll({ scrollDirection, scrollOffset }) {
       // console.log(scrollDirection, this.listHeight, scrollOffset, this.listLength * this.itemHeight)
       if (
@@ -100,17 +109,23 @@ export default {
         // 100 = 滚动提前加载量
         this.listHeight + scrollOffset > (this.listLength * this.itemHeight - 100)
       ) {
-        this.listReachBottom()
+        // this.listReachBottom()
+        this.fetchProducts({ more: true })
       }
     },
-    async filterCategory(categoryId) {
+    filterCategory(categoryId) {
+      this.updateFilter({ category: categoryId }, { partial: false, fetch: false })
+      this.fetchProducts()
+    },
+    async fetchProducts({ more = false } = {}) {
+      // fetchList 和 fetchMore 统一在这里调用, 因为调用前后还要处理各种 UI 元素
       Taro.showNavigationBarLoading()
-      await this.updateFilter({
-        category: categoryId
-      }, {
-        partial: false,
-        fetch: true
-      })
+      if (more) {
+        await this.fetchMore()
+      } else {
+        // TODO active category
+        await this.fetchList()
+      }
       Taro.hideNavigationBarLoading()
     }
   }

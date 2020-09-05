@@ -10,6 +10,15 @@ const state = () => {
   }
 }
 
+const getters = {
+  getRootCategory(state) {
+    return (categoryId) => {
+      // test, 这个暂时用不到
+      // console.log('!!!', state, categoryId)
+    }
+  }
+}
+
 const mutations = {
   REQUEST_STARTED(state) {
     state.pending = true
@@ -51,6 +60,7 @@ const actions = {
 export default {
   namespaced: true,
   state,
+  getters,
   mutations,
   actions
 }
