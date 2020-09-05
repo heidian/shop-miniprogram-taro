@@ -8,7 +8,7 @@
             :src="optimizeImage(product.image)"
           ></image>
         </view>
-        <view :class="$style['text']">
+        <view :class="$style['textWrapper']">
           <view :class="$style['title']">{{ product.title }}</view>
           <view :class="$style['description']">{{ product.description }}</view>
         </view>
@@ -83,7 +83,6 @@ export default {
 
 <style lang="scss" module>
 @import '@/styles/_mixins';
-
 $color-text: #262626;
 $color-text-light: #555;
 .container {
@@ -111,7 +110,7 @@ $color-text-light: #555;
   background-color: #fff;
   overflow: hidden;
 }
-.text {
+.textWrapper {
   padding: 7px 7px 10px;
 }
 .title,

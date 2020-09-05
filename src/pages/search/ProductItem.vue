@@ -5,14 +5,19 @@
       :class="$style['grid']"
       @tap="goToProduct(product.name)"
     >
-      <view :class="$style['imageWrapper']">
-        <image :class="$style['image']" mode="aspectFill" :src="optimizeImage(product.image)"></image>
+      <view :class="$style['productItem']">
+        <view :class="$style['imageWrapper']">
+          <image :class="$style['image']" mode="aspectFill" :src="optimizeImage(product.image)"></image>
+        </view>
+        <view :class="$style['textWrapper']">
+          <view :class="$style['title']">{{ product.title }}</view>
+          <view :class="$style['description']">{{ product.description }}</view>
+          <price
+            :class="$style['price']" :highlight="true" :keepZero="true"
+            :price="product.price" :compareAtPrice="product.compare_at_price"
+          ></price>
+        </view>
       </view>
-      <view :class="$style['title']">{{ product.price }} Product {{ product.id }} | {{ product.title }}</view>
-      <price
-        :class="$style['price']" :highlight="true" :keepZero="true"
-        :price="product.price" :compareAtPrice="product.compare_at_price"
-      ></price>
     </view>
   </view>
 </template>
@@ -52,6 +57,9 @@ export default {
 /* --------- postcss-pxtransform disable*/
 /* 禁止 px 到 rpx 转换, 这里因为用到了 systemInfo 里面的尺寸来计算每一个商品的高度, 所以全部用 px */
 /* 之前 pxTransform 初始化有问题, 现在修复了, 所以这一页现在 js 里可以正常计算 rpx */
+@import '@/styles/_mixins';
+$color-text: #262626;
+$color-text-light: #555;
 .row {
   display: flex;
   align-items: top;
@@ -65,16 +73,30 @@ export default {
   height: 100%;
   // border: 1px solid rgba(#000, 0.1);
 }
-.title {
+.productItem {
+  width: 100%;
+  border-radius: 5px;
+  background-color: #fff;
   overflow: hidden;
-  font-size: 14px;
-  line-height: 16px;
-  height: 32px;
+}
+.textWrapper {
+  padding: 5px 7px;
+}
+.title,
+.description {
+  overflow: hidden;
+  font-size: 12px;
+  line-height: 20px;
+  height: 20px;
   word-break: break-all;
-  text-overflow: ellipsis;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
+  @include ellipsis(1);
+}
+.title {
+  font-weight: 500;
+  color: $color-text;
+}
+.description {
+  color: $color-text-light;
 }
 .imageWrapper {
   width: 100%;
@@ -90,7 +112,8 @@ export default {
   height: 100%;
 }
 .price {
-  // font-size: 13px;
-  line-height: 20px;
+  line-height: 24px;
+  height: 24px;
+  margin-left: 0.2em;
 }
 </style>

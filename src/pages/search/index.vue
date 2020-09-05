@@ -1,5 +1,5 @@
 <template>
-  <view>
+  <view :class="$style['page']">
     <!-- <view v-for="product in products.data">
       <text>{{ product.id }}</text>
     </view> -->
@@ -32,21 +32,31 @@ export default {
   components: {},
   data() {
     const { windowHeight, windowWidth } = Taro.getSystemInfoSync()
-    const listHeight = windowHeight - 40
     const ratio = 375 / windowWidth  // 这个项目的设计尺寸是 375, Taro 那里也是配置了 375 为设计尺寸, 而不是默认的 750
+    const topBarHeight = 40  // 顶部过滤条
+    const listHeight = windowHeight - topBarHeight / ratio
     const containerWidth = windowWidth - 2 * (5 / ratio)
     const topBottomPadding = (2 * 5) / ratio
     const leftRightPadding = (2 * 5) / ratio
+    const textPadding = (5 + 5) / ratio
     const imageHeight = containerWidth / 2 - leftRightPadding
-    const titleHeight = (2 * 16) / ratio
-    const priceHeight = 20 / ratio
-    const itemHeight = topBottomPadding + imageHeight + titleHeight + priceHeight
+    const titleHeight = 20 / ratio
+    const descHeight = 20 / ratio
+    const priceHeight = 24 / ratio
+    const itemHeight = topBottomPadding + imageHeight + titleHeight + descHeight + priceHeight + textPadding
     /* virtual-list 会根据 listHeight/itemHeight 判断首屏幕渲染几个 item */
     return {
       listHeight: listHeight,
       itemHeight: parseInt(itemHeight + 1),  // 最后加个1
       ProductItem
     }
+  },
+  created() {
+    Taro.setBackgroundColor({
+      backgroundColor: '#f6f6f6',
+      backgroundColorTop: '#ffffff',
+      backgroundColorBottom: '#f6f6f6',
+    })
   },
   computed: {
     listData() {
@@ -81,4 +91,14 @@ export default {
 }
 </script>
 
-<style lang="scss"></style>
+<style lang="scss" module>
+$color-bg-gray: #f6f6f6;
+page {
+  background-color: $color-bg-gray;
+}
+.page {
+  padding-top: 40px;
+  overflow: hidden;
+  height: 100vh;
+}
+</style>
