@@ -41,7 +41,7 @@ import Taro from '@tarojs/taro'
 import { mapState } from 'vuex'
 import { optimizeImage } from '@/utils/image'
 import InputNumber from '@/components/InputNumber'
-import InfiniteProducts from '@/components/InfiniteProducts/InfiniteProducts'
+import InfiniteProducts from '@/components/InfiniteProducts'
 
 export default {
   name: 'Cart',

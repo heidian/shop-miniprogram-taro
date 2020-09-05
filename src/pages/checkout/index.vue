@@ -64,8 +64,8 @@ import { mapState } from 'vuex'
 import Taro, { getCurrentInstance } from '@tarojs/taro'
 // import { API } from '@/utils/api'
 import { optimizeImage, backgroundImageUrl } from '@/utils/image'
-import AvailableCouponCodes from './AvailableCouponCodes'
 import Price from '@/components/Price'
+import AvailableCouponCodes from './AvailableCouponCodes'
 import './index.scss'
 
 export default {

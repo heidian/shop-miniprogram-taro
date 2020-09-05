@@ -13,7 +13,7 @@
 import _ from 'lodash'
 import Taro from '@tarojs/taro'
 import ThemeBlocks from '@/mixins/ThemeBlocks'
-import InfiniteProducts from '@/components/InfiniteProducts/InfiniteProducts'
+import InfiniteProducts from '@/components/InfiniteProducts'
 
 export default {
   name: 'Home',

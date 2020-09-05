@@ -10,7 +10,7 @@
           :class="$style['variantPrice']" :highlight="true" :keepZero="true"
           :price="selectedVariant.price" :compareAtPrice="selectedVariant.compare_at_price"
         ></price>
-        <view :class="$style['variantTitle']">已选择 {{ selectedVariant.title }}</view>
+        <view :class="$style['variantTitle']">已选择: {{ selectedVariant.title }}</view>
       </view>
     </view>
     <view :class="$style['optionsWrapper']">

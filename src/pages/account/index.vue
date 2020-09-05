@@ -145,7 +145,7 @@ import { mapState } from 'vuex'
 import _ from 'lodash'
 import { handleErr } from '@/utils/errHelper'
 
-import InfiniteProducts from '@/components/InfiniteProducts/InfiniteProducts'
+import InfiniteProducts from '@/components/InfiniteProducts'
 
 import './index.scss'
 
