@@ -58,7 +58,7 @@ export default {
   },
   async mounted() {
     this.updateDefaultParams({
-      fields: ['id', 'name', 'title', 'description', 'image', 'price'].join(',')
+      fields: ['id', 'name', 'title', 'description', 'image', 'price', 'compare_at_price'].join(',')
     }, { fetch: false })
     await this.fetchList()
   },

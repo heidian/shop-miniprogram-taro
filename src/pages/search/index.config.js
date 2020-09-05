@@ -1,3 +1,3 @@
 export default {
-  navigationBarTitleText: '商品'
+  navigationBarTitleText: '全部商品'
 }

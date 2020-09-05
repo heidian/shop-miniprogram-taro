@@ -68,7 +68,8 @@ $color-text-light: #555;
   justify-content: space-between;
 }
 .grid {
-  padding: 5px;
+  margin-top: 10px;
+  padding: 0 5px;
   width: 50%;
   height: 100%;
   // border: 1px solid rgba(#000, 0.1);
