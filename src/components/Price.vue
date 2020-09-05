@@ -41,7 +41,7 @@ export default {
     },
     price: {
       type: [Number, String],
-      required: true
+      required: false
     },
     compareAtPrice: {
       type: [Number, String],
@@ -49,15 +49,30 @@ export default {
     }
   },
   data() {
-    const priceValue = formatCurrency(this.price, { keepZero: this.keepZero })
-    const compareValue = formatCurrency(this.compareAtPrice, { keepZero: this.keepZero })
     return {
-      priceValue: priceValue,
-      compareValue: (parseFloat(this.compareAtPrice) > parseFloat(this.price)) ? compareValue : null
+      priceValue: [],
+      compareValue: null
     }
   },
-  computed: {},
-  methods: {},
+  created() {
+    this.parseValues()
+  },
+  methods: {
+    parseValues() {
+      const priceValue = formatCurrency(this.price, { keepZero: this.keepZero })
+      const compareValue = formatCurrency(this.compareAtPrice, { keepZero: this.keepZero })
+      this.priceValue = priceValue,
+      this.compareValue = (parseFloat(this.compareAtPrice) > parseFloat(this.price)) ? compareValue : null
+    }
+  },
+  watch: {
+    price(newValue, oldValue) {
+      this.parseValues()
+    },
+    compareAtPrice(newValue, oldValue) {
+      this.parseValues()
+    }
+  }
 }
 </script>
 
@@ -67,6 +82,7 @@ $color-text-light: #555;
 $color-orange: #ff5a00;
 .price-wrapper {
   display: inline-block;
+  letter-spacing: 1rpx;
   .price, .price--compare {
     display: inline-block;
     vertical-align: baseline;
