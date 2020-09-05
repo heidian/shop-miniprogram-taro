@@ -38,7 +38,7 @@
         ></image>
         <text v-if="order.lines.length === 1" :class="$style['lineTitle']">{{ order.lines[0].title }}</text>
         <view :class="$style['lineSummary']">
-          <view :class="$style['totalPrice']">{{ order.total_price|currency }}</view>
+          <view :class="$style['totalPrice']">{{ order.total_price|currency({keepZero: true}) }}</view>
           <view :class="$style['totalQty']">共{{ order.lines.length }}件</view>
         </view>
       </view>

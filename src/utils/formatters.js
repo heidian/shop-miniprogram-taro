@@ -1,13 +1,13 @@
 import moment from 'moment'
 
-export const formatCurrency = (value, { removeTrailingZero=false } = {}) => {
+export const formatCurrency = (value, { keepZero } = {}) => {
   /* parseFloat 和 + 不同, parseFloat 不会把 null, '' 和 [] 变成 0, 但是 + 会 */
   const decimalValue = parseFloat(value)
   if (!decimalValue && decimalValue !== 0) {
     return '-'
   }
   let formatted = Math.abs(decimalValue).toFixed(2)
-  if (removeTrailingZero) {
+  if (!keepZero) {
     formatted = +formatted
   }
   return `${decimalValue < 0 ? '-' : ''}¥${formatted}`

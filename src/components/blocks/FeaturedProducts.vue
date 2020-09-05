@@ -10,10 +10,10 @@
       }"></view>
       <view class="title">{{ textValue(product.title) }}</view>
       <view class="price">
-        <text class="price-sale">{{ product.price|currency({removeTrailingZero: true}) }}</text>
+        <text class="price-sale">{{ product.price|currency }}</text>
         <text
           v-if="+product.compare_at_price !== +product.price" class="price-compare"
-        >{{ product.compare_at_price|currency({removeTrailingZero: true}) }}</text>
+        >{{ product.compare_at_price|currency }}</text>
       </view>
     </view>
   </view>

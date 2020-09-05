@@ -20,7 +20,7 @@
             <view class="cart__product">{{ item.product.title }}</view>
             <view class="cart__variant">{{ item.variant|variantTitle }}</view>
             <view class="cart__bottom">
-              <view class="cart__price">{{ item.variant.price|currency({ removeTrailingZero: true }) }}</view>
+              <view class="cart__price">{{ item.variant.price|currency }}</view>
               <input-number
                 class="cart__quantity"
                 :min="1" :value="item.quantity" @change="(quantity) => setItemQuantity(quantity, item.id)"

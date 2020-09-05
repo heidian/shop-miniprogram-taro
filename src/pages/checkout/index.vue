@@ -34,14 +34,24 @@
     </view>
     <!-- <view class="section">支付方式, 因为没法选择, 这个不显示</view> -->
     <view class="section">
-      <view class="price-line"><text>商品金额</text><text>{{ getField('total_line_items_price')|currency }}</text></view>
-      <view class="price-line"><text>运费</text><text>{{ getField('shipping_cost')|currency }}</text></view>
+      <view class="price-line">
+        <text>商品金额</text>
+        <text>{{ getField('total_line_items_price')|currency({keepZero: true}) }}</text>
+      </view>
+      <view class="price-line">
+        <text>运费</text>
+        <text>{{ getField('shipping_cost')|currency({keepZero: true}) }}</text>
+      </view>
       <view class="price-line" v-for="discount in getField('discounts')" :key="discount.id">
-        <text>{{ discount.description }}</text><text>{{ (-discount.discount_price)|currency }}</text>
+        <text>{{ discount.description }}</text>
+        <text>{{ (-discount.discount_price)|currency({keepZero: true}) }}</text>
       </view>
     </view>
     <view class="footer">
-      <view>实付金额: <text class="text-price--accent text-bold">{{ finalPrice|currency }}</text></view>
+      <view>
+        <text>实付金额:</text>
+        <text class="text-price--accent text-bold">{{ finalPrice|currency({keepZero: true}) }}</text>
+      </view>
       <button class="button--payfororder button--round button--orange" type="primary">立即支付</button>
     </view>
     <available-coupon-codes :visible.sync="couponCodesDrawerVisible"></available-coupon-codes>

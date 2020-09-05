@@ -6,7 +6,7 @@
     <view :class="$style['header']">
       <image :class="$style['variantImage']" :src="selectedVariant.image|imageUrl(200)" mode="aspectFill"></image>
       <view :class="$style['headerCaption']">
-        <view :class="$style['variantPrice']">{{ selectedVariant.price|currency }}</view>
+        <view :class="$style['variantPrice']">{{ selectedVariant.price|currency({keepZero: true}) }}</view>
         <view :class="$style['variantTitle']">已选择 {{ selectedVariant.title }}</view>
       </view>
     </view>

@@ -9,10 +9,10 @@
       <view class="image" :style="{ 'backgroundImage': backgroundImageUrl(product.image, 600)}"></view>
       <view class="title">{{ textValue(product.title) }}</view>
       <view class="price">
-        <text class="price-sale">{{ product.price|currency({removeTrailingZero: true}) }}</text>
+        <text class="price-sale">{{ product.price|currency }}</text>
         <text
           v-if="+product.compare_at_price !== +product.price" class="price-compare"
-        >{{ product.compare_at_price|currency({removeTrailingZero: true}) }}</text>
+        >{{ product.compare_at_price|currency }}</text>
       </view>
     </view>
     <!-- 闭合标签尽量和文本内容紧贴, 避免出现前后空格, 内部元素是标签就随意 -->
