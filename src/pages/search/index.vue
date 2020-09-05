@@ -1,11 +1,17 @@
 <template>
   <view :class="$style['page']">
-    <scroll-view :class="$style['categoriesBar']" :scroll-x="true" :enhanced="true" :show-scrollbar="false">
+    <scroll-view
+      :class="$style['categoriesBar']"
+      :scroll-x="true" :enhanced="true" :show-scrollbar="false"
+      :scroll-into-view="activeCategoryId ? `search-category-${activeCategoryId}` : null"
+      :scroll-with-animation="true"
+    >
       <view :class="$style['categoriesInner']">
         <view
           v-for="category in categories.data" :key="category.id"
           :class="[$style['categoryItem'], (category.id === activeCategoryId) && 'is-active']"
-          @tap="filterCategory(category.id)"
+          :id="`search-category-${category.id}`"
+          @tap="() => filterCategory(category.id)"
         ><text :class="$style['categoryText']">{{ category.title }}</text></view>
       </view>
     </scroll-view>
@@ -70,7 +76,7 @@ export default {
   computed: {
     ...mapState(['categories']),
     ...mapGetters('categories', [
-      'getRootCategory'  // 这个暂时用不到
+      'getRootCategoryId'
     ]),
     listData() {
       return _.chunk(this.products.data, 2)
@@ -114,6 +120,8 @@ export default {
       }
     },
     filterCategory(categoryId) {
+      // 虽然 fetchProducts 里面也会计算 activeCategoryId, 但这里早点设置也没事
+      this.activeCategoryId = categoryId
       this.updateFilter({ category: categoryId }, { partial: false, fetch: false })
       this.fetchProducts()
     },
@@ -124,6 +132,7 @@ export default {
         await this.fetchMore()
       } else {
         // TODO active category
+        this.activeCategoryId = this.getRootCategoryId(this.products.filter.category)
         await this.fetchList()
       }
       Taro.hideNavigationBarLoading()

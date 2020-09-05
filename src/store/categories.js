@@ -1,9 +1,10 @@
-import { API } from '@/utils/api'
 import _ from 'lodash'
+import { API } from '@/utils/api'
 
 const state = () => {
   return {
     _fetched: false,  // categories 只运行一次
+    _rootCategoryId: {},
     pending: false,
     error: {},
     data: []
@@ -11,10 +12,9 @@ const state = () => {
 }
 
 const getters = {
-  getRootCategory(state) {
+  getRootCategoryId(state) {
     return (categoryId) => {
-      // test, 这个暂时用不到
-      // console.log('!!!', state, categoryId)
+      return state._rootCategory[categoryId] || null
     }
   }
 }
@@ -33,8 +33,16 @@ const mutations = {
     state.error = _.cloneDeep(error || {})
   },
   setData (state, { data } = {}) {
-    state.data = _.cloneDeep(data || [])
     state._fetched = true
+    state.data = _.cloneDeep(data || [])
+    const rootCategory = {}
+    _.forEach(state.data, (category) => {
+      rootCategory[category.id] = category.id
+      _.forEach(category.children || [], (subCategory) => {
+        rootCategory[subCategory.id] = category.id
+      })
+    })
+    state._rootCategory = rootCategory
   }
 }
 
