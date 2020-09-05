@@ -158,6 +158,14 @@
 					"id": -1,
 					"name": "pages/categories/index",
 					"pathName": "pages/categories/index",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "pages/search/index",
+					"pathName": "pages/search/index",
+					"query": "",
 					"scene": null
 				}
 			]

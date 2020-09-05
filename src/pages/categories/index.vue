@@ -17,7 +17,7 @@ import SideBar from './SideBar'
 import CategoriesBody from './CategoriesBody'
 
 export default {
-  name: 'category',
+  name: 'Categories',
   components: {
     SideBar,
     CategoriesBody
