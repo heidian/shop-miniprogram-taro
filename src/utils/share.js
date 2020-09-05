@@ -5,7 +5,7 @@ const { pixelRatio: dpr } = Taro.getSystemInfoSync()
 
 function _drawText (ctx, { offsetLeft, offsetTop, maxWidth, texts, miniqrUrl }) {
   _.forEach(texts, item => {
-    ctx.font = `${item.fontSize || 14}px ans-serif`
+    ctx.font = `${item.fontSize || 14}px sans-serif`
     ctx.fillStyle = item.color
     ctx.fillText(item.value, offsetLeft, offsetTop, maxWidth)
     if (item.fontWeight === 'bold') {
@@ -37,7 +37,7 @@ function _drawBadge(ctx, { offsetLeft, offsetTop, text, fillColor, color }) {
   ctx.fill()
 
   ctx.fillStyle = color || '#fff'
-  ctx.font = '15px ans-serif'
+  ctx.font = '15px sans-serif'
   ctx.textBaseline = 'middle'
   ctx.fillText(text || '精选商品', offsetLeft * 2, offsetTop + badgeHeight / 2)
   ctx.restore()
@@ -110,7 +110,7 @@ export default class ProductCanvas {
         ctx.scale(dpr, dpr)
 
         // fill bg
-        ctx.font = '14px ans-serif'
+        ctx.font = '14px sans-serif'
         ctx.fillStyle = bgColor
         ctx.fillRect(0, 0, canvas_width, canvas_height)
         ctx.save()
@@ -197,7 +197,7 @@ export default class ProductCanvas {
 
         // draw product title
         ctx.save()
-        ctx.font = '20px serif'
+        ctx.font = '20px sans-serif'
 
         // const productTitleMetrics = ctx.measureText(productTitle)
         // const { width: productTitleWidth} = productTitleMetrics
@@ -258,7 +258,7 @@ export default class ProductCanvas {
         })
 
         // draw tips
-        ctx.font = '14px ans-serif'
+        ctx.font = '14px sans-serif'
         ctx.fillStyle = colorTitleLight
         ctx.textBaseline = 'middle'
         const tipsOffsetHeight = cursorOffsetTop + miniqrRadius
