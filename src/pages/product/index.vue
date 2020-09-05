@@ -11,7 +11,7 @@
         autoplay
       >
         <swiper-item class="product__images__swiper-item" v-for="image in product.images" :key="image.id">
-          <image class="product__images__swiper-item__image" mode="aspectFit" :src="optimizeImage(image, 800)"></image>
+          <image class="product__images__swiper-item__image" mode="aspectFit" :src="optimizeImage(image, 600)"></image>
         </swiper-item>
       </swiper>
       <!-- 商品价格和添加心愿单 -->
