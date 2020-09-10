@@ -45,6 +45,12 @@
         </view>
       </view>
     </view>
+    <view class="page__section" v-if="showReviews && product.id">
+      <product-reviews
+        :reviewsCaption="{}"
+        :productId="product.id"
+      />
+    </view>
     <view class="page__section">
       <view class="page__section__title">图文详情</view>
       <view v-if="body_html" class="taro_html product__html" v-html="body_html"></view>
@@ -97,7 +103,7 @@ import { API } from '@/utils/api'
 import { optimizeImage, backgroundImageUrl } from '@/utils/image'
 import SelectVariant from '@/components/SelectVariant/SelectVariant'
 import RelatedProducts from './RelatedProducts'
-import { setTimeout } from 'timers';
+import ProductReviews from './ProductReviews'
 
 const ICON_CUSTOMER_SERVIDE = "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iaXNvLTg4NTktMSI/Pg0KPCEtLSBHZW5lcmF0b3I6IEFkb2JlIElsbHVzdHJhdG9yIDE5LjAuMCwgU1ZHIEV4cG9ydCBQbHVnLUluIC4gU1ZHIFZlcnNpb246IDYuMDAgQnVpbGQgMCkgIC0tPg0KPHN2ZyB2ZXJzaW9uPSIxLjEiIGlkPSJDYXBhXzEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHg9IjBweCIgeT0iMHB4Ig0KCSB2aWV3Qm94PSIwIDAgNDIyLjEzOSA0MjIuMTM5IiBzdHlsZT0iZW5hYmxlLWJhY2tncm91bmQ6bmV3IDAgMCA0MjIuMTM5IDQyMi4xMzk7IiB4bWw6c3BhY2U9InByZXNlcnZlIj4NCjxnPg0KCTxnPg0KCQk8cGF0aCBkPSJNMzYzLjYzMSwxNzQuNDk4aC0xLjA0NXYtMjUuNkMzNjIuNTg2LDY2LjY2NCwyOTUuOTIzLDAsMjEzLjY4OCwwUzY0Ljc5LDY2LjY2NCw2NC43OSwxNDguODk4djI1LjZoLTYuMjY5DQoJCQljLTIyLjk4OCwwLTQwLjc1MSwyMC4zNzUtNDAuNzUxLDQzLjg4NnY2NS4zMDZjLTAuNTc5LDIyLjc4NywxNy40MjUsNDEuNzI5LDQwLjIxMiw0Mi4zMDhjMC4xOCwwLjAwNSwwLjM1OSwwLjAwOCwwLjUzOSwwLjAxDQoJCQloMzguNjYxYzUuNDc2LTAuMjU3LDkuNzA3LTQuOTA2LDkuNDQ5LTEwLjM4MmMtMC4wMDktMC4xOTctMC4wMjQtMC4zOTQtMC4wNDUtMC41OXYtMTI4YzAtNi4yNjktMy42NTctMTIuNTM5LTkuNDA0LTEyLjUzOQ0KCQkJSDg1LjY4OHYtMjUuNmMwLTcwLjY5Miw1Ny4zMDgtMTI4LDEyOC0xMjhzMTI4LDU3LjMwOCwxMjgsMTI4djI1LjZoLTExLjQ5NGMtNS43NDcsMC05LjQwNCw2LjI2OS05LjQwNCwxMi41Mzl2MTI4DQoJCQljLTAuNTgzLDUuNDUxLDMuMzYzLDEwLjM0Myw4LjgxNCwxMC45MjZjMC4xOTYsMC4wMjEsMC4zOTMsMC4wMzYsMC41OSwwLjA0NWgxMi4wMTZsLTEuMDQ1LDEuNTY3DQoJCQljLTE1LjY3NywyMC44MzUtNDAuMjc3LDMzLjAzOC02Ni4zNTEsMzIuOTE0Yy01LjcwOC0yNy45ODktMzMuMDI2LTQ2LjA1Mi02MS4wMTUtNDAuMzQzDQoJCQljLTIzLjkzNSw0Ljg4MS00MS4xOTIsMjUuODQzLTQxLjM4NSw1MC4yN2MwLjI4NiwyOC42NSwyMy41OTQsNTEuNzI0LDUyLjI0NSw1MS43MjJjMTQuMTgzLTAuMjMsMjcuNzAyLTYuMDUsMzcuNjE2LTE2LjE5Ng0KCQkJYzYuNjg5LTYuODUsMTEuMDcyLTE1LjYxNywxMi41MzktMjUuMDc4YzMyLjY1MiwwLjEyNCw2My40NDUtMTUuMTc2LDgzLjA2OS00MS4yNzNsOS45MjctMTQuNjI5DQoJCQljMjIuNDY1LTEuNTY3LDM2LjU3MS0xNS42NzMsMzYuNTcxLTM2LjA0OXYtNjUuMzA2QzQwNC4zODIsMjAxLjE0MywzODcuNjY0LDE3NC40OTgsMzYzLjYzMSwxNzQuNDk4eiBNODUuNjg4LDMwNS4xMUg1OC41MjENCgkJCWMtMTEuMjUtMC4yNzQtMjAuMTQ4LTkuNjE1LTE5Ljg3NC0yMC44NjVjMC4wMDUtMC4xODUsMC4wMTItMC4zNywwLjAyMS0wLjU1NnYtNjUuMzA2YzAtMTIuMDE2LDguMzU5LTIyLjk4OCwxOS44NTMtMjIuOTg4DQoJCQloMjcuMTY3VjMwNS4xMXogTTI0Ny4xMjUsMzkxLjMxNGMtNS43OSw2LjI3OC0xMy45MjUsOS44NzMtMjIuNDY1LDkuOTI3Yy0xNi45OTgtMC4yNy0zMC43OTItMTMuODM0LTMxLjM0Ny0zMC44MjUNCgkJCWMtMC4wMDctMTcuMDI0LDEzLjc4OC0zMC44MywzMC44MTItMzAuODM3YzE3LjAyNC0wLjAwNywzMC44MywxMy43ODgsMzAuODM3LDMwLjgxMmMwLDAuMDA4LDAsMC4wMTcsMCwwLjAyNQ0KCQkJQzI1NS4zOTcsMzc4LjE3MywyNTIuNTUzLDM4NS43NTYsMjQ3LjEyNSwzOTEuMzE0eiBNMzgzLjQ4NCwyODguOTE0YzAsMTQuMTA2LTEzLjU4NCwxNi4xOTYtMTkuODUzLDE2LjE5NmgtMjEuOTQzVjE5NS4zOTYNCgkJCWgyMS45NDNjMTEuNDk0LDAsMTkuODUzLDE2LjE5NiwxOS44NTMsMjguMjEyVjI4OC45MTR6Ii8+DQoJPC9nPg0KPC9nPg0KPGc+DQo8L2c+DQo8Zz4NCjwvZz4NCjxnPg0KPC9nPg0KPGc+DQo8L2c+DQo8Zz4NCjwvZz4NCjxnPg0KPC9nPg0KPGc+DQo8L2c+DQo8Zz4NCjwvZz4NCjxnPg0KPC9nPg0KPGc+DQo8L2c+DQo8Zz4NCjwvZz4NCjxnPg0KPC9nPg0KPGc+DQo8L2c+DQo8Zz4NCjwvZz4NCjxnPg0KPC9nPg0KPC9zdmc+DQo="
 const ICON_CART = "data:image/svg+xml;base64,PHN2ZyBpZD0iTGF5ZXJfMSIgZW5hYmxlLWJhY2tncm91bmQ9Im5ldyAwIDAgNTEyLjAwMyA1MTIuMDAzIiBoZWlnaHQ9IjUxMiIgdmlld0JveD0iMCAwIDUxMi4wMDMgNTEyLjAwMyIgd2lkdGg9IjUxMiIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48Zz48cGF0aCBkPSJtNTAzLjk5NSAxMDUuMzczYy02Ljg2OC04LjQ5OC0xNy4wNzYtMTMuMzcxLTI4LjAwNC0xMy4zNzFoLTM5MC4yNTRsLTMuNDg1LTI0Ljk3NmMtMi40NjgtMTcuNjg2LTE3Ljc5Ni0zMS4wMjQtMzUuNjU1LTMxLjAyNGgtMzAuNTk3Yy04LjgzNiAwLTE2IDcuMTY0LTE2IDE2czcuMTY0IDE2IDE2IDE2aDMwLjU5N2MxLjk4NCAwIDMuNjg4IDEuNDgyIDMuOTYxIDMuNDQ3bDQzLjE4OSAzMDkuNTI5YzIuNDY4IDE3LjY4NyAxNy43OTYgMzEuMDI0IDM1LjY1NSAzMS4wMjRoMTcuMzQ5Yy0xLjc3NiA1LjAwOC0yLjc1MiAxMC4zOTEtMi43NTIgMTYgMCAyNi40NjcgMjEuNTMzIDQ4IDQ4IDQ4czQ4LTIxLjUzMyA0OC00OGMwLTUuNjA5LS45NzYtMTAuOTkyLTIuNzUyLTE2aDg1LjUwNGMtMS43NzYgNS4wMDgtMi43NTIgMTAuMzkxLTIuNzUyIDE2IDAgMjYuNDY3IDIxLjUzMyA0OCA0OCA0OHM0OC0yMS41MzMgNDgtNDhjMC01LjYwOS0uOTc2LTEwLjk5Mi0yLjc1Mi0xNmgzNC43NTNjOC44MzYgMCAxNi03LjE2NCAxNi0xNnMtNy4xNjQtMTYtMTYtMTZoLTMxOC41OTdjLTEuOTg0IDAtMy42ODgtMS40ODItMy45NjEtMy40NDdsLTMuOTg0LTI4LjU1M2gzMTUuMTAyYzE2Ljg1OCAwIDMxLjY2My0xMS45NjUgMzUuMjA1LTI4LjQ1OGwzOS40MjktMTgzLjk5N2MyLjI5MS0xMC42ODEtLjMzMy0yMS42NzktNy4xOTktMzAuMTc0em0tMjk1Ljk5NSAzMjIuNjI5YzAgOC44MjItNy4xNzggMTYtMTYgMTZzLTE2LTcuMTc4LTE2LTE2IDcuMTc4LTE2IDE2LTE2IDE2IDcuMTc3IDE2IDE2em0xNzYgMGMwIDguODIyLTcuMTc4IDE2LTE2IDE2cy0xNi03LjE3OC0xNi0xNiA3LjE3OC0xNiAxNi0xNiAxNiA3LjE3NyAxNiAxNnptOTUuOTA1LTI5OS4xNjMtMzkuNDI4IDE4My45OTNjLS4zOTQgMS44MzYtMi4wNDIgMy4xNjktMy45MTcgMy4xNjloLTMxOS41NjhsLTI2Ljc5LTE5MmgzODUuNzg4YzEuNTgzIDAgMi41NjkuODA4IDMuMTE3IDEuNDg2LjU0Ny42NzcgMS4xMjkgMS44MDguNzk4IDMuMzUyeiIvPjwvZz48L3N2Zz4="
@@ -106,6 +112,7 @@ export default {
   components: {
     /* 组件名称用首字母大写, template 里面标签不能用大写, 全部用小写+减号 */
     RelatedProducts,
+    ProductReviews,
     SelectVariant
   },
   data() {
@@ -131,6 +138,11 @@ export default {
     }
   },
   created() {
+    Taro.setBackgroundColor({
+      backgroundColor: '#f6f6f6',
+      backgroundColorTop: '#ffffff',
+      backgroundColorBottom: '#f6f6f6',
+    })
   },
   async mounted() {
     await this.fetchProduct()
@@ -144,6 +156,9 @@ export default {
     }),
     body_html () {
       return _.get(this.product, 'body_html_mobile') || _.get(this.product, 'body_html')
+    },
+    showReviews () {
+      return true
     }
   },
   methods: {
@@ -209,10 +224,11 @@ $color-text-lighter: #969aa1;
 $btn-blue: #284179;
 $btn-orange: #ff5a00;
 $color-border: #ecf0f1;
-
+page {
+  background-color: #f6f6f6;
+}
 .page {
   min-height: 100vh;
-  background-color: #f6f6f6;
   padding-bottom: 50px;
   position: relative;
   &__footer {
