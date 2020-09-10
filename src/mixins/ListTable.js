@@ -291,7 +291,7 @@ function LocalListTable(propertyName, urlRoot) {
         // })
         // this[propertyName].pending = true
         // try {
-        //   await this.$store.dispatch(`${storeName}/remove`, { id })
+        //   await API.delete(`${urlRoot}${id}/`)
         //   this[propertyName].pending = false
         // } catch(error) {
         //   const message = _.get(error, 'response.data.detail', '无法删除') + ''
