@@ -265,7 +265,7 @@ function LocalListTable(propertyName, urlRoot) {
         this[propertyName].pending = true
         let res
         try {
-          res = await API.post(urlRoot, { data })
+          res = await API.post(urlRoot, data)
           this[propertyName].pending = false
         } catch(error) {
           this[propertyName].pending = false
