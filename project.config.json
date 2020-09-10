@@ -78,10 +78,10 @@
 					"scene": null
 				},
 				{
-					"id": -1,
+					"id": 2,
 					"name": "pages/product/index",
 					"pathName": "pages/product/index",
-					"query": "name=p_1e2v1ccbc1cfr1h19",
+					"query": "name=p_1d99qkptiapmho0",
 					"scene": null
 				},
 				{
@@ -166,6 +166,13 @@
 					"name": "pages/search/index",
 					"pathName": "pages/search/index",
 					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "pages/product/reviews",
+					"pathName": "pages/product/reviews",
+					"query": "product=54271",
 					"scene": null
 				}
 			]

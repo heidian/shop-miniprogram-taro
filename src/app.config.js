@@ -9,6 +9,7 @@ export default {
     'pages/account/profile',
     'pages/search/index',
     'pages/product/index',
+    'pages/product/reviews',
     'pages/login/index',
     'pages/checkout/index',
     'pages/addresses/index',
