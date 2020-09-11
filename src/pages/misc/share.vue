@@ -3,16 +3,32 @@
     [$style['page']]: true,
     [$style['disableScroll']]: !isReady
   }">
-    <view v-if="!isReady" :class="$style['pending']">
-      <view :class="$style['pending_text']">正在生成...</view>
+    <view v-if="type && canvasImage" :class="$style['canvasImageWrapper']">
+      <image
+        :src="canvasImage"
+        mode="widthFix"
+        @load="onLoadCanvasImage"
+        :class="[$style['canvasImage'], canvasImageReady && $style['imageVisible']]"
+        :show-menu-by-longpress="true"></image>
     </view>
-    <view v-else-if="type == 'product'" :class="$style['canvasImageWrapper']">
-      <image :src="productCanvasImage" mode="widthFix" :class="{[$style['canvasImage']]: true, [$style['productCanvasImage']]: true}" @longtap="onLongTapImage" :show-menu-by-longpress="true"></image>
+    <view v-if="isReady" :class="$style['actionSave']">
+      <text :class="$style['saveHint']">保存图片，将好货分享给朋友们吧</text>
+      <button :class="$style['btnSave']" @tap="onSaveImageToAblum">
+        <image
+          src="https://up.img.heidiancdn.com/o_1ehtmvja215282udkv0448118b0icon2x.png"
+          mode="scaleToFill"
+          :class="$style['btnIcon']"></image>
+        <text :class="$style['btnText']">保存图片</text>
+      </button>
     </view>
-    <view v-else-if="type == 'shop'" :class="$style['canvasImageWrapper']">
-      <image :src="shopCanvasImage" mode="widthFix" :class="$style['canvasImage']" @longtap="onLongTapImage" :show-menu-by-longpress="true"></image>
+
+    <view v-if="!isReady && !canvasImageReady" :class="$style['pending']">
+      <image
+        mode="aspectFit"
+        :class="$style['pendingIcon']"
+        :src="'https://up.img.heidiancdn.com/o_1ehtu4aarjjg1t5dfa5nrjsg30shop2x.png'|imageUrl(100)"></image>
+      <view :class="$style['pendingText']">正在加载素材，请稍等</view>
     </view>
-    <button v-if="isReady" :class="$style['btnSave']" @tap="onSaveImageToAblum">保存图片</button>
     <canvas id="productCanvas" type="2d" :class="$style['productCanvas']"></canvas>
     <canvas id="shopCanvas" type="2d" :class="$style['shopCanvas']"></canvas>
   </view>
@@ -37,9 +53,9 @@ export default {
       product: {},
       miniqrUrl: '',
       productCanvas: null,
-      productCanvasImage: '',
       shopCanvas: null,
-      shopCanvasImage: ''
+      canvasImage: '',
+      canvasImageReady: false
     }
   },
   computed: {
@@ -49,8 +65,17 @@ export default {
     referralCode () {
       return _.get(this.customer, 'referral_code', '')
     },
-    appid() {
+    appid () {
       return this.$store.state.config.appid
+    },
+    shareTitle () {
+      return _.get(this.customer, 'full_name', '你的好友') + '给你分享以下好物'
+    },
+    shareScene () {
+      return this.productId && this.referralCode ? `r=pdt&id=${this.productId}&s=share&c=${this.referralCode}` : ''
+    },
+    shareImage () {
+      return optimizeImage(_.get(this.product, 'image'), 400)
     }
   },
   mounted () {
@@ -78,7 +103,7 @@ export default {
       if (!this.productId) {
         return
       }
-      const scene = `r=pdt&id=${this.productId}&s=share&c=${this.referralCode}`
+      const scene = this.shareScene
       try {
         const res = await API.post('/weixin/wacode/', {
           appid: this.appid,
@@ -96,8 +121,10 @@ export default {
           isDark: false
         })
         this.productCanvas.initialize().then((tempFilePath) => {
-          this.isReady = true
-          this.productCanvasImage = tempFilePath
+          this.canvasImage = tempFilePath
+          _.delay(() => {
+            this.isReady = true
+          }, 500)
         }).catch(err => {
 
         })
@@ -113,14 +140,21 @@ export default {
         this.productCanvas.saveCanvasToAlbum()
       }
     },
-    onLongTapImage (e) {
-      console.log('onLongTapProductCanvas', e)
-      Taro.showModal({
-        title: "长按中",
-        content: "成功"
-      })
+    onLoadCanvasImage (e) {
+      this.canvasImageReady = true
     }
   },
+  onShareAppMessage (res) {
+    return {
+      title: this.shareTitle,
+      path: `/pages/home?scene=${this.shareScene}`,
+      imageUrl: this.shareImage,
+      success: res => {},
+      fail: () => {},
+      complete: () => {}
+    }
+  }
+
 }
 </script>
 
@@ -129,17 +163,21 @@ export default {
 $color-orange: #ff5a00;
 $color-text: #262626;
 $color-text-light: #666666;
+$color-text-toast: #ffffff;
+$color-text-hint: #333333;
 $color-divider: #f0f0f0;
 $color-bg-gray: #f6f6f6;
+$color-bg-toast: rgba(#000000, 0.6);
 $color-border: #bbbbbb;
-$btn-orange: #ff5a00;
+$color-box-shadow: rgba(#000000, 0.08);
+$color-bg-btn-save: #222222;
 
 page {
   background-color: $color-bg-gray;
 }
 .page {
-  height: 100vh;
   width: 100%;
+  padding-bottom: 30px;
 }
 .disableScroll {
   overflow: hidden;
@@ -151,19 +189,31 @@ page {
   bottom: 0;
   left: 0;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  justify-content: flex-start;
   align-items: center;
-  background-color: rgb(58, 62, 75);
+  background-color: transparent;
+  overflow: hidden;
+  padding-top: 200px;
 }
-.pending_text {
+.pendingIcon {
+  width: 100px;
+  height: 100px;
+  margin-bottom: 18px;
+}
+.pendingText {
   font-size: 14px;
-  color: $color-orange;
+  color: $color-text-toast;
+  padding: 10px 30px;
+  background-color: $color-bg-toast;
+  border-radius: 8px;
 }
 .canvasImageWrapper {
-  background-color: orange;
-  width: 75vw;
-  margin: 0 auto;
-  border: 10px solid $color-border;
+  width: 66.666667vw;
+  margin: 30px auto 0;
+  border-radius: 8px;
+  box-shadow: 0 3px 20px 0 $color-box-shadow;
+  overflow: hidden;
 }
 .productCanvas {
   position: fixed;
@@ -175,25 +225,53 @@ page {
 .canvasImage{
   display: block;
   width: 100%;
+  opacity: 0;
+  transition: opacity 0.25s ease-in-out;
+}
+.imageVisible {
+  opacity: 1;
 }
 .shopCanvas {
   display: none;
   width: 375px;
   height: 785px;
 }
-.btnSave {
-  width: 180px;
-  height: 40px;
-  margin: 30px auto;
-  line-height: 20px;
-  padding: 10px 0;
-  text-align: center;
-  background-color: $btn-orange;
+.actionSave {
+  margin: 60px auto 25px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+}
+.saveHint {
   font-size: 14px;
+  color: $color-text-hint;
+  margin-bottom: 20px;
+}
+.btnSave {
+  max-width: 320px;
+  width: 100%;
+  height: 50px;
+  line-height: 20px;
+  padding: 15px 0;
+  text-align: center;
+  background-color: $color-bg-btn-save;
   color: #ffffff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 25px;
   &::after {
     display: none;
   }
+}
+.btnIcon {
+  width: 19px;
+  height: 19px;
+  margin-right: 5px;
+}
+.btnText {
+  font-size: 16px;
 }
 
 </style>
