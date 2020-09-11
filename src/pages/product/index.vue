@@ -460,6 +460,7 @@ page {
   padding: 10px;
   background-color: #ffffff;
   border-radius: 50%;
+  box-shadow: 0 1px 5px 0px #aaaaaa;
   &__icon {
     width: 20px;
     height: 20px;

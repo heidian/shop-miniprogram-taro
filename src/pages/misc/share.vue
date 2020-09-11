@@ -81,6 +81,14 @@ export default {
   mounted () {
     this.fetchProduct()
   },
+  watch: {
+    shareScene: {
+      immediate: true,
+      handler (newScene) {
+        !!newScene && this.getProductQr()
+      }
+    }
+  },
   methods: {
     optimizeImage,
     backgroundImageUrl,
@@ -97,7 +105,6 @@ export default {
         console.log(err)
       }
       this.product = product
-      await this.getProductQr()
     },
     async getProductQr () {
       if (!this.productId) {

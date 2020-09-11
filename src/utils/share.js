@@ -91,6 +91,7 @@ export default class ProductCanvas {
       const colorText = isDark ? 'white' : '#303030'
       const colorTitle = isDark ? 'white' : '#262626'
       const colorTitleLight = isDark ? '#646464' : '#C8C8C8'
+      const titleLogo = 'https://up.img.heidiancdn.com/o_1ehu3f2q4fb5tmt19ql1gcnnic0hite2x.png'
       const avatar = _getCanvasImageUrl(_.get(customer, 'avatar', 'https://up.img.heidiancdn.com/o_1cm7ccaoirfi1tdiutsn6s1odj0rofile.png?imageView2/2/w/360/ignore-error/1'), 200)
       const full_name = _.get(customer, 'full_name', '')
       const productImage = _getCanvasImageUrl(_.get(product, 'image.src', ''), 800)
@@ -118,9 +119,24 @@ export default class ProductCanvas {
         let cursorOffsetTop = 0  // 从上往下渲染文字和图片，记录当前光标位置
         cursorOffsetTop += 30
 
-        // TODO: draw logo
-        // ctx.drawImage()
-        cursorOffsetTop += 65
+        // TODO: draw logo  170 x 65
+        const titleLogoWidth = 170, titleLogoHeight = 65
+        const titleLogoOffsetLeft = (canvas_width - titleLogoWidth) / 2
+        const titleLogoImage = this.canvas.createImage()
+        titleLogoImage.src = titleLogo
+        try {
+          await new Promise((resolve, reject) => {
+            ;((cursorOffsetTop) => {
+              titleLogoImage.onload = () => {
+                ctx.save()
+                ctx.drawImage(titleLogoImage, titleLogoOffsetLeft, cursorOffsetTop, titleLogoWidth, titleLogoHeight);
+                ctx.restore()
+                resolve()
+              }
+            })(cursorOffsetTop)
+          })
+        } catch (error) {}
+        cursorOffsetTop += 85
 
         // draw user logo and text
         const avatarWidth = 50
