@@ -77,12 +77,12 @@ export default {
       }
       Taro.hideNavigationBarLoading()
     },
-    onReachBottom() {
-      const { data, page, pageSize, count } = this.reviews
-      if (page * pageSize < count) {
-        this.fetchMore()
-      }
-    },
+  },
+  onReachBottom() {
+    const { data, page, pageSize, count } = this.reviews
+    if (page * pageSize < count) {
+      this.fetchMore()
+    }
   },
 }
 
