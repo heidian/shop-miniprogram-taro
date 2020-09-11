@@ -32,6 +32,7 @@ const config = {
   },
   plugins: [],
   defineConstants: {
+    DEFAULT_AVATAR: "'https://up.img.heidiancdn.com/o_1cm7ccaoirfi1tdiutsn6s1odj0rofile.png'"
   },
   copy: {
     patterns: [

@@ -17,6 +17,7 @@ export default {
     'pages/orders/index',
     'pages/orders/detail',
     'pages/misc/share',
+    'pages/misc/landing',
     'pages/index/index'
   ],
   tabBar: {

@@ -164,7 +164,7 @@ $color-orange: #ff5a00;
 $color-text: #262626;
 $color-text-light: #666666;
 $color-text-toast: #ffffff;
-$color-text-hint: #333333;
+$color-text-hint: rgba(#333333, 0.8);
 $color-divider: #f0f0f0;
 $color-bg-gray: #f6f6f6;
 $color-bg-toast: rgba(#000000, 0.6);
@@ -261,6 +261,7 @@ page {
   justify-content: center;
   align-items: center;
   border-radius: 25px;
+  box-shadow: 0 1px 4px 0 $color-box-shadow;
   &::after {
     display: none;
   }
