@@ -80,9 +80,9 @@
         </button>
       </view>
     </view>
-    <navigator :url="`/pages/misc/share?product=${product.id}`" class="product__share">
+    <view class="product__share" @tap="onClickShare">
       <image class="product__share__icon" src="data:image/svg+xml;base64,PHN2ZyBpZD0iQ2FwYV8xIiBlbmFibGUtYmFja2dyb3VuZD0ibmV3IDAgMCA1NTEuMTMgNTUxLjEzIiBoZWlnaHQ9IjUxMiIgdmlld0JveD0iMCAwIDU1MS4xMyA1NTEuMTMiIHdpZHRoPSI1MTIiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0ibTQ2NS4wMTYgMTcyLjIyOGgtNTEuNjY4djM0LjQ0NmgzNC40NDZ2MzEwLjAxMWgtMzQ0LjQ1N3YtMzEwLjAxMWgzNC40NDZ2LTM0LjQ0NmgtNTEuNjY5Yy05LjUyIDAtMTcuMjIzIDcuNzAzLTE3LjIyMyAxNy4yMjN2MzQ0LjQ1NmMwIDkuNTIgNy43MDMgMTcuMjIzIDE3LjIyMyAxNy4yMjNoMzc4LjkwMmM5LjUyIDAgMTcuMjIzLTcuNzAzIDE3LjIyMy0xNy4yMjN2LTM0NC40NTZjMC05LjUyLTcuNzAzLTE3LjIyMy0xNy4yMjMtMTcuMjIzeiIvPjxwYXRoIGQ9Im0yNTguMzQyIDY1LjkzMXYyNDQuMDhoMzQuNDQ2di0yNDQuMDhsNzMuOTM3IDczLjkzNyAyNC4zNTQtMjQuMzU0LTExNS41MTQtMTE1LjUxNC0xMTUuNTE0IDExNS41MTQgMjQuMzU0IDI0LjM1NHoiLz48L3N2Zz4=" mode="aspectFit" lazy-load="false"></image>
-    </navigator>
+    </view>
     <select-variant
       :visible="variantsDrawer.visible"
       :openType="variantsDrawer.openType"
@@ -153,6 +153,7 @@ export default {
     }),
     ...mapState('customer', {
       customer: (state) => state.data || {},
+      isAuthenticated: (state) => state.isAuthenticated || false
     }),
     body_html () {
       return _.get(this.product, 'body_html_mobile') || _.get(this.product, 'body_html')
@@ -212,6 +213,13 @@ export default {
     onNavigateToCart () {
       Taro.switchTab({ url: '/pages/cart/index' })
     },
+    onClickShare () {
+      if (!this.isAuthenticated) {
+        Taro.navigateTo({ url: `/pages/login/index` })
+      } else if (this.product && this.product.id){
+        Taro.navigateTo({ url: `/pages/misc/share?product=${this.product.id}` })
+      }
+    }
   }
 }
 </script>
