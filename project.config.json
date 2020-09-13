@@ -181,6 +181,13 @@
 					"pathName": "pages/misc/landing",
 					"query": "product=54271&code=SJe223",
 					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "pages/product/review",
+					"pathName": "pages/product/review",
+					"query": "product=54271",
+					"scene": null
 				}
 			]
 		}
