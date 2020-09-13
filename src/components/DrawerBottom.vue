@@ -84,7 +84,7 @@ export default {
     bottom: 0;
     left: 0;
     width: 100%;
-    min-height: 300px;
+    // min-height: 300px;
     background-color: $color-bg-gray;
     border-top-left-radius: 16px;
     border-top-right-radius: 16px;
