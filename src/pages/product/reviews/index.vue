@@ -23,7 +23,7 @@ import { mapState } from 'vuex'
 import _ from 'lodash'
 import { API } from '@/utils/api'
 import { optimizeImage, backgroundImageUrl } from '@/utils/image'
-import ReviewItem from './ReviewItem'
+import ReviewItem from '../ReviewItem'
 import ListTable from '@/mixins/ListTable'
 
 const listTableMixin = ListTable('reviews', { storeName: 'lists/reviews' })
@@ -89,7 +89,7 @@ export default {
 </script>
 
 <style lang="scss" module>
-@import './variables.scss';
+@import '../variables.scss';
 page {
   background-color: $color-bg-grey;
 }

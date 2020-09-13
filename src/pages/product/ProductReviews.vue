@@ -6,12 +6,12 @@
         <navigator
           v-if="count > 0"
           :class="$style['reviewsMore']"
-          :url="`/pages/product/reviews?product=${productId}`">查看全部</navigator>
+          :url="`/pages/product/reviews/index?product=${productId}`">查看全部</navigator>
       </view>
       <view :class="$style['sectionContainer']">
         <navigator
           v-if="count === 0"
-          :url="`/pages/product_review_add?product=${ productId }`"
+          :url="`/pages/product/reviews/review?product=${ productId }`"
           :class="$style['navigatorNew']">
           <image
             :class="$style['navigatorNewIcon']"
