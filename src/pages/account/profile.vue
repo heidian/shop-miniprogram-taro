@@ -43,6 +43,7 @@ export default {
   methods: {
     handleLogout () {
       this.$store.dispatch('customer/logout')
+      Taro.reLaunch({ url: '/pages/account/index' })
     }
   }
 }

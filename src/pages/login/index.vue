@@ -1,10 +1,13 @@
 <template>
-  <view>
+  <view :class="$style['page']">
+    <image
+      :class="$style['decoImage']" mode="aspectFit"
+      src="https://up.img.heidiancdn.com/o_1ehtu4aarjjg1t5dfa5nrjsg30shop2x.png"
+    ></image>
     <button
-      type="primary"
-      open-type="getPhoneNumber"
-      @getPhoneNumber="getPhoneNumber"
-    >快速登录</button>
+      :class="[$style['loginButton'], 'button--round']" type="primary"
+      open-type="getPhoneNumber" @getPhoneNumber="getPhoneNumber"
+    >微信登录</button>
   </view>
 </template>
 
@@ -38,6 +41,7 @@ export default {
         console.log('无法获取手机号', errMsg)
         return
       }
+      Taro.showLoading({})
       try {
         const res = await this.$store.dispatch('customer/login', {
           appid: this.appid,
@@ -50,7 +54,10 @@ export default {
             // ...analytics.apiCampaignContext()
           }
         })
+        Taro.hideLoading()
+        Taro.navigateBack()
       } catch(err) {
+        Taro.hideLoading()
         console.log('登录失败', _.get(err, 'response.data', ('' + err)))
       }
     },
@@ -66,4 +73,22 @@ export default {
 }
 </script>
 
-<style lang="scss"></style>
+<style lang="scss" module>
+.page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+.decoImage {
+  width: 120px;
+  height: 120px;
+  display: block;
+  margin-bottom: 30px;
+}
+.loginButton {
+  width: 80%;
+  margin-bottom: 50px;
+}
+</style>
