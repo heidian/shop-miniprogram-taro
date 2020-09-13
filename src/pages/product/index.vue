@@ -1,8 +1,8 @@
 <template>
-  <view class="page page--product">
-    <view class="page__section">
+  <view :class="$style['page']">
+    <view :class="$style['pageSection']">
       <swiper
-        class="product__images"
+        :class="$style['productImages']"
         indicatorColor='#999'
         indicatorActiveColor='#333'
         circular
@@ -10,78 +10,78 @@
         interval="5000"
         autoplay
       >
-        <swiper-item class="product__images__swiper-item" v-for="image in product.images" :key="image.id">
-          <image class="product__images__swiper-item__image" mode="aspectFit" :src="optimizeImage(image, 600)"></image>
+        <swiper-item :class="$style['productImagesSwiperItem']" v-for="image in product.images" :key="image.id">
+          <image :class="$style['productImagesSwiperItemImage']" mode="aspectFit" :src="optimizeImage(image, 600)"></image>
         </swiper-item>
       </swiper>
       <!-- 商品价格和添加心愿单 -->
-      <view class="product__header">
-        <view class="product__price-wrapper">
-          <view class="product__price">
-            <text class="product__price__currency">￥</text>
-            <text class="product__price__value">{{ currentVariant.price }}</text>
+      <view :class="$style['productHeader']">
+        <view :class="$style['productPriceWrapper']">
+          <view :class="$style['productPrice']">
+            <text :class="$style['productPriceCurrency']">￥</text>
+            <text :class="$style['productPriceValue']">{{ currentVariant.price }}</text>
           </view>
-          <view class="product__compare-at-price" v-if="+currentVariant.compare_at_price > +currentVariant.price">
-            <text class="product__compare-at-price__currency">￥</text>
-            <text class="product__compare-at-price__value">{{ currentVariant.compare_at_price }}</text>
+          <view :class="$style['productCompare']" v-if="+currentVariant.compare_at_price > +currentVariant.price">
+            <text :class="$style['productCompareCurrency']">￥</text>
+            <text :class="$style['productCompareValue']">{{ currentVariant.compare_at_price }}</text>
           </view>
         </view>
-        <view class="product__add-to-wishlist">
+        <view :class="$style['addToWishlist']">
           心愿单
         </view>
       </view>
       <!-- 商品标题和描述 -->
-      <view class="product__title">{{ product.title }}</view>
-      <view class="product__description">{{ product.description }}</view>
+      <view :class="$style['productTitle']">{{ product.title }}</view>
+      <view :class="$style['productDescription']">{{ product.description }}</view>
     </view>
     <!-- 待删除 -->
     <!-- 待删除 -->
-    <view class="page__section">
-      <view class="cell" @tap="() => showVariantsDrawer('')">
-        <view class="cell__label">已选</view>
-        <view class="cell__value">{{ currentVariant.title }}</view>
-        <view class="cell__ft">
-          <image class="cell__ft__icon" src="https://up.img.heidiancdn.com/o_1egfmehbs19vhj4p7cn1ko4kqi0next.png" mode="aspectFill"></image>
+    <view :class="$style['pageSection']">
+      <view :class="$style['cell']" @tap="() => showVariantsDrawer('')">
+        <view :class="$style['cellLabel']">已选</view>
+        <view :class="$style['cellValue']">{{ currentVariant.title }}</view>
+        <view :class="$style['cellFt']">
+          <image :class="$style['cellFtIcon']" src="https://up.img.heidiancdn.com/o_1egfmehbs19vhj4p7cn1ko4kqi0next.png" mode="aspectFill"></image>
         </view>
       </view>
     </view>
-    <view class="page__section" v-if="showReviews && product.id">
+    <view :class="$style['pageSection']" v-if="showReviews && product.id">
       <product-reviews
         :reviewsCaption="{}"
         :productId="product.id"
       />
     </view>
-    <view class="page__section">
-      <view class="page__section__title">图文详情</view>
-      <view v-if="body_html" class="taro_html product__html" v-html="body_html"></view>
+    <view :class="$style['pageSection']">
+      <view :class="$style['pageSectionTitle']">图文详情</view>
+      <view v-if="body_html" class="'taro_html'" :class="$style['productHtml']" v-html="body_html"></view>
     </view>
-    <view class="page__section" v-if="productId">
-      <view class="page__section__title">猜你喜欢</view>
+    <view :class="$style['pageSection']" v-if="productId">
+      <view :class="$style['pageSectionTitle']">猜你喜欢</view>
       <related-products :productId="productId"/>
     </view>
-    <view class="page__footer">
-      <view class="page__footer__left">
-        <button class="page__footer__icon-btn" openType="contact">
-          <image class="page__footer__icon-btn__icon" mode="aspectFit" :src="ICON_CUSTOMER_SERVIDE"></image>
-          <text class="page__footer__icon-btn__text">客服</text>
+    <view :class="$style['footer']">
+      <view :class="$style['footerLeft']">
+        <button :class="$style['footerIconBtn']" openType="contact">
+          <image :class="$style['footerIconBtnIcon']" mode="aspectFit" :src="ICON_CUSTOMER_SERVIDE"></image>
+          <text :class="$style['footerIconBtnText']">客服</text>
         </button>
-        <navigator url="/pages/cart/index" open-type="switchTab" class="page__footer__icon-btn">
-          <image class="page__footer__icon-btn__icon" mode="aspectFit" :src="ICON_CART"></image>
-          <text class="page__footer__icon-btn__text">购物车</text>
-          <text v-if="cart.totalCount" class="page__footer__icon-btn--cart__count">{{ cart.totalCount > 10 ? '10+' : cart.totalCount }}</text>
+        <navigator url="/pages/cart/index" open-type="switchTab" :class="$style['footerIconBtn']">
+          <image :class="$style['footerIconBtnIcon']" mode="aspectFit" :src="ICON_CART"></image>
+          <text :class="$style['footerIconBtnText']">购物车</text>
+          <text v-if="cart.totalCount" :class="$style['footerIconBtnCartCount']">{{ cart.totalCount > 10 ? '10+' : cart.totalCount }}</text>
         </navigator>
       </view>
-      <view class="page__footer__right">
-        <button class="page__footer__btn btn--blue" @tap="() => showVariantsDrawer('add_to_cart')">
-          <text class="page__footer__btn__text">加入购物车</text>
+      <view :class="$style['footerRight']">
+        <button :class="[$style['footerBtn'], $style['btnBlue']]" @tap="() => showVariantsDrawer('add_to_cart')">
+          <text :class="$style['footerBtnText']">加入购物车</text>
         </button>
-        <button class="page__footer__btn btn--orange" @tap="() => showVariantsDrawer('buy_now')">
-          <text class="page__footer__btn__text">立即购买</text>
+        <button :class="[$style['footerBtn'], $style['btnOrange']]" @tap="() => showVariantsDrawer('buy_now')">
+          <text :class="$style['footerBtnText']">立即购买</text>
         </button>
       </view>
     </view>
-    <view class="product__share" @tap="onClickShare">
-      <image class="product__share__icon" src="data:image/svg+xml;base64,PHN2ZyBpZD0iQ2FwYV8xIiBlbmFibGUtYmFja2dyb3VuZD0ibmV3IDAgMCA1NTEuMTMgNTUxLjEzIiBoZWlnaHQ9IjUxMiIgdmlld0JveD0iMCAwIDU1MS4xMyA1NTEuMTMiIHdpZHRoPSI1MTIiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0ibTQ2NS4wMTYgMTcyLjIyOGgtNTEuNjY4djM0LjQ0NmgzNC40NDZ2MzEwLjAxMWgtMzQ0LjQ1N3YtMzEwLjAxMWgzNC40NDZ2LTM0LjQ0NmgtNTEuNjY5Yy05LjUyIDAtMTcuMjIzIDcuNzAzLTE3LjIyMyAxNy4yMjN2MzQ0LjQ1NmMwIDkuNTIgNy43MDMgMTcuMjIzIDE3LjIyMyAxNy4yMjNoMzc4LjkwMmM5LjUyIDAgMTcuMjIzLTcuNzAzIDE3LjIyMy0xNy4yMjN2LTM0NC40NTZjMC05LjUyLTcuNzAzLTE3LjIyMy0xNy4yMjMtMTcuMjIzeiIvPjxwYXRoIGQ9Im0yNTguMzQyIDY1LjkzMXYyNDQuMDhoMzQuNDQ2di0yNDQuMDhsNzMuOTM3IDczLjkzNyAyNC4zNTQtMjQuMzU0LTExNS41MTQtMTE1LjUxNC0xMTUuNTE0IDExNS41MTQgMjQuMzU0IDI0LjM1NHoiLz48L3N2Zz4=" mode="aspectFit" lazy-load="false"></image>
+    <view :class="$style['productShare']" @tap="onClickShare">
+      <image :class="$style['productShareIcon']" src="data:image/svg+xml;base64,PHN2ZyBpZD0iQ2FwYV8xIiBlbmFibGUtYmFja2dyb3VuZD0ibmV3IDAgMCA1NTEuMTMgNTUxLjEzIiBoZWlnaHQ9IjUxMiIgdmlld0JveD0iMCAwIDU1MS4xMyA1NTEuMTMiIHdpZHRoPSI1MTIiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0ibTQ2NS4wMTYgMTcyLjIyOGgtNTEuNjY4djM0LjQ0NmgzNC40NDZ2MzEwLjAxMWgtMzQ0LjQ1N3YtMzEwLjAxMWgzNC40NDZ2LTM0LjQ0NmgtNTEuNjY5Yy05LjUyIDAtMTcuMjIzIDcuNzAzLTE3LjIyMyAxNy4yMjN2MzQ0LjQ1NmMwIDkuNTIgNy43MDMgMTcuMjIzIDE3LjIyMyAxNy4yMjNoMzc4LjkwMmM5LjUyIDAgMTcuMjIzLTcuNzAzIDE3LjIyMy0xNy4yMjN2LTM0NC40NTZjMC05LjUyLTcuNzAzLTE3LjIyMy0xNy4yMjMtMTcuMjIzeiIvPjxwYXRoIGQ9Im0yNTguMzQyIDY1LjkzMXYyNDQuMDhoMzQuNDQ2di0yNDQuMDhsNzMuOTM3IDczLjkzNyAyNC4zNTQtMjQuMzU0LTExNS41MTQtMTE1LjUxNC0xMTUuNTE0IDExNS41MTQgMjQuMzU0IDI0LjM1NHoiLz48L3N2Zz4=" mode="aspectFit" lazy-load="false"></image>
     </view>
     <select-variant
       :visible="variantsDrawer.visible"
@@ -224,7 +224,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" module>
 /* Taro vue 版本不支持 scoped, 只能用 cssModule, 这里不要写 scoped, 平时注意 class 冲突 */
 $color-orange: #ff5a00;
 $color-text-light: #999999;
@@ -239,113 +239,112 @@ page {
   min-height: 100vh;
   padding-bottom: 50px;
   position: relative;
-  &__footer {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 50px;
-    width: 100%;
-    padding: 7px 10px;
-    background-color: #ffffff;
-    box-shadow: 0 -1px 0 0 $color-border;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-  }
-  &__footer__left,
-  &__footer__right {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-  }
-  &__footer__left {
-  }
-  &__footer__right {
-    margin-left: 15px;
-    flex: 1;
-  }
-  &__footer__icon-btn {
-    padding: 0;
-    margin: 0;
-    background-color: transparent;
-    outline: none;
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    min-width: 40px;
-    position: relative;
-  }
-  &__footer__icon-btn::after {
-    display: none;
-  }
-  &__footer__icon-btn + &__footer__icon-btn {
-    margin-left: 10px;
-  }
-  &__footer__icon-btn__icon {
-    width: 16px;
-    height: 16px;
-  }
-  &__footer__icon-btn__text {
-    font-size: 10px;
-    margin-top: 4px;
-    line-height: 10px;
-    white-space: nowrap;
-  }
-  &__footer__icon-btn--cart__count {
-    font-size: 10px;
-    background-color: $color-orange;
-    color: #ffffff;
-    line-height: 10px;
-    padding: 2px;
-    min-width: 14px;
-    text-align: center;
-    border-radius: 7px;
-    position: absolute;
-    top: -5px;
-    left: 55%;
-  }
-  &__footer__btn {
-    width: 48%;
-    height: 36px;
-    line-height: 36px;
-    padding: 0;
-    margin: 0;
-    border: none;
-    outline: none;
-    color: #ffffff;
-    border-radius: 18px;
-  }
-  &__footer__btn.btn--orange {
-    background-color: $btn-orange;
-  }
-  &__footer__btn.btn--blue {
-    background-color: $btn-blue;
-  }
-  &__footer__btn:hover,
-  &__footer__btn:active {
-    opacity: 0.9;
-  }
-  &__footer__btn__text {
-    font-size: 13px;
-  }
 }
-.page__section {
+.footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 50px;
+  width: 100%;
+  padding: 7px 10px;
+  background-color: #ffffff;
+  box-shadow: 0 -1px 0 0 $color-border;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+.footerLeft,
+.footerRight {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+.footerLeft {}
+.footerRight {
+  margin-left: 15px;
+  flex: 1;
+}
+.footerIconBtn {
+  padding: 0;
+  margin: 0;
+  background-color: transparent;
+  outline: none;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-width: 40px;
+  position: relative;
+}
+.footerIconBtn::after {
+  display: none;
+}
+.footerIconBtn + .footerIconBtn {
+  margin-left: 10px;
+}
+.footerIconBtnIcon {
+  width: 16px;
+  height: 16px;
+}
+.footerIconBtnText {
+  font-size: 10px;
+  margin-top: 4px;
+  line-height: 10px;
+  white-space: nowrap;
+}
+.footerIconBtnCartCount {
+  font-size: 10px;
+  background-color: $color-orange;
+  color: #ffffff;
+  line-height: 10px;
+  padding: 2px;
+  min-width: 14px;
+  text-align: center;
+  border-radius: 7px;
+  position: absolute;
+  top: -5px;
+  left: 55%;
+}
+.footerBtn {
+  width: 48%;
+  height: 36px;
+  line-height: 36px;
+  padding: 0;
+  margin: 0;
+  border: none;
+  outline: none;
+  color: #ffffff;
+  border-radius: 18px;
+}
+.footerBtn.btnOrange {
+  background-color: $btn-orange;
+}
+.footerBtn.btnBlue {
+  background-color: $btn-blue;
+}
+.footerBtn:hover,
+.footerBtn:active {
+  opacity: 0.9;
+}
+.footerBtnText {
+  font-size: 13px;
+}
+.pageSection {
   background-color: #ffffff;
   & + & {
     margin-top: 10px;
   }
-  &__title {
-    padding: 10px;
-    text-align: center;
-    line-height: 40px;
-    font-size: 15px;
-    font-weight: bold;
-  }
+}
+.pageSectionTitle {
+  padding: 10px;
+  text-align: center;
+  line-height: 40px;
+  font-size: 15px;
+  font-weight: bold;
 }
 .cell {
   width: 100%;
@@ -354,24 +353,24 @@ page {
   justify-content: flex-start;
   align-items: center;
   font-size: 12px;
-  &__label {
-    margin-right: 20px;
-  }
-  &__value {
-    flex: 1;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-  &__ft {
-    margin-left: 20px;
-  }
   & + & {
     border-top: 1px solid #f6f6f6;
   }
 }
+.cellLabel {
+  margin-right: 20px;
+}
+.cellValue {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.cellFt {
+  margin-left: 20px;
+}
 
-.product-image-bg {
+.productImageBg {
   width: 100px;
   height: 100px;
   background-size: contain;
@@ -380,86 +379,86 @@ page {
 }
 
 /* Images Swiper */
-.product__images {
+.productImages {
   width: 100vw;
   height: 100vw;
 }
-.product__images__swiper-item__image {
+.productImagesSwiperItemImage {
   width: 100%;
   height: 100%;
 }
 
-.product__header {
+.productHeader {
   width: 100%;
   padding: 15px;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
-.product__price-wrapper {
+.productPriceWrapper {
   display: flex;
   justify-content: flex-start;
   align-items: center;
 }
-.product__price,
-.product__compare-at-price {
+.productPrice,
+.productCompare {
   display: flex;
   justify-content: flex-start;
   align-items: baseline;
 }
-.product__price {
+.productPrice {
   color: $btn-orange;
-  &__currency {
-    font-size: 12px;
-    line-height: 1;
-  }
-  &__value {
-    font-size: 20px;
-    line-height: 1;
-    font-weight: bold;
-  }
 }
-.product__compare-at-price {
+.productPriceCurrency {
+  font-size: 12px;
+  line-height: 1;
+}
+.productPriceValue {
+  font-size: 20px;
+  line-height: 1;
+  font-weight: bold;
+}
+.productCompare {
   color: $color-text-lighter;
   text-decoration: line-through;
   margin-left: 3px;
-  &__currency {
+  &Currency {
     font-size: 11px;
     line-height: 1;
   }
-  &__value {
+  &Value {
     font-size: 14px;
     line-height: 1;
     font-weight: bold;
   }
 }
-.product__add-to-wishlist {
+.addToWishlist {
   font-size: 11px;
 }
 
 /* 标题和描述 */
-.product__title {
+.productTitle {
   padding: 5px 15px;
   font-size: 15px;
   font-weight: bolder;
   text-align: justify;
   line-height: 1.6;
 }
-.product__description {
+.productDescription {
   padding: 5px 15px;
   font-size: 12px;
   color: $color-text-light;
   text-align: justify;
 }
-.cell__ft__icon {
+.cellFtIcon {
   width: 10px;
   height: 12px;
 }
-.product__html {
+.productHtml {
   padding: 0 15px;
 }
 
-.product__share {
+.productShare {
   position: absolute;
   top: 15px;
   right: 15px;
@@ -469,7 +468,7 @@ page {
   background-color: #ffffff;
   border-radius: 50%;
   box-shadow: 0 1px 5px 0px #aaaaaa;
-  &__icon {
+  &Icon {
     width: 20px;
     height: 20px;
   }
