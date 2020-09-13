@@ -54,6 +54,7 @@ import Taro, { getCurrentInstance } from '@tarojs/taro'
 import { API } from '@/utils/api'
 import { optimizeImage } from '@/utils/image'
 import ListTable from '@/mixins/ListTable'
+import RequiresLogin from '@/mixins/RequiresLogin'
 import { OrderStatus, OrderFinancialStatus, OrderFulfillmentStatus } from './constants'
 
 const FiltersOfTab = {
@@ -67,6 +68,7 @@ const FiltersOfTab = {
 export default {
   name: 'Orders',
   mixins: [
+    RequiresLogin,
     ListTable('orders', { urlRoot: '/customers/order/' })
   ],
   data() {

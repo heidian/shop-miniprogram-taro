@@ -28,7 +28,7 @@ import RequiresLogin from '@/mixins/RequiresLogin'
 
 export default {
   name: 'Profile',
-  mixins: [RequiresLogin],
+  mixins: [ RequiresLogin ],
   data() {
     return {
       navigators: [

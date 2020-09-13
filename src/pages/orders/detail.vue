@@ -3,7 +3,11 @@
 </template>
 
 <script>
+import RequiresLogin from '@/mixins/RequiresLogin'
+
 export default {
+  name: 'Order',
+  mixins: [ RequiresLogin ],
   data() {
     return {
       //

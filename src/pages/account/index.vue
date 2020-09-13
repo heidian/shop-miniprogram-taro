@@ -85,17 +85,18 @@
         <view class="account__section">
           <view class="account__section__head">
             <text class="account__section__head__title">我的订单</text>
-            <navigator class="account__section__head__navigator" open-type="navigate" hover-class="none">
+            <navigator
+              class="account__section__head__navigator"
+              open-type="navigate" hover-class="none" url="/pages/orders/index"
+            >
               <text>查看全部</text><view class="account__text__caret"></view>
             </navigator>
           </view>
           <view class="account__grid">
             <navigator
               v-for="(item, index) in orderNavigators" :key="index"
+              open-type="navigate" hover-class="none" :url="item.url"
               class="account__grid__item account__grid__navigator account__grid__navigator--divider"
-              open-type="navigate"
-              hover-class="none"
-              :url="item.url"
             >
               <image class="account__grid__item__icon" :src="item.icon" mode="aspectFit"></image>
               <text class="account__grid__item__text">{{ item.text }}</text>
@@ -110,7 +111,7 @@
           <view class="account__grid">
             <navigator
               v-for="item in otherNavigators" :key="item.text"
-              open-type="navigate" hover-class="none"
+              open-type="navigate" hover-class="none" :url="item.url"
               class="account__grid__item account__grid__navigator account__grid__navigator--divider"
             >
               <image class="account__grid__item__icon" :src="item.icon" mode="aspectFit"></image>
@@ -197,7 +198,7 @@ export default {
         icon: '',
         text: '礼品卡'
       }, {
-        url: '',
+        url: '/pages/addresses/index',
         icon: 'https://up.img.heidiancdn.com/o_1eh4ipmqg1sv31rko9toam31q1m0hape2x.png',
         text: '收货地址'
       }, {

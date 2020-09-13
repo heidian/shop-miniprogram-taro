@@ -18,10 +18,12 @@
 <script>
 import _ from 'lodash'
 import Taro, { getCurrentInstance } from '@tarojs/taro'
+import RequiresLogin from '@/mixins/RequiresLogin'
 import { API } from '@/utils/api'
 
 export default {
   name: 'Addresses',
+  mixins: [ RequiresLogin ],
   data() {
     const { intent } = getCurrentInstance().router.params
     return {

@@ -43,8 +43,11 @@
 </template>
 
 <script>
+import RequiresLogin from '@/mixins/RequiresLogin'
+
 export default {
   name: 'BindAlipay',
+  mixins: [ RequiresLogin ],
   data() {
     return {
       form: {},
