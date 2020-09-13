@@ -23,12 +23,14 @@ const state = () => {
 const getters = {}
 
 const mutations = {
-  setData(state, { data, pending, checkoutToken, availableCouponCodes, availableVouchers } = {}) {
-    if (typeof checkoutToken !== 'undefined') { state.checkoutToken = checkoutToken }
-    if (typeof data !== 'undefined') { state.data = data }
-    if (typeof pending !== 'undefined') { state.pending = pending }
-    if (typeof availableCouponCodes !== 'undefined') { state.availableCouponCodes = availableCouponCodes }
-    if (typeof availableVouchers !== 'undefined') { state.availableVouchers = availableVouchers }
+  setData(state, payload = {}) {
+    _.forEach([
+      'data', 'pending', 'checkoutToken', 'availableCouponCodes', 'availableVouchers'
+    ], field => {
+      if (typeof payload[field] !== 'undefined') {
+        state[field] = payload[field]
+      }
+    })
   }
 }
 

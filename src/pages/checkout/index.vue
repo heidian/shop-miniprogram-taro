@@ -95,11 +95,20 @@ export default {
   created() {},
   mounted() {
     this.$store.commit('checkout/setData', { checkoutToken: this.token })
-    this.$store.dispatch('checkout/fetch')
+    this.$store.dispatch('checkout/fetch').catch((err) => {
+      if (_.get(err, 'response.status') === 400 && _.get(err,'response.data.code') === 'order_placed') {
+        const orderId = _.get(err,'response.data.order.id')
+        this.redirectToOrder(orderId)
+      }
+    })
   },
   methods: {
     optimizeImage,
     backgroundImageUrl,
+    redirectToOrder(orderId) {
+      const redirect = encodeURIComponent('/pages/orders/detail?id=' + orderId)
+      Taro.reLaunch({ url: `/pages/account/index?redirect=${redirect}` })
+    },
     async pay() {
       if (this.paymentPending) {
         return
@@ -120,6 +129,7 @@ export default {
         return
       }
       const credential = _.get(res.data, 'charge.charge_essentials.credential.wx_lite')
+      const orderId = _.get(res.data, 'order.id')
       console.log(credential)
       Taro.requestPayment({
         ...credential,
@@ -127,9 +137,7 @@ export default {
         fail: (res) => { console.log(res) },
         complete: () => {
           // 支付成功或者失败都跳转订单页面
-          // Taro.reLaunch({
-          //   url: `/pages/account?redirect=${encodeURIComponent('order-detail?ordertoken=' + this.options.ordertoken)}`
-          // })
+          this.redirectToOrder(orderId)
         }
       })
     },
