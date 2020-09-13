@@ -77,7 +77,7 @@ export default {
     }
   },
   created() {
-    if (this.customer.isAuthenticated) {
+    if (!this.customer.isAuthenticated) {
       Taro.redirectTo({ url: '/pages/login/index' })
     }
   },
