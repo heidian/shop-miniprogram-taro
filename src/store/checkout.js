@@ -93,8 +93,8 @@ const actions = {
       throw err
     }
   },
-  async addCoupon({ commit, state, dispatch }, { code, codePrefix } = {}) {
-    const payload = codePrefix ? { codePrefix } : { code }
+  async addCoupon({ commit, state, dispatch }, { code, codePrefix, id } = {}) {
+    const payload = codePrefix ? { code_prefix: codePrefix } : (id ? { id } : { code })
     const url = `/checkout/${state.checkoutToken}/add_coupon/`
     // commit('setData', { pending: true })
     try {
@@ -103,6 +103,15 @@ const actions = {
       // commit('setData', { pending: false })
     } catch(err) {
       // commit('setData', { pending: false })
+      throw err
+    }
+    dispatch('fetch')
+  },
+  async removeCoupons({ commit, state, dispatch }) {
+    const url = `/checkout/${state.checkoutToken}/remove_coupons/`
+    try {
+      await API.post(url)
+    } catch(err) {
       throw err
     }
     dispatch('fetch')

@@ -52,7 +52,7 @@
         <text>实付金额:</text>
         <price :price="finalPrice" :highlight="true" :keepZero="true"></price>
       </view>
-      <button class="button--payfororder button--round button--orange" type="primary">立即支付</button>
+      <button class="button--payfororder button--round button--orange" type="primary" @tap="pay">立即支付</button>
     </view>
     <available-coupon-codes :visible.sync="couponCodesDrawerVisible"></available-coupon-codes>
   </view>
@@ -62,7 +62,7 @@
 import _ from 'lodash'
 import { mapState } from 'vuex'
 import Taro, { getCurrentInstance } from '@tarojs/taro'
-// import { API } from '@/utils/api'
+import { API } from '@/utils/api'
 import { optimizeImage, backgroundImageUrl } from '@/utils/image'
 import Price from '@/components/Price'
 import AvailableCouponCodes from './AvailableCouponCodes'
@@ -98,6 +98,14 @@ export default {
   methods: {
     optimizeImage,
     backgroundImageUrl,
+    async pay() {
+      const res = await API.post('/pingxx/charge_for_order/', {
+        voucher_ids: this.voucher_ids || [],
+        order_token: this.options.ordertoken,
+        openid: this.open_id,
+        channel: "wx_lite"
+      })
+    },
     getField(path, defaultValue) {
       return _.get(this.checkout.data, path, defaultValue)
     },

@@ -8,7 +8,7 @@
       <template v-else>
         <view
           v-for="(couponCode, index) in availableCouponCodes" :key="`${couponCode.id}-${index}`"
-          class="coupon-codes-item" @tap="() => handleSelect(couponCode.code)"
+          class="coupon-codes-item" @tap="() => handleSelect(couponCode.id)"
         >
           <image class="image"></image>
           <view class="caption">
@@ -19,7 +19,7 @@
             </view>
           </view>
           <icon
-            v-if="usedCode === couponCode.code"
+            v-if="usedCouponCodeId === couponCode.id"
             type="success" size="20" color="#ff5a00" class="check"
           ></icon>
         </view>
@@ -60,7 +60,7 @@ export default {
         ...state.availableCouponCodes
       ],
       pending: (state) => state.pending,
-      usedCode: (state) => _.get(state.data, 'coupon_codes[0].code')
+      usedCouponCodeId: (state) => _.get(state.data, 'coupon_codes[0].id')
     })
   },
   methods: {
@@ -74,16 +74,25 @@ export default {
       // 可以考虑优化下, 不要每次 open 的时候都取, 但这个问题也不是太大
       this.$store.dispatch('checkout/fetchAvailableCouponCodes')
     },
-    handleSelect(code) {
+    async handleSelect(couponCodeId) {
       Taro.showLoading({})
-      this.$store.dispatch('checkout/addCoupon', { code }).then(() => {
-        this.isVisible = false
-        Taro.hideLoading()
-      }).catch((err) => {
-        // console.log('使用优惠券失败', err)
-        Taro.hideLoading()
-        Taro.showToast({ title: '使用优惠券失败', icon: 'none', duration: 2000 })
-      })
+      if (this.usedCouponCodeId !== couponCodeId) {
+        try {
+          await this.$store.dispatch('checkout/addCoupon', {
+            id: couponCodeId
+          })
+          this.isVisible = false
+        } catch(err) {
+          // console.log('使用优惠券失败', err)
+          Taro.showToast({ title: '使用优惠券失败', icon: 'none', duration: 2000 })
+        }
+      } else {
+        try {
+          await this.$store.dispatch('checkout/removeCoupons')
+          this.isVisible = false
+        } catch(err) {}
+      }
+      Taro.hideLoading()
     }
   },
   watch: {
