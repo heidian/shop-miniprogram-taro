@@ -1,0 +1,43 @@
+// button 标签是小程序和网页通用的, 这里定义样式的时候可以不用 css
+button {
+  display: inline-block;
+  font-size: 13px;
+  line-height: 20px;
+  padding: 10px 16px;
+  // button 高度是 40
+  border: 0;
+  margin: 0;
+  &::after {
+    display: none;
+  }
+}
+button.button--round {
+  border-radius: 20px;
+  padding-left: 24px;
+  padding-right: 24px;
+}
+
+button.button--orange {
+  color: #fff;
+  background-color: $color-orange;
+  &.button-hover {
+    color: rgba(#fff, 0.9);
+    background-color: lighten($color-orange, 5%);
+  }
+}
+button.button--blue {
+  color: #fff;
+  background-color: $color-blue;
+  &.button-hover {
+    color: rgba(#fff, 0.9);
+    background-color: lighten($color-blue, 5%);
+  }
+}
+button.button--dark {
+  color: #fff;
+  background-color: $color-text;
+  &.button-hover {
+    color: rgba(#fff, 0.9);
+    background-color: lighten($color-text, 5%);
+  }
+}

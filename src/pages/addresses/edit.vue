@@ -23,7 +23,9 @@
       </view>
       <!-- <view>设为默认地址</view> -->
     </form>
-    <button @tap="submitForm">保存</button>
+    <view class="buttons-wrapper">
+      <button class="button--dark" @tap="submitForm">保存</button>
+    </view>
   </view>
 </template>
 
@@ -101,7 +103,6 @@ export default {
 @import '@/styles/variables';
 .page--address-edit {
   background-color: $color-bg-gray;
-  min-height: 100vh;
   .form {
     display: block;
     overflow: hidden;
@@ -138,6 +139,17 @@ export default {
   }
   .form-control:nth-child(4) .label {
     border-bottom: 1px solid $color-divider;
+  }
+  .buttons-wrapper {
+    position: fixed;
+    z-index: $z-index-footer;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    padding: 20px;
+    button {
+      display: block;
+    }
   }
 }
 </style>
