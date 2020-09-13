@@ -52,7 +52,10 @@
         <text>实付金额:</text>
         <price :price="finalPrice" :highlight="true" :keepZero="true"></price>
       </view>
-      <button class="button--payfororder button--round button--orange" type="primary" @tap="pay">立即支付</button>
+      <button
+        class="button--payfororder button--round button--orange" type="primary"
+        @tap="pay"
+      >{{ paymentPending ? '正在支付...' : '立即支付' }}</button>
     </view>
     <available-coupon-codes :visible.sync="couponCodesDrawerVisible"></available-coupon-codes>
   </view>
@@ -75,36 +78,43 @@ export default {
     AvailableCouponCodes
   },
   data() {
+    const { token } = getCurrentInstance().router.params
     return {
+      token,
+      paymentPending: false,
       couponCodesDrawerVisible: false
     }
   },
   computed: {
-    ...mapState('checkout', {
-      checkout: (state) => state
-    }),
+    ...mapState(['checkout', 'customer']),
     finalPrice() {
       const totalPrice = this.getField('total_price')
       return totalPrice
     }
   },
-  created() {
-    const { token } = getCurrentInstance().router.params
-    this.$store.commit('checkout/setData', { checkoutToken: token })
-  },
+  created() {},
   mounted() {
+    this.$store.commit('checkout/setData', { checkoutToken: this.token })
     this.$store.dispatch('checkout/fetch')
   },
   methods: {
     optimizeImage,
     backgroundImageUrl,
     async pay() {
+      if (this.paymentPending) {
+        return
+      }
+      this.paymentPending = true
       const res = await API.post('/pingxx/charge_for_order/', {
-        voucher_ids: this.voucher_ids || [],
-        order_token: this.options.ordertoken,
-        openid: this.open_id,
-        channel: "wx_lite"
+        voucher_ids: [],
+        order_token: this.token,
+        openid: this.customer.openid,
+        channel: 'wx_lite'
       })
+      setTimeout(() => {
+        this.paymentPending = false
+      }, 1000)
+      console.log(res)
     },
     getField(path, defaultValue) {
       return _.get(this.checkout.data, path, defaultValue)
