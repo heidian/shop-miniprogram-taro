@@ -47,7 +47,7 @@ export default {
 </script>
 
 <style lang="scss">
-$color-bg-gray: #f6f6f6;
+@import '@/styles/_variables';
 page {
   background-color: $color-bg-gray;
 }

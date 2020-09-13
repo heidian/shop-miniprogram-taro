@@ -47,12 +47,12 @@ export default {
 </script>
 
 <style lang="scss" module>
-@import './variables.scss';
+@import '@/styles/_variables';
 .sidebar {
   width: 100%;
   height: 100%;
   border-right: 1px solid $color-divider;
-  background-color: $color-bg;
+  background-color: #fff;
   &::-webkit-scrollbar {
     display: none;
   }

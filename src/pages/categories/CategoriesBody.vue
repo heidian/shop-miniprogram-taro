@@ -72,7 +72,7 @@ export default {
 </script>
 
 <style lang="scss" module>
-@import './variables.scss';
+@import '@/styles/_variables';
 .swiper {
   width: 100%;
   height: 100%;
@@ -99,7 +99,7 @@ export default {
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
-  border-radius: $border-radius;
+  border-radius: 4px;
 }
 .subCategoryWrapper {
   width: 100%;
@@ -120,7 +120,7 @@ export default {
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
-  border-radius: $border-radius;
+  border-radius: 4px;
 }
 .childTitle {
   font-size: 12px;
