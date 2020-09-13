@@ -98,11 +98,7 @@ export default {
 </script>
 
 <style lang="scss">
-$color-text: #262626;
-$color-bg-gray: #f6f6f6;
-$color-text-light: #555;
-// $color-text-lighter: #aaa;
-$color-divider: #f0f0f0;
+@import '@/styles/_variables';
 .page--address-edit {
   background-color: $color-bg-gray;
   min-height: 100vh;

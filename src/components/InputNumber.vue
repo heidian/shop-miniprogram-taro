@@ -72,7 +72,7 @@ export default {
 </script>
 
 <style lang="scss">
-$color-divider: #f0f0f0;
+@import '@/styles/_variables';
 .input-number {
   border: 1px solid $color-divider;
   position: relative;

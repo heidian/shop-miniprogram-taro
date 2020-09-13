@@ -83,8 +83,7 @@ export default {
 
 <style lang="scss" module>
 @import '@/styles/_mixins';
-$color-text: #262626;
-$color-text-light: #555;
+@import '@/styles/_variables';
 .container {
   @include clearfix();
   padding: 5px 5px;

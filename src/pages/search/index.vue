@@ -142,8 +142,7 @@ export default {
 </script>
 
 <style lang="scss" module>
-$color-bg-gray: #f6f6f6;
-$color-text: #262626;
+@import '@/styles/_variables';
 page {
   background-color: $color-bg-gray;
 }

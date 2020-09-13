@@ -86,9 +86,7 @@ export default {
 </script>
 
 <style lang="scss">
-$color-text: #262626;
-$color-text-lighter: #aaa;
-$color-orange: #ff5a00;
+@import '@/styles/_variables';
 .price-wrapper {
   display: inline-block;
   letter-spacing: 1rpx;

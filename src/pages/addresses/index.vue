@@ -77,8 +77,7 @@ export default {
 </script>
 
 <style lang="scss">
-$color-text: #222;
-$color-divider: #f0f0f0;
+@import '@/styles/_variables';
 .page--addresses {
   .address-item {
     display: flex;

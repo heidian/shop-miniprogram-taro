@@ -58,8 +58,7 @@ export default {
 /* 禁止 px 到 rpx 转换, 这里因为用到了 systemInfo 里面的尺寸来计算每一个商品的高度, 所以全部用 px */
 /* 之前 pxTransform 初始化有问题, 现在修复了, 所以这一页现在 js 里可以正常计算 rpx */
 @import '@/styles/_mixins';
-$color-text: #262626;
-$color-text-light: #555;
+@import '@/styles/_variables';
 .row {
   display: flex;
   align-items: top;

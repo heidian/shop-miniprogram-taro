@@ -129,11 +129,7 @@ export default {
 
 <style lang="scss">
 @import '@/styles/_mixins';
-$color-orange: #ff5a00;
-$color-text: #262626;
-$color-text-light: #666666;
-$color-divider: #f0f0f0;
-$color-bg-gray: #f6f6f6;
+@import '@/styles/_variables';
 page {
   background-color: $color-bg-gray;
 }

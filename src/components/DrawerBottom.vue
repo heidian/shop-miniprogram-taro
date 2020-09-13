@@ -63,8 +63,7 @@ export default {
 
 <style lang="scss">
 @import '@/styles/_mixins';
-$z-index-drawer: 100;
-$color-bg-gray: #f6f6f6;
+@import '@/styles/_variables';
 .drawer.drawer--bottom {
   position: fixed;
   z-index: $z-index-drawer;
