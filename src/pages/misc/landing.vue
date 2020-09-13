@@ -73,7 +73,7 @@ import Taro, { getCurrentInstance } from '@tarojs/taro'
 import _ from 'lodash'
 import { mapState } from 'vuex'
 import { API } from '@/utils/api'
-import { optimizeImage, backgroundImageUrl } from '@/utils/image'
+import { optimizeImage, backgroundImageUrl, DEFAULT_AVATAR } from '@/utils/image'
 import ProductCanvas from '@/utils/share'
 
 export default {
@@ -82,7 +82,7 @@ export default {
     const { product: productId, code: referralCode } = getCurrentInstance().router.params
     const type = !!productId ? 'product' : 'shop'
     return {
-      DEFAULT_AVATAR, // 在 defineConstants 里定义了全局可用的默认头像
+      DEFAULT_AVATAR,
       isReady: false,
       type,
       titleLogo: type === 'product' ? 'https://up.img.heidiancdn.com/o_1ehu3f2q4fb5tmt19ql1gcnnic0hite2x.png' : 'https://up.img.heidiancdn.com/o_1ehu0lfh57rk17obfpa128411ka0mber2x.png',

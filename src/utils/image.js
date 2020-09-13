@@ -53,3 +53,6 @@ export const backgroundImageUrl = (imageSrc, width, height) => {
   )
   return `url("${safeImageSrc}")`
 }
+
+
+export const DEFAULT_AVATAR = "https://up.img.heidiancdn.com/o_1cm7ccaoirfi1tdiutsn6s1odj0rofile.png"
