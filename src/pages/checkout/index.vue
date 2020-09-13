@@ -53,8 +53,8 @@
         <price :price="finalPrice" :highlight="true" :keepZero="true"></price>
       </view>
       <button
-        class="button--payfororder button--round button--orange" type="primary"
-        @tap="pay"
+        class="button--payfororder button--round button--orange"
+        :disabled="paymentPending" @tap="pay"
       >{{ paymentPending ? '正在支付...' : '立即支付' }}</button>
     </view>
     <available-coupon-codes :visible.sync="couponCodesDrawerVisible"></available-coupon-codes>

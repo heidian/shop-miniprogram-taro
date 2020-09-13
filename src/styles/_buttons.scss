@@ -1,5 +1,6 @@
 // button 标签是小程序和网页通用的, 这里定义样式的时候可以不用 css
 // button 和 form 的组件的常规高度都固定在 44px
+// button 不带 class 的时候不改变任何颜色, 也就是保留小程序默认的颜色, 比如 <button type="primary"> 还是可以很好的显示的
 button {
   display: inline-block;
   font-size: 14px;
@@ -35,6 +36,10 @@ button.button--orange {
     color: rgba(#fff, 0.9);
     background-color: lighten($color-orange, 5%);
   }
+  &[disabled] {
+    color: rgba(#fff, 0.9);
+    background-color: lighten($color-orange, 30%);
+  }
 }
 button.button--blue {
   color: #fff;
@@ -43,6 +48,10 @@ button.button--blue {
     color: rgba(#fff, 0.9);
     background-color: lighten($color-blue, 5%);
   }
+  &[disabled] {
+    color: rgba(#fff, 0.9);
+    background-color: lighten($color-blue, 40%);
+  }
 }
 button.button--dark {
   color: #fff;
@@ -50,5 +59,9 @@ button.button--dark {
   &.button-hover {
     color: rgba(#fff, 0.9);
     background-color: lighten($color-text, 5%);
+  }
+  &[disabled] {
+    color: rgba(#fff, 0.9);
+    background-color: lighten($color-text, 50%);
   }
 }
