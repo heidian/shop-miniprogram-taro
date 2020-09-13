@@ -15,6 +15,7 @@ import { API } from '@/utils/api'
  */
 const state = () => {
   return {
+    openid: '',
     customerToken: '',  // 除了 utils/api 文件里的 interceptor, 其他地方都不要直接访问这个值
     isAuthenticated: false,
     data: {}
@@ -24,16 +25,12 @@ const state = () => {
 const getters = {}
 
 const mutations = {
-  setData(state, { customerToken, isAuthenticated, data } = {}) {
-    if (typeof customerToken !== 'undefined') {
-      state.customerToken = customerToken
-    }
-    if (typeof isAuthenticated !== 'undefined') {
-      state.isAuthenticated = isAuthenticated
-    }
-    if (typeof data !== 'undefined') {
-      state.data = data
-    }
+  setData(state, payload = {}) {
+    _.forEach(['openid', 'customerToken', 'isAuthenticated', 'data'], field => {
+      if (typeof payload[field] !== 'undefined') {
+        state[field] = payload[field]
+      }
+    })
   }
 }
 
@@ -76,6 +73,26 @@ const actions = {
       console.log('获取用户信息失败', _.get(err, 'response.data'))
       throw err
     })
+  },
+  getOpenID({ rootState, commit }) {
+    const appid = rootState.config.appid
+    const exchangeOpenID = ({ code }) => {
+      API.post('/clients/wechat-auth-openid/', {
+        js_code: code,
+        appid: appid
+      }).then((res) => {
+        const openid = res.data.openid
+        commit('setData', { openid })
+      }).catch((err) => {
+        console.log(err)
+        Taro.showModal({
+          title: '系统故障',
+          content: '获取用户信息失败 (wechat-auth-openid)',
+          showCancel: false
+        })
+      })
+    }
+    Taro.login({ success: exchangeOpenID })
   }
 }
 

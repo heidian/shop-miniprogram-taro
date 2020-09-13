@@ -49,6 +49,7 @@ const actions = {
         isAuthenticated: true
       })
       dispatch('customer/getCustomer')
+      dispatch('customer/getOpenID')
     }
     const cartToken = Taro.getStorageSync('cartToken')
     if (cartToken) {
