@@ -71,7 +71,6 @@
 <script>
 import Taro, { getCurrentInstance } from '@tarojs/taro'
 import _ from 'lodash'
-import { mapState } from 'vuex'
 import { API } from '@/utils/api'
 import { optimizeImage, backgroundImageUrl, DEFAULT_AVATAR } from '@/utils/image'
 import ProductCanvas from '@/utils/share'

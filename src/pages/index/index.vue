@@ -22,10 +22,7 @@ export default {
     NumberSubmit
   },
   computed: {
-    ...mapState(['globalColors']),
-    ...mapState('customer', {
-      customer: (state) => state
-    })
+    ...mapState(['globalColors', 'customer'])
   },
   mounted() {
     // console.log(this.$store.state.config)

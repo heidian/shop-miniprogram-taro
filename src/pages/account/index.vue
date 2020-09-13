@@ -211,7 +211,7 @@ export default {
     InfiniteProducts
   },
   computed: {
-    ...mapState('customer'),
+    ...mapState(['customer']),
     levelTitle() {
       return _.get(this.customer.data, 'level.title')
     },

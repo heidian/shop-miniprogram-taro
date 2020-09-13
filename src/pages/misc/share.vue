@@ -59,7 +59,7 @@ export default {
     }
   },
   computed: {
-    ...mapState('customer'),
+    ...mapState(['customer']),
     referralCode () {
       return _.get(this.customer.data, 'referral_code', '')
     },
