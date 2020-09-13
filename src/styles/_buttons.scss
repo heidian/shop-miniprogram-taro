@@ -1,10 +1,11 @@
 // button 标签是小程序和网页通用的, 这里定义样式的时候可以不用 css
+// button 和 form 的组件的常规高度都固定在 44px
 button {
   display: inline-block;
-  font-size: 13px;
+  font-size: 14px;
   line-height: 20px;
-  padding: 10px 16px;
-  // button 高度是 40
+  padding: 12px 24px;
+  // button 高度是 44
   border: 0;
   margin: 0;
   &::after {
@@ -12,9 +13,19 @@ button {
   }
 }
 button.button--round {
-  border-radius: 20px;
-  padding-left: 24px;
-  padding-right: 24px;
+  border-radius: 22px;
+  padding-left: 30px;
+  padding-right: 30px;
+}
+
+button.button--small {
+  font-size: 13px;
+  padding: 8px 16px;
+  &.button--round {
+    border-radius: 18px;
+    padding-left: 24px;
+    padding-right: 24px;
+  }
 }
 
 button.button--orange {

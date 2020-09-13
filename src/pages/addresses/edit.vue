@@ -123,18 +123,18 @@ export default {
     &:last-child::after {
       left: 0;
     }
-    padding: 5px 0 5px 100px;
-    height: 50px;  // 内容高度是 40, 整体高度是 50
+    padding: 3px 0 3px 100px;
+    height: 50px;  // 内容高度是 44, 整体高度是 50
     .input {
       display: block;
-      margin: 8px 0;
+      margin: 10px 0;
       height: 24px;
       line-height: 24px;
     }
     .picker {
       display: block;
-      height: 40px;
-      line-height: 40px;
+      height: 44px;
+      line-height: 44px;
       margin: 0;
     }
   }
