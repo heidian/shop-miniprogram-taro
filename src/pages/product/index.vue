@@ -149,10 +149,6 @@ export default {
     ...mapState('cart', {
       cart: (state) => state
     }),
-    ...mapState('customer', {
-      customer: (state) => state.data || {},
-      isAuthenticated: (state) => state.isAuthenticated || false
-    }),
     body_html () {
       return _.get(this.product, 'body_html_mobile') || _.get(this.product, 'body_html')
     },
@@ -212,11 +208,7 @@ export default {
       Taro.switchTab({ url: '/pages/cart/index' })
     },
     onClickShare () {
-      if (!this.isAuthenticated) {
-        Taro.navigateTo({ url: `/pages/login/index` })
-      } else if (this.product && this.product.id){
-        Taro.navigateTo({ url: `/pages/misc/share?product=${this.product.id}` })
-      }
+      Taro.navigateTo({ url: `/pages/misc/share?product=${this.product.id}` })
     }
   }
 }

@@ -78,6 +78,11 @@ export default {
       return optimizeImage(_.get(this.product, 'image'), 400)
     }
   },
+  created() {
+    if (this.customer.isAuthenticated) {
+      Taro.redirectTo({ url: '/pages/login/index' })
+    }
+  },
   mounted () {
     this.fetchProduct()
   },

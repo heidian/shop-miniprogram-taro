@@ -74,9 +74,9 @@
         <view class="account__grid account__promotion">
           <navigator
             v-for="item in promotionNavigators" :key="item.text"
+            :url="item.url" open-type="navigate" hover-class="none"
             class="account__grid__item account__grid__navigator"
-            open-type="navigate"
-            hover-class="none">
+          >
             <image class="account__grid__item__icon account__grid__item__icon--bigger" :src="item.icon" mode="aspectFit"></image>
             <text class="account__grid__item__text">{{ item.text }}</text>
           </navigator>
@@ -110,9 +110,9 @@
           <view class="account__grid">
             <navigator
               v-for="item in otherNavigators" :key="item.text"
+              open-type="navigate" hover-class="none"
               class="account__grid__item account__grid__navigator account__grid__navigator--divider"
-              open-type="navigate"
-              hover-class="none">
+            >
               <image class="account__grid__item__icon" :src="item.icon" mode="aspectFit"></image>
               <text class="account__grid__item__text">{{ item.text }}</text>
             </navigator>
@@ -154,72 +154,57 @@ export default {
   data() {
     return {
       pointsMax: 1000,
-      promotionNavigators: [
-        {
-          url: '',
-          icon: 'https://up.img.heidiancdn.com/o_1eh4kgtf1qm01d8a1hovm201gqe0up263x.png',
-          text: '我的任务'
-        },
-        {
-          url: '',
-          icon: 'https://up.img.heidiancdn.com/o_1eh4kgtf1lha1tl75f7phcrp30enifit.png',
-          text: '邀请返现'
-        },
-        {
-          url: '',
-          icon: 'https://up.img.heidiancdn.com/o_1eh4kgtf11k0p1qk31mha1qgb1rjf0awards.png',
-          text: '粉丝排行榜'
-        },
-        {
-          url: '',
-          icon: 'https://up.img.heidiancdn.com/o_1eh4kgtf149j1sk5bih1rpk1rfb0.png',
-          text: '推广帮助'
-        }
-      ],
-      orderNavigators: [
-        {
-          url: '/pages/orders/index?filter=unpaid',
-          icon: 'https://up.img.heidiancdn.com/o_1eh4ipmqg17erq8ufi5un71lj50opay2x.png',
-          text: '待付款'
-        },
-        {
-          url: '/pages/orders/index?filter=paid',
-          icon: 'https://up.img.heidiancdn.com/o_1eh4ipmqg1ads6g21aba1bhn1e870paid2x.png',
-          text: '已付款'
-        },
-        {
-          url: '/pages/orders/index?filter=closed',
-          icon: 'https://up.img.heidiancdn.com/o_1eh4ipmqg1mnck81cve1gf6asd0shed2x.png',
-          text: '已完成'
-        },
-        {
-          url: '/pages/orders/index?filter=cancelled',
-          icon: 'https://up.img.heidiancdn.com/o_1eh4ipmqf1112btg1f3jjdden0eled2x.png',
-          text: '已取消'
-        },
-      ],
-      otherNavigators: [
-        {
-          url: '',
-          icon: 'https://up.img.heidiancdn.com/o_1eh4ipmqf1f1k1foe13541saq1o9e0hape2x.png',
-          text: '优惠券'
-        },
-        {
-          url: '',
-          icon: '',
-          text: '礼品卡'
-        },
-        {
-          url: '',
-          icon: 'https://up.img.heidiancdn.com/o_1eh4ipmqg1sv31rko9toam31q1m0hape2x.png',
-          text: '收货地址'
-        },
-        {
-          url: '',
-          icon: 'https://up.img.heidiancdn.com/o_1eh4ipmqgbe6ker5eg12j31g560path2x.png',
-          text: '我的收藏'
-        }
-      ]
+      promotionNavigators: [{
+        url: '',
+        icon: 'https://up.img.heidiancdn.com/o_1eh4kgtf1qm01d8a1hovm201gqe0up263x.png',
+        text: '我的任务'
+      }, {
+        url: '/pages/misc/share',
+        icon: 'https://up.img.heidiancdn.com/o_1eh4kgtf1lha1tl75f7phcrp30enifit.png',
+        text: '邀请返现'
+      }, {
+        url: '',
+        icon: 'https://up.img.heidiancdn.com/o_1eh4kgtf11k0p1qk31mha1qgb1rjf0awards.png',
+        text: '粉丝排行榜'
+      }, {
+        url: '',
+        icon: 'https://up.img.heidiancdn.com/o_1eh4kgtf149j1sk5bih1rpk1rfb0.png',
+        text: '推广帮助'
+      }],
+      orderNavigators: [{
+        url: '/pages/orders/index?filter=unpaid',
+        icon: 'https://up.img.heidiancdn.com/o_1eh4ipmqg17erq8ufi5un71lj50opay2x.png',
+        text: '待付款'
+      }, {
+        url: '/pages/orders/index?filter=paid',
+        icon: 'https://up.img.heidiancdn.com/o_1eh4ipmqg1ads6g21aba1bhn1e870paid2x.png',
+        text: '已付款'
+      }, {
+        url: '/pages/orders/index?filter=closed',
+        icon: 'https://up.img.heidiancdn.com/o_1eh4ipmqg1mnck81cve1gf6asd0shed2x.png',
+        text: '已完成'
+      }, {
+        url: '/pages/orders/index?filter=cancelled',
+        icon: 'https://up.img.heidiancdn.com/o_1eh4ipmqf1112btg1f3jjdden0eled2x.png',
+        text: '已取消'
+      }],
+      otherNavigators: [{
+        url: '',
+        icon: 'https://up.img.heidiancdn.com/o_1eh4ipmqf1f1k1foe13541saq1o9e0hape2x.png',
+        text: '优惠券'
+      }, {
+        url: '',
+        icon: '',
+        text: '礼品卡'
+      }, {
+        url: '',
+        icon: 'https://up.img.heidiancdn.com/o_1eh4ipmqg1sv31rko9toam31q1m0hape2x.png',
+        text: '收货地址'
+      }, {
+        url: '',
+        icon: 'https://up.img.heidiancdn.com/o_1eh4ipmqgbe6ker5eg12j31g560path2x.png',
+        text: '我的收藏'
+      }]
     }
   },
   components: {
