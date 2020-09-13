@@ -24,10 +24,11 @@
 
 <script>
 import Taro from '@tarojs/taro'
-import { mapState } from 'vuex'
+import RequiresLogin from '@/mixins/RequiresLogin'
 
 export default {
   name: 'Profile',
+  mixins: [RequiresLogin],
   data() {
     return {
       navigators: [
@@ -39,19 +40,11 @@ export default {
       ]
     }
   },
-  created() {
-    if (!this.customer.isAuthenticated) {
-      Taro.redirectTo({ url: '/pages/login/index' })
-    }
-  },
-  computed: {
-    ...mapState(['customer'])
-  },
   methods: {
     handleLogout () {
       this.$store.dispatch('customer/logout')
     }
-  },
+  }
 }
 </script>
 
