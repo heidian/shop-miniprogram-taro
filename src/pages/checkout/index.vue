@@ -105,16 +105,33 @@ export default {
         return
       }
       this.paymentPending = true
-      const res = await API.post('/pingxx/charge_for_order/', {
-        voucher_ids: [],
-        order_token: this.token,
-        openid: this.customer.openid,
-        channel: 'wx_lite'
-      })
-      setTimeout(() => {
+      let res
+      try {
+        res = await API.post('/pingxx/charge_for_order/', {
+          voucher_ids: [],
+          order_token: this.token,
+          openid: this.customer.openid,
+          channel: 'wx_lite'
+        })
         this.paymentPending = false
-      }, 1000)
-      console.log(res)
+      } catch(err) {
+        Taro.showModal({ title: '发起支付失败', showCancel: false })
+        this.paymentPending = false
+        return
+      }
+      const credential = _.get(res.data, 'charge.charge_essentials.credential.wx_lite')
+      console.log(credential)
+      Taro.requestPayment({
+        ...credential,
+        success: (res) => { console.log(res) },
+        fail: (res) => { console.log(res) },
+        complete: () => {
+          // 支付成功或者失败都跳转订单页面
+          // Taro.reLaunch({
+          //   url: `/pages/account?redirect=${encodeURIComponent('order-detail?ordertoken=' + this.options.ordertoken)}`
+          // })
+        }
+      })
     },
     getField(path, defaultValue) {
       return _.get(this.checkout.data, path, defaultValue)
