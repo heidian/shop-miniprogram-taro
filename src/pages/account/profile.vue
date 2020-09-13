@@ -45,9 +45,7 @@ export default {
     }
   },
   computed: {
-    ...mapState('customer', {
-      customer: (state) => state.data || {}
-    }),
+    ...mapState('customer')
   },
   methods: {
     handleLogout () {

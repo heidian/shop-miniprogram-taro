@@ -126,11 +126,7 @@ export default {
       title: this.type === 'product' ? '分享' : 'HEYSHOP'
     })
   },
-  computed: {
-    ...mapState('customer', {
-      customer: (state) => state.data || {},
-    }),
-  },
+  computed: {},
   async mounted () {
     if (this.type === 'product') {
       await this.fetchProduct()

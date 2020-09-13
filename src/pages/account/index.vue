@@ -7,16 +7,16 @@
           <image
             class="account__customer__avatar"
             mode="aspectFill"
-            :src="customer.avatar || 'https://up.img.heidiancdn.com/o_1cm7ccaoirfi1tdiutsn6s1odj0rofile.png?imageView2/2/w/360/ignore-error/1'"></image>
-          <view class="account__customer__caption" v-if="isAuthenticated">
+            :src="customer.data.avatar || 'https://up.img.heidiancdn.com/o_1cm7ccaoirfi1tdiutsn6s1odj0rofile.png?imageView2/2/w/360/ignore-error/1'"></image>
+          <view class="account__customer__caption" v-if="customer.isAuthenticated">
             <view class="account__customer__caption__name">
-              <text class="account__customer__full-name">{{ customer.full_name || '未命名' }}</text>
+              <text class="account__customer__full-name">{{ customer.data.full_name || '未命名' }}</text>
               <text class="account__customer__level__title">{{ levelTitle }}</text>
               <navigator class="account__customer__navigator--text" url="/pages/account/profile" open-type="navigate" hover-class="none">填写微信号</navigator>
             </view>
             <view class="account__customer__caption__referral">
-              <text class="account__customer__referral-code">邀请ID：{{ customer.referral_code }}</text>
-              <button class="account__customer__btn--copy-referral-code" @tap="onCopyToClipboard(customer.referral_code)">复制</button>
+              <text class="account__customer__referral-code">邀请ID：{{ customer.data.referral_code }}</text>
+              <button class="account__customer__btn--copy-referral-code" @tap="onCopyToClipboard(customer.data.referral_code)">复制</button>
             </view>
           </view>
           <view v-else class="account__customer__caption">
@@ -122,7 +122,7 @@
     </view>
 
     <!-- <view class="account__auth-btns">
-      <button v-if="isAuthenticated"  class="account__auth__btn account__auth__btn--red" @tap="logout">登出</button>
+      <button v-if="customer.isAuthenticated"  class="account__auth__btn account__auth__btn--red" @tap="logout">登出</button>
     </view> -->
     <view class="account__light account__infinite-products">
       <view class="account__infinite-products__head">
@@ -211,15 +211,12 @@ export default {
     InfiniteProducts
   },
   computed: {
-    ...mapState('customer', {
-      customer: (state) => state.data || {},
-      isAuthenticated: (state) => state.isAuthenticated || false
-    }),
+    ...mapState('customer'),
     levelTitle() {
-      return _.get(this.customer, 'level.title')
+      return _.get(this.customer.data, 'level.title')
     },
     points() {
-      return _.get(this.customer, 'points', 0)
+      return _.get(this.customer.data, 'points', 0)
     },
     levelProgressStyle() {
       const width = (this.points || 0) * 100 / this.pointsMax

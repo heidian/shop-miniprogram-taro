@@ -59,17 +59,15 @@ export default {
     }
   },
   computed: {
-    ...mapState('customer', {
-      customer: (state) => state.data || {},
-    }),
+    ...mapState('customer'),
     referralCode () {
-      return _.get(this.customer, 'referral_code', '')
+      return _.get(this.customer.data, 'referral_code', '')
     },
     appid () {
       return this.$store.state.config.appid
     },
     shareTitle () {
-      return _.get(this.customer, 'full_name', '你的好友') + '给你分享以下好物'
+      return _.get(this.customer.data, 'full_name', '你的好友') + '给你分享以下好物'
     },
     shareScene () {
       return this.productId && this.referralCode ? `r=pdt&id=${this.productId}&s=share&c=${this.referralCode}` : ''
@@ -127,7 +125,7 @@ export default {
         this.miniqrUrl = miniqrUrl
         this.productCanvas = new ProductCanvas({
           canvasId: '#productCanvas',
-          customer: this.customer,
+          customer: this.customer.data,
           product: this.product,
           miniqrUrl: this.miniqrUrl,
           isDark: false
