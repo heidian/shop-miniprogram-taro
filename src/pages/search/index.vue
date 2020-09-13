@@ -156,6 +156,7 @@ page {
 }
 .categoriesBar {
   position: fixed;
+  z-index: $z-index-navbar;
   left: 0;
   top: 0;
   height: 35px;

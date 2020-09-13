@@ -130,6 +130,7 @@ page {
 }
 .tabs {
   position: fixed;
+  z-index: $z-index-navbar;
   top: 0;
   left: 0;
   width: 100%;

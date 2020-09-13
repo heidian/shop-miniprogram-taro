@@ -12,4 +12,7 @@ $color-blue: #284179;
 
 
 // 统一控制 z-index
-$z-index-drawer: 100;
+$z-index-navbar: 100;  // 固定的顶部或者侧边导航栏
+$z-index-footer: 100;  // 底部固定按钮
+$z-index-drawer: 200;  // Drawer 专用
+$z-index-modal: 300;  // 弹出框专用
