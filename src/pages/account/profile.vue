@@ -18,8 +18,7 @@
         </navigator>
       </template>
     </view>
-    <button v-if="isAuthenticated" class="page__btn page__btn--red" @tap="onLogout">登出</button>
-    <navigator v-else class="page__btn page__btn--golden" url="/pages/login/index">登录</navigator>
+    <button class="page__btn page__btn--red" @tap="handleLogout">登出</button>
   </view>
 </template>
 
@@ -40,14 +39,18 @@ export default {
       ]
     }
   },
+  created() {
+    if (!this.customer.isAuthenticated) {
+      Taro.redirectTo({ url: '/pages/login/index' })
+    }
+  },
   computed: {
     ...mapState('customer', {
-      customer: (state) => state.data || {},
-      isAuthenticated: (state) => state.isAuthenticated || false
+      customer: (state) => state.data || {}
     }),
   },
   methods: {
-    onLogout () {
+    handleLogout () {
       this.$store.dispatch('customer/logout')
     }
   },
