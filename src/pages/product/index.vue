@@ -60,25 +60,23 @@
       <related-products :productId="productId"/>
     </view>
     <view :class="$style['footer']">
-      <view :class="$style['footerLeft']">
-        <button :class="$style['footerIconBtn']" openType="contact">
-          <image :class="$style['footerIconBtnIcon']" mode="aspectFit" :src="ICON_CUSTOMER_SERVIDE"></image>
-          <text :class="$style['footerIconBtnText']">客服</text>
-        </button>
-        <navigator url="/pages/cart/index" open-type="switchTab" :class="$style['footerIconBtn']">
-          <image :class="$style['footerIconBtnIcon']" mode="aspectFit" :src="ICON_CART"></image>
-          <text :class="$style['footerIconBtnText']">购物车</text>
-          <text v-if="cart.totalCount" :class="$style['footerIconBtnCartCount']">{{ cart.totalCount > 10 ? '10+' : cart.totalCount }}</text>
-        </navigator>
-      </view>
-      <view :class="$style['footerRight']">
-        <button :class="[$style['footerBtn'], $style['btnBlue']]" @tap="() => showVariantsDrawer('add_to_cart')">
-          <text :class="$style['footerBtnText']">加入购物车</text>
-        </button>
-        <button :class="[$style['footerBtn'], $style['btnOrange']]" @tap="() => showVariantsDrawer('buy_now')">
-          <text :class="$style['footerBtnText']">立即购买</text>
-        </button>
-      </view>
+      <button :class="$style['footerIconBtn']" openType="contact">
+        <image :class="$style['footerIconBtnIcon']" mode="aspectFit" :src="ICON_CUSTOMER_SERVIDE"></image>
+        <text :class="$style['footerIconBtnText']">客服</text>
+      </button>
+      <navigator url="/pages/cart/index" open-type="switchTab" :class="$style['footerIconBtn']">
+        <image :class="$style['footerIconBtnIcon']" mode="aspectFit" :src="ICON_CART"></image>
+        <text :class="$style['footerIconBtnText']">购物车</text>
+        <text v-if="cart.totalCount" :class="$style['footerIconBtnCartCount']">{{ cart.totalCount > 10 ? '10+' : cart.totalCount }}</text>
+      </navigator>
+      <button
+        :class="[$style['footerBtn'], 'button--blue', 'button--small', 'button--round']"
+        @tap="() => showVariantsDrawer('add_to_cart')"
+      >加入购物车</button>
+      <button
+        :class="[$style['footerBtn'], 'button--orange', 'button--small', 'button--round']"
+        @tap="() => showVariantsDrawer('buy_now')"
+      >立即购买</button>
     </view>
     <view :class="$style['productShare']" @tap="onClickShare">
       <image :class="$style['productShareIcon']" src="data:image/svg+xml;base64,PHN2ZyBpZD0iQ2FwYV8xIiBlbmFibGUtYmFja2dyb3VuZD0ibmV3IDAgMCA1NTEuMTMgNTUxLjEzIiBoZWlnaHQ9IjUxMiIgdmlld0JveD0iMCAwIDU1MS4xMyA1NTEuMTMiIHdpZHRoPSI1MTIiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0ibTQ2NS4wMTYgMTcyLjIyOGgtNTEuNjY4djM0LjQ0NmgzNC40NDZ2MzEwLjAxMWgtMzQ0LjQ1N3YtMzEwLjAxMWgzNC40NDZ2LTM0LjQ0NmgtNTEuNjY5Yy05LjUyIDAtMTcuMjIzIDcuNzAzLTE3LjIyMyAxNy4yMjN2MzQ0LjQ1NmMwIDkuNTIgNy43MDMgMTcuMjIzIDE3LjIyMyAxNy4yMjNoMzc4LjkwMmM5LjUyIDAgMTcuMjIzLTcuNzAzIDE3LjIyMy0xNy4yMjN2LTM0NC40NTZjMC05LjUyLTcuNzAzLTE3LjIyMy0xNy4yMjMtMTcuMjIzeiIvPjxwYXRoIGQ9Im0yNTguMzQyIDY1LjkzMXYyNDQuMDhoMzQuNDQ2di0yNDQuMDhsNzMuOTM3IDczLjkzNyAyNC4zNTQtMjQuMzU0LTExNS41MTQtMTE1LjUxNC0xMTUuNTE0IDExNS41MTQgMjQuMzU0IDI0LjM1NHoiLz48L3N2Zz4=" mode="aspectFit" lazy-load="false"></image>
@@ -255,36 +253,24 @@ page {
   justify-content: space-between;
   align-items: center;
 }
-.footerLeft,
-.footerRight {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-}
-.footerLeft {}
-.footerRight {
-  margin-left: 15px;
+.footerBtn {
+  margin-left: 10px;
   flex: 1;
 }
 .footerIconBtn {
+  margin-right: 10px;
+  width: 30px;
   padding: 0;
-  margin: 0;
   background-color: transparent;
   outline: none;
-  flex: 1;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  min-width: 40px;
   position: relative;
-}
-.footerIconBtn::after {
-  display: none;
-}
-.footerIconBtn + .footerIconBtn {
-  margin-left: 10px;
+  &::after {
+    display: none;
+  }
 }
 .footerIconBtnIcon {
   width: 16px;
@@ -308,30 +294,6 @@ page {
   position: absolute;
   top: -5px;
   left: 55%;
-}
-.footerBtn {
-  width: 48%;
-  height: 36px;
-  line-height: 36px;
-  padding: 0;
-  margin: 0;
-  border: none;
-  outline: none;
-  color: #ffffff;
-  border-radius: 18px;
-}
-.footerBtn.btnOrange {
-  background-color: $btn-orange;
-}
-.footerBtn.btnBlue {
-  background-color: $btn-blue;
-}
-.footerBtn:hover,
-.footerBtn:active {
-  opacity: 0.9;
-}
-.footerBtnText {
-  font-size: 13px;
 }
 .pageSection {
   background-color: #ffffff;
