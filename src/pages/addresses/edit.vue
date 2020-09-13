@@ -1,15 +1,15 @@
 <template>
   <view class="page--address-edit">
     <form class="form">
-      <view class="form-control">
+      <view class="form-item">
         <view class="label">收货人</view>
         <input class="input" v-model="address.data.full_name" type="text"/>
       </view>
-      <view class="form-control">
+      <view class="form-item">
         <view class="label">联系电话</view>
         <input class="input" v-model="address.data.mobile" type="digit"/>
       </view>
-      <view class="form-control">
+      <view class="form-item">
         <view class="label">所在区域</view>
         <picker class="picker" mode="region" @change="onRegionChange" :value="regionValue">
           <view class="picker">
@@ -17,7 +17,7 @@
           </view>
         </picker>
       </view>
-      <view class="form-control">
+      <view class="form-item">
         <view class="label">详细地址</view>
         <input class="input" v-model="address.data.address1" type="text"/>
       </view>
@@ -109,12 +109,22 @@ export default {
     background-color: #fff;
     padding-bottom: 20px;
   }
-  .form-control {
+  .form-item {
     position: relative;
-    margin-left: 100px;
-    height: 44px;
-    border-bottom: 1px solid $color-divider;
-    padding: 2px 0 1px;  // 因为有一个 border-bottom, 所以 padding-bottom 是 1px, 这样内容高度是 40px
+    &::after {
+      position: absolute;
+      content: "";
+      display: block;
+      bottom: 0;
+      right: 0;
+      left: 100px;
+      border-bottom: 1px solid $color-divider;
+    }
+    &:last-child::after {
+      left: 0;
+    }
+    padding: 5px 0 5px 100px;
+    height: 50px;  // 内容高度是 40, 整体高度是 50
     .input {
       display: block;
       margin: 8px 0;
@@ -131,14 +141,11 @@ export default {
   .label {
     position: absolute;
     top: 0;
-    height: 44px;
-    line-height: 44px;
+    height: 50px;
+    line-height: 50px;
     width: 80px;
-    left: -80px;
+    left: 15px;
     color: $color-text-light;
-  }
-  .form-control:nth-child(4) .label {
-    border-bottom: 1px solid $color-divider;
   }
   .buttons-wrapper {
     position: fixed;
