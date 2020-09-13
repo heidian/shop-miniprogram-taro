@@ -47,7 +47,7 @@ export default {
 </script>
 
 <style lang="scss">
-@import '@/styles/_variables';
+@import '@/styles/variables';
 $color-text: var(--color-text);
 $color-bg: var(--color-bg);
 .page--index {

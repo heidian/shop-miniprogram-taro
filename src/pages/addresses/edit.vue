@@ -98,7 +98,7 @@ export default {
 </script>
 
 <style lang="scss">
-@import '@/styles/_variables';
+@import '@/styles/variables';
 .page--address-edit {
   background-color: $color-bg-gray;
   min-height: 100vh;

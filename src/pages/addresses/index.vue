@@ -77,7 +77,7 @@ export default {
 </script>
 
 <style lang="scss">
-@import '@/styles/_variables';
+@import '@/styles/variables';
 .page--addresses {
   .address-item {
     display: flex;

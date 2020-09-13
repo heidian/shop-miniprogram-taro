@@ -62,8 +62,8 @@ export default {
 </script>
 
 <style lang="scss">
-@import '@/styles/_mixins';
-@import '@/styles/_variables';
+@import '@/styles/mixins';
+@import '@/styles/variables';
 .drawer.drawer--bottom {
   position: fixed;
   z-index: $z-index-drawer;

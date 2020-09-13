@@ -128,8 +128,8 @@ export default {
 </script>
 
 <style lang="scss">
-@import '@/styles/_mixins';
-@import '@/styles/_variables';
+@import '@/styles/mixins';
+@import '@/styles/variables';
 page {
   background-color: $color-bg-gray;
 }

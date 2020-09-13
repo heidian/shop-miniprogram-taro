@@ -166,7 +166,7 @@ export default {
 </script>
 
 <style lang="scss" module>
-@import '@/styles/_mixins';
+@import '@/styles/mixins';
 $color-orange: #ff5a00;
 $color-text: #262626;
 $color-text-light: #666666;

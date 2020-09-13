@@ -120,8 +120,8 @@ export default {
 
 <style lang="scss" module>
 // @import './index.module.scss'
-@import '@/styles/_mixins';
-@import '@/styles/_variables';
+@import '@/styles/mixins';
+@import '@/styles/variables';
 page {
   background-color: $color-bg-gray;
 }

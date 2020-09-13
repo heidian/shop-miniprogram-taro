@@ -180,7 +180,7 @@ export default {
 </script>
 
 <style lang="scss" module>
-@import '@/styles/_mixins';
+@import '@/styles/mixins';
 $color-text: #262626;
 $color-text-light: #303030;
 $color-text-hint: rgba(#333333, 0.8);

@@ -86,7 +86,7 @@ export default {
 </script>
 
 <style lang="scss">
-@import '@/styles/_variables';
+@import '@/styles/variables';
 .price-wrapper {
   display: inline-block;
   letter-spacing: 1rpx;

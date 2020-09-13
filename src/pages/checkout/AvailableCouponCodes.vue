@@ -95,7 +95,7 @@ export default {
 </script>
 
 <style lang="scss">
-@import '@/styles/_variables';
+@import '@/styles/variables';
 .checkout__coupon_codes {
   .loading-text {
     padding: 20px;

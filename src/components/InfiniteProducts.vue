@@ -82,8 +82,8 @@ export default {
 </script>
 
 <style lang="scss" module>
-@import '@/styles/_mixins';
-@import '@/styles/_variables';
+@import '@/styles/mixins';
+@import '@/styles/variables';
 .container {
   @include clearfix();
   padding: 5px 5px;
