@@ -1,48 +1,49 @@
 <template>
-  <view class="page page--alipay">
-    <view class="alipay__form">
-      <view class="form__field">
-        <view class="form__field__label">支付宝</view>
-        <view class="form__field__body">
-          <input type="text" class="form__field__control" :value="form.alipay" placeholder="请输入支付宝账号" @input="(e) => onInput('alipay', e)"/>
+  <view :class="$style['bindAlipay']">
+    <view :class="$style['form']">
+      <view :class="$style['field']">
+        <view :class="$style['label']">支付宝</view>
+        <view :class="$style['body']">
+          <input type="text" :class="$style['control']" :value="form.alipay" placeholder="请输入支付宝账号" @input="(e) => onInput('alipay', e)"/>
         </view>
       </view>
 
-      <view class="form__field">
-        <view class="form__field__label">姓名</view>
-        <view class="form__field__body">
-          <input type="text" class="form__field__control" :value="form.full_name" placeholder="请输入支付宝姓名" @input="(e) => onInput('full_name', e)"/>
+      <view :class="$style['field']">
+        <view :class="$style['label']">姓名</view>
+        <view :class="$style['body']">
+          <input type="text" :class="$style['control']" :value="form.full_name" placeholder="请输入支付宝姓名" @input="(e) => onInput('full_name', e)"/>
         </view>
       </view>
 
-      <view class="form__field">
-        <view class="form__field__label">证件类型</view>
-        <view class="form__field__body">
-          <input type="text" class="form__field__control" value="证件类型" disabled/>
+      <view :class="$style['field']">
+        <view :class="$style['label']">证件类型</view>
+        <view :class="$style['body']">
+          <input type="text" :class="$style['control']" value="证件类型" disabled/>
         </view>
       </view>
 
-      <view class="form__field">
-        <view class="form__field__label">证件号</view>
-        <view class="form__field__body">
-          <input type="idcard" class="form__field__control" :value="form.identification_number" placeholder="请输入身份证号" @input="(e) => onInput('identification_number', e)"/>
+      <view :class="$style['field']">
+        <view :class="$style['label']">证件号</view>
+        <view :class="$style['body']">
+          <input type="idcard" :class="$style['control']" :value="form.identification_number" placeholder="请输入身份证号" @input="(e) => onInput('identification_number', e)"/>
         </view>
       </view>
     </view>
-    <view class="alipay__addition">
+    <view :class="$style['addition']">
       <label @tap="toggleChecked">
-        <checkbox :checked="checked" class="alipay__addition__checkbox"></checkbox>
-        <view class="alipay__addition__checkbox--fake" :class="{checked: checked}"></view>
+        <checkbox :checked="checked" :class="$style['additionCheckbox']"></checkbox>
+        <view :class="{[$style['additionCheckboxFake']]: true, [$style['checked']]: checked}"></view>
       </label>
-      <view class="alipay__addition__message">
-        <text class="alipay__addition__text">请如实填写以上信息，并同意接受</text><navigator class="alipay__addition__navigator">《HeyShop支付相关协议》</navigator>
+      <view :class="$style['message']">
+        <text :class="$style['text']">请如实填写以上信息，并同意接受</text><navigator :class="$style['navigator']">《HeyShop支付相关协议》</navigator>
       </view>
     </view>
-    <button class="alipay__btn" :class="{'disabled': disableSubmit }" :disabled="disableSubmit" @tap="onSubmitForm">下一步</button>
+    <button :class="{[$style['alipayBtn']]: true, [$style['disabled']]: disableSubmit }" :disabled="disableSubmit" @tap="onSubmitForm">下一步</button>
   </view>
 </template>
 
 <script>
+import Taro from '@tarojs/taro'
 import RequiresLogin from '@/mixins/RequiresLogin'
 
 export default {
@@ -53,6 +54,13 @@ export default {
       form: {},
       checked: false
     }
+  },
+  created () {
+    Taro.setBackgroundColor({
+      backgroundColor: '#f6f6f6',
+      backgroundColorTop: '#ffffff',
+      backgroundColorBottom: '#f6f6f6',
+    })
   },
   computed: {
     disableSubmit () {
@@ -77,27 +85,27 @@ export default {
 }
 </script>
 
-<style lang="scss">
-$color-bg: #f0f0f0;
+<style lang="scss" module>
+$color-bg: #f6f6f6;
 $color-bg-white: #ffffff;
 $color-divider: rgba(#979797, 0.1);
 $color-text: #262626;
 $color-text-light: rgba(#262626, 0.6);
 $color-checkbox-border: rgba(#262626, 0.15);
 
-.page {
-  min-height: 100vh;
+page {
+  background-color: $color-bg;
 }
-.page--alipay {
+
+.bindAlipay {
+  min-height: 100vh;
   background-color: $color-bg;
   padding-bottom: 90px;
 }
-.alipay {
-  &__form {
-    background-color: $color-bg-white;
-  }
+.form {
+  background-color: $color-bg-white;
 }
-.form__field {
+.field {
   width: 100%;
   padding: 15px 20px;
   display: flex;
@@ -105,27 +113,27 @@ $color-checkbox-border: rgba(#262626, 0.15);
   align-items: center;
   font-size: 12px;
   position: relative;
-  &__label {
+  .label {
     margin-right: 20px;
     font-size: 15px;
     color: $color-text;
     width: 70px;
     text-align: left;
   }
-  &__body {
+  .body {
     flex: 1;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
   }
-  &__control {
+  .control {
     width: 100%;
     padding: 5px 15px;
     line-height: 22px;
     font-size: 14px;
     height: 32px;
   }
-  &__ft {
+  .ft {
     margin-left: 20px;
   }
   &:not(:last-child)::after {
@@ -136,56 +144,56 @@ $color-checkbox-border: rgba(#262626, 0.15);
     bottom: 0;
     border-bottom: 1px solid $color-divider;
   }
-  &__ft__icon {
+  .ftIcon {
     width: 10px;
     height: 12px;
     opacity: 0.2;
   }
 }
-.alipay__addition {
+.addition {
   display: flex;
   justify-content: flex-start;
   align-items: flex-start;
   padding: 20px;
   color: $color-text-light;
 }
-.alipay__addition__checkbox {
+.additionCheckbox {
   display: none;
-  &--fake {
-    width: 20px;
-    height: 20px;
-    background-color: transparent;
-    border: 1px solid $color-checkbox-border;
-    border-radius: 50%;
-    position: relative;
-  }
-  &--fake::after {
-    content: '';
-    position: absolute;
-    top: 2px;
-    right: 2px;
-    bottom: 2px;
-    left: 2px;
-    background-color: transparent;
-    border-radius: 50%;
-  }
-  &--fake.checked {
-    border-color: $color-text;
-  }
-  &--fake.checked::after {
-    background-color: $color-text;
-  }
 }
-.alipay__addition__message {
+.additionCheckboxFake {
+  width: 20px;
+  height: 20px;
+  background-color: transparent;
+  border: 1px solid $color-checkbox-border;
+  border-radius: 50%;
+  position: relative;
+}
+.additionCheckboxFake::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  bottom: 2px;
+  left: 2px;
+  background-color: transparent;
+  border-radius: 50%;
+}
+.additionCheckboxFake.checked {
+  border-color: $color-text;
+}
+.additionCheckboxFake.checked::after {
+  background-color: $color-text;
+}
+.message {
   padding-left: 10px;
   width: 100%;
 }
-.alipay__addition__text,
-.alipay__addition__navigator {
+.text,
+.navigator {
   display: inline;
   white-space: wrap;
 }
-.alipay__btn {
+.alipayBtn {
   position: fixed;
   bottom: 30px;
   left: 20px;
