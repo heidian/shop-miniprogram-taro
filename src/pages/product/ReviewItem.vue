@@ -130,6 +130,7 @@ import { optimizeImage, backgroundImageUrl } from '@/utils/image'
   background-position: center;
 }
 .caption {
+  width: calc(100% - 40px);
   flex: 1;
   padding-left: 5px;
 }
@@ -182,11 +183,19 @@ import { optimizeImage, backgroundImageUrl } from '@/utils/image'
   margin-top: 5px;
   white-space: nowrap;
   overflow: auto;
-  vertical-align: middle;
+  width: 100%;
+  // display: flex;
+  // flex-direction: row;
+  // flex-wrap: nowrap;
+  // justify-content: flex-start;
+  // align-items: center;
 }
 .imageItem {
+  display: inline-block;
   margin-left: 0;
   margin-right: 0;
+  width: 80px;
+  height: 80px;
 }
 .imageItem + .imageItem {
   margin-left: 8px;

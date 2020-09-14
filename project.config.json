@@ -4,7 +4,7 @@
 	"description": "HeyShop国货商城小程序",
 	"appid": "wx0ebd63bd0a26f767",
 	"setting": {
-		"urlCheck": true,
+		"urlCheck": false,
 		"es6": false,
 		"enhance": false,
 		"postcss": false,
@@ -144,7 +144,7 @@
 					"id": 11,
 					"name": "pages/misc/share",
 					"pathName": "pages/misc/share",
-					"query": "product=76878&__key_=16000497420312",
+					"query": "product=76878",
 					"scene": null
 				},
 				{
@@ -169,10 +169,10 @@
 					"scene": null
 				},
 				{
-					"id": -1,
-					"name": "pages/product/reviews",
-					"pathName": "pages/product/reviews",
-					"query": "product=54271",
+					"id": 15,
+					"name": "pages/product/reviews/index",
+					"pathName": "pages/product/reviews/index",
+					"query": "product=76878",
 					"scene": null
 				},
 				{
@@ -183,10 +183,10 @@
 					"scene": null
 				},
 				{
-					"id": -1,
-					"name": "pages/product/review",
-					"pathName": "pages/product/review",
-					"query": "product=54271",
+					"id": 17,
+					"name": "pages/product/reviews/post",
+					"pathName": "pages/product/reviews/post",
+					"query": "product=76878",
 					"scene": null
 				}
 			]

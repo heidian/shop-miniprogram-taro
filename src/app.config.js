@@ -10,7 +10,7 @@ export default {
     'pages/search/index',
     'pages/product/index',
     'pages/product/reviews/index',
-    'pages/product/reviews/review',
+    'pages/product/reviews/post',
     'pages/product/reviews/reply',
     'pages/login/index',
     'pages/checkout/index',
