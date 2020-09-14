@@ -156,9 +156,9 @@ export default {
           mask: true,
         })
         this.pending = false
-        try {
-          Taro.setStorageSync('_need_refresh_product_reviews', true)
-        } catch (error) {}
+        // try {
+        //   Taro.setStorageSync('_need_refresh_product_reviews', true)
+        // } catch (error) {}
 
         _.delay(() => {
           Taro.navigateBack({
