@@ -1,140 +1,135 @@
 <template>
-  <view class="page page--account">
+  <view :class="$style['account']">
     <!-- 普通的跳转页面, 只需要 url 就行了 -->
-    <view class="account__dark">
-      <view class="account__customer">
-        <view class="account__customer__main">
+    <view :class="$style['darkMode']">
+      <view :class="$style['customer']">
+        <view :class="$style['main']">
           <image
-            class="account__customer__avatar"
-            mode="aspectFill"
+            :class="$style['avatar']" mode="aspectFill"
             :src="customer.data.avatar || 'https://up.img.heidiancdn.com/o_1cm7ccaoirfi1tdiutsn6s1odj0rofile.png?imageView2/2/w/360/ignore-error/1'"></image>
-          <view class="account__customer__caption" v-if="customer.isAuthenticated">
-            <view class="account__customer__caption__name">
-              <text class="account__customer__full-name">{{ customer.data.full_name || '未命名' }}</text>
-              <text class="account__customer__level__title">{{ levelTitle }}</text>
-              <navigator class="account__customer__navigator--text" url="/pages/account/profile" open-type="navigate" hover-class="none">填写微信号</navigator>
+          <view :class="$style['caption']" v-if="customer.isAuthenticated">
+            <view :class="$style['captionName']">
+              <text :class="$style['fullName']">{{ customer.data.full_name || '未命名' }}</text>
+              <text :class="$style['levelTitle']">{{ levelTitle }}</text>
+              <navigator :class="$style['navigatorText']" url="/pages/account/profile" open-type="navigate" hover-class="none">填写微信号</navigator>
             </view>
-            <view class="account__customer__caption__referral">
-              <text class="account__customer__referral-code">邀请ID：{{ customer.data.referral_code }}</text>
-              <button class="account__customer__btn--copy-referral-code" @tap="onCopyToClipboard(customer.data.referral_code)">复制</button>
+            <view :class="$style['referral']">
+              <text :class="$style['referralCode']">邀请ID：{{ customer.data.referral_code }}</text>
+              <button :class="$style['btnCopy']" @tap="onCopyToClipboard(customer.data.referral_code)">复制</button>
             </view>
           </view>
-          <view v-else class="account__customer__caption">
-            <navigator url="/pages/login/index" class="account__customer__login">登录</navigator>
+          <view v-else :class="$style['caption']">
+            <navigator url="/pages/login/index" :class="$style['login']">登录</navigator>
           </view>
-          <navigator class="account__customer__caret" url="/pages/account/profile" open-type="navigate" hover-class="none"></navigator>
+          <navigator :class="$style['caret']" url="/pages/account/profile" open-type="navigate" hover-class="none"></navigator>
         </view>
-        <view class="account__customer__level-progress">
-          <view class="account__customer__level__hint">
-            <view class="account__customer__level__hint__text">当前成长值{{ points }}（达{{ pointsMax }}即可升级）</view>
-            <view class="account__customer__level__hint__number">{{ points }}/{{ pointsMax }} <view class="account__text__caret"></view></view>
+        <view :class="$style['level']">
+          <view :class="$style['levelHint']">
+            <view :class="$style['levelHintText']">当前成长值{{ points }}（达{{ pointsMax }}即可升级）</view>
+            <view :class="$style['levelHintNumber']">{{ points }}/{{ pointsMax }} <view :class="$style['textCaret']"></view></view>
           </view>
-          <view class="account__customer__level__progress">
-            <view class="account__customer__level__progress__inner" :style="levelProgressStyle"></view>
+          <view :class="$style['levelProgress']">
+            <view :class="$style['levelProgressInner']" :style="levelProgressStyle"></view>
           </view>
         </view>
       </view>
 
       <template>
-
-        <view class="account__partner">
-          <text class="account__partner__text">成为合伙人获取收益</text>
-          <text class="account__partner__btn__text">立即升级</text>
+        <view :class="$style['partner']">
+          <text :class="$style['partnerText']">成为合伙人获取收益</text>
+          <text :class="$style['partnerBtnText']">立即升级</text>
         </view>
 
-        <view class="account__balance">
-          <view class="account__balance__main">
-            <view class="account__balance__values">
-              <text class="account__balance__values__label">账户余额（元）</text>
-              <text class="account__balance__values__number">{{ balance }}</text>
-              <text class="account__balance__values__hint">自购返利￥0+邀请收益￥0</text>
+        <view :class="$style['balance']">
+          <view :class="$style['balanceMain']">
+            <view :class="$style['balanceValues']">
+              <text :class="$style['balanceValuesLabel']">账户余额（元）</text>
+              <text :class="$style['balanceValuesNumber']">{{ balance }}</text>
+              <text :class="$style['balanceValuesHint']">自购返利￥0+邀请收益￥0</text>
             </view>
-            <view class="account__balance__btns">
-              <view class="account__balance__btns__withdraw-history">提现记录 <view class="account__text__caret"></view></view>
-              <navigator class="account__balance__btns__bind-alipay" url="/pages/account/bind-alipay" open-type="navigate" hover-class="none">绑定支付宝</navigator>
+            <view :class="$style['balanceBtns']">
+              <view :class="$style['withdrawHistory']">提现记录 <view :class="$style['textCaret']"></view></view>
+              <navigator :class="$style['bindAlipay']" url="/pages/account/bind-alipay" open-type="navigate" hover-class="none">绑定支付宝</navigator>
             </view>
           </view>
-          <view class="account__balance__divider"></view>
-          <view class="account__balance__summary">
-            <view class="account__balance__summary__item">
-              <view class="account__balance__summary__item__label">今日预估奖励</view>
-              <view class="account__balance__summary__item__value">0</view>
+          <view :class="$style['balanceDivider']"></view>
+          <view :class="$style['balanceSummary']">
+            <view :class="$style['balanceSummaryItem']">
+              <view :class="$style['balanceSummaryLabel']">今日预估奖励</view>
+              <view :class="$style['balanceSummaryValue']">0</view>
             </view>
-            <view class="account__balance__summary__item">
-              <view class="account__balance__summary__item__label">本月预估奖励</view>
-              <view class="account__balance__summary__item__value">0</view>
+            <view :class="$style['balanceSummaryItem']">
+              <view :class="$style['balanceSummaryLabel']">本月预估奖励</view>
+              <view :class="$style['balanceSummaryValue']">0</view>
             </view>
-            <view class="account__balance__summary__item">
-              <view class="account__balance__summary__item__label">已邀请粉丝</view>
-              <view class="account__balance__summary__item__value">0</view>
+            <view :class="$style['balanceSummaryItem']">
+              <view :class="$style['balanceSummaryLabel']">已邀请粉丝</view>
+              <view :class="$style['balanceSummaryValue']">0</view>
             </view>
           </view>
         </view>
 
-        <view class="account__grid account__promotion">
+        <view :class="[$style['grid'], $style['promotion']]">
           <navigator
             v-for="item in promotionNavigators" :key="item.text"
             :url="item.url" open-type="navigate" hover-class="none"
-            class="account__grid__item account__grid__navigator"
+            :class="[$style['gridItem'], $style['gridNavigator']]"
           >
-            <image class="account__grid__item__icon account__grid__item__icon--bigger" :src="item.icon" mode="aspectFit"></image>
-            <text class="account__grid__item__text">{{ item.text }}</text>
+            <image :class="[$style['gridItemIcon'], $style['gridItemIconBigger']]" :src="item.icon" mode="aspectFit"></image>
+            <text :class="$style['gridItemText']">{{ item.text }}</text>
           </navigator>
         </view>
 
-        <view class="account__section">
-          <view class="account__section__head">
-            <text class="account__section__head__title">我的订单</text>
+        <view :class="$style['section']">
+          <view :class="$style['sectionHead']">
+            <text :class="$style['sectionHeadTitle']">我的订单</text>
             <navigator
-              class="account__section__head__navigator"
+              :class="$style['sectionHeadNavigator']"
               open-type="navigate" hover-class="none" url="/pages/orders/index"
             >
-              <text>查看全部</text><view class="account__text__caret"></view>
+              <text>查看全部</text><view :class="$style['textCaret']"></view>
             </navigator>
           </view>
-          <view class="account__grid">
+          <view :class="$style['grid']">
             <navigator
               v-for="(item, index) in orderNavigators" :key="index"
               open-type="navigate" hover-class="none" :url="item.url"
-              class="account__grid__item account__grid__navigator account__grid__navigator--divider"
+              :class="[$style['gridItem'], $style['gridNavigator'], $style['gridNavigatorDivider']]"
             >
-              <image class="account__grid__item__icon" :src="item.icon" mode="aspectFit"></image>
-              <text class="account__grid__item__text">{{ item.text }}</text>
+              <image :class="$style['gridItemIcon']" :src="item.icon" mode="aspectFit"></image>
+              <text :class="$style['gridItemText']">{{ item.text }}</text>
             </navigator>
           </view>
         </view>
 
-        <view class="account__section">
-          <view class="account__section__head">
-            <text class="account__section__head__title">我的功能</text>
+        <view :class="$style['section']">
+          <view :class="$style['sectionHead']">
+            <text :class="$style['sectionHeadTitle']">我的功能</text>
           </view>
-          <view class="account__grid">
+          <view :class="$style['grid']">
             <navigator
               v-for="item in otherNavigators" :key="item.text"
               open-type="navigate" hover-class="none" :url="item.url"
-              class="account__grid__item account__grid__navigator account__grid__navigator--divider"
+              :class="[$style['gridItem'], $style['gridNavigator'], $style['gridNavigatorDivider']]"
             >
-              <image class="account__grid__item__icon" :src="item.icon" mode="aspectFit"></image>
-              <text class="account__grid__item__text">{{ item.text }}</text>
+              <image :class="$style['gridItemIcon']" :src="item.icon" mode="aspectFit"></image>
+              <text :class="$style['gridItemText']">{{ item.text }}</text>
             </navigator>
           </view>
         </view>
       </template>
     </view>
 
-    <!-- <view class="account__auth-btns">
-      <button v-if="customer.isAuthenticated"  class="account__auth__btn account__auth__btn--red" @tap="logout">登出</button>
-    </view> -->
-    <view class="account__light account__infinite-products">
-      <view class="account__infinite-products__head">
-        <image class="account__infinite-products__logo" mode="aspectFill" :src="'https://up.img.heidiancdn.com/o_1eh71dvj035vlmd1251d2b14on0up412x.png'|imageUrl(300)"></image>
-        <navigator class="account__infinite-products__navigator">
-          <text class="account__infinite-products__navigator__text">查看全部</text>
-          <image class="account__infinite-products__navigator__arrow" mode="aspectFit" src="https://up.img.heidiancdn.com/o_1eh71g4odmlspfo1ubjqc196a0copy2x.png"></image>
+    <view :class="[$style['light'], $style['infiniteProducts']]">
+      <view :class="$style['infiniteProductsHead']">
+        <image :class="$style['infiniteProductsLogo']" mode="aspectFill" :src="'https://up.img.heidiancdn.com/o_1eh71dvj035vlmd1251d2b14on0up412x.png'|imageUrl(300)"></image>
+        <navigator :class="$style['infiniteProductsNavigator']">
+          <text :class="$style['infiniteProductsNavigatorText']">查看全部</text>
+          <image :class="$style['infiniteProductsNavigatorArrow']" mode="aspectFit" src="https://up.img.heidiancdn.com/o_1eh71g4odmlspfo1ubjqc196a0copy2x.png"></image>
         </navigator>
       </view>
-      <view class="account__infinite-products__body">
-        <infinite-products ref="infiniteProducts"></infinite-products>
+      <view :class="$style['infiniteProductsBody']">
+        <infiniteProducts ref="infiniteProducts"></infiniteProducts>
       </view>
     </view>
   </view>
@@ -148,7 +143,6 @@ import { handleErr } from '@/utils/errHelper'
 
 import InfiniteProducts from '@/components/InfiniteProducts'
 
-import './index.scss'
 
 export default {
   name: 'Account',
@@ -258,4 +252,356 @@ export default {
 }
 </script>
 
-<style lang="scss"></style>
+<style lang="scss" module>
+$color-bg: #1a1a1a;
+$color-bg-light: #373737;
+$color-bg-lighter: #f6f6f6;
+$color-bg-dark: #000000;
+$color-text: #ffffff;
+$color-text-dark: #000000;
+$color-text-light: rgba(#ffffff, 0.6);
+$color-golden: #e7cba7;
+$color-red: #e74c3c;
+$color-bg-progress: #272727;
+$color-brown: #5c411a;
+$color-box-shadow: rgba(0, 0, 0, 0.2);
+$color-divider: rgba(#ffffff, 0.1);
+
+.account {
+  .darkMode {
+    background-color: $color-bg;
+    color: $color-text;
+    padding: 25px 20px 50px;
+  }
+  .main {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+  }
+  .login {
+    font-size: 16px;
+  }
+  .avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 25px;
+    overflow: hidden;
+  }
+  .caption {
+    flex: 1;
+    padding: 0 0 0 15px;
+    font-size: 12px;
+  }
+  .captionName {
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: baseline;
+  }
+  .referral {
+    margin-top: 5px;
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+  }
+  .fullName {
+    font-size: 15px;
+  }
+  .levelTitle {
+    margin-left: 10px;
+    color: $color-text-light;
+  }
+  .navigatorText {
+    margin-left: 10px;
+    color: $color-golden;
+  }
+  .referralCode {
+    line-height: 1;
+    padding: 4px 6px;
+    background-color: $color-bg-dark;
+    border-radius: 2px;
+  }
+  .btnCopy {
+    background-color: transparent;
+    font-size: 12px !important;
+    padding: 3px 6px;
+    margin: 0;
+    margin-left: 10px;
+    line-height: 1;
+    color: $color-golden;
+    border: 1px solid $color-golden;
+    border-radius: 2px;
+  }
+  .caret {
+    margin-right: -15px;
+    width: 40px;
+    height: 40px;
+    position: relative;
+  }
+  .caret::after {
+    content: '';
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    border-top: 2px solid $color-text;
+    border-right: 2px solid $color-text;
+    top: 50%;
+    left: 50%;
+    margin-left: -5px;
+    margin-top: -5px;
+    transform: rotate(45deg);
+  }
+
+  .level {
+    width: 100%;
+    margin-top: 15px;
+  }
+  .levelHint {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+    color: $color-text-light;
+  }
+  .levelHintNumber {
+    display: flex;
+    align-items: center;
+    color: $color-text;
+    font-size: 11px;
+  }
+  .textCaret {
+    display: inline-block;
+    margin-left: 3px;
+    width: 6px;
+    height: 6px;
+    border-top: 1px solid $color-text-light;
+    border-right: 1px solid $color-text-light;
+    transform: rotate(45deg);
+  }
+  .levelProgress {
+    width: 100%;
+    margin-top: 8px;
+    overflow: hidden;
+    height: 8px;
+    border-radius: 4px;
+    background-color: $color-bg-progress;
+  }
+  .levelProgressInner {
+    display: block;
+    width: 0;
+    height: 100%;
+    background-color: $color-golden;
+  }
+
+  /* partner */
+  .partner {
+    width: 100%;
+    height: 34px;
+    margin-top: 15px;
+    border-radius: 17px;
+    background: linear-gradient(135deg, #020202 66.7%, $color-golden 33.3%);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .partnerText {
+    font-size: 15px;
+    width: 64%;
+    text-align: center;
+    color: $color-golden;
+    font-weight: normal;
+  }
+  .partnerBtnText {
+    width: 32%;
+    font-size: 14px;
+    font-weight: bold;
+    text-align: center;
+    color: $color-brown;
+  }
+
+  /* balance */
+  .balance {
+    margin-top: 15px;
+    width: 100%;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 2px 4px 10px 0 $color-box-shadow;
+    background-image: linear-gradient(126deg, $color-bg-light, $color-bg 87%);
+    color: $color-text-light;
+  }
+  .balanceMain {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .balanceValues {
+    display: flex;
+    flex-direction: column;
+    color: $color-text;
+  }
+  .balanceValuesLabel {
+    font-size: 13px;
+  }
+  .balanceValuesNumber {
+    font-size: 22px;
+  }
+  .balanceValuesHint {
+    font-size: 10px;
+  }
+  .balanceBtns {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-end;
+  }
+  .withdrawHistory {
+    color: $color-text;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+  }
+  .bindAlipay {
+    margin-top: 20px;
+    font-size: 14px;
+    border-radius: 4px;
+    background-color: $color-golden;
+    color: $color-brown;
+    width: 100px;
+    height: 30px;
+    line-height: 30px;
+    padding: 0;
+    text-align: center;
+  }
+
+  .balanceDivider {
+    width: 100%;
+    height: 0;
+    border-top: 1px solid $color-divider;
+    margin: 15px 0;
+  }
+
+  .balanceSummary {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .balanceSummaryItem {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .balanceSummaryLabel {
+    font-size: 12px;
+    line-height: 1;
+    margin-bottom: 10px;
+  }
+  .balanceSummaryValue {
+    font-size: 18px;
+    color: $color-text;
+    line-height: 1;
+  }
+
+  .grid {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .gridItem {
+    flex: 1;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .gridItemIcon {
+    width: 20px;
+    height: 20px;
+    margin-bottom: 15px;
+  }
+  .gridItemIconBigger {
+    width: 25px;
+    height: 25px;
+  }
+  .gridItemText {
+    font-size: 13px;
+    line-height: 1;
+    color: $color-text-light;
+  }
+
+  .promotion {
+    margin-top: 30px;
+  }
+
+  .section {
+    margin-top: 30px;
+  }
+  .sectionHead {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 7px;
+    border-bottom: 1px solid $color-divider;
+    margin-bottom: 10px;
+  }
+  .sectionHeadTitle {
+    font-size: 15px;
+    font-weight: 600;
+    color: $color-text;
+  }
+  .sectionHeadNavigator {
+    display: flex;
+    align-items: center;
+    font-size: 12px;
+    color: $color-text-light;
+  }
+  .gridNavigatorDivider:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    top: 10px;
+    bottom: 10px;
+    right: 0;
+    border-right: 1px solid $color-divider;
+  }
+
+  .light {
+    padding: 20px 0;
+    background-color: $color-bg-lighter;
+  }
+  .infiniteProductsHead {
+    width: 100%;
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+  .infiniteProductsLogo {
+    width: 216px;
+    height: 72px;
+  }
+  .infiniteProductsNavigator {
+    display: flex;
+    align-items: center;
+  }
+  .infiniteProductsNavigatorText {
+    color: $color-text-dark;
+    font-size: 12px;
+    line-height: 22px;
+    border-bottom: 1px solid;
+  }
+  .infiniteProductsNavigatorArrow {
+    margin-left: 4px;
+    width: 22px;
+    height: 6px;
+  }
+}
+
+</style>
