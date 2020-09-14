@@ -30,7 +30,7 @@ import { handleErr } from '@/utils/errHelper'
 import { optimizeImage, backgroundImageUrl } from '@/utils/image'
 import { uploadImage } from '@/utils/uploader'
 
-import ReviewItem from '../ReviewItem'
+import ReviewItem from './ReviewItem'
 
 export default {
   name: 'Reply',

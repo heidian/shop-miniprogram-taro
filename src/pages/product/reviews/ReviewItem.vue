@@ -108,7 +108,7 @@ import { optimizeImage, backgroundImageUrl } from '@/utils/image'
 </script>
 
 <style lang="scss" module>
-@import './variables.scss';
+@import '../variables.scss';
 .reviewItem {
   width: 100%;
   display: flex;
