@@ -96,7 +96,6 @@ export default class ProductCanvas {
       const avatar = _getCanvasImageUrl(_.get(customer, 'avatar', 'https://up.img.heidiancdn.com/o_1cm7ccaoirfi1tdiutsn6s1odj0rofile.png?imageView2/2/w/360/ignore-error/1'), 200)
       const full_name = _.get(customer, 'full_name', '')
       const productImage = _getCanvasImageUrl(_.get(product, 'image.src', ''), 800, 800, true)
-      console.log('productImage', productImage)
       const productTitle = _.get(product, 'title', '')
 
       query.select(canvasId)
