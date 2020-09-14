@@ -45,10 +45,7 @@
       </view>
     </view>
     <view :class="$style['pageSection']" v-if="product.id">
-      <product-reviews
-        :reviewsCaption="{}"
-        :productId="product.id"
-      />
+      <product-reviews :productId="product.id"/>
     </view>
     <view :class="$style['pageSection']" v-if="body_html">
       <view :class="$style['pageSectionTitle']">图文详情</view>

@@ -2,7 +2,7 @@
   <view :class="$style['sectionInner']">
     <!-- Taro 是先用 vue 完全编译好输出节点再一次性填充到一个 wxml 模板里, 这里的 key 写法和 vue 一样 -->
       <view :class="$style['sectionHead']">
-        <text :class="$style['sectionTitle']">{{ reviewsCaption.section_title || '评论' }}（{{count}}）</text>
+        <text :class="$style['sectionTitle']">{{ sectionTitle || '评论' }}（{{count}}）</text>
         <navigator
           v-if="count > 0"
           :class="$style['reviewsMore']"
@@ -11,7 +11,7 @@
       <view :class="$style['sectionContainer']">
         <navigator
           v-if="count === 0"
-          :url="`/pages/product/reviews/review?product=${ productId }`"
+          :url="`/pages/product/reviews/post?product=${ productId }`"
           :class="$style['navigatorNew']">
           <image
             :class="$style['navigatorNewIcon']"
@@ -44,11 +44,9 @@ import ReviewItem from './reviews/ReviewItem'
 export default {
   name: 'ProductReviews',
   props: {
-    reviewsCaption: {
-      tyoe: Object,
-      default: () => {
-        return {}
-      }
+    sectionTitle: {
+      tyoe: String,
+      default: ''
     },
     productId: {
       type: [Number, String],
@@ -103,7 +101,6 @@ export default {
 <style lang="scss" module>
 @import './variables.scss';
 .sectionInner {
-  border-bottom: 10px solid $color-border;
   padding-left: 15px;
   padding-right: 15px;
   overflow: hidden;

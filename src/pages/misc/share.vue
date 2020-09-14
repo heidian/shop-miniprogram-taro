@@ -41,9 +41,11 @@ import { mapState } from 'vuex'
 import { API } from '@/utils/api'
 import { optimizeImage, backgroundImageUrl } from '@/utils/image'
 import ProductCanvas from '@/utils/share'
+import RequiresLogin from '@/mixins/RequiresLogin'
 
 export default {
   name: 'Share',
+  mixins: [ RequiresLogin ],
   data() {
     const { product } = getCurrentInstance().router.params
     return {
@@ -70,28 +72,32 @@ export default {
       return _.get(this.customer.data, 'full_name', '你的好友') + '给你分享以下好物'
     },
     shareScene () {
-      return this.productId && this.referralCode ? `r=pdt&id=${this.productId}&s=share&c=${this.referralCode}` : ''
+      return (this.productId && this.referralCode) ? `r=pdt&id=${this.productId}&s=share&c=${this.referralCode}` : ''
     },
     shareImage () {
       return optimizeImage(_.get(this.product, 'image'), 400)
     }
   },
-  created() {
-    if (!this.customer.isAuthenticated) {
-      Taro.redirectTo({ url: '/pages/login/index' })
-    }
-  },
+  // created() {  // 使用了mixin
+  //   if (!this.customer.isAuthenticated) {
+  //     Taro.redirectTo({ url: '/pages/login/index' })
+  //   }
+  // },
   mounted () {
-    this.fetchProduct()
+    /**
+     * 保证用户已登录且拿到referralCode，再去获取商品信息和后面初始化 share
+     */
+    if (!this.customer.isAuthenticated || !this.referralCode) return
+    await this.fetchProduct()
   },
-  watch: {
-    shareScene: {
-      immediate: true,
-      handler (newScene) {
-        !!newScene && this.getProductQr()
-      }
-    }
-  },
+  // watch: {
+  //   shareScene: {
+  //     immediate: true,
+  //     handler (newScene) {
+  //       !!newScene && this.getProductQr()
+  //     }
+  //   }
+  // },
   methods: {
     optimizeImage,
     backgroundImageUrl,
@@ -108,9 +114,10 @@ export default {
         console.log(err)
       }
       this.product = product
+      await this.getProductQr()
     },
     async getProductQr () {
-      if (!this.productId) {
+      if (!this.productId || !this.referralCode || !this.shareScene) {
         return
       }
       const scene = this.shareScene
@@ -143,9 +150,6 @@ export default {
       }
     },
     onSaveImageToAblum () {
-      if (this.productCanvas && this.productCanvas.saveCanvasToAlbum) {
-        this.productCanvas.saveCanvasToAlbum()
-      }
       if (this.productCanvas && this.productCanvas.saveCanvasToAlbum) {
         this.productCanvas.saveCanvasToAlbum()
       }

@@ -12,7 +12,7 @@
             v-if="!disableReply"
             :url="`/pages/product/reviews/reply?review=${review.id}&product=${productId}`"
             :class="$style['action']"
-            :hover-class="'none'"
+            hover-class=“none”
           >
             <image
               :class="$style['actionIcon']"
@@ -44,7 +44,7 @@
         <navigator
           v-if="review.replies.count > 1"
           :class="$style['reviewItemMore']"
-          :hover-class="'none'"
+          hover-class=“none”
           :url="`/pages/product/reviews/reply?review=${review.id}&product=${productId}`"
         >
           <text>共{{ review.replies.count }}条回复</text>
@@ -67,7 +67,9 @@ import { optimizeImage, backgroundImageUrl } from '@/utils/image'
       },
       review: {
         type: Object,
-        default: {}
+        default: () => {
+          return {}
+        }
       },
       disableReply: {
         type: Boolean,
@@ -84,7 +86,7 @@ import { optimizeImage, backgroundImageUrl } from '@/utils/image'
         return _.get(this.review, 'images', [])
       },
       reviewCustomerAvatar () {
-        return _.get(this.review, 'customer.atavar', 'https://up.img.heidiancdn.com/o_1dhf2esd81lde76c1rttgf31dm0oup23x.png')
+        return _.get(this.review, 'customer.avatar', 'https://up.img.heidiancdn.com/o_1dhf2esd81lde76c1rttgf31dm0oup23x.png')
       }
     },
     methods: {
