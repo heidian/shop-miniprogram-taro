@@ -269,10 +269,14 @@ page {
   [class^="el-icon-"] {
     font-size: 20px;
     height: 20px;
+    overflow: hidden;
+    display: block;
   }
   .iconBtnText {
     font-size: 10px;
     height: 10px;
+    overflow: hidden;
+    display: block;
     white-space: nowrap;
   }
 }
