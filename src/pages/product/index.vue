@@ -5,10 +5,10 @@
         :class="$style['productImages']"
         indicatorColor='#999'
         indicatorActiveColor='#333'
-        circular
+        :circular="true"
         :indicatorDots="true"
-        interval="5000"
-        autoplay
+        :interval="5000"
+        :autoplay="true"
       >
         <swiper-item :class="$style['productImagesSwiperItem']" v-for="image in product.images" :key="image.id">
           <image :class="$style['productImagesSwiperItemImage']" mode="aspectFit" :src="optimizeImage(image, 600)"></image>
@@ -17,7 +17,7 @@
       <!-- 商品价格和添加心愿单 -->
       <view :class="$style['productHeader']">
         <price
-          :class="$style['productPrice']" :highlight="true" :keepZero="false"
+          :class="$style['productPrice']" :highlight="true" :keepZero="true"
           :price="currentVariant.price" :compareAtPrice="currentVariant.compare_at_price"
         ></price>
         <view :class="$style['iconBtn']" @tap="addToFavorite">
@@ -36,8 +36,6 @@
         <view :class="$style['tip']" @tap="showRebateTip">?</view>
       </view>
     </view>
-    <!-- 待删除 -->
-    <!-- 待删除 -->
     <view :class="$style['pageSection']">
       <view :class="$style['cell']" @tap="() => showVariantsDrawer('')">
         <view :class="$style['cellLabel']">已选</view>
@@ -57,10 +55,8 @@
       <view :class="$style['pageSectionTitle']">图文详情</view>
       <view v-if="body_html" class="'taro_html'" :class="$style['productHtml']" v-html="body_html"></view>
     </view>
-    <view :class="$style['pageSection']" v-if="productId">
-      <view :class="$style['pageSectionTitle']">猜你喜欢</view>
-      <related-products :productId="productId"/>
-    </view>
+    <!-- 猜你喜欢这个板块不要 pageSection -->
+    <related-products v-if="productId" :productId="productId"/>
     <view :class="$style['footer']">
       <button :class="[$style['iconBtn'], $style['footerIconBtn']]" open-type="contact">
         <view class="el-icon-headset"></view>
@@ -232,7 +228,7 @@ page {
   background-color: #f6f6f6;
 }
 .page {
-  min-height: 100vh;
+  overflow: hidden;
   padding-bottom: 50px;
   position: relative;
 }
@@ -302,7 +298,7 @@ page {
   }
 }
 .pageSectionTitle {
-  padding: 10px;
+  padding: 10px 15px;
   text-align: center;
   line-height: 40px;
   font-size: 15px;

@@ -1,21 +1,24 @@
 <template>
-  <view class="related-products">
-    <!-- Taro 是先用 vue 完全编译好输出节点再一次性填充到一个 wxml 模板里, 这里的 key 写法和 vue 一样 -->
-    <view
-      v-for="product in relatedProducts" :key="product.id"
-      class="product-item"
-      @tap="goToProduct(product.name)"
-    >
-      <view class="image" :style="{ 'backgroundImage': backgroundImageUrl(product.image, 600)}"></view>
-      <view class="title">{{ textValue(product.title) }}</view>
-      <view class="price">
-        <text class="price-sale">{{ product.price|currency }}</text>
-        <text
-          v-if="+product.compare_at_price !== +product.price" class="price-compare"
-        >{{ product.compare_at_price|currency }}</text>
+  <view :class="$style['container']">
+    <view :class="$style['sectionTitle']">猜你喜欢</view>
+    <view v-for="(product, index) in relatedProducts" :key="product.id" :class="$style['grid']">
+      <view :class="$style['productItem']" @tap="goToProduct(product.name)">
+        <view :class="$style['imageWrapper']">
+          <image
+            :class="$style['image']" mode="widthFix" :lazy-load="true"
+            :src="optimizeImage(product.image)"
+          ></image>
+        </view>
+        <view :class="$style['textWrapper']">
+          <view :class="$style['title']">{{ product.title }}</view>
+          <!-- <view :class="$style['description']">{{ product.description }}</view> -->
+          <price
+            :class="$style['price']" :highlight="false" :keepZero="true"
+            :price="product.price" :compareAtPrice="product.compare_at_price"
+          ></price>
+        </view>
       </view>
     </view>
-    <!-- 闭合标签尽量和文本内容紧贴, 避免出现前后空格, 内部元素是标签就随意 -->
   </view>
 </template>
 
@@ -24,6 +27,8 @@ import Taro from '@tarojs/taro'
 import _ from 'lodash'
 import { API } from '@/utils/api'
 import { optimizeImage, backgroundImageUrl } from '@/utils/image'
+import Price from '@/components/Price'
+
 /* 页面私有组件放在页面同一个目录下,
 因为 taro 无法实现 vue 的 scoped css, 样式写在页面和组件里都可以, 注意 class 冲突就行 */
 export default {
@@ -36,6 +41,9 @@ export default {
       }
     },
   },
+  components: {
+    Price
+  },
   data() {
     return {
       relatedProducts: []
@@ -47,21 +55,12 @@ export default {
   methods: {
     optimizeImage,
     backgroundImageUrl,
-    textValue (textObj) {
-      if (_.isString(textObj)) {
-        return textObj
-      } else if (_.isObject(textObj)) {
-        return _.get(textObj, 'value')
-      } else {
-        return '' + textObj
-      }
-    },
-    goToProduct (productName) {
-      /* 没有特别原因不要用 wx 的方法, 全部用 Taro 上的方法 */
+    goToProduct(productName) {
       Taro.navigateTo({ url: `/pages/product/index?name=${productName}` })
     },
-    fetchRelatedProducts () {
+    fetchRelatedProducts() {
       const params = {
+        fields: ['id', 'name', 'title', 'description', 'image', 'price', 'compare_at_price'].join(','),
         random_fill: 1,
         page_size: 6
       }
@@ -75,52 +74,66 @@ export default {
 }
 </script>
 
-<style lang="scss">
-.related-products {
-  padding: 10px 15px;
+<style lang="scss" module>
+@import '@/styles/mixins';
+@import '@/styles/variables';
+.container {
+  @include clearfix();
+  padding: 5px;
+}
+.sectionTitle {
   width: 100%;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: flex-start;
-  flex-wrap: wrap;
-  .product-item {
-    width: 48%;
-    margin-bottom: 10px;
-    .image {
-      width: 100%;
-      padding-top: percentage(4/3);
-      background-position: center;
-      background-size: cover;
-      background-repeat: no-repeat;
-    }
-    .title {
-      margin-top: 0.5em;
-      line-height: 1.4em;
-      height: 2.8em;
-      font-weight: bold;
-      overflow : hidden;
-      text-overflow: ellipsis;
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-    }
-    .price {
-      margin-top: 0.1em;
-      margin-bottom: 0.5em;
-    }
-    .price-sale {
-      font-weight: bold;
-      font-size: 1.2em;
-    }
-    .price-compare {
-      margin-left: 0.1em;
-      opacity: 0.7;
-      text-decoration: line-through;
-    }
+  padding: 20px 5px 15px;
+  text-align: center;
+  font-weight: bold;
+}
+.grid {
+  float: left;
+  width: 50%;
+  padding: 5px;
+  // &:nth-child(2n+1) {
+  &:nth-child(2n) {  // 因为最顶上有一个 sectionTitle, 这里奇偶要变一下
+    clear: both;
   }
-  // .product-item:nth-child(2n) {
-  //   margin-right: 15px;
-  // }
+}
+.productItem {
+  width: 100%;
+  border-radius: 5px;
+  // box-shadow: 0 3px 5px rgba(#000, 0.2);
+  background-color: #fff;
+  overflow: hidden;
+}
+.textWrapper {
+  padding: 7px;
+}
+.title,
+.description {
+  font-size: 12px;
+  line-height: 15px;
+  height: 30px;
+  letter-spacing: 1px;
+  word-break: break-all;
+  @include ellipsis(2);
+  margin-bottom: 5px;
+}
+.title {
+  font-weight: 500;
+  color: $color-text;
+}
+.description {
+  color: $color-text-light;
+}
+.imageWrapper {
+  width: 100%;
+  padding-top: 100%;
+  position: relative;
+}
+.image {
+  display: block;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
 }
 </style>

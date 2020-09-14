@@ -11,6 +11,10 @@
         <view :class="$style['textWrapper']">
           <view :class="$style['title']">{{ product.title }}</view>
           <view :class="$style['description']">{{ product.description }}</view>
+          <price
+            :class="$style['price']" :highlight="true" :keepZero="true"
+            :price="product.price" :compareAtPrice="product.compare_at_price"
+          ></price>
         </view>
       </view>
     </view>
@@ -41,13 +45,16 @@ import _ from 'lodash'
 import Taro from '@tarojs/taro'
 import ListTable from '@/mixins/ListTable'
 import { optimizeImage } from '@/utils/image'
+import Price from '@/components/Price'
 
 export default {
   name: 'InfiniteProduct',
   mixins: [
     ListTable('products', { urlRoot: '/shopfront/product/' })
   ],
-  components: {},
+  components: {
+    Price
+  },
   data() {
     return {
       viewMore: false
@@ -86,7 +93,7 @@ export default {
 @import '@/styles/variables';
 .container {
   @include clearfix();
-  padding: 5px 5px;
+  padding: 5px;
 }
 // .column {
 //   float: left;
@@ -110,7 +117,7 @@ export default {
   overflow: hidden;
 }
 .textWrapper {
-  padding: 7px 7px 10px;
+  padding: 7px;
 }
 .title,
 .description {
