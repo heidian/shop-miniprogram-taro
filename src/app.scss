@@ -1,7 +1,7 @@
 @import "styles/mixins";
 @import "styles/variables";
 
-/* global css start */
+/* reset global styles */
 page, view, icon, rich-text, progress, slider, switch, navigator, radio, checkbox,
 text, image, button, form, input, label, textarea, audio, video, swiper, swiper-item,
 scroll-view, movable-area, movable-view, cover-view, picker, picker-view {
@@ -21,7 +21,7 @@ html, body, page {
   margin: 0;
   padding: 0;
 }
-/* global css end */
+/* reset end */
 
 /* components */
 @import "styles/icons";

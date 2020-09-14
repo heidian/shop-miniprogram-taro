@@ -35,7 +35,7 @@
     <navigator
       v-if="viewMore"
       url="/pages/search/index" open-type="navigate"
-      :class="$style['viewMore']"
+      :class="$style['viewMore']" hover-class="none"
     >点击查看更多</navigator>
   </view>
 </template>
@@ -153,5 +153,6 @@ export default {
   clear: both;
   text-align: center;
   padding: 15px;
+  color: $color-text-light;
 }
 </style>
