@@ -28,6 +28,13 @@
       <!-- 商品标题和描述 -->
       <view :class="$style['productTitle']">{{ product.title }}</view>
       <view :class="$style['productDescription']">{{ product.description }}</view>
+      <view :class="$style['productTags']">
+        <view :class="[$style['tag'], $style['tagOrange']]">立赚9.14</view>
+        <view :class="[$style['tag'], $style['tagGold']]">
+          <text class="el-icon-star-on" style="font-size: 1.2em;"></text>成长值120
+        </view>
+        <view :class="$style['tip']" @tap="showRebateTip">?</view>
+      </view>
     </view>
     <!-- 待删除 -->
     <!-- 待删除 -->
@@ -205,6 +212,13 @@ export default {
     },
     addToFavorite() {
       //
+    },
+    showRebateTip() {
+      Taro.showModal({
+        title: '立赚说明',
+        content: '成为 HeyShop 会员/国货大使后，无论是自购或是分享商品，均可获得返现哦！',
+        showCancel: false
+      })
     }
   }
 }
@@ -338,7 +352,8 @@ page {
 
 .productHeader,
 .productTitle,
-.productDescription {
+.productDescription,
+.productTags {
   width: 100%;
   padding-left: 15px;
   padding-right: 15px;
@@ -371,6 +386,42 @@ page {
   opacity: 0.9;
   text-align: justify;
 }
+.productTags {
+  margin: 15px auto;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  .tag {
+    padding: 0 8px;
+    font-size: 12px;
+    line-height: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    margin-right: 10px;
+  }
+  .tagOrange {
+    background-color: $color-orange;
+    color: #fff;
+  }
+  .tagGold {
+    background-image: linear-gradient(106deg, #e8cca7, #edd6b8 52%, #e6caa5 82%);
+    color: #5c411a;
+  }
+  .tip {
+    width: 16px;
+    height: 16px;
+    border-radius: 8px;
+    line-height: 14px;  // 因为有 border, line-height 要减去 2px
+    font-size: 10px;
+    text-align: center;
+    border: 1px solid $color-text-lighter;
+    color: $color-text-lighter;
+  }
+}
+
 .cellFtIcon {
   width: 10px;
   height: 12px;
