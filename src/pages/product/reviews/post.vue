@@ -26,9 +26,9 @@
     </view>
     <view :class="$style['postReviewft']">
       <button
+        class="button--round button--dark"
         :class="$style['submitBtn']"
-        :hover-class="$style['submitBtnHover']"
-        :disabled="!content || pending"
+        :disabled="!content || !!pending || !!uploading"
         @tap="onSubmit"
       >{{ pending ? '正在发布' : '发布' }}</button>
     </view>
@@ -53,6 +53,7 @@ export default {
       productTitle: '',
       content: '',
       images: [],
+      uploading: false,
       pending: true,
       imagesLimit: 6
     }
@@ -97,7 +98,7 @@ export default {
       this.content = content
     },
     onUpdateImages (idx) {
-      if (!this.uptoken) {
+      if (!this.uptoken || !!this.uploading) {
         return
       }
       const should_replace = /\d+/.test(idx)
@@ -113,7 +114,7 @@ export default {
           Taro.showToast({ title: `图片最多上传${this.imagesLimit}张` })
           return
         }
-        this.pending = true
+        this.uploading = true
         const promiseList = _.map(res.tempFilePaths || [], tempFilePath => uploadImage(tempFilePath, this.uptoken))
         Promise.all(promiseList).then((uploadResults) => {
           const uploadImages = _.map(uploadResults, 'link')
@@ -125,9 +126,9 @@ export default {
               ...uploadImages
             ]
           }
-          this.pending = false
+          this.uploading = false
         }).catch(err => {
-          this.pending = false
+          this.uploading = false
           handleErr(err)
         })
       })
@@ -250,24 +251,24 @@ page {
   left: 50%;
   margin-left: -75px;
   width: 150px;
-  height: 40px;
-  border-radius: 20px;
-  box-shadow: 0 5px 15px 0 rgba(0, 0, 0, 0.15);
-  background-color: $color-dark;
-  text-align: center;
-  padding: 0;
-  font-size: 14px;
-  font-weight: 600;
-  color: #ffffff;
-  line-height: 40px;
+  // height: 40px;
+  // border-radius: 20px;
+  // box-shadow: 0 5px 15px 0 rgba(0, 0, 0, 0.15);
+  // background-color: $color-dark;
+  // text-align: center;
+  // padding: 0;
+  // font-size: 14px;
+  // font-weight: 600;
+  // color: #ffffff;
+  // line-height: 40px;
 }
-.submitBtn[disabled] {
-  background-color: rgba($color-dark, 0.3) !important;
-  color: #ffffff !important;
-}
-.submitBtnHover {
-  background-color: rgba($color-dark, 0.8);
-}
+// .submitBtn[disabled] {
+//   background-color: rgba($color-dark, 0.3) !important;
+//   color: #ffffff !important;
+// }
+// .submitBtnHover {
+//   background-color: rgba($color-dark, 0.8);
+// }
 </style>
 
 
