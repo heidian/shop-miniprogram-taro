@@ -83,6 +83,16 @@ const API = {
       method: 'PUT',
       header: headers
     })
+  },
+  delete: (path, options = {}) => {
+    const params = options.params || {}
+    const headers = options.headers || {}
+    const url = combineURLs(getAPIRoot(), path, params)
+    return Taro.request({
+      url: url,
+      method: 'DELETE',
+      header: headers
+    })
   }
 }
 
