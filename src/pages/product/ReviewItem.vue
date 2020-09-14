@@ -10,7 +10,7 @@
         <view :class="$style['itemActions']">
           <navigator
             v-if="disableReply != '1'"
-            :url="`/pages/product/reply?review=${review.id}&product=${productId}`"
+            :url="`/pages/product/reviews/reply?review=${review.id}&product=${productId}`"
             :class="$style['action']"
             :hover-class="'none'"
           >
@@ -46,7 +46,7 @@
           v-if="review.replies.count > 1"
           :class="$style['reviewItemMore']"
           :hover-class="'none'"
-          :url="`/pages/product/reply?review=${review.id}&product=${productId}`"
+          :url="`/pages/product/reviews/reply?review=${review.id}&product=${productId}`"
         >
           <text>共{{ review.replies.count }}条回复</text>
         </navigator>

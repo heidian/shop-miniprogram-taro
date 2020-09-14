@@ -9,7 +9,7 @@
       />
     </view>
     <view :class="$style['footer']">
-      <navigator :url="`/pages/product/review?product=${ productId }`" :class="$style['footerNavigator']">
+      <navigator :url="`/pages/product/reviews/post?product=${ productId }`" :class="$style['footerNavigator']">
         <image :class="$style['footerNavigatorIcon']" src="https://up.img.heidiancdn.com/o_1eeaarogl57i13djipg1r8c13k0hape3x.png" mode="aspectFill"></image>
         <text :class="$style['footerNavigatorText']">我要评论</text>
       </navigator>
