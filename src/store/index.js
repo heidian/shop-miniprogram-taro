@@ -5,6 +5,7 @@ import Taro from '@tarojs/taro'
 
 import listStores from './lists/index'
 import customerStore from './customer'
+import clientsStore from './clients'
 import cartStore from './cart'
 import checkoutStore from './checkout'
 import exampleStore from './example'
@@ -50,6 +51,7 @@ const actions = {
       })
       dispatch('customer/getCustomer')
       dispatch('customer/getOpenID')
+      dispatch('clients/getUploadToken')
     }
     const cartToken = Taro.getStorageSync('cartToken')
     if (cartToken) {
@@ -70,6 +72,7 @@ export default new Vuex.Store({
     lists: listStores,
     customer: customerStore,
     cart: cartStore,
+    clients: clientsStore,
     checkout: checkoutStore,
     example: exampleStore,
     categories: categoriesStore,
