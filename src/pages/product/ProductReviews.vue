@@ -22,7 +22,7 @@
         <view v-else :class="$style['reviewItemWrapper']">
           <review-item
             :review="results[0]"
-            :disableReply="'1'"
+            :disableReply="true"
           />
         </view>
       </view>

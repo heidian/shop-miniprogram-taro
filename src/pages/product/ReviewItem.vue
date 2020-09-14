@@ -9,7 +9,7 @@
         <view :class="$style['fullName']">{{ review.customer && review.customer.full_name || '未命名用户' }}</view>
         <view :class="$style['itemActions']">
           <navigator
-            v-if="disableReply != '1'"
+            v-if="!disableReply"
             :url="`/pages/product/reviews/reply?review=${review.id}&product=${productId}`"
             :class="$style['action']"
             :hover-class="'none'"
@@ -17,8 +17,7 @@
             <image
               :class="$style['actionIcon']"
               src="https://up.img.heidiancdn.com/o_1eea50d0f1f9obddflu1la3qbp0reply.png" mode="scaleToFill"
-              style="width: 12px;height: 12px;"
-              lazy-load="false">
+              :lazy-load="false">
             </image>
             <text :class="$style['actionText']">回复</text>
           </navigator>
@@ -71,8 +70,8 @@ import { optimizeImage, backgroundImageUrl } from '@/utils/image'
         default: {}
       },
       disableReply: {
-        type: String,
-        defaule: ''
+        type: Boolean,
+        defaule: false
       }
     },
     data () {

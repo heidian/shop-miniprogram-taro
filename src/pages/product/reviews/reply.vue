@@ -1,12 +1,12 @@
 <template>
   <view :class="$style['reply']">
     <view :class="$style['replyCard']">
-      <review-item :review="review" :disableReply="'1'" />
+      <review-item :review="review" :disableReply="true" />
     </view>
     <view :class="$style['replyCard']" v-if="replies.length">
       <view :class="$style['cardHead']" style="font-size: 15px; margin-bottom: 15px;">全部回复（{{ replies.length }}）</view>
       <view :class="$style['repliesContainer']">
-        <review-item v-for="item in replies" :key="item.id" :review="item" :disableReply="'1'" />
+        <review-item v-for="item in replies" :key="item.id" :review="item" :disableReply="true" />
       </view>
     </view>
     <view :class="$style['replyFooter']">
