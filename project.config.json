@@ -120,9 +120,9 @@
 					"scene": null
 				},
 				{
-					"id": -1,
-					"name": "pages/profile/index",
-					"pathName": "pages/profile/index",
+					"id": 8,
+					"name": "pages/account/profile",
+					"pathName": "pages/account/profile",
 					"query": "",
 					"scene": null
 				},

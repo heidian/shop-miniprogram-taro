@@ -1,24 +1,24 @@
 <template>
-  <view class="page page--profile">
-    <view class="profile__navigators">
+  <view :class="$style['profile']">
+    <view :class="$style['navigators']">
       <template v-for="item in navigators">
-        <button v-if="item.openType" class="cell" :key="item.label" openType="contact">
-          <view class="cell__label">{{ item.label }}</view>
-          <view class="cell__value"></view>
-          <view class="cell__ft">
-            <image v-if="item.hasCaret" class="cell__ft__icon" src="https://up.img.heidiancdn.com/o_1egfmehbs19vhj4p7cn1ko4kqi0next.png" mode="aspectFill"></image>
+        <button v-if="item.openType" :class="$style['cell']" :key="item.label" openType="contact">
+          <view :class="$style['cellLabel']">{{ item.label }}</view>
+          <view :class="$style['cellValue']"></view>
+          <view :class="$style['cellFt']">
+            <image v-if="item.hasCaret" :class="$style['cellftIcon']" src="https://up.img.heidiancdn.com/o_1egfmehbs19vhj4p7cn1ko4kqi0next.png" mode="aspectFill"></image>
           </view>
         </button>
-        <navigator v-else class="cell" :key="item.label">
-          <view class="cell__label">{{ item.label }}</view>
-          <view class="cell__value"></view>
-          <view class="cell__ft">
-            <image v-if="item.hasCaret" class="cell__ft__icon" src="https://up.img.heidiancdn.com/o_1egfmehbs19vhj4p7cn1ko4kqi0next.png" mode="aspectFill"></image>
+        <navigator v-else :class="$style['cell']" :key="item.label">
+          <view :class="$style['cellLabel']">{{ item.label }}</view>
+          <view :class="$style['cellValue']"></view>
+          <view :class="$style['cellFt']">
+            <image v-if="item.hasCaret" :class="$style['cellftIcon']" src="https://up.img.heidiancdn.com/o_1egfmehbs19vhj4p7cn1ko4kqi0next.png" mode="aspectFill"></image>
           </view>
         </navigator>
       </template>
     </view>
-    <button class="page__btn page__btn--red" @tap="handleLogout">登出</button>
+    <button class="btn--red" :class="$style['pageBtn']" @tap="handleLogout">登出</button>
   </view>
 </template>
 
@@ -40,6 +40,13 @@ export default {
       ]
     }
   },
+  created () {
+    Taro.setBackgroundColor({
+      backgroundColor: '#f6f6f6',
+      backgroundColorTop: '#ffffff',
+      backgroundColorBottom: '#f6f6f6',
+    })
+  },
   methods: {
     handleLogout () {
       this.$store.dispatch('customer/logout')
@@ -49,7 +56,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" module>
 $color-bg: #f0f0f0;
 $color-bg-white: #ffffff;
 $color-divider: rgba(#979797, 0.1);
@@ -57,17 +64,15 @@ $color-text: #262626;
 $color-red: #e74c3c;
 $color-golden: #e7cba7;
 
-.page {
-  min-height: 100vh;
-  padding-bottom: 90px;
-}
-.page--profile {
+page {
   background-color: $color-bg;
 }
 .profile {
-  &__navigators {
-    background-color: $color-bg-white;
-  }
+  min-height: 100vh;
+  padding-bottom: 90px;
+}
+.navigators {
+  background-color: $color-bg-white;
 }
 .cell {
   background-color: transparent;
@@ -85,18 +90,18 @@ $color-golden: #e7cba7;
   &::after {
     display: none;
   }
-  &__label {
+  .cellLabel {
     margin-right: 20px;
     font-size: 15px;
     color: $color-text;
   }
-  &__value {
+  .cellValue {
     flex: 1;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
   }
-  &__ft {
+  .cellFt {
     margin-left: 20px;
   }
   // & + & {
@@ -110,13 +115,13 @@ $color-golden: #e7cba7;
     bottom: 0;
     border-bottom: 1px solid $color-divider;
   }
-  &__ft__icon {
+  .cellftIcon {
     width: 10px;
     height: 12px;
     opacity: 0.2;
   }
 }
-.page__btn {
+.pageBtn {
   position: fixed;
   bottom: 30px;
   left: 20px;
@@ -130,7 +135,7 @@ $color-golden: #e7cba7;
   background-color: $color-red;
   font-size: 16px;
   border-radius: 0;
-  &.page__btn--golden {
+  &.pageBtn--golden {
     background-color: $color-golden;
   }
 }
