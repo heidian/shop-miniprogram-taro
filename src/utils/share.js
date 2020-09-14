@@ -3,7 +3,7 @@ import _ from 'lodash'
 
 const { pixelRatio: dpr } = Taro.getSystemInfoSync()
 
-function _drawText (ctx, { offsetLeft, offsetTop, maxWidth, texts, miniqrUrl }) {
+function _drawText (ctx, { offsetLeft, offsetTop, maxWidth, texts }) {
   _.forEach(texts, item => {
     ctx.font = `${item.fontSize || 14}px sans-serif`
     ctx.fillStyle = item.color
@@ -16,10 +16,11 @@ function _drawText (ctx, { offsetLeft, offsetTop, maxWidth, texts, miniqrUrl }) 
   })
 }
 
-function _getCanvasImageUrl (original_src, width, height) {
+function _getCanvasImageUrl (original_src, width, height, toJpeg) {
   if (!original_src) return ''
-  var url = original_src.split('?')[0]
+  let url = original_src.split('?')[0]
   url += `?imageMogr2/thumbnail/!${width}x${height || width}r/crop/${width}x${height || width}`
+  if (!!toJpeg) url += '/format/jpg'
   return url
 }
 
@@ -94,7 +95,8 @@ export default class ProductCanvas {
       const titleLogo = 'https://up.img.heidiancdn.com/o_1ehu3f2q4fb5tmt19ql1gcnnic0hite2x.png'
       const avatar = _getCanvasImageUrl(_.get(customer, 'avatar', 'https://up.img.heidiancdn.com/o_1cm7ccaoirfi1tdiutsn6s1odj0rofile.png?imageView2/2/w/360/ignore-error/1'), 200)
       const full_name = _.get(customer, 'full_name', '')
-      const productImage = _getCanvasImageUrl(_.get(product, 'image.src', ''), 800)
+      const productImage = _getCanvasImageUrl(_.get(product, 'image.src', ''), 800, 800, true)
+      console.log('productImage', productImage)
       const productTitle = _.get(product, 'title', '')
 
       query.select(canvasId)
