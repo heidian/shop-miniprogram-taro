@@ -3,12 +3,8 @@
     <view :class="$style['pageSection']">
       <swiper
         :class="$style['productImages']"
-        indicatorColor='#999'
-        indicatorActiveColor='#333'
-        :circular="true"
-        :indicatorDots="true"
-        :interval="5000"
-        :autoplay="true"
+        indicatorColor='#999' indicatorActiveColor='#333' :indicatorDots="true"
+        :circular="true" :interval="5000" :autoplay="true"
       >
         <swiper-item :class="$style['productImagesSwiperItem']" v-for="image in product.images" :key="image.id">
           <image :class="$style['productImagesSwiperItemImage']" mode="aspectFit" :src="optimizeImage(image, 600)"></image>
@@ -21,7 +17,10 @@
           :price="currentVariant.price" :compareAtPrice="currentVariant.compare_at_price"
         ></price>
         <view :class="$style['iconBtn']" @tap="addToFavorite">
-          <view class="el-icon-star-off"></view>
+          <view
+            :class="{'el-icon-star-on': !!favoriteId, 'el-icon-star-off': !favoriteId}"
+            :style="{color: favoriteId ? '#ffd700' : 'inherit'}"
+          ></view>
           <view :class="$style['iconBtnText']">心愿单</view>
         </view>
       </view>
@@ -45,7 +44,7 @@
         </view>
       </view>
     </view>
-    <view :class="$style['pageSection']" v-if="showReviews && product.id">
+    <view :class="$style['pageSection']" v-if="product.id">
       <product-reviews
         :reviewsCaption="{}"
         :productId="product.id"
@@ -117,7 +116,6 @@ export default {
     /* 服务器端取下来的数据放入 this.[propertyName] 以后, 其他处理过的数据不要放进 this.[propertyName], 直接放在 this 下面,
     data() 方法返回的属性和本地变量名称用驼峰, 其他 object 的 key 不做限制 */
     return {
-      pending: true,
       productId: id,
       productName: name,
       product: {
@@ -128,7 +126,8 @@ export default {
         openType: ''
       },
       currentVariant: {},
-      miniqrUrl: ''
+      favoriteId: null,
+      pending: true
     }
   },
   created() {
@@ -140,16 +139,12 @@ export default {
   },
   async mounted() {
     await this.fetchProduct()
+    this.checkFavorite()
   },
   computed: {
-    ...mapState('cart', {
-      cart: (state) => state
-    }),
-    body_html () {
+    ...mapState(['cart', 'customer']),
+    body_html() {
       return _.get(this.product, 'body_html_mobile') || _.get(this.product, 'body_html')
-    },
-    showReviews () {
-      return true
     }
   },
   methods: {
@@ -206,8 +201,34 @@ export default {
     onClickShare() {
       Taro.navigateTo({ url: `/pages/misc/share?product=${this.product.id}` })
     },
-    addToFavorite() {
-      //
+    addToFavorite: _.throttle(async function() {
+      if (!this.customer.isAuthenticated) {
+        Taro.navigateTo({ url: '/pages/login/index' })
+        return
+      }
+      if (this.favoriteId) {
+        try {
+          await API.delete(`/customers/favorite/${this.favoriteId}/`)
+          this.favoriteId = null
+        } catch(err) { console.log(err) }
+      } else {
+        try {
+          const { data } = await API.post('/customers/favorite/', {
+            'owner_resource': 'product',
+            'owner_id': this.productId,
+            'subscribe': true
+          })
+          this.favoriteId = data.id
+        } catch(err) { console.log(err) }
+      }
+    }, 2000),
+    async checkFavorite() {
+      if (this.customer.isAuthenticated) {
+        const { data } = await API.get('/customers/favorite/', {
+          params: { product: this.productId }
+        })
+        this.favoriteId = _.get(data, 'results[0].id', null)
+      }
     },
     showRebateTip() {
       Taro.showModal({

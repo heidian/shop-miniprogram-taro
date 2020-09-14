@@ -37,6 +37,7 @@
       url="/pages/search/index" open-type="navigate"
       :class="$style['viewMore']" hover-class="none"
     >点击查看更多</navigator>
+    <view v-else :class="$style['loadMore']"><text class="el-icon-more"></text></view>
   </view>
 </template>
 
@@ -149,10 +150,17 @@ export default {
   width: 100%;
   height: 100%;
 }
-.viewMore {
+.viewMore, .loadMore {
   clear: both;
   text-align: center;
+}
+.viewMore {
   padding: 15px;
   color: $color-text-light;
+}
+.loadMore {
+  font-size: 20px;
+  padding: 10px 15px;
+  color: $color-text-lighter;
 }
 </style>

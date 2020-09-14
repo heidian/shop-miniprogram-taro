@@ -84,6 +84,7 @@ export default {
 .sectionTitle {
   width: 100%;
   padding: 20px 5px 15px;
+  font-size: 15px;
   text-align: center;
   font-weight: bold;
 }
