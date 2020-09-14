@@ -1,20 +1,17 @@
 <template>
-  <view class="reply">
-    <view class="replyCard">
+  <view :class="$style['reply']">
+    <view :class="$style['replyCard']">
       <review-item :review="review" :disableReply="'1'" />
     </view>
-    <view class="replyCard" v-if="replies.length">
-      <view class="cardHead" style="font-size: 15px; margin-bottom: 15px;">全部回复（{{ replies.length }}）</view>
-      <view class="repliesContainer">
+    <view :class="$style['replyCard']" v-if="replies.length">
+      <view :class="$style['cardHead']" style="font-size: 15px; margin-bottom: 15px;">全部回复（{{ replies.length }}）</view>
+      <view :class="$style['repliesContainer']">
         <review-item v-for="item in replies" :key="item.id" :review="item" :disableReply="'1'" />
       </view>
-      <!-- <view class="" style="display: {{loading ? 'block': 'none'}}; width: 100vw; background-color: #fff;">
-        <customloader backgroundColor.once="#F8F8F8">加载中</customloader>
-      </view> -->
     </view>
-    <view class="replyFooter">
+    <view :class="$style['replyFooter']">
       <input
-        class="replyInput"
+        :class="$style['replyInput']"
         :value="content"
         @confirm="onSubmit"
         @input="onInput"
@@ -38,15 +35,16 @@ import ReviewItem from '../ReviewItem'
 export default {
   name: 'Reply',
   data () {
-    const { product } = getCurrentInstance().router.params
+    const { product, review } = getCurrentInstance().router.params
     return {
       productId: product,
-      productTitle: '',
+      reviewId: review,
       content: '',
-      images: [],
-      uploading: false,
+      review: {},
+      replies: [],
+      loading: false,
+      productTitle: '',
       pending: true,
-      imagesLimit: 6
     }
   },
   components: {
@@ -60,86 +58,25 @@ export default {
     })
   },
   computed: {
-    ...mapState(['clients']),
-    uptoken () {
-      return _.get(this.clients, 'uptoken', '')
-    }
+    ...mapState(['clients'])
   },
   mounted () {
-    this.fetchProductTitle()
+    this.fetchReviewData(this.reviewId)
+    this.fetchReplies()
   },
   methods: {
     optimizeImage,
     backgroundImageUrl,
-    fetchProductTitle () {
-      this.pending = true
-      API.get(`/shopfront/product/${this.productId}/`, {
-        params: {
-          fields: 'title',
-          page_size: 1
-        }
-      }).then(res => {
-        const { title } =  res.data || {}
-        this.productTitle = title
-        this.pending = false
-      }).catch(err => {
-        this.pending = false
-        handleErr(err)
-      })
-    },
     onInput (e) {
       const content = e.detail.value || ''
       this.content = content
     },
-    onUpdateImages (idx) {
-      if (!this.uptoken || !!this.uploading) {
-        return
-      }
-      const should_replace = /\d+/.test(idx)
-      const rest_count = should_replace ? 1 : this.imagesLimit - (this.images.length || 0)
-      if (!rest_count) return;
-      Taro.chooseImage({
-        count: rest_count,
-        sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
-        sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
-      }).then(res => {
-        // 返回选定照片的本地文件路径列表，tempFilePath可以作为img标签的src属性显示图片
-        if (res.tempFilePaths.length > this.imagesLimit) {
-          Taro.showToast({ title: `图片最多上传${this.imagesLimit}张` })
-          return
-        }
-        this.uploading = true
-        const promiseList = _.map(res.tempFilePaths || [], tempFilePath => uploadImage(tempFilePath, this.uptoken))
-        Promise.all(promiseList).then((uploadResults) => {
-          const uploadImages = _.map(uploadResults, 'link')
-          if (should_replace) {
-            this.images[ idx ] = uploadImages[0] || ''
-          } else {
-            this.images = [
-              ...this.images,
-              ...uploadImages
-            ]
-          }
-          this.uploading = false
-        }).catch(err => {
-          this.uploading = false
-          handleErr(err)
-        })
-      })
-    },
     onSubmit () {
       const payload = {
+        reply_to_id: this.reviewId,
         "owner_resource": "product",
         "owner_id": this.productId,
         "content": this.content || ''
-      }
-      if (this.images.length) {
-        payload.images = _.map(this.images, image => {
-          return {
-            src: image,
-            metafield: {}
-          }
-        })
       }
       this.pending = true
       API.post('/customers/review/', payload).then(res => {
@@ -149,23 +86,46 @@ export default {
           duration: 1500, //延迟时间,
           mask: true,
         })
+        this.content = ''
         this.pending = false
-        try {
-          Taro.setStorageSync('_need_refresh_product_reviews', true)
-        } catch (error) {}
-
-        _.delay(() => {
-          Taro.navigateBack({
-            delta: 1
-          })
-        }, 1500)
+        // try {
+        //   Taro.setStorageSync('_need_refresh_product_reviews', true)
+        // } catch (error) {}
+        this.fetchReplies(true)
       }).catch(err => {
         handleErr(err)
         this.pending = false
       })
+    },
+    fetchReviewData (reviewId) {
+      if (!reviewId) return
+      API.get(`/shopfront/review/${reviewId}/`).then(res => {
+        const review = res.data || {}
+        this.review = _.omit(review, 'replies')
+      }).catch(err => {
+        handleErr(err)
+      })
+    },
+    fetchReplies (reset) {
+      if (this.loading) return;
+      this.loading = true
+      API.get(`/shopfront/review/?reply_to=${this.reviewId}`).then(res => {
+        const { results = [], next } =  res.data || {}
+        const _replies = results
+        this.replies = reset ? _replies : [
+          ...(this.replies || []),
+          ..._replies
+        ]
+        this.canFetch = !!next ? true : false
+        this.loading = false
+      })
+    },
+  },
+  onReachBottom () {
+    if (this.canFetch && !this.loading) {
+      this.fetchReplies()
     }
   }
-
 }
 </script>
 <style lang="scss" module>
