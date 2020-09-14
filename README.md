@@ -25,3 +25,11 @@ Conflicting order between:
 另一个是在 script 里面引入 scss, 按照 config/index.js 的配置, 文件名的格式得是 xxx.module.scss 才会被处理成 css modules. 比如 `import styles from './xxx.module.scss'`, 然后需要把 styles 放进 data 里才能在 template 里面使用
 
 第二种方法更适合 React, 在 Vue 中还是用第一种. 第一种方式 Taro 默认没有实现, 我们自己修改了 config/index.js 文件
+
+
+
+#### WxParse
+参考了这个项目 https://github.com/NervJS/taro-sample-weapp/tree/vue/src/pages
+Vue 的 template 和小程序原生的 template 标签重名了, 所以要用 WxParse 必须使用小程序原生组件来实现, 事实上这样实现反而简单
+WxParse 的小程序自定义组件定义在 components/wxParse/index.js
+并且在 product 页面的 index.config.js 里面通过 usingComponents 引入

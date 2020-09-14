@@ -50,9 +50,10 @@
         :productId="product.id"
       />
     </view>
-    <view :class="$style['pageSection']">
+    <view :class="$style['pageSection']" v-if="body_html">
       <view :class="$style['pageSectionTitle']">图文详情</view>
-      <view v-if="body_html" class="'taro_html'" :class="$style['productHtml']" v-html="body_html"></view>
+      <!-- <view v-if="body_html" class="'taro_html'" :class="$style['productHtml']" v-html="body_html"></view> -->
+      <wxparse :html="body_html" />
     </view>
     <!-- 猜你喜欢这个板块不要 pageSection -->
     <related-products v-if="productId" :productId="productId"/>
@@ -153,7 +154,10 @@ export default {
     /* 方法名称用驼峰 */
     async fetchProduct() {
       // TODO 要处理 404
-      const fields = ['id', 'title', 'description', 'image', 'images', 'variants', 'options', 'created_at'].join(',')
+      const fields = [
+        'id', 'title', 'description', 'image', 'images', 'variants', 'options',
+        'body_html', 'body_html_mobile', 'published', 'published_at'
+      ].join(',')
       let product = null
       if (this.productId) {
         const res = await API.get(`/shopfront/product/${this.productId}/`, {
