@@ -21,7 +21,7 @@
           :price="currentVariant.price" :compareAtPrice="currentVariant.compare_at_price"
         ></price>
         <view :class="$style['addToWishlist']">
-          心愿单
+          <text class="el-icon-plus"></text> 心愿单
         </view>
       </view>
       <!-- 商品标题和描述 -->
