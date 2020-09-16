@@ -1,7 +1,7 @@
 import Taro from '@tarojs/taro'
 import _ from 'lodash'
 
-const SHOP_BG_IMG = 'https://up.img.heidiancdn.com/o_1ei8iib7pi142491eec1iajtjo0eyshop.jpg?imageView2/2/w/800/ignore-error/1'
+const SHOP_BG_IMG = 'https://up.img.heidiancdn.com/o_1eib7kl4hise1fom1d0h1lem1qln03.jpg?imageView2/2/w/800/ignore-error/1'
 
 
 const { pixelRatio: dpr } = Taro.getSystemInfoSync()
