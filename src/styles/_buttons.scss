@@ -33,11 +33,11 @@ button.button--small {
 }
 
 button.button--mini {
-  font-size: 12px;
-  padding: 2px 8px;
+  font-size: 11px;
+  padding: 1px 8px;
   border-radius: 3px;
   &.button--round {
-    border-radius: 12px;
+    border-radius: 11px;
     padding-left: 12px;
     padding-right: 12px;
   }

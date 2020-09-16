@@ -88,7 +88,7 @@
               :highlight="false" :keepZero="false"
               :price="product.price" :compareAtPrice="product.compare_at_price"
             ></price>
-            <button class="button--dark button--round" @tap="goToProduct(product.name)">
+            <button class="button--dark button--round button--mini" @tap="goToProduct(product.name)">
               <text class="el-icon-shopping-cart"></text>去购买
             </button>
           </view>

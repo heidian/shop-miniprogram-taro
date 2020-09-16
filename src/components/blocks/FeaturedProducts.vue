@@ -116,7 +116,7 @@ export default {
     button {
       display: block;
       margin: 1em auto 0.5em;
-      width: 50%;
+      width: 70px;
     }
   }
   .title {
