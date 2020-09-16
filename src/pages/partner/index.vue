@@ -25,7 +25,10 @@
             <view><text style="font-size: 1.8em; font-weight: bold;">5880.0</text> 元</view>
             <view :class="$style['lightText']">预计每年为您省赚</view>
           </view>
-          <button class="button--round button--small" @tap="scrollToProducts">成为合伙人</button>
+          <button
+            class="button--dark button--round button--small"
+            style="color: #e6caa5;" @tap="scrollToProducts"
+          >成为合伙人</button>
         </view>
       </template>
       <template v-else>
@@ -63,7 +66,7 @@
             <text :class="[$style['todoTag'], $style['goldBg']]">{{ item.tag }}</text>
           </view>
           <view :class="$style['lightText']" style="margin-top: 0.2em;">{{ item.description }}</view>
-          <button class="button--round">去完成</button>
+          <button class="button--mini button--round button--dark">去完成</button>
         </view>
       </view>
     </view>
@@ -85,7 +88,7 @@
               :highlight="false" :keepZero="false"
               :price="product.price" :compareAtPrice="product.compare_at_price"
             ></price>
-            <button class="button--round" @tap="goToProduct(product.name)">
+            <button class="button--dark button--round" @tap="goToProduct(product.name)">
               <text class="el-icon-shopping-cart"></text>去购买
             </button>
           </view>
@@ -93,7 +96,7 @@
       </view>
     </view>
     <view :class="$style['activationBottom']">
-      <button>免费激活合伙人身份</button>
+      <button class="button--dark button--small" style="color: #e6caa5;">免费激活合伙人身份</button>
     </view>
   </view>
 </template>
@@ -155,7 +158,7 @@ export default {
   computed: {
     ...mapState(['customer']),
     growthValue() {
-      return 1100;
+      return 900;
     }
   },
   created() {

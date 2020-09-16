@@ -82,10 +82,6 @@ page {
   justify-content: space-between;
   padding: 20px 18px;
   border-radius: 4px;
-  button {
-    color: #e6caa5;
-    background-color: #020202;
-  }
 }
 .isPartnerWrapper {
   margin-top: 15px;
@@ -136,11 +132,6 @@ page {
     position: absolute;
     right: 0;
     top: 10px;
-    padding: 2px 12px;
-    border-radius: 12px;
-    font-size: 12px;
-    color: #fff;
-    background-color: #020202;
   }
 }
 .todoTag {
@@ -219,8 +210,6 @@ page {
     padding: 0 8px;
     border-radius: 10px;
     font-size: 11px;
-    color: #fff;
-    background-color: #020202;
   }
 }
 
@@ -240,9 +229,5 @@ page {
   button {
     display: block;
     width: 100%;
-    padding-top: 8px;
-    padding-bottom: 8px;
-    background-color: #020202;
-    color: #e6caa5;
   }
 }

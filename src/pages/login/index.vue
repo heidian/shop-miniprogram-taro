@@ -8,24 +8,25 @@
       :class="$style['decoImage']" mode="aspectFit"
       src="https://up.img.heidiancdn.com/o_1ehtu4aarjjg1t5dfa5nrjsg30shop2x.png"></image>
     <view :class="$style['footer']">
-      <view :class="$style['rederral']">
-        <input type="text" :class="$style['referralCode']" v-model="tmpCode" placeholder="请输入邀请码（可选填）" :disabled="!!referrerData">
+      <view :class="$style['referral']">
+        <input
+          type="text" :class="$style['referralCode']" placeholder="请输入邀请码（可选填）"
+          v-model="tmpCode" :disabled="!!referrerData"
+        >
         <button
           v-if="!referralCode"
-          type="primary"
-          :class="[$style['suffixBtn'], 'btn', 'button--dark']"
-          hover-class="button-hover"
-          :disabled="!!pending || !tmpCode || !!referrerData"
-          @tap="getReferrerInfo"
-          >确定</button>
+          type="primary" class="button--dark" style="margin-left: 10px;"
+          :disabled="!!pending || !tmpCode || !!referrerData" @tap="getReferrerInfo"
+        >确定</button>
       </view>
       <button
-        :class="[$style['loginButton']]"
-        hover-class="button-hover"
-        type="primary"
-        open-type="getPhoneNumber" @getPhoneNumber="getPhoneNumber">
-        <image src="https://up.img.heidiancdn.com/o_1cgtnj1nadol7n31b8n1lfidgb0wechat.png" :class="$style['buttonIcon']"></image>
-        <text>微信登录</text>
+        :class="[$style['loginButton']]" type="primary"
+        open-type="getPhoneNumber" @getPhoneNumber="getPhoneNumber"
+      >
+        <image
+          src="https://up.img.heidiancdn.com/o_1cgtnj1nadol7n31b8n1lfidgb0wechat.png"
+          :class="$style['buttonIcon']"
+        ></image>微信登录
       </button>
     </view>
     <hs-dialog :visible.sync="dialogVisible">
@@ -36,8 +37,8 @@
         <view :class="$style['referralCodeText']">{{ tmpCode }}</view>
       </view>
       <view :class="$style['referralFooter']" slot="footer">
-        <button :class="[$style['dialogFooterBtn']]" @tap="dialogVisible = false">取消</button>
-        <button :class="[$style['dialogFooterBtn']]" @tap="onEnsure">确定</button>
+        <button @tap="dialogVisible = false">取消</button>
+        <button @tap="onEnsure">确定</button>
       </view>
     </hs-dialog>
   </view>
@@ -177,15 +178,14 @@ export default {
 }
 .footer {
   width: 100%;
-  display: flex;
-  flex-direction: column;
+  button {
+    border-radius: 0;
+  }
 }
-.rederral,
 .loginButton {
   width: 100%;
 }
-.rederral {
-  width: 100%;
+.referral {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -199,16 +199,6 @@ export default {
   font-size: 14px;
   height: 44px;
   border: 2px solid $color-divider;
-}
-.suffixBtn {
-  width: 70px;
-  margin-left: 10px;
-  padding-left: 20px;
-  padding-right: 20px;
-  border-radius: 0;
-}
-.loginButton {
-  border-radius: 0;
 }
 .buttonIcon {
   width: 16px;
@@ -255,16 +245,14 @@ export default {
   justify-content: flex-start;
   align-items: center;
   border-top: 1px solid $color-divider;
-}
-.dialogFooterBtn {
-  flex: 1;
-  padding: 12px;
-  text-align: center;
-  font-size: 15px;
-  line-height: 26px;
-  font-weight: 600;
-  & + & {
-    border-left: 1px solid $color-divider;
+  button {
+    flex: 1;
+    border-radius: 0;
+    background-color: transparent;
+    & + button {
+      border-left: 1px solid $color-divider;
+      color: $color-orange;
+    }
   }
 }
 </style>
