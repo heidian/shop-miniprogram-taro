@@ -83,7 +83,7 @@ export default {
     right: 10%;
     transform: translateY(-50%);
     // min-height: 300px;
-    background-color: $color-bg-dialog;
+    background-color: #fff;
     border-radius: 16px;
     overflow: hidden;
     display: flex;

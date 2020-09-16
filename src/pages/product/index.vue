@@ -96,10 +96,10 @@ import { mapState } from 'vuex'
 import _ from 'lodash'
 import { API } from '@/utils/api'
 import { optimizeImage, backgroundImageUrl } from '@/utils/image'
+import Price from '@/components/Price'
 import SelectVariant from '@/components/SelectVariant/SelectVariant'
 import RelatedProducts from './RelatedProducts'
 import ProductReviews from './ProductReviews'
-import Price from '@/components/Price'
 
 export default {
   name: 'Product',

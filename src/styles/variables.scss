@@ -3,7 +3,6 @@ $color-text-light: #666666;  // 辅助文字的颜色
 $color-text-lighter: #aaaaaa;  // 提示文字的颜色
 
 $color-bg-gray: #f6f6f6;  // 默认页面背景色
-$color-bg-dialog: #ffffff;
 
 $color-divider: #f0f0f0;
 
@@ -16,5 +15,4 @@ $color-blue: #284179;
 $z-index-navbar: 100;  // 固定的顶部或者侧边导航栏
 $z-index-footer: 100;  // 底部固定按钮
 $z-index-drawer: 200;  // Drawer 专用
-$z-index-modal: 300;  // 弹出框专用
-$z-index-dialog: 300;
+$z-index-dialog: 300;  // 弹出框专用
