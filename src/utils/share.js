@@ -1,56 +1,66 @@
 import Taro from '@tarojs/taro'
 import _ from 'lodash'
 
+const SHOP_BG_IMG = 'https://up.img.heidiancdn.com/o_1ei8iib7pi142491eec1iajtjo0eyshop.jpg?imageView2/2/w/800/ignore-error/1'
+
+
 const { pixelRatio: dpr } = Taro.getSystemInfoSync()
 
-function _drawText (ctx, { offsetLeft, offsetTop, maxWidth, texts }) {
+function _drawText (context, { offsetLeft, offsetTop, maxWidth, texts }) {
   _.forEach(texts, item => {
-    ctx.font = `${item.fontSize || 14}px sans-serif`
-    ctx.fillStyle = item.color
-    ctx.fillText(item.value, offsetLeft, offsetTop, maxWidth)
+    context.font = `${item.fontSize || 14}px sans-serif`
+    context.fillStyle = item.color
+    context.fillText(item.value, offsetLeft, offsetTop, maxWidth)
     if (item.fontWeight === 'bold') {
-      ctx.fillText(item.value, offsetLeft + 0.4, offsetTop, maxWidth)
+      context.fillText(item.value, offsetLeft + 0.4, offsetTop, maxWidth)
     }
     offsetLeft += item.value.length * item.fontSize
-    ctx.save()
+    context.save()
   })
 }
 
-function _getCanvasImageUrl (original_src, width, height, toJpeg) {
+function _getCanvasImageUrl (original_src, width, height, toJpeg, rounded) {
   if (!original_src) return ''
   let url = original_src.split('?')[0]
   url += `?imageMogr2/thumbnail/!${width}x${height || width}r/crop/${width}x${height || width}`
   if (!!toJpeg) url += '/format/jpg'
+  if (!!rounded) url += '|roundPic/radiusx/!50p/radiusy/!50p'
   return url
 }
 
-function _drawBadge(ctx, { offsetLeft, offsetTop, text, fillColor, color }) {
-  const badgeHeight = 28, badgeWidth = 90
-  ctx.save()
-  ctx.beginPath()
-  ctx.moveTo(offsetLeft, offsetTop) // badge 左上角
-  ctx.lineTo(offsetLeft + badgeWidth, offsetTop) // 右上角
-  ctx.arcTo(offsetLeft + badgeWidth - badgeHeight / 2, offsetTop + badgeHeight / 2, offsetLeft + badgeWidth, offsetTop + badgeHeight, badgeHeight / 1.7)
-  ctx.lineTo(offsetLeft + badgeWidth, offsetTop + badgeHeight) // 右下角
-  ctx.lineTo(offsetLeft, offsetTop + badgeHeight) // 左下角
-  ctx.closePath()
-  ctx.fillStyle = fillColor || '#262626'
-  ctx.fill()
-
-  ctx.fillStyle = color || '#fff'
-  ctx.font = '15px sans-serif'
-  ctx.textBaseline = 'middle'
-  ctx.fillText(text || '精选商品', offsetLeft * 2, offsetTop + badgeHeight / 2)
-  ctx.restore()
+function _drawImage(context, { image, offsetLeft, offsetTop, imageWidth, imageHeight }) {
+  context.save()
+  context.drawImage(image, offsetLeft, offsetTop, imageWidth, imageHeight)
+  context.restore()
 }
 
-function _getTextLine (ctx, { font, text, maxWidth }) {
+function _drawBadge(context, { offsetLeft, offsetTop, text, fillColor, color }) {
+  const badgeHeight = 28, badgeWidth = 90
+  context.save()
+  context.beginPath()
+  context.moveTo(offsetLeft, offsetTop) // badge 左上角
+  context.lineTo(offsetLeft + badgeWidth, offsetTop) // 右上角
+  context.arcTo(offsetLeft + badgeWidth - badgeHeight / 2, offsetTop + badgeHeight / 2, offsetLeft + badgeWidth, offsetTop + badgeHeight, badgeHeight / 1.7)
+  context.lineTo(offsetLeft + badgeWidth, offsetTop + badgeHeight) // 右下角
+  context.lineTo(offsetLeft, offsetTop + badgeHeight) // 左下角
+  context.closePath()
+  context.fillStyle = fillColor || '#262626'
+  context.fill()
+
+  context.fillStyle = color || '#fff'
+  context.font = '15px sans-serif'
+  context.textBaseline = 'middle'
+  context.fillText(text || '精选商品', offsetLeft * 2, offsetTop + badgeHeight / 2)
+  context.restore()
+}
+
+function _getTextLine (context, { font, text, maxWidth }) {
   let arrText = text.split('')
   let line = ''
   let arrTr = []
   for (let i = 0; i < arrText.length; i++) {
       var testLine = line + arrText[i]
-      var metrics = ctx.measureText(testLine)
+      var metrics = context.measureText(testLine)
       var width = metrics.width
       if (width > maxWidth && i > 0) {
         arrTr.push({text: line, width: width})
@@ -68,222 +78,107 @@ function _getTextLine (ctx, { font, text, maxWidth }) {
   return arrTr
 }
 
+function _imagesPromiseList(canvas, imageSrcList) {
+  const promiseList = _.map(imageSrcList, src => {
+    return new Promise((resolve, reject) => {
+      const image = canvas.createImage()
+      image.src = src
+      image.onload = () => {
+        resolve(image)
+      }
+    })
+  })
+  return promiseList
+}
+
 /**
  * Generate shared product images with draw in canvas
- * @param {string} canvasId
- * @param {object} customer 分享人
- * @param {object} product 商品信息
+ * @param {string}  canvasId 当前view中canvas节点的id
+ * @param {object}  customer 分享人
+ * @param {object}  product 商品信息, 如果没有，则分享店铺
  * @param {boolean} isDark 画布背景色是否为暗色
+ * @param {string}  miniqrUrl 初始化时传过来的小程序码图片
  * @returns None
  */
-export default class ProductCanvas {
+export default class ShareCanvas {
   constructor(options) {
     this.options = options
+    this.isProduct = false
+    this.ctx = null
+    this.canvas = null
+    this.canvasWidth = null
+    this.canvasHeight = null
+    this.canvasImages = {}
+    this.cursorOffsetTop = 0
   }
 
   initialize () {
     return new Promise((resolve, reject) => {
       const { canvasId, customer = {}, product, miniqrUrl, isDark = false } = this.options || {}
       if (!miniqrUrl) return
-      const query = Taro.createSelectorQuery()
-      this.canvas = null
-      let ctx = null
       const bgColor = isDark ? 'black' : 'white'
       const colorText = isDark ? 'white' : '#303030'
       const colorTitle = isDark ? 'white' : '#262626'
       const colorTitleLight = isDark ? '#646464' : '#C8C8C8'
       const titleLogo = 'https://up.img.heidiancdn.com/o_1ehu3f2q4fb5tmt19ql1gcnnic0hite2x.png'
-      const avatar = _getCanvasImageUrl(_.get(customer, 'avatar', 'https://up.img.heidiancdn.com/o_1cm7ccaoirfi1tdiutsn6s1odj0rofile.png?imageView2/2/w/360/ignore-error/1'), 200)
+      const avatar = _getCanvasImageUrl(_.get(customer, 'avatar', 'https://up.img.heidiancdn.com/o_1cm7ccaoirfi1tdiutsn6s1odj0rofile.png?imageView2/2/w/360/ignore-error/1'), 100, 100, true, true)
+      const tags = 'https://up.img.heidiancdn.com/o_1eh9lrgqd10eok5o9mgbv31s1d0oup22x.png?imageView2/2/w/800/ignore-error/1'
       const full_name = _.get(customer, 'full_name', '')
+      if (!_.isEmpty(product)) {
+        this.isProduct = true
+      }
       const productImage = _getCanvasImageUrl(_.get(product, 'image.src', ''), 800, 800, true)
       const productTitle = _.get(product, 'title', '')
 
+      const canvasImageSrcList =  !!this.isProduct ?
+                                  [ titleLogo, avatar, productImage, tags, miniqrUrl ] :
+                                  [ SHOP_BG_IMG, avatar, miniqrUrl ]
+
+      const query = Taro.createSelectorQuery()
       query.select(canvasId)
       .fields({ node: true, size: true })
       .exec(async (res) => {
         // init canvas and ctx
         if (!res || !res.length) return;
         this.canvas = res[0].node
-        ctx = this.canvas.getContext('2d')
+        this.ctx = this.canvas.getContext('2d')
         const canvas_width = 375
-        const canvas_height = 820
+        const canvas_height = !!this.isProduct ? 820 : 780
+        this.canvasWidth = canvas_width
+        this.canvasHeight = canvas_height
+
         this.canvas.width = canvas_width * dpr
         this.canvas.height = canvas_height * dpr
-        ctx.scale(dpr, dpr)
+        this.ctx.scale(dpr, dpr)
 
         // fill bg
-        ctx.font = '14px sans-serif'
-        ctx.fillStyle = bgColor
-        ctx.fillRect(0, 0, canvas_width, canvas_height)
-        ctx.save()
+        this._fillBg(bgColor)
 
-        let cursorOffsetTop = 0  // 从上往下渲染文字和图片，记录当前光标位置
-        cursorOffsetTop += 30
-
-        // TODO: draw logo  170 x 65
-        const titleLogoWidth = 170, titleLogoHeight = 65
-        const titleLogoOffsetLeft = (canvas_width - titleLogoWidth) / 2
-        const titleLogoImage = this.canvas.createImage()
-        titleLogoImage.src = titleLogo
-        try {
-          await new Promise((resolve, reject) => {
-            ;((cursorOffsetTop) => {
-              titleLogoImage.onload = () => {
-                ctx.save()
-                ctx.drawImage(titleLogoImage, titleLogoOffsetLeft, cursorOffsetTop, titleLogoWidth, titleLogoHeight);
-                ctx.restore()
-                resolve()
-              }
-            })(cursorOffsetTop)
-          })
-        } catch (error) {}
-        cursorOffsetTop += 85
-
-        // draw user logo and text
-        const avatarWidth = 50
-        const avatarOffsetLeft = (canvas_width - avatarWidth) / 2
-        // const { path: avatarPath } = await Taro.getImageInfo({src: avatar})
-        let avatarImage = this.canvas.createImage()
-        avatarImage.src = avatar
-        await new Promise((resolve, reject) => {
-          ;((cursorOffsetTop) => {
-            avatarImage.onload = () => {
-              ctx.save()
-              const avatarRadius = avatarWidth / 2
-              ctx.arc(avatarOffsetLeft + avatarRadius, cursorOffsetTop + avatarRadius, avatarRadius, 0, 2 * Math.PI)
-              ctx.clip()
-              ctx.drawImage(avatarImage, avatarOffsetLeft, cursorOffsetTop, avatarWidth, avatarWidth);
-              ctx.restore()
-              resolve()
-            }
-          })(cursorOffsetTop)
-        })
-        cursorOffsetTop += avatarWidth + 20
-
-        // draw user name and text
-        const userText = full_name + '给你分享以下好物'
-        const userTextMetrics = ctx.measureText(userText)
-        const { width: userTextWidth} = userTextMetrics
-        _drawText(ctx, {
-          offsetLeft: (canvas_width - userTextWidth) / 2,
-          offsetTop: cursorOffsetTop,
-          maxWidth: canvas_width,
-          align: 'center',
-          texts: [
-            {fontSize: 14, fontWeight: 'bold', value: full_name, color: colorText},
-            {fontSize: 14, fontWeight: '', value: '给你分享以下好物', color: colorText},
-          ]
-        })
-        cursorOffsetTop += 20
-
-        // draw Product Image
-        const IMAGE_PADDING = 15
-        const productImageWidth = canvas_width - IMAGE_PADDING * 2
-        ctx.fillStyle = colorTitleLight
-        ctx.fillRect(IMAGE_PADDING, cursorOffsetTop, productImageWidth, productImageWidth)
-
-        if (productImage) {
-          let canvasProductImage = this.canvas.createImage()
-          canvasProductImage.src = productImage
-          await new Promise((resolve, reject) => {
-            ;((cursorOffsetTop) => {
-              canvasProductImage.onload = () => {
-                ctx.drawImage(canvasProductImage, IMAGE_PADDING, cursorOffsetTop, productImageWidth, productImageWidth)
-                // draw badge
-                _drawBadge(ctx, {
-                  offsetLeft: 7,
-                  offsetTop: cursorOffsetTop + 25,
-                  text: '精选商品',
-                  fillColor: '#262626',
-                  color: '#ffffff'
-                })
-                resolve()
-              }
-            })(cursorOffsetTop)
-          })
-        } else {
-          _drawBadge(ctx, {
-            offsetLeft: 7,
-            offsetTop: cursorOffsetTop + 25,
-            text: '精选商品',
-            fillColor: '#262626',
-            color: '#ffffff'
-          })
+        // load images
+        const loadError = await this._loadImages(canvasImageSrcList)
+        if (loadError) {
+          return loadError
         }
-        cursorOffsetTop += productImageWidth + 20
 
-        // draw product title
-        ctx.save()
-        ctx.font = '20px sans-serif'
+        // 从上往下渲染文字和图片，记录当前光标位置
+        this.cursorOffsetTop += 30
 
-        // const productTitleMetrics = ctx.measureText(productTitle)
-        // const { width: productTitleWidth} = productTitleMetrics
-        const textMaxWidth = canvas_width - 60
-        const titleLines = _getTextLine(ctx, {
-          text: productTitle,
-          maxWidth: textMaxWidth
-        })
-        ctx.textBaseline = 'top'
-        _.forEach(titleLines, ({text, width}) => {
-          _drawText(ctx, {
-            offsetLeft: (canvas_width - width) / 2,
-            offsetTop: cursorOffsetTop,
-            maxWidth: textMaxWidth,
-            align: 'center',
-            texts: [
-              {fontSize: 20, fontWeight: 'bold', value: text, color: colorTitle},
-            ]
-          })
-          cursorOffsetTop += 20 * 1.4
-        })
-
-        // draw tags
-        cursorOffsetTop += 20
-        ctx.restore()
-        const tagsImageWidth = canvas_width - 30 * 2
-        let tagsImage = this.canvas.createImage()
-        tagsImage.src = 'https://up.img.heidiancdn.com/o_1eh9lrgqd10eok5o9mgbv31s1d0oup22x.png'
-        await new Promise((resolve, reject) => {
-          ;((cursorOffsetTop) => {
-            tagsImage.onload = () => {
-              ctx.drawImage(tagsImage, 30, cursorOffsetTop, tagsImageWidth, tagsImageWidth / 16)
-              resolve()
-            }
-          })(cursorOffsetTop)
-        })
-        cursorOffsetTop += 45
-
-        // draw miniqr
-        ctx.restore()
-        const miniqrWidth = 100
-        let miniqrImage = this.canvas.createImage()
-        miniqrImage.src = miniqrUrl
-        const miniqrRadius = miniqrWidth / 2
-        await new Promise((resolve, reject) => {
-          ;((cursorOffsetTop) => {
-            miniqrImage.onload = () => {
-              ctx.save()
-              ctx.fillStyle = '#ffffff'
-              ctx.beginPath()
-              ctx.arc(canvas_width / 2, cursorOffsetTop + miniqrRadius, miniqrRadius, 0, 2 * Math.PI, false)
-              ctx.fill()
-              ctx.drawImage(miniqrImage, (canvas_width - miniqrWidth) / 2, cursorOffsetTop, miniqrWidth, miniqrWidth)
-              ctx.restore()
-              resolve()
-            }
-          })(cursorOffsetTop)
-        })
-
-        // draw tips
-        ctx.font = '14px sans-serif'
-        ctx.fillStyle = colorTitleLight
-        ctx.textBaseline = 'middle'
-        const tipsOffsetHeight = cursorOffsetTop + miniqrRadius
-        ctx.textAlign = 'right'
-        ctx.fillText('识别小程序', canvas_width / 2 - miniqrRadius - 10, tipsOffsetHeight)
-        ctx.textAlign = 'left'
-        ctx.fillText('进入HeyShop', canvas_width / 2 + miniqrRadius + 10, tipsOffsetHeight)
-
+        if (this.isProduct) {
+          // 绘制商品分享
+          this._drawTitleLogo()
+          this._drawAvatar()
+          this._dwarShareTitle(full_name, '给你分享以下好物', colorText)
+          this._drawProductImage(colorTitleLight)
+          this._drawProductTitle(productTitle, colorTitle)
+          this._drawTags()
+          this._drawProductMiniQr(colorTitleLight)
+        } else {
+          // 绘制店铺分享
+          this._drawBgShop()
+          this._drawAvatar()
+          this._dwarShareTitle(full_name, '给你分享一个好店', 'white')
+          this._drawShopMiniQr()
+        }
         setTimeout(() => {
           Taro.canvasToTempFilePath({
             canvas: this.canvas,
@@ -292,13 +187,201 @@ export default class ProductCanvas {
               resolve(res.tempFilePath)
             },
             fail: (err) => {
-              console.log('canvasToTempFilePath err: ', err)
+              reject(err)
             }
           })
-        }, 1500)
-
+        }, 200)
       })
     })
+  }
+
+  _drawTitleLogo () {
+    // TODO: draw logo  170 x 65
+    const titleLogoWidth = 170, titleLogoHeight = 65
+    const titleLogoOffsetLeft = (this.canvasWidth - titleLogoWidth) / 2
+    _drawImage(this.ctx, {
+      image: this.loadedImages.imgTitleLogo,
+      offsetLeft: titleLogoOffsetLeft,
+      offsetTop: this.cursorOffsetTop,
+      imageWidth: titleLogoWidth,
+      imageHeight: titleLogoHeight
+    })
+    this.cursorOffsetTop += 85
+  }
+
+  _drawBgShop () {
+    _drawImage(this.ctx, {
+      image: this.loadedImages.imgShopBg,
+      offsetLeft: 0,
+      offsetTop: 0,
+      imageWidth: this.canvasWidth,
+      imageHeight: this.canvasHeight
+    })
+  }
+  _drawAvatar () {
+    // draw user logo and text
+    const avatarWidth = 50
+    const avatarOffsetLeft = (this.canvasWidth - avatarWidth) / 2
+    _drawImage(this.ctx, {
+      image: this.loadedImages.imgAvatar,
+      offsetLeft: avatarOffsetLeft,
+      offsetTop: this.cursorOffsetTop,
+      imageWidth: avatarWidth,
+      imageHeight: avatarWidth
+    })
+    this.cursorOffsetTop += avatarWidth + 20
+  }
+
+  _dwarShareTitle (full_name, other_text, colorText) {
+    // draw user name and text
+    const userText = full_name + other_text
+    const userTextMetrics = this.ctx.measureText(userText)
+    const { width: userTextWidth} = userTextMetrics
+    _drawText(this.ctx, {
+      offsetLeft: (this.canvasWidth - userTextWidth) / 2,
+      offsetTop: this.cursorOffsetTop,
+      maxWidth: this.canvasWidth,
+      align: 'center',
+      texts: [
+        {fontSize: 14, fontWeight: 'bold', value: full_name, color: colorText},
+        {fontSize: 14, fontWeight: '', value: other_text, color: colorText},
+      ]
+    })
+    this.cursorOffsetTop += 20
+  }
+
+  _drawProductImage (colorTitleLight) {
+    // draw Product Image
+    const IMAGE_PADDING = 15
+    const productImageWidth = this.canvasWidth - IMAGE_PADDING * 2
+    this.ctx.fillStyle = colorTitleLight
+    this.ctx.fillRect(IMAGE_PADDING, this.cursorOffsetTop, productImageWidth, productImageWidth)
+    _drawImage(this.ctx, {
+      image: this.loadedImages.imgProduct,
+      offsetLeft: IMAGE_PADDING,
+      offsetTop: this.cursorOffsetTop,
+      imageWidth: productImageWidth,
+      imageHeight: productImageWidth
+    })
+    _drawBadge(this.ctx, {
+      offsetLeft: 7,
+      offsetTop: this.cursorOffsetTop + 25,
+      text: '精选商品',
+      fillColor: '#262626',
+      color: '#ffffff'
+    })
+    this.cursorOffsetTop += productImageWidth + 20
+  }
+
+  _drawProductTitle (productTitle, colorTitle) {
+    // draw product title
+    this.ctx.save()
+    this.ctx.font = '20px sans-serif'
+
+    const textMaxWidth = this.canvasWidth - 60
+    const titleLines = _getTextLine(this.ctx, {
+      text: productTitle,
+      maxWidth: textMaxWidth
+    })
+    this.ctx.textBaseline = 'top'
+    _.forEach(titleLines, ({text, width}) => {
+      _drawText(this.ctx, {
+        offsetLeft: (this.canvasWidth - width) / 2,
+        offsetTop: this.cursorOffsetTop,
+        maxWidth: textMaxWidth,
+        align: 'center',
+        texts: [
+          {fontSize: 20, fontWeight: 'bold', value: text, color: colorTitle},
+        ]
+      })
+      this.cursorOffsetTop += 20 * 1.4
+    })
+  }
+
+  _drawTags () {
+    // draw tags
+    this.cursorOffsetTop += 20
+    this.ctx.restore()
+    const tagsImageWidth = this.canvasWidth - 30 * 2
+    _drawImage(this.ctx, {
+      image: this.loadedImages.imgTags,
+      offsetLeft: 30,
+      offsetTop: this.cursorOffsetTop,
+      imageWidth: tagsImageWidth,
+      imageHeight: tagsImageWidth / 16
+    })
+    this.cursorOffsetTop += 45
+  }
+
+  _drawProductMiniQr (colorTitleLight) {
+    // draw miniqr
+    this.ctx.restore()
+    const miniqrWidth = 100
+    const miniqrRadius = miniqrWidth / 2
+    _drawImage(this.ctx, {
+      image: this.loadedImages.imgMiniqr,
+      offsetLeft: (this.canvasWidth - miniqrWidth) / 2,
+      offsetTop: this.cursorOffsetTop,
+      imageWidth: miniqrWidth,
+      imageHeight: miniqrWidth
+    })
+
+    // draw tips
+    this.ctx.font = '14px sans-serif'
+    this.ctx.fillStyle = colorTitleLight
+    this.ctx.textBaseline = 'middle'
+    const tipsOffsetHeight = this.cursorOffsetTop + miniqrRadius
+    this.ctx.textAlign = 'right'
+    this.ctx.fillText('识别小程序', this.canvasWidth / 2 - miniqrRadius - 10, tipsOffsetHeight)
+    this.ctx.textAlign = 'left'
+    this.ctx.fillText('进入HeyShop', this.canvasWidth / 2 + miniqrRadius + 10, tipsOffsetHeight)
+  }
+
+  _drawShopMiniQr () {
+    this.ctx.restore()
+    const miniqrWidth = 80
+    _drawImage(this.ctx, {
+      image: this.loadedImages.imgMiniqr,
+      offsetLeft: 30,
+      offsetTop: this.canvasHeight - miniqrWidth - 10,
+      imageWidth: miniqrWidth,
+      imageHeight: miniqrWidth
+    })
+  }
+
+  _fillBg (bgColor) {
+    this.ctx.font = '14px sans-serif'
+    this.ctx.fillStyle = bgColor
+    this.ctx.fillRect(0, 0, this.canvasWidth, this.canvasHeight)
+    this.ctx.save()
+  }
+
+  async _loadImages (canvasImageSrcList) {
+    let loadedImages = null
+    try {
+      loadedImages = await Promise.all(_imagesPromiseList(this.canvas, canvasImageSrcList))
+    } catch (error) {
+      return error
+    }
+
+    if (this.isProduct) {
+      const [ imgTitleLogo, imgAvatar, imgProduct, imgTags, imgMiniqr ] = loadedImages
+      this.loadedImages = {
+        imgTitleLogo,
+        imgAvatar,
+        imgProduct,
+        imgTags,
+        imgMiniqr
+      }
+    } else {
+      const [ imgShopBg, imgAvatar, imgMiniqr ] = loadedImages
+      this.loadedImages = {
+        imgShopBg,
+        imgAvatar,
+        imgMiniqr
+      }
+    }
+    return null
   }
 
   saveCanvasToAlbum () {

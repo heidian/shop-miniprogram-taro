@@ -3,7 +3,7 @@
     [$style['page']]: true,
     [$style['disableScroll']]: !isReady
   }">
-    <view v-if="type && canvasImage" :class="$style['canvasImageWrapper']">
+    <view v-if="canvasImage" :class="$style['canvasImageWrapper']">
       <image
         :src="canvasImage"
         mode="widthFix"
@@ -40,7 +40,8 @@ import _ from 'lodash'
 import { mapState } from 'vuex'
 import { API } from '@/utils/api'
 import { optimizeImage, backgroundImageUrl } from '@/utils/image'
-import ProductCanvas from '@/utils/share'
+import ShareCanvas from '@/utils/share'
+import { handleErr } from '@/utils/errHelper'
 import RequiresLogin from '@/mixins/RequiresLogin'
 
 export default {
@@ -50,14 +51,14 @@ export default {
     const { product } = getCurrentInstance().router.params
     return {
       isReady: false,
-      type: product ? 'product' : 'shop',
-      productId: product,
+      productId: product || null,
       product: {},
       miniqrUrl: '',
-      productCanvas: null,
+      canvasInstance: null,
       shopCanvas: null,
       canvasImage: '',
-      canvasImageReady: false
+      canvasImageReady: false,
+      shareScene: ''
     }
   },
   computed: {
@@ -71,36 +72,34 @@ export default {
     shareTitle () {
       return _.get(this.customer.data, 'full_name', '你的好友') + '给你分享以下好物'
     },
-    shareScene () {
-      return (this.productId && this.referralCode) ? `r=pdt&id=${this.productId}&s=share&c=${this.referralCode}` : ''
-    },
     shareImage () {
       return optimizeImage(_.get(this.product, 'image'), 400)
     }
   },
-  // created() {  // 使用了mixin
-  //   if (!this.customer.isAuthenticated) {
-  //     Taro.redirectTo({ url: '/pages/login/index' })
-  //   }
-  // },
-  mounted () {
+  async mounted () {
     /**
      * 保证用户已登录且拿到referralCode，再去获取商品信息和后面初始化 share
      */
-    if (!this.customer.isAuthenticated || !this.referralCode) return
-    this.fetchProduct()
+    if (!this.customer.data.id) {
+      await this.$store.dispatch('customer/getCustomer')
+    }
+    if (this.productId) {
+      await this.fetchProduct()
+    }
+    this.getShareScene()
   },
-  // watch: {
-  //   shareScene: {
-  //     immediate: true,
-  //     handler (newScene) {
-  //       !!newScene && this.getProductQr()
-  //     }
-  //   }
-  // },
   methods: {
     optimizeImage,
     backgroundImageUrl,
+    getShareScene () {
+      const referralCode = this.customer.data.referral_code
+      let scene = `s=share&c=${this.referralCode}`
+      if (this.productId) {
+        scene += `&r=pdt&id=${this.productId}`
+      }
+      this.shareScene = scene
+      this.generateMiniQr()
+    },
     async fetchProduct() {
       // TODO 要处理 404
       const fields = _.join(['id', 'title', 'image'], ',')
@@ -114,44 +113,49 @@ export default {
         console.log(err)
       }
       this.product = product
-      await this.getProductQr()
     },
-    async getProductQr () {
-      if (!this.productId || !this.referralCode || !this.shareScene) {
-        return
-      }
-      const scene = this.shareScene
+    async generateMiniQr () {
+      if (!this.shareScene) return
       try {
         const res = await API.post('/weixin/wacode/', {
           appid: this.appid,
           page: 'pages/home',
-          scene: scene
+          scene: this.shareScene
         })
-        const miniqrUrl = _.get(res.data, 'src', '') ? optimizeImage(_.get(res.data, 'src', ''), 400) : ''
-        if (!miniqrUrl) return;
+        const miniqrUrl = _.get(res.data, 'src', '') ? optimizeImage(_.get(res.data, 'src', ''), 160, 160, true) : ''
+        if (!miniqrUrl) return
         this.miniqrUrl = miniqrUrl
-        this.productCanvas = new ProductCanvas({
+        const canvasOptions = !!this.productId ?
+        {
           canvasId: '#productCanvas',
           customer: this.customer.data,
           product: this.product,
           miniqrUrl: this.miniqrUrl,
           isDark: false
-        })
-        this.productCanvas.initialize().then((tempFilePath) => {
+        } :
+        {
+          canvasId: '#shopCanvas',
+          customer: this.customer.data,
+          miniqrUrl: this.miniqrUrl,
+          isDark: false
+        }
+        this.canvasInstance = new ShareCanvas(canvasOptions)
+        this.canvasInstance.initialize().then((tempFilePath) => {
           this.canvasImage = tempFilePath
           _.delay(() => {
             this.isReady = true
           }, 500)
         }).catch(err => {
-
+          console.log(err)
+          handleErr(err)
         })
       } catch (err) {
-
+        handleErr(err)
       }
     },
     onSaveImageToAblum () {
-      if (this.productCanvas && this.productCanvas.saveCanvasToAlbum) {
-        this.productCanvas.saveCanvasToAlbum()
+      if (this.canvasInstance && this.canvasInstance.saveCanvasToAlbum) {
+        this.canvasInstance.saveCanvasToAlbum()
       }
     },
     onLoadCanvasImage (e) {
@@ -236,6 +240,13 @@ page {
   width: 375px;
   height: 820px;
 }
+.shopCanvas {
+  position: fixed;
+  left: 1000px;
+  top: 0;
+  width: 375px;
+  height: 785px;
+}
 .canvasImage{
   display: block;
   width: 100%;
@@ -244,11 +255,6 @@ page {
 }
 .imageVisible {
   opacity: 1;
-}
-.shopCanvas {
-  display: none;
-  width: 375px;
-  height: 785px;
 }
 .actionSave {
   margin: 60px auto 25px;
