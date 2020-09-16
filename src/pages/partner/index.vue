@@ -24,7 +24,7 @@
           <view><text style="font-size: 1.8em; font-weight: bold;">5880.0</text> 元</view>
           <view :class="$style['lightText']">预计每年为您省赚</view>
         </view>
-        <button class="button--round button--small">成为合伙人</button>
+        <button class="button--round button--small" @tap="scrollToProducts">成为合伙人</button>
       </view>
     </view>
     <!-- 国货大使攻略 -->
@@ -57,6 +57,10 @@
       </view>
     </view>
     <view :class="$style['productsWrapper']">
+      <image
+        :class="$style['productsHeader']" mode="heightFix"
+        src="https://up.img.heidiancdn.com/o_1eib6m5pal6mv2n6up247mls0up413x.png"
+      ></image>
       <view v-for="(product, index) in products.data" :key="product.id" :class="$style['productGrid']">
         <view :class="$style['productItem']" @tap="goToProduct(product.name)">
           <view :class="$style['productImageWrapper']" :style="{'backgroundImage': backgroundImageUrl(product.image, 200)}">
@@ -159,6 +163,13 @@ export default {
   methods: {
     optimizeImage,
     backgroundImageUrl,
+    scrollToProducts() {
+      const className = this.$style['productsWrapper']
+      Taro.pageScrollTo({
+        selector: `.${className}`,
+        duration: 350
+      })
+    },
     goToLogin() {
       Taro.navigateTo('/pages/login/index')
     },
