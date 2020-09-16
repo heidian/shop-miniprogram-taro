@@ -6,7 +6,10 @@
     >
       <view
         class="product-item"
-        :style="{'backgroundColor': settingsData.backgroundColor}"
+        :style="settingsData.backgroundColor ? {
+          'borderRadius': '4px',  // 如果有底色, 就加一个圆角
+          'backgroundColor': settingsData.backgroundColor
+        } : {}"
         @tap="goToProduct(product.name)"
       >
         <view class="image" :style="{
@@ -113,7 +116,9 @@ export default {
   flex-wrap: wrap;
   justify-content: flex-start;
   align-items: flex-start;
-  .product-item {}
+  .product-item {
+    overflow: hidden;
+  }
   .image {
     background-position: center;
     background-size: cover;
