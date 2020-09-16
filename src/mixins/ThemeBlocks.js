@@ -26,7 +26,7 @@ const BLOCKS_MAP = {
   'blocks/text': Text
 }
 
-export default (propertyName, { pageType, pageName } = {}) => {
+export default (propertyName) => {
   return {
     data() {
       return {
@@ -34,7 +34,7 @@ export default (propertyName, { pageType, pageName } = {}) => {
       }
     },
     methods: {
-      async fetchPageConfig() {
+      async fetchPageConfig(pageType, pageName) {
         console.log(`get test pageconfig of ${pageType}`)
         // const pageConfig = getTestPageConfig(pageType, pageName)
         // const blocks = _.cloneDeep(pageConfig['settings_data']['components'])

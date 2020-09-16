@@ -5,26 +5,28 @@
       :is="block.componentClass"
       :css="block.css" :settingsData="block.settings_data"
     ></component>
-    <infinite-products ref="infiniteProducts"></infinite-products>
   </view>
 </template>
 
 <script>
 import _ from 'lodash'
-import Taro from '@tarojs/taro'
+import Taro, { getCurrentInstance } from '@tarojs/taro'
 import ThemeBlocks from '@/mixins/ThemeBlocks'
-import InfiniteProducts from '@/components/InfiniteProducts'
 
 export default {
   name: 'Home',
   mixins: [
     ThemeBlocks('blocks')
   ],
-  components: {
-    InfiniteProducts
-  },
+  components: {},
   computed: {
     //
+  },
+  data() {
+    const { name } = getCurrentInstance().router.params
+    return {
+      pageName: name
+    }
   },
   created() {
     // TODO, 这里的颜色需要配置, 而不是写死
@@ -34,11 +36,9 @@ export default {
       backgroundColorBottom: '#f6f6f6'
     })
   },
-  onReachBottom() {
-    this.$refs.infiniteProducts.onReachBottom()
-  },
+  onReachBottom() {},
   async mounted() {
-    await this.fetchPageConfig('home')
+    await this.fetchPageConfig('static', this.pageName)
   },
   methods: {
     //

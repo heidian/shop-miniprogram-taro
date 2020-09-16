@@ -202,6 +202,13 @@
 					"pathName": "pages/partner/index",
 					"query": "",
 					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "pages/static/index",
+					"pathName": "pages/static/index",
+					"query": "name=gifts",
+					"scene": null
 				}
 			]
 		}

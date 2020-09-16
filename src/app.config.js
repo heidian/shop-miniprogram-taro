@@ -18,6 +18,7 @@ export default {
     'pages/addresses/edit',
     'pages/orders/index',
     'pages/orders/detail',
+    'pages/static/index',
     'pages/misc/share',
     'pages/misc/landing',
     'pages/index/index'
