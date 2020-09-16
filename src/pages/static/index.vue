@@ -1,5 +1,5 @@
 <template>
-  <view class="page--home">
+  <view class="page--static">
     <component
       v-for="(block, index) in blocks" :key="index"
       :is="block.componentClass"
@@ -14,7 +14,7 @@ import Taro, { getCurrentInstance } from '@tarojs/taro'
 import ThemeBlocks from '@/mixins/ThemeBlocks'
 
 export default {
-  name: 'Home',
+  name: 'Static',
   mixins: [
     ThemeBlocks('blocks')
   ],
@@ -38,7 +38,10 @@ export default {
   },
   onReachBottom() {},
   async mounted() {
-    await this.fetchPageConfig('static', this.pageName)
+    const data = await this.fetchPageConfig('static', this.pageName)
+    Taro.setNavigationBarTitle({
+      title: data.page.title
+    })
   },
   methods: {
     //
@@ -51,7 +54,7 @@ export default {
 page {
   background-color: $color-bg-gray;
 }
-.page--home {
+.page--static {
   //
 }
 </style>

@@ -2,18 +2,30 @@
   <view class="block--featured-products" :style="css">
     <view
       v-for="product in products.data" :key="product.id"
-      class="product-item" :style="gridStyle"
+      class="grid" :style="gridStyle"
     >
-      <view class="image" :style="{
-        'paddingTop': paddingTop,
-        'backgroundImage': backgroundImageUrl(product.image, 600)
-      }"></view>
-      <view class="title">{{ textValue(product.title) }}</view>
-      <view class="price">
-        <text class="price-sale">{{ product.price|currency }}</text>
-        <text
-          v-if="+product.compare_at_price !== +product.price" class="price-compare"
-        >{{ product.compare_at_price|currency }}</text>
+      <view class="product-item" :style="{'backgroundColor': settingsData.backgroundColor}">
+        <view class="image" :style="{
+          'paddingTop': paddingTop,
+          'backgroundImage': backgroundImageUrl(product.image, 600)
+        }"></view>
+        <view class="text-wrapper" :style="{
+          // 如果有底色, 就加一个左右边距
+          'padding': settingsData.backgroundColor ? '0.5em' : '0.5em 0'
+        }">
+          <view class="title">{{ product.title }}</view>
+          <view class="price">
+            <text class="price-sale">{{ product.price|currency }}</text>
+            <text
+              v-if="+product.compare_at_price !== +product.price" class="price-compare"
+            >{{ product.compare_at_price|currency }}</text>
+          </view>
+          <button
+            class="button--round button--mini button--dark"
+            v-if="settingsData.buyButton"
+            :style="{'backgroundColor': settingsData.buyButtonBackground}"
+          >购买</button>
+        </view>
       </view>
     </view>
   </view>
@@ -34,10 +46,13 @@ export default {
     settingsData: {
       type: Object,
       default: () => ({
+        backgroundColor: null,  // 商品格子的底色
         productsQuery: {},  // 商品过滤参数
         gridGap: 0,  // px 整数
         imageRatio: 1,  // 宽高比
-        columns: 3
+        columns: 3,
+        buyButton: false,
+        buyButtonBackground: null
       })
     }
   },
@@ -57,7 +72,7 @@ export default {
       const widthPercent = (100 / columns).toFixed(6)
       style['width'] = `${widthPercent}%`
       style['padding'] = Taro.pxTransform(`${parseInt(gridGap/2)}px`)
-      style['fontSize'] = columns >= 3 ? '0.75em' : (columns === 2 ? '0.85em' : '1em')
+      style['fontSize'] = columns >= 3 ? '0.75em' : (columns === 2 ? '0.95em' : '1em')
       return style
     },
     paddingTop() {
@@ -71,15 +86,6 @@ export default {
   methods: {
     optimizeImage,
     backgroundImageUrl,
-    textValue(textObj) {
-      if (_.isString(textObj)) {
-        return textObj
-      } else if (_.isObject(textObj)) {
-        return _.get(textObj, 'value')
-      } else {
-        return '' + textObj
-      }
-    },
     async fetchProducts() {
       this.products.pending = true
       const res = await API.get('/shopfront/product/', {
@@ -90,17 +96,6 @@ export default {
         pending: false
       }
     }
-  },
-  filters: {
-    // text(textObj) {
-    //   if (_.isString(textObj)) {
-    //     return textObj
-    //   } else if (_.isObject(textObj)) {
-    //     return _.get(textObj, 'value')
-    //   } else {
-    //     return '' + textObj
-    //   }
-    // }
   }
 }
 </script>
@@ -117,11 +112,17 @@ export default {
     background-size: cover;
     background-repeat: no-repeat;
   }
+  .text-wrapper {
+    button {
+      display: block;
+      margin: 1em auto 0.5em;
+      width: 50%;
+    }
+  }
   .title {
-    margin-top: 0.5em;
     line-height: 1.4em;
     height: 2.8em;
-    font-weight: bold;
+    font-weight: 500;
     overflow : hidden;
     text-overflow: ellipsis;
     display: -webkit-box;
@@ -129,16 +130,17 @@ export default {
     -webkit-box-orient: vertical;
   }
   .price {
-    margin-top: 0.1em;
-    margin-bottom: 0.5em;
+    margin-top: 0.2em;
+    margin-bottom: 0.2em;
   }
   .price-sale {
-    font-weight: bold;
-    font-size: 1.2em;
+    font-weight: 500;
+    font-size: 1.1em;
   }
   .price-compare {
+    font-size: 0.85em;
     margin-left: 0.1em;
-    opacity: 0.7;
+    opacity: 0.6;
     text-decoration: line-through;
   }
 }

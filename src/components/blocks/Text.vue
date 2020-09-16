@@ -87,7 +87,17 @@ export default {
       }
     }
   },
-  filters: {}
+  filters: {
+    // text(textObj) {
+    //   if (_.isString(textObj)) {
+    //     return textObj
+    //   } else if (_.isObject(textObj)) {
+    //     return _.get(textObj, 'value')
+    //   } else {
+    //     return '' + textObj
+    //   }
+    // }
+  }
 }
 </script>
 

@@ -40,7 +40,7 @@ export default (propertyName) => {
         // const blocks = _.cloneDeep(pageConfig['settings_data']['components'])
         const params = {
           'fields[shop]': 'id',
-          'fields[page]': 'pageconfig',
+          'fields[page]': 'title,pageconfig',
           'scope': 'miniprogram',
           'preview_theme_id': PREVIEW_THEME_ID,  // 上线以后要删掉
           'page_type': pageType
@@ -62,6 +62,7 @@ export default (propertyName) => {
           block.componentClass = BLOCKS_MAP[block.name]
         })
         this[propertyName] = blocks
+        return res.data
       }
     }
   }
