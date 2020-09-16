@@ -1,6 +1,6 @@
 <template>
   <view :class="$style['page']">
-    <view :class="$style['blackHeader']">
+    <view :class="$style['blackHeader']"> <!-- 顶部个人信息 -->
       <view v-if="customer.isAuthenticated" :class="$style['profileWrapper']">
         <image :class="$style['avatar']" :src="optimizeImage(customer.data.avatar, 50)"></image>
         <view>
@@ -12,48 +12,59 @@
         </view>
       </view>
       <view v-else @tap="goToLogin">去登录</view>
-      <view :class="$style['growthValueWrapper']">
-        <view :class="$style['lightText']" style="margin-left: 0.5em;">当前成长值100（达1000即可升级）</view>
-        <view :class="$style['lightText']" style="margin-right: 0.5em;">100/1000</view>
-        <view :class="$style['progressBar']">
-          <view :class="$style['progressBarInner']"></view>
+      <template v-if="growthValue < 1000">
+        <view :class="$style['growthProgressWrapper']">
+          <view :class="$style['lightText']" style="margin-left: 0.5em;">当前成长值{{ growthValue }}（达1000即可升级）</view>
+          <view :class="$style['lightText']" style="margin-right: 0.5em;">{{ growthValue }}/1000</view>
+          <view :class="$style['progressBar']">
+            <view :class="$style['progressBarInner']" :style="{'width':`${growthValue/10}%`}"></view>
+          </view>
         </view>
-      </view>
-      <view :class="$style['ctaWrapper']">
-        <view>
-          <view><text style="font-size: 1.8em; font-weight: bold;">5880.0</text> 元</view>
-          <view :class="$style['lightText']">预计每年为您省赚</view>
+        <view :class="[$style['toBePartnerWrapper'], $style['goldBg']]">
+          <view>
+            <view><text style="font-size: 1.8em; font-weight: bold;">5880.0</text> 元</view>
+            <view :class="$style['lightText']">预计每年为您省赚</view>
+          </view>
+          <button class="button--round button--small" @tap="scrollToProducts">成为合伙人</button>
         </view>
-        <button class="button--round button--small" @tap="scrollToProducts">成为合伙人</button>
-      </view>
+      </template>
+      <template v-else>
+        <view :class="$style['growthProgressWrapper']">
+          <view :class="$style['lightText']" style="margin-left: 0.5em;">当前成长值{{ growthValue }}</view>
+        </view>
+        <view :class="[$style['isPartnerWrapper'], $style['goldBg']]">
+          当前已达合伙人申请条件 | 2021.12.14 到期
+        </view>
+      </template>
     </view>
-    <!-- 国货大使攻略 -->
-    <image
-      style="height: 80px; display: block; width: auto; margin: 20px 10px;" mode="aspectFit"
-      src="https://up.img.heidiancdn.com/o_1eialsc45bu093fkfor2q1l2d0copy3x.png"
-    ></image>
-    <view :class="$style['sectionTitle']">合伙人权益</view>
-    <view :class="$style['pros']">
-      <view
-        v-for="(item, index) in pros" :key="index" :class="$style['proItem']"
-        :style="{'backgroundImage': backgroundImageUrl(item.image, 60)}"
-      >
-        <view>{{ item.title }}</view>
-        <view :class="$style['lightText']">{{ item.description }}</view>
-      </view>
-    </view>
-    <view :class="$style['sectionTitle']">获取成长值</view>
-    <view :class="$style['todos']">
-      <view
-        v-for="(item, index) in todos" :key="index" :class="$style['todoItem']"
-        :style="{'backgroundImage': backgroundImageUrl(item.image, 60)}"
-      >
-        <view>
-          <text>{{ item.title }}</text>
-          <text :class="$style['todoTag']">{{ item.tag }}</text>
+    <view :class="$style['whiteSection']"> <!-- 国货大使攻略 -->
+      <image
+        style="height: 80px; display: block; width: 100%;" mode="aspectFit"
+        src="https://up.img.heidiancdn.com/o_1eialsc45bu093fkfor2q1l2d0copy3x.png"
+      ></image>
+      <view :class="$style['sectionTitle']">合伙人权益</view>
+      <view :class="$style['pros']">
+        <view
+          v-for="(item, index) in pros" :key="index" :class="$style['proItem']"
+          :style="{'backgroundImage': backgroundImageUrl(item.image, 60)}"
+        >
+          <view>{{ item.title }}</view>
+          <view :class="$style['lightText']">{{ item.description }}</view>
         </view>
-        <view :class="$style['lightText']" style="margin-top: 0.2em;">{{ item.description }}</view>
-        <button class="button--round">去完成</button>
+      </view>
+      <view :class="$style['sectionTitle']">获取成长值</view>
+      <view :class="$style['todos']">
+        <view
+          v-for="(item, index) in todos" :key="index" :class="$style['todoItem']"
+          :style="{'backgroundImage': backgroundImageUrl(item.image, 60)}"
+        >
+          <view>
+            <text>{{ item.title }}</text>
+            <text :class="[$style['todoTag'], $style['goldBg']]">{{ item.tag }}</text>
+          </view>
+          <view :class="$style['lightText']" style="margin-top: 0.2em;">{{ item.description }}</view>
+          <button class="button--round">去完成</button>
+        </view>
       </view>
     </view>
     <view :class="$style['productsWrapper']">
@@ -64,7 +75,7 @@
       <view v-for="(product, index) in products.data" :key="product.id" :class="$style['productGrid']">
         <view :class="$style['productItem']" @tap="goToProduct(product.name)">
           <view :class="$style['productImageWrapper']" :style="{'backgroundImage': backgroundImageUrl(product.image, 200)}">
-            <view :class="$style['productGrowthValue']">
+            <view :class="[$style['productGrowthValue'], $style['goldBg']]">
               <text class="el-icon-star-on"></text>成长值 900
             </view>
           </view>
@@ -80,6 +91,9 @@
           </view>
         </view>
       </view>
+    </view>
+    <view :class="$style['activationBottom']">
+      <button>免费激活合伙人身份</button>
     </view>
   </view>
 </template>
@@ -139,7 +153,10 @@ export default {
     }
   },
   computed: {
-    ...mapState(['customer'])
+    ...mapState(['customer']),
+    growthValue() {
+      return 1100;
+    }
   },
   created() {
     Taro.setBackgroundColor({

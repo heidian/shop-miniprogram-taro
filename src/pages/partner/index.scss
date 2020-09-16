@@ -1,12 +1,28 @@
 @import '@/styles/mixins';
 @import '@/styles/variables';
 
+page {
+  background-color: $color-bg-gray;
+}
+.page {
+  // 给底部固定的按钮留出空间
+  padding-bottom: 50px;
+}
+.goldBg {
+  box-shadow: 0 4px 10px 0 rgba(0, 0, 0, 0.1);
+  background-image: linear-gradient(109deg, #e8cca7, #edd6b8 53%, #e6caa5 83%);
+  color: #5c411a;
+}
 .lightText {
   opacity: 0.7;
   font-size: 0.85em;
 }
 
-/* 黑色顶部区域 */
+
+/*
+ * 黑色顶部区域
+ */
+
 .blackHeader {
   background-color: #020202;
   color: #fff;
@@ -38,8 +54,8 @@
   margin-right: 10px;
   display: block;
 }
-.growthValueWrapper {
-  margin: 20px auto;
+.growthProgressWrapper {
+  margin: 15px auto;
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
@@ -56,36 +72,45 @@
 }
 .progressBarInner {
   height: 100%;
-  width: 20%;
   background-image: linear-gradient(104deg, #eac893, #ddb47a 81%);
   box-shadow: 0 4px 10px 0 rgba(0, 0, 0, 0.1);
 }
-.ctaWrapper {
-  margin-top: 20px;
+.toBePartnerWrapper {
+  margin-top: 15px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 20px 18px;
   border-radius: 4px;
-  box-shadow: 0 4px 10px 0 rgba(0, 0, 0, 0.1);
-  background-image: linear-gradient(109deg, #e8cca7, #edd6b8 53%, #e6caa5 83%);
-  color: #5c411a;
   button {
     color: #e6caa5;
     background-color: #020202;
   }
 }
+.isPartnerWrapper {
+  margin-top: 15px;
+  padding: 5px 10px;
+  font-size: 13px;
+  text-align: center;
+  border-radius: 4px;
+}
 
-/* 合伙人权益和任务 */
+
+/*
+ * 合伙人权益和任务
+ */
+.whiteSection {
+  background-color: #fff;
+  padding: 20px;
+}
 .sectionTitle {
-  padding: 20px 25px;
+  margin: 20px auto;
   text-align: center;
   font-size: 18px;
   font-weight: bold;
 }
 .pros {
   @include clearfix();
-  padding: 0 25px;
 }
 .proItem {
   float: left;
@@ -99,9 +124,7 @@
   background-repeat: no-repeat;
   font-size: 1.1em;
 }
-.todos {
-  padding: 0 25px;
-}
+.todos {}
 .todoItem {
   padding: 5px 80px 5px 55px;
   margin-bottom: 15px;
@@ -123,14 +146,16 @@
 .todoTag {
   display: inline-block;
   border-radius: 2px;
-  background-image: linear-gradient(107deg, #e8cca7, #edd6b8 52%, #e6caa5 83%);
-  color: #5c411a;
   font-size: 11px;
   font-weight: bold;
   padding: 0 5px;
 }
 
-/* 高成长值商品 */
+
+/*
+ * 高成长值商品列表
+ */
+
 .productsWrapper {
   padding: 10px 5px 10px;
   background-color: $color-bg-gray;
@@ -173,9 +198,6 @@
   line-height: 18px;
   height: 18px;
   border-radius: 2px;
-  box-shadow: 0 4px 10px 0 rgba(0, 0, 0, 0.1);
-  background-image: linear-gradient(106deg, #e8cca7, #edd6b8 52%, #e6caa5 82%);
-  color: #5c411a;
 }
 .productTitle {
   margin: 7px;
@@ -199,5 +221,25 @@
     font-size: 11px;
     color: #fff;
     background-color: #020202;
+  }
+}
+
+
+/*
+ * 底部菜单
+ */
+
+.activationBottom {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: 5px 10px;
+  background-color: #fff;
+  button {
+    display: block;
+    width: 100%;
+    padding-top: 8px;
+    padding-bottom: 8px;
   }
 }
