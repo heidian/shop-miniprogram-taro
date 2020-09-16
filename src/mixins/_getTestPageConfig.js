@@ -1,10 +1,3 @@
-/*
- * component 下面的 css 只支持 padding 和 background !!
- * 建站工具下面会支持写如板块根节点 css 属性, 建站工具会分开存储 padding 四个方向的值
- * 现在手写 padding 也一定要分成 paddingTop, paddingBottom, paddingRight, paddingLeft 写, 不然不方便转换成 rpx
- * backgroundImage 的写法还是 { src, metafield } 的格式, 而不是 css 的 url() 的写法
- */
-
 export default function getTestPageConfig() {
   return {
     "settings_data": {
