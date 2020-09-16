@@ -2,7 +2,7 @@ export default {
   pages: [
     'pages/home/index',
     'pages/categories/index',
-    'pages/membership/index',
+    'pages/partner/index',
     'pages/cart/index',
     'pages/account/index',
     'pages/account/bind-alipay',
@@ -37,7 +37,7 @@ export default {
         'text': '分类'
       },
       {
-        'pagePath': 'pages/membership/index',
+        'pagePath': 'pages/partner/index',
         'iconPath': 'assets/images/tabbar/member.png',
         'selectedIconPath': 'assets/images/tabbar/member.png',
         'text': '会员'

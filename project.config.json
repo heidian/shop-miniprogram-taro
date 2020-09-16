@@ -197,9 +197,9 @@
 					"scene": null
 				},
 				{
-					"id": -1,
-					"name": "pages/membership/index",
-					"pathName": "pages/membership/index",
+					"id": 19,
+					"name": "pages/partner/index",
+					"pathName": "pages/partner/index",
 					"query": "",
 					"scene": null
 				}
