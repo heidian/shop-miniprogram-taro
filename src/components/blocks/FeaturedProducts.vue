@@ -4,7 +4,11 @@
       v-for="product in products.data" :key="product.id"
       class="grid" :style="gridStyle"
     >
-      <view class="product-item" :style="{'backgroundColor': settingsData.backgroundColor}">
+      <view
+        class="product-item"
+        :style="{'backgroundColor': settingsData.backgroundColor}"
+        @tap="goToProduct(product.name)"
+      >
         <view class="image" :style="{
           'paddingTop': paddingTop,
           'backgroundImage': backgroundImageUrl(product.image, 600)
@@ -95,6 +99,9 @@ export default {
         data: res.data.results,
         pending: false
       }
+    },
+    goToProduct(productName) {
+      Taro.navigateTo({ url: `/pages/product/index?name=${productName}` })
     }
   }
 }
