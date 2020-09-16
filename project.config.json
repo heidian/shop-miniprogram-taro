@@ -195,6 +195,13 @@
 					"pathName": "pages/product/reviews/reply",
 					"query": "review=79&product=76878",
 					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "pages/membership/index",
+					"pathName": "pages/membership/index",
+					"query": "",
+					"scene": null
 				}
 			]
 		}

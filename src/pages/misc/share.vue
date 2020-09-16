@@ -88,7 +88,7 @@ export default {
      * 保证用户已登录且拿到referralCode，再去获取商品信息和后面初始化 share
      */
     if (!this.customer.isAuthenticated || !this.referralCode) return
-    await this.fetchProduct()
+    this.fetchProduct()
   },
   // watch: {
   //   shareScene: {
