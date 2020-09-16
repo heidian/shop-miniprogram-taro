@@ -56,7 +56,8 @@ export default {
     optimizeImage,
     backgroundImageUrl,
     goToProduct(productName) {
-      Taro.navigateTo({ url: `/pages/product/index?name=${productName}` })
+      // 用 redirectTo 避免出现太多商品页面入栈
+      Taro.redirectTo({ url: `/pages/product/index?name=${productName}` })
     },
     fetchRelatedProducts() {
       const params = {
