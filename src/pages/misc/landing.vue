@@ -149,9 +149,7 @@ export default {
     },
     async getReferrerInfo () {
       try {
-        const res = await API.get(`customers/referrer/`, {
-          params: { referral_code: this.referralCode }
-        })
+        const res = await API.get(`customers/referrer/${this.referralCode}/`)
         const referrerData = res.data || {}
         this.referrerData = referrerData
       } catch (err) {
