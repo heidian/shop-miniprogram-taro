@@ -4,7 +4,7 @@
       <view :class="$style['productItem']" @tap="goToProduct(product.name)">
         <view :class="$style['imageWrapper']">
           <image
-            :class="$style['image']" mode="widthFix" :lazy-load="true"
+            :class="$style['image']" mode="aspectFill" :lazy-load="true"
             :src="optimizeImage(product.image)"
           ></image>
         </view>
