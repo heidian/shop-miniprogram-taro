@@ -5,7 +5,7 @@
         <view :class="$style['imageWrapper']">
           <image
             :class="$style['image']" mode="aspectFill" :lazy-load="true"
-            :src="optimizeImage(product.image)"
+            :src="optimizeImage(product.image, 200)"
           ></image>
         </view>
         <view :class="$style['textWrapper']">

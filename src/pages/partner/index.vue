@@ -56,6 +56,27 @@
         <button class="button--round">去完成</button>
       </view>
     </view>
+    <view :class="$style['productsWrapper']">
+      <view v-for="(product, index) in products.data" :key="product.id" :class="$style['productGrid']">
+        <view :class="$style['productItem']" @tap="goToProduct(product.name)">
+          <view :class="$style['productImageWrapper']" :style="{'backgroundImage': backgroundImageUrl(product.image, 200)}">
+            <view :class="$style['productGrowthValue']">
+              <text class="el-icon-star-on"></text>成长值 900
+            </view>
+          </view>
+          <view :class="$style['productTitle']">{{ product.title }}</view>
+          <view :class="$style['productFooter']">
+            <price
+              :highlight="false" :keepZero="false"
+              :price="product.price" :compareAtPrice="product.compare_at_price"
+            ></price>
+            <button class="button--round" @tap="goToProduct(product.name)">
+              <text class="el-icon-shopping-cart"></text>去购买
+            </button>
+          </view>
+        </view>
+      </view>
+    </view>
   </view>
 </template>
 
@@ -65,10 +86,17 @@ import Taro from '@tarojs/taro'
 import { mapState } from 'vuex'
 import { API } from '@/utils/api'
 import { optimizeImage, backgroundImageUrl } from '@/utils/image'
+import ListTable from '@/mixins/ListTable'
+import Price from '@/components/Price'
 
 export default {
   name: 'Partner',
-  components: {},
+  mixins: [
+    ListTable('products', { urlRoot: '/shopfront/product/' })
+  ],
+  components: {
+    Price
+  },
   data() {
     return {
       pros: [{
@@ -116,146 +144,31 @@ export default {
       backgroundColorBottom: '#f6f6f6',
     })
   },
+  async mounted() {
+    this.updateDefaultParams({
+      fields: ['id', 'name', 'title', 'description', 'image', 'price', 'compare_at_price'].join(',')
+    }, { fetch: false })
+    await this.fetchList()
+  },
+  onReachBottom() {
+    const { data, page, pageSize, count } = this.products
+    if (data.length < 30 && page * pageSize < count) {
+      this.fetchMore()
+    } else {}
+  },
   methods: {
     optimizeImage,
     backgroundImageUrl,
     goToLogin() {
       Taro.navigateTo('/pages/login/index')
+    },
+    goToProduct(productName) {
+      Taro.navigateTo({ url: `/pages/product/index?name=${productName}` })
     }
   }
 }
 </script>
 
 <style lang="scss" module>
-@import '@/styles/mixins';
-@import '@/styles/variables';
-
-.lightText {
-  opacity: 0.7;
-  font-size: 0.85em;
-}
-
-/* 黑色顶部区域 */
-.blackHeader {
-  background-color: #020202;
-  color: #fff;
-  padding: 20px;
-  position: relative;
-  &::after {
-    content: "";
-    position: absolute;
-    display: block;
-    left: 50%;
-    margin-left: -8px;
-    bottom: -6px;
-    height: 16px;
-    width: 16px;
-    transform: rotate(45deg);
-    background-color: #020202;
-  }
-}
-.profileWrapper {
-  margin-bottom: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-}
-.avatar {
-  width: 46px;
-  height: 46px;
-  border-radius: 50%;
-  margin-right: 10px;
-  display: block;
-}
-.growthValueWrapper {
-  margin: 20px auto;
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  width: 100%;
-}
-.progressBar {
-  width: 100%;
-  height: 8px;
-  border-radius: 4px;
-  background-color: #272727;
-  overflow: hidden;
-  margin-top: 10px;
-}
-.progressBarInner {
-  height: 100%;
-  width: 20%;
-  background-image: linear-gradient(104deg, #eac893, #ddb47a 81%);
-  box-shadow: 0 4px 10px 0 rgba(0, 0, 0, 0.1);
-}
-.ctaWrapper {
-  margin-top: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 20px 18px;
-  border-radius: 4px;
-  box-shadow: 0 4px 10px 0 rgba(0, 0, 0, 0.1);
-  background-image: linear-gradient(109deg, #e8cca7, #edd6b8 53%, #e6caa5 83%);
-  color: #5c411a;
-  button {
-    color: #e6caa5;
-    background-color: #020202;
-  }
-}
-
-/* 合伙人权益和任务 */
-.sectionTitle {
-  padding: 20px 25px;
-  text-align: center;
-  font-size: 18px;
-  font-weight: bold;
-}
-.pros {
-  @include clearfix();
-  padding: 0 25px;
-}
-.proItem {
-  float: left;
-  width: 50%;
-  white-space: nowrap;
-  line-height: 20px;
-  padding: 5px 5px 5px 55px;
-  margin-bottom: 15px;
-  background-size: auto 44px;
-  background-position: top left;
-  background-repeat: no-repeat;
-  font-size: 1.1em;
-}
-.todos {
-  padding: 0 25px;
-}
-.todoItem {
-  padding: 5px 80px 5px 55px;
-  margin-bottom: 15px;
-  background-size: auto 44px;
-  background-position: top left;
-  background-repeat: no-repeat;
-  position: relative;
-  button {
-    position: absolute;
-    right: 0;
-    top: 10px;
-    padding: 2px 12px;
-    border-radius: 12px;
-    font-size: 12px;
-    color: #fff;
-    background-color: #020202;
-  }
-}
-.todoTag {
-  display: inline-block;
-  border-radius: 2px;
-  background-image: linear-gradient(107deg, #e8cca7, #edd6b8 52%, #e6caa5 83%);
-  color: #5c411a;
-  font-size: 11px;
-  font-weight: bold;
-  padding: 0 5px;
-}
+@import './index.scss'
 </style>
