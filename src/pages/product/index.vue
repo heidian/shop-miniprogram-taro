@@ -16,7 +16,7 @@
           :class="$style['productPrice']" :highlight="true" :keepZero="true"
           :price="currentVariant.price" :compareAtPrice="currentVariant.compare_at_price"
         ></price>
-        <view :class="$style['iconBtn']" @tap="addToFavorite">
+        <view :class="[$style['iconBtn'], $style['iconBtnFavorite']]" @tap="addToFavorite">
           <view
             :class="{'el-icon-star-on': !!favoriteId, 'el-icon-star-off': !favoriteId}"
             :style="{color: favoriteId ? '#ffd700' : 'inherit'}"
@@ -74,8 +74,10 @@
       >立即购买</button>
     </view>
     <view :class="$style['productShare']" @tap="onClickShare">
-      <image :class="$style['productShareIcon']" src="data:image/svg+xml;base64,PHN2ZyBpZD0iQ2FwYV8xIiBlbmFibGUtYmFja2dyb3VuZD0ibmV3IDAgMCA1NTEuMTMgNTUxLjEzIiBoZWlnaHQ9IjUxMiIgdmlld0JveD0iMCAwIDU1MS4xMyA1NTEuMTMiIHdpZHRoPSI1MTIiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0ibTQ2NS4wMTYgMTcyLjIyOGgtNTEuNjY4djM0LjQ0NmgzNC40NDZ2MzEwLjAxMWgtMzQ0LjQ1N3YtMzEwLjAxMWgzNC40NDZ2LTM0LjQ0NmgtNTEuNjY5Yy05LjUyIDAtMTcuMjIzIDcuNzAzLTE3LjIyMyAxNy4yMjN2MzQ0LjQ1NmMwIDkuNTIgNy43MDMgMTcuMjIzIDE3LjIyMyAxNy4yMjNoMzc4LjkwMmM5LjUyIDAgMTcuMjIzLTcuNzAzIDE3LjIyMy0xNy4yMjN2LTM0NC40NTZjMC05LjUyLTcuNzAzLTE3LjIyMy0xNy4yMjMtMTcuMjIzeiIvPjxwYXRoIGQ9Im0yNTguMzQyIDY1LjkzMXYyNDQuMDhoMzQuNDQ2di0yNDQuMDhsNzMuOTM3IDczLjkzNyAyNC4zNTQtMjQuMzU0LTExNS41MTQtMTE1LjUxNC0xMTUuNTE0IDExNS41MTQgMjQuMzU0IDI0LjM1NHoiLz48L3N2Zz4=" mode="aspectFit" lazy-load="false"></image>
+      <text class="el-icon-share"></text>
+      <!-- <image :class="$style['productShareIcon']" src="data:image/svg+xml;base64,PHN2ZyBpZD0iQ2FwYV8xIiBlbmFibGUtYmFja2dyb3VuZD0ibmV3IDAgMCA1NTEuMTMgNTUxLjEzIiBoZWlnaHQ9IjUxMiIgdmlld0JveD0iMCAwIDU1MS4xMyA1NTEuMTMiIHdpZHRoPSI1MTIiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0ibTQ2NS4wMTYgMTcyLjIyOGgtNTEuNjY4djM0LjQ0NmgzNC40NDZ2MzEwLjAxMWgtMzQ0LjQ1N3YtMzEwLjAxMWgzNC40NDZ2LTM0LjQ0NmgtNTEuNjY5Yy05LjUyIDAtMTcuMjIzIDcuNzAzLTE3LjIyMyAxNy4yMjN2MzQ0LjQ1NmMwIDkuNTIgNy43MDMgMTcuMjIzIDE3LjIyMyAxNy4yMjNoMzc4LjkwMmM5LjUyIDAgMTcuMjIzLTcuNzAzIDE3LjIyMy0xNy4yMjN2LTM0NC40NTZjMC05LjUyLTcuNzAzLTE3LjIyMy0xNy4yMjMtMTcuMjIzeiIvPjxwYXRoIGQ9Im0yNTguMzQyIDY1LjkzMXYyNDQuMDhoMzQuNDQ2di0yNDQuMDhsNzMuOTM3IDczLjkzNyAyNC4zNTQtMjQuMzU0LTExNS41MTQtMTE1LjUxNC0xMTUuNTE0IDExNS41MTQgMjQuMzU0IDI0LjM1NHoiLz48L3N2Zz4=" mode="aspectFit" lazy-load="false"></image> -->
     </view>
+
     <select-variant
       :visible="variantsDrawer.visible"
       :openType="variantsDrawer.openType"
@@ -280,6 +282,9 @@ page {
     white-space: nowrap;
   }
 }
+.iconBtnFavorite {
+  height: auto;
+}
 .footer {
   position: fixed;
   bottom: 0;
@@ -388,8 +393,11 @@ page {
   align-items: center;
 }
 .productPrice {
+  display: flex;
+  align-items: baseline;
   font-size: 20px;
   :global(.price--compare) {
+    margin-left: 10px;
     font-size: 0.6em;
   }
 }
@@ -453,7 +461,7 @@ page {
 }
 
 .productShare {
-  position: absolute;
+  position: fixed;
   top: 15px;
   right: 15px;
   width: 40px;
@@ -462,6 +470,9 @@ page {
   background-color: #ffffff;
   border-radius: 50%;
   box-shadow: 0 1px 5px 0px #aaaaaa;
+  font-size: 18px;
+  line-height: 20px;
+
   &Icon {
     width: 20px;
     height: 20px;
