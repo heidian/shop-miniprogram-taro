@@ -43,7 +43,13 @@ const mutations = {
 }
 
 const actions = {
-  async initClient({ commit, dispatch }) {
+  async initClient({ commit, dispatch }, { campaignContext, referralCode } = {}) {
+    // !!_.isEmpty(campaignContext)
+    // !!referralCode
+    // Taro.setStorage({
+    //   key: '_referral_code',
+    //   data: referralCode
+    // })
     const [customerToken, cartToken] = await Promise.all([
       Taro.getStorage({ key: 'customerToken' }).then(res => res.data).catch(() => {}),
       Taro.getStorage({ key: 'cartToken' }).then(res => res.data).catch(() => {}),
@@ -53,15 +59,6 @@ const actions = {
     }
     if (cartToken) {
       commit('cart/setData', { cartToken })
-    }
-    if (customerToken) {
-      dispatch('customer/getCustomer')
-      dispatch('partnerProfile/retrieve')
-    }
-    /* 如果一开始没有 fetch 一下 cart, 会出现的问题是 add 了以后, quantity 覆盖服务器上的 quantity
-    这里并不一定需要判断 customerToken 或 cartToken 是否存在, 如果是没登录也没创建过 cartToken, fetch 接口会返回空的 */
-    if (customerToken || cartToken) {
-      dispatch('cart/fetch')
     }
   }
 }

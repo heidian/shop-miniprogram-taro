@@ -1,11 +1,12 @@
 import _ from 'lodash'
+import qs from 'qs'
 import Vue from 'vue'
 import Taro from '@tarojs/taro'
-import qs from 'qs'
+import VirtualList from '@tarojs/components/virtual-list'
 import store from './store/index'
 import { formatCurrency, formatDate, formatDateTime } from './utils/formatters'
 import { optimizeImage } from './utils/image'
-import VirtualList from '@tarojs/components/virtual-list'
+import parseScene from './utils/parseScene'
 
 // Vue.config.productionTip = false
 
@@ -76,8 +77,26 @@ try {
  */
 const App = new Vue({
   store,
-  onLaunch() {
-    this.$store.dispatch('initClient')
+  onLaunch(options) {
+    const queryScene = decodeURIComponent(_.get(options, 'query.scene', ''))
+    const { campaignContext, referralCode, redirect } = parseScene(queryScene)
+    /* initClient 里面只是做一些 storage 相关的处理, 其他 dispatch 都直接在 onLaunch 里面调用 */
+    this.$store.dispatch('initClient', {
+      campaignContext,
+      referralCode
+    }).then(() => {
+      if (this.$store.state.customer.isAuthenticated) {
+        this.$store.dispatch('customer/getCustomer')
+        this.$store.dispatch('partnerProfile/retrieve')
+      }
+      /* 如果一开始没有 fetch 一下 cart, 会出现的问题是 add 了以后, quantity 覆盖服务器上的 quantity
+      这里不需要判断 customerToken 或 cartToken 是否存在, 如果是没登录也没创建过 cartToken, fetch 接口会返回空的 */
+      this.$store.dispatch('cart/fetch')
+    })
+    /* 最后再处理 redirect ? 这个可能最好放在最前面 */
+    if (redirect) {
+      Taro.navigateTo({ url: redirect })
+    }
   },
   onShow(options) {},
   render(h) {
