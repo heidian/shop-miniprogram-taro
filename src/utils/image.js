@@ -18,7 +18,7 @@ export const optimizeImage = (url, options) => {
     // options 是一个数字, 可能还需要检查下 +options > 0
     options = { width: +options }
   }
-  const { width, height, format } = options
+  let { width, height, format } = options
   if (!width) {
     width = 400
   }
@@ -48,6 +48,7 @@ export const optimizeImage = (url, options) => {
   if (format) {
     transform += `/format/${format}`
   }
+  optimQueries.push(transform + '/ignore-error/1')
   return optimUrl + optimQueries.join('|')
 }
 
