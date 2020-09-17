@@ -6,7 +6,7 @@ const state = {
 }
 
 const mutations = {
-  set_uptoken (state, payload) {
+  setUptoken (state, payload) {
     state.uptoken = payload
   }
 }
@@ -23,7 +23,7 @@ const actions = {
         policy: JSON.stringify(policy)
       }
     }).then(({ data: { uptoken } }) => {
-      context.commit('set_uptoken', uptoken)
+      context.commit('setUptoken', uptoken)
     })
   }
 }

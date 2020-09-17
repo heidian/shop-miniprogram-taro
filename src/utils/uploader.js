@@ -5,12 +5,11 @@ const UPLOAD_URL = 'https://up.qbox.me'
 export const uploadImage = (filePath, uptoken) => {
   return new Promise((resolve, reject) => {
     if (!filePath) {
-      reject('没有选择文件')
+      reject(new Error('没有选择文件'))
     }
     if (!uptoken) {
-      reject('请先获取 uptoken')
+      reject(new Error('请先获取 uptoken'))
     }
-
     Taro.uploadFile({
       url: UPLOAD_URL,
       filePath: filePath,
