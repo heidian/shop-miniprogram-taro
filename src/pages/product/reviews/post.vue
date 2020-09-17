@@ -110,7 +110,7 @@ export default {
         }
         this.uploading = true
         const promiseList = _.map(res.tempFilePaths, tempFilePath => {
-          return this.$store.dispatch('clients/uploadImage', tempFilePath)
+          return this.$store.dispatch('qiniu/uploadImage', tempFilePath)
         })
         Promise.all(promiseList).then((images) => {
           if (shouldReplace) {

@@ -134,7 +134,7 @@ export default {
         sourceType: ['album', 'camera'],
       }).then(res => {
         const tempFilePath = res.tempFilePaths[0]
-        this.$store.dispatch('clients/uploadImage', tempFilePath).then(image => {
+        this.$store.dispatch('qiniu/uploadImage', tempFilePath).then(image => {
           this.userInfo.avatar = image.src
           this.uploading = false
         }).catch(err => {

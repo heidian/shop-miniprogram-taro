@@ -56,9 +56,7 @@ export default {
       backgroundColorBottom: '#f6f6f6',
     })
   },
-  computed: {
-    ...mapState(['clients'])
-  },
+  computed: {},
   mounted () {
     this.fetchReviewData(this.reviewId)
     this.fetchReplies()

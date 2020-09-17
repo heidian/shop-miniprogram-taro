@@ -7,7 +7,7 @@ import Taro from '@tarojs/taro'
 import listStores from './lists/index'
 import customerStore from './customer'
 import partnerProfileStore from './partnerProfile'
-import clientsStore from './clients'
+import qiniuStore from './qiniu'
 import cartStore from './cart'
 import checkoutStore from './checkout'
 import exampleStore from './example'
@@ -74,7 +74,7 @@ export default new Vuex.Store({
     customer: customerStore,
     partnerProfile: partnerProfileStore,
     cart: cartStore,
-    clients: clientsStore,
+    qiniu: qiniuStore,
     checkout: checkoutStore,
     example: exampleStore,
     categories: categoriesStore,
