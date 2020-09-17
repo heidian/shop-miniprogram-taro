@@ -45,9 +45,9 @@ import _ from 'lodash'
 import { mapState } from 'vuex'
 import { API } from '@/utils/api'
 import { optimizeImage, backgroundImageUrl } from '@/utils/image'
-import ShareCanvas from '@/utils/share'
 import { handleErr } from '@/utils/errHelper'
 import RequiresLogin from '@/mixins/RequiresLogin'
+import ShareCanvas from './share'
 
 export default {
   name: 'Share',
