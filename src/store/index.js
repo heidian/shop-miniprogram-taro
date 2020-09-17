@@ -39,26 +39,51 @@ const state = () => {
 const mutations = {
   setGlobalColors(state, payload) {
     state.globalColors = payload
+  },
+  setCampaignContext(state, payload) {
+    state.campaignContext = payload
+  },
+  setReferralCode(state, payload) {
+    state.referralCode = payload
   }
 }
 
 const actions = {
-  async initClient({ commit, dispatch }, { campaignContext, referralCode } = {}) {
-    // !!_.isEmpty(campaignContext)
-    // !!referralCode
-    // Taro.setStorage({
-    //   key: '_referral_code',
-    //   data: referralCode
-    // })
-    const [customerToken, cartToken] = await Promise.all([
-      Taro.getStorage({ key: 'customerToken' }).then(res => res.data).catch(() => {}),
-      Taro.getStorage({ key: 'cartToken' }).then(res => res.data).catch(() => {}),
-    ])
+  initClient({ commit, dispatch }, { campaignContext, referralCode } = {}) {
+    /* initClient 里面只是做一些 storage 相关的处理, 其他 dispatch 都直接在 onLaunch 里面调用 */
+    const customerToken = Taro.getStorageSync('customerToken')
     if (customerToken) {
       commit('customer/setData', { customerToken, isAuthenticated: true })
     }
+    const cartToken = Taro.getStorageSync('cartToken')
     if (cartToken) {
       commit('cart/setData', { cartToken })
+    }
+    /* 下面这些不是非常关键, 目前都用异步处理 */
+    if (campaignContext && !_.isEmpty(campaignContext)) {
+      Taro.setStorage({
+        key: '_campaign_context',
+        data: { ...campaignContext, timestamp: (new Date()).valueOf() }
+      })
+      commit('setCampaignContext', campaignContext)
+    } else {
+      Taro.getStorage({ key: '_campaign_context' }).then((res) => {
+        const campaignContext = _.omit(res.data, ['timestamp'])
+        const timestamp = res.data.timestamp
+        if (!timestamp || ((new Date()).valueOf() - timestamp) > 1000 * 86400 * 7) {
+          Taro.removeStorage({ key: '_campaign_context' })
+        } else {
+          commit('setCampaignContext', campaignContext)
+        }
+      })
+    }
+    if (referralCode) {
+      Taro.setStorage({ key: '_referral_code', data: referralCode })
+      commit('setReferralCode', referralCode)
+    } else {
+      Taro.getStorage({ key: '_referral_code' }).then((res) => {
+        commit('setReferralCode', res.data)
+      })
     }
   }
 }

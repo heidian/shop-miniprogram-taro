@@ -81,18 +81,14 @@ const App = new Vue({
     const queryScene = decodeURIComponent(_.get(options, 'query.scene', ''))
     const { campaignContext, referralCode, redirect } = parseScene(queryScene)
     /* initClient 里面只是做一些 storage 相关的处理, 其他 dispatch 都直接在 onLaunch 里面调用 */
-    this.$store.dispatch('initClient', {
-      campaignContext,
-      referralCode
-    }).then(() => {
-      if (this.$store.state.customer.isAuthenticated) {
-        this.$store.dispatch('customer/getCustomer')
-        this.$store.dispatch('partnerProfile/retrieve')
-      }
-      /* 如果一开始没有 fetch 一下 cart, 会出现的问题是 add 了以后, quantity 覆盖服务器上的 quantity
-      这里不需要判断 customerToken 或 cartToken 是否存在, 如果是没登录也没创建过 cartToken, fetch 接口会返回空的 */
-      this.$store.dispatch('cart/fetch')
-    })
+    this.$store.dispatch('initClient', { campaignContext, referralCode })
+    if (this.$store.state.customer.isAuthenticated) {
+      this.$store.dispatch('customer/getCustomer')
+      this.$store.dispatch('partnerProfile/retrieve')
+    }
+    /* 如果一开始没有 fetch 一下 cart, 会出现的问题是 add 了以后, quantity 覆盖服务器上的 quantity
+    这里不需要判断 customerToken 或 cartToken 是否存在, 如果是没登录也没创建过 cartToken, fetch 接口会返回空的 */
+    this.$store.dispatch('cart/fetch')
     /* 最后再处理 redirect ? 这个可能最好放在最前面 */
     if (redirect) {
       Taro.navigateTo({ url: redirect })

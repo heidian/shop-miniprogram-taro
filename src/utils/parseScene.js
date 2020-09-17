@@ -14,13 +14,10 @@ export default function(scene) {
    * p 弹框 popup
    * 除了 r|redirect|s|us|utm_source|m|um|utm_medium|uc|utm_content|c|referral_code 以外都是自定义参数
    */
-  if (typeof scene !== 'string') {
-    return null
-  }
-  if (!/[^=]+=[^=]+(&[^=]+=[^=]+)*/.test(scene)) {
-    return null
-  }
   const parsedSceneObj = {}
+  if (typeof scene !== 'string' || !/[^=]+=[^=]+(&[^=]+=[^=]+)*/.test(scene)) {
+    return parsedSceneObj
+  }
   const kvs = scene.split('&')
   const query = _.fromPairs(_.map(_.compact(kvs), item => item.split('=')))
   const utm_source = query.utm_source || query.us || query.s || ''
@@ -32,14 +29,16 @@ export default function(scene) {
       medium: utm_medium || 'referral',  // 如果有 utm_source 则默认 medium 为 referral
       content: utm_content
     }
-    // TODO 需要 setStorage
   }
   const referralCode = query.referral_code || query.c
   if (referralCode) {
     parsedSceneObj['referralCode'] = referralCode
   }
   const redirect = query.redirect || query.r
-  const popup = query.popup || query.p  // TODO: popup 的功能需要实现, 可以实现进入首页就弹出一个指定券号的优惠券
+  const popup = query.popup || query.p
+  if (popup) {
+    // TODO: popup 的功能需要实现, 可以实现进入首页就弹出一个指定券号的优惠券
+  }
   if (redirect) {
     const _page = redirect
     const shortNames = {
