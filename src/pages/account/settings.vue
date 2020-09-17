@@ -2,14 +2,14 @@
   <view :class="$style['settings']">
     <view :class="$style['navigators']">
       <template v-for="item in navigators">
-        <button v-if="item.openType" :class="$style['cell']" :key="item.label" openType="contact">
+        <button v-if="item.openType" :class="$style['cell']" :key="item.label" :open-type="item.openType">
           <view :class="$style['cellLabel']">{{ item.label }}</view>
           <view :class="$style['cellValue']"></view>
           <view :class="$style['cellFt']">
             <image v-if="item.hasCaret" :class="$style['cellftIcon']" src="https://up.img.heidiancdn.com/o_1egfmehbs19vhj4p7cn1ko4kqi0next.png" mode="aspectFill"></image>
           </view>
         </button>
-        <navigator v-else :class="$style['cell']" :key="item.label">
+        <navigator v-else :class="$style['cell']" :key="item.label" :url="item.url" open-type="navigate">
           <view :class="$style['cellLabel']">{{ item.label }}</view>
           <view :class="$style['cellValue']"></view>
           <view :class="$style['cellFt']">
@@ -18,7 +18,9 @@
         </navigator>
       </template>
     </view>
-    <button class="btn--red" :class="$style['pageBtn']" @tap="handleLogout">登出</button>
+    <view :class="$style['buttonWrapper']">
+      <button type="warn" @tap="handleLogout">登出</button>
+    </view>
   </view>
 </template>
 
@@ -57,22 +59,13 @@ export default {
 </script>
 
 <style lang="scss" module>
-$color-bg: #f0f0f0;
-$color-bg-white: #ffffff;
-$color-divider: rgba(#979797, 0.1);
-$color-text: #262626;
-$color-red: #e74c3c;
-$color-golden: #e7cba7;
-
+@import '@/styles/variables';
 page {
-  background-color: $color-bg;
+  background-color: $color-bg-gray;
 }
-.settings {
-  min-height: 100vh;
-  padding-bottom: 90px;
-}
+.page {}
 .navigators {
-  background-color: $color-bg-white;
+  background-color: #fff;
 }
 .cell {
   background-color: transparent;
@@ -121,23 +114,15 @@ page {
     opacity: 0.2;
   }
 }
-.pageBtn {
+.buttonWrapper {
   position: fixed;
-  bottom: 30px;
-  left: 20px;
-  right: 20px;
-  padding: 10px 0;
-  text-align: center;
-  line-height: 28px;
-  margin-left: auto;
-  margin-right: auto;
-  color: #ffffff;
-  background-color: $color-red;
-  font-size: 16px;
-  border-radius: 0;
-  &.pageBtn--golden {
-    background-color: $color-golden;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: 15px;
+  button {
+    display: block;
+    width: 100%;
   }
 }
 </style>
-

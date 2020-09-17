@@ -11,7 +11,7 @@
             <view :class="$style['captionName']">
               <text :class="$style['fullName']">{{ customer.data.full_name || '未命名' }}</text>
               <text :class="$style['levelTitle']">{{ levelTitle }}</text>
-              <navigator :class="$style['navigatorText']" url="/pages/account/profile" open-type="navigate" hover-class="none">填写微信号</navigator>
+              <navigator :class="$style['navigatorText']" url="/pages/account/settings" open-type="navigate" hover-class="none">填写微信号</navigator>
             </view>
             <view :class="$style['referral']">
               <text :class="$style['referralCode']">邀请ID：{{ customer.data.referral_code }}</text>
@@ -21,7 +21,7 @@
           <view v-else :class="$style['caption']">
             <navigator url="/pages/login/index" :class="$style['login']">登录</navigator>
           </view>
-          <navigator :class="$style['caret']" url="/pages/account/profile" open-type="navigate" hover-class="none"></navigator>
+          <navigator :class="$style['caret']" url="/pages/account/settings" open-type="navigate" hover-class="none"></navigator>
         </view>
         <view :class="$style['level']">
           <view :class="$style['levelHint']">
