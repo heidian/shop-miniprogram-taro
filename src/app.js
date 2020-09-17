@@ -6,6 +6,9 @@ import { formatCurrency, formatDate, formatDateTime } from './utils/formatters'
 import { optimizeImage } from './utils/image'
 import VirtualList from '@tarojs/components/virtual-list'
 
+// Vue.config.productionTip = false
+
+
 /*
  * 处理旧的路由, 重定向到新的路由
  */
@@ -18,13 +21,13 @@ Taro.onPageNotFound(function({ isEntryPage, path, query }) {
   }
 })
 
+
 /*
  * Global styles
  * 这里如果不引入, 全局样式和通用的组件样式都不会生效
  */
 import './app.scss'
 
-// Vue.config.productionTip = false
 
 /*
  * 初始化 Taro 的 pxTransform
@@ -36,11 +39,13 @@ Taro.initPxTransform({
   }
 })
 
+
 /*
  * 使用长列表组件
  * https://nervjs.github.io/taro/docs/virtual-list
  */
 Vue.use(VirtualList)
+
 
 /*
  * 定义全局 filters
@@ -51,24 +56,29 @@ Vue.filter('datetime', (value) => formatDateTime(value))
 Vue.filter('currency', (value, options) => formatCurrency(value, options))
 Vue.filter('imageUrl', (value, width, height) => optimizeImage(value, width, height))
 
+
+/*
+ * 监听路由变化, 用于发送 analytics 数据
+ * 不要在 analytics 以外的场景使用 wx.onAppRoute, 这是个未公开的 API, 不能依赖于它
+ */
+try {
+  wx.onAppRoute(res => {
+    console.log('DEBUG: 检测到路由变化 (优化一下这部分的代码, 移动到 analytics 单独的包里)\n', res)
+  })
+} catch(err) {
+  console.log(err)
+}
+
+
 /*
  * Vue 渲染入口
  */
 const App = new Vue({
   store,
   onLaunch() {
-    try {
-      // 不要在 analytics 以外的场景使用 wx.onAppRoute, 这是个未公开的 API, 不能依赖于它
-      wx.onAppRoute(res => {
-        console.log('DEBUG: 检测到路由变化 (优化一下这部分的代码, 移动到 analytics 单独的包里)\n', res)
-      })
-    } catch(err) {
-      console.log(err)
-    }
     this.$store.dispatch('initClient')
   },
-  onShow(options) {
-  },
+  onShow(options) {},
   render(h) {
     // this.$slots.default 是将要会渲染的页面
     return h('block', this.$slots.default)

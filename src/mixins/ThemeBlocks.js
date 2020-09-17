@@ -35,7 +35,7 @@ export default (propertyName) => {
     },
     methods: {
       async fetchPageConfig(pageType, pageName) {
-        console.log(`get test pageconfig of ${pageType}`)
+        // console.log(`get test pageconfig of ${pageType}`)
         // const pageConfig = getTestPageConfig(pageType, pageName)
         // const blocks = _.cloneDeep(pageConfig['settings_data']['components'])
         const params = {
