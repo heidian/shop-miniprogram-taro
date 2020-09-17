@@ -13,11 +13,16 @@
     </view>
     <view v-if="isReady" :class="$style['actionSave']">
       <text :class="$style['saveHint']">保存图片，将好货分享给朋友们吧</text>
-      <button :class="$style['btnSave']" @tap="onSaveImageToAblum">
-        <image
+      <button
+        :class="['button', 'button--round', 'button--dark', $style['btnSave']]"
+        hover-class="hover-class"
+        type="primary"
+        @tap="onSaveImageToAblum">
+        <!-- <image
           src="https://up.img.heidiancdn.com/o_1ehtmvja215282udkv0448118b0icon2x.png"
           mode="scaleToFill"
-          :class="$style['btnIcon']"></image>
+          :class="$style['btnIcon']"></image> -->
+        <text :class="['el-icon-download', $style['btnIcon']]"></text>
         <text :class="$style['btnText']">保存图片</text>
       </button>
     </view>
@@ -271,24 +276,25 @@ page {
 .btnSave {
   max-width: 320px;
   width: 100%;
-  height: 50px;
-  line-height: 20px;
-  padding: 15px 0;
-  text-align: center;
+  // height: 50px;
+  // line-height: 20px;
+  // padding: 15px 0;
+  // text-align: center;
   background-color: $color-bg-btn-save;
   color: #ffffff;
   display: flex;
   justify-content: center;
   align-items: center;
-  border-radius: 25px;
+  // border-radius: 25px;
   box-shadow: 0 1px 4px 0 $color-box-shadow;
   &::after {
     display: none;
   }
 }
 .btnIcon {
-  width: 19px;
-  height: 19px;
+  // width: 19px;
+  // height: 19px;
+  font-size: 19px;
   margin-right: 5px;
 }
 .btnText {
