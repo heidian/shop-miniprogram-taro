@@ -6,6 +6,7 @@ export default {
     'pages/cart/index',
     'pages/account/index',
     'pages/account/bind-alipay',
+    'pages/account/settings',
     'pages/account/profile',
     'pages/search/index',
     'pages/product/index',
