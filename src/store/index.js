@@ -51,6 +51,7 @@ const actions = {
         isAuthenticated: true
       })
       dispatch('customer/getCustomer')
+      dispatch('partnerProfile/retrieve')
       dispatch('customer/getOpenID')
       dispatch('clients/getUploadToken')
     }

@@ -102,7 +102,7 @@ export default {
     onChangeBirthday (e) {
       this.userInfo.birthday = e.detail.value
     },
-    async submitForm() {
+    submitForm() {
       if (this.pending) return
       if (this.genderIndex === 1) {
         this.userInfo.gender = 'male'
@@ -111,7 +111,7 @@ export default {
       } else {
         this.userInfo.gender = 'unknown'
       }
-      this.$store.dispatch('customer/updateCustomerProfile', this.userInfo).then(data => {
+      this.$store.dispatch('customer/updateCustomer', this.userInfo).then(data => {
         this.pending = false
         Taro.showToast({ title: '更新成功' })
       }).catch(err => {
