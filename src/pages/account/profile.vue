@@ -1,29 +1,50 @@
 <template>
-  <view :class="$style['profile']">
-    <view :class="$style['navigators']">
-      <template v-for="item in navigators">
-        <button v-if="item.openType" :class="$style['cell']" :key="item.label" openType="contact">
-          <view :class="$style['cellLabel']">{{ item.label }}</view>
-          <view :class="$style['cellValue']"></view>
-          <view :class="$style['cellFt']">
-            <image v-if="item.hasCaret" :class="$style['cellftIcon']" src="https://up.img.heidiancdn.com/o_1egfmehbs19vhj4p7cn1ko4kqi0next.png" mode="aspectFill"></image>
+  <view class="page--profile">
+    <form class="form">
+      <view class="form-item form-item--avatar">
+        <image :src="userInfo.avatar" mode="aspectFill" class="avatarImage" @tap="onSelectAvatar"></image>
+      </view>
+      <view class="form-item">
+        <view class="label">姓名</view>
+        <input class="input" v-model="userInfo.full_name" type="text"/>
+      </view>
+      <!-- <view class="form-item">
+        <view class="label">联系电话</view>
+        <input class="input" v-model="userInfo.mobile" type="digit"/>
+      </view> -->
+
+      <view class="form-item">
+        <view class="label">性别</view>
+        <picker class="picker" mode="selector" @change="onChangeGender" :value="genderIndex" :range="genderOptions" range-key="title">
+          <view class="picker">
+            {{ genderOptions[genderIndex].title }}
           </view>
-        </button>
-        <navigator v-else :class="$style['cell']" :key="item.label">
-          <view :class="$style['cellLabel']">{{ item.label }}</view>
-          <view :class="$style['cellValue']"></view>
-          <view :class="$style['cellFt']">
-            <image v-if="item.hasCaret" :class="$style['cellftIcon']" src="https://up.img.heidiancdn.com/o_1egfmehbs19vhj4p7cn1ko4kqi0next.png" mode="aspectFill"></image>
+        </picker>
+      </view>
+      <view class="form-item">
+        <view class="label">生日</view>
+        <picker class="picker" mode="date" @change="onChangeBirthday" :value="userInfo.birthday">
+          <view class="picker">
+            {{ userInfo.birthday || '请选择你的生日'}}
           </view>
-        </navigator>
-      </template>
+        </picker>
+      </view>
+    </form>
+    <view class="buttons-wrapper">
+      <button type="primary" open-type="getUserInfo" @getUserInfo="getUserInfo" :withCredentials="false">
+        <image class="buttonIcon" src="https://up.img.heidiancdn.com/o_1cgtnj1nadol7n31b8n1lfidgb0wechat.png"></image>使用微信信息
+      </button>
+      <button class="button--dark" @tap="submitForm">保存</button>
     </view>
-    <button class="btn--red" :class="$style['pageBtn']" @tap="handleLogout">登出</button>
   </view>
 </template>
 
 <script>
 import Taro from '@tarojs/taro'
+import _ from 'lodash'
+import { mapState } from 'vuex'
+import { uploadImage } from '@/utils/uploader'
+import { handleErr } from '@/utils/errHelper'
 import RequiresLogin from '@/mixins/RequiresLogin'
 
 export default {
@@ -37,7 +58,16 @@ export default {
         { label: '账户安全', value: '', hasCaret: true, url: '' },
         { label: '联系客服', value: '', hasCaret: true, url: '', openType: 'contact' },
         { label: '关于', value: '', hasCaret: true, url: '' },
-      ]
+      ],
+      genderOptions: [
+        { title: '未知', value: 'unknown' },
+        { title: '男', value: 'male' },
+        { title: '女', value: 'female' }
+      ],
+      userInfo: {},
+      genderIndex: 0,
+      uploading: false,
+      pending: false,
     }
   },
   created () {
@@ -47,97 +77,170 @@ export default {
       backgroundColorBottom: '#f6f6f6',
     })
   },
+  mounted() {
+    const { full_name, gender, birthday, avatar } = _.cloneDeep(this.customer.data) || {}
+    this.userInfo = {
+      full_name, gender, birthday, avatar
+    }
+    if (gender === 'male') {
+      this.genderIndex = 1
+    } else if (gender === 'female') {
+      this.genderIndex = 2
+    } else {
+      this.genderIndex = 0
+    }
+  },
+  computed: {
+    ...mapState(['customer', 'clients']),
+    uptoken () {
+      return _.get(this.clients, 'uptoken', '')
+    }
+  },
   methods: {
-    handleLogout () {
-      this.$store.dispatch('customer/logout')
-      Taro.reLaunch({ url: '/pages/account/index' })
+    onChangeGender (e) {
+      this.genderIndex = +e.detail.value
+    },
+    onChangeBirthday (e) {
+      this.userInfo.birthday = e.detail.value
+    },
+    async submitForm() {
+      if (this.pending) return
+      if (this.genderIndex === 1) {
+        this.userInfo.gender = 'male'
+      } else if (this.genderIndex === 2) {
+        this.userInfo.gender = 'female'
+      } else {
+        this.userInfo.gender = 'unknown'
+      }
+      this.$store.dispatch('customer/updateCustomerProfile', this.userInfo).then(data => {
+        this.pending = false
+        Taro.showToast({ title: '更新成功' })
+      }).catch(err => {
+        this.pending = false
+        handleErr(err)
+      })
+    },
+    getUserInfo (e) {
+      const { userInfo } = e.detail
+      const { nickName, gender, avatarUrl } = userInfo
+      this.userInfo = {
+        ...this.userInfo,
+        full_name: nickName,
+        avatar: avatarUrl
+      }
+      this.genderIndex = gender
+    },
+    onSelectAvatar () {
+      if (!!this.uploading) return
+      this.uploading = true
+      Taro.chooseImage({
+        count: 1,
+        sizeType: ['original', 'compressed'],
+        sourceType: ['album', 'camera'],
+      }).then(res => {
+        const tempFilePath = res.tempFilePaths[0]
+        uploadImage(tempFilePath, this.uptoken).then(uploadRes => {
+          if (!!uploadRes.link) this.userInfo.avatar = uploadRes.link
+          this.uploading = false
+        }).catch(err => {
+          handleErr(err)
+          this.uploading = false
+        })
+      }).catch(err => {
+        this.uploading = false
+      })
     }
   }
 }
 </script>
 
-<style lang="scss" module>
-$color-bg: #f0f0f0;
-$color-bg-white: #ffffff;
-$color-divider: rgba(#979797, 0.1);
-$color-text: #262626;
-$color-red: #e74c3c;
-$color-golden: #e7cba7;
-
+<style lang="scss">
+@import '@/styles/variables';
 page {
-  background-color: $color-bg;
+  background-color: $color-bg-gray;
 }
-.profile {
-  min-height: 100vh;
-  padding-bottom: 90px;
-}
-.navigators {
-  background-color: $color-bg-white;
-}
-.cell {
-  background-color: transparent;
-  margin-left: auto;
-  margin-right: auto;
-  outline: none;
-  width: 100%;
-  padding: 15px;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  font-size: 12px;
-  position: relative;
-  line-height: 2.2;
-  &::after {
-    display: none;
-  }
-  .cellLabel {
-    margin-right: 20px;
-    font-size: 15px;
-    color: $color-text;
-  }
-  .cellValue {
-    flex: 1;
+.page--profile {
+  background-color: $color-bg-gray;
+  .form {
+    display: block;
     overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    background-color: #fff;
+    padding-bottom: 20px;
   }
-  .cellFt {
-    margin-left: 20px;
+  .form-item {
+    position: relative;
+    &::after {
+      position: absolute;
+      content: "";
+      display: block;
+      bottom: 0;
+      right: 0;
+      left: 100px;
+      border-bottom: 1px solid $color-divider;
+    }
+    &:last-child::after {
+      left: 0;
+    }
+    padding: 3px 0 3px 100px;
+    height: 50px;  // 内容高度是 44, 整体高度是 50
+    .input {
+      display: block;
+      margin: 10px 0;
+      height: 24px;
+      line-height: 24px;
+    }
+    .picker {
+      display: block;
+      height: 44px;
+      line-height: 44px;
+      margin: 0;
+    }
   }
-  // & + & {
-  //   border-top: 1px solid $color-divider;
-  // }
-  &:not(:last-child)::before {
-    content: '';
+  .label {
     position: absolute;
+    top: 0;
+    height: 50px;
+    line-height: 50px;
+    width: 80px;
     left: 15px;
-    right: 15px;
+    color: $color-text-light;
+  }
+  .form-item--avatar {
+    display: flex;
+    justify-content: center;
+    height: auto;
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-top: 30px;
+    padding-bottom: 30px;
+  }
+  .avatarImage {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background-color: #f0f0f0;
+  }
+  .buttons-wrapper {
+    position: fixed;
+    z-index: $z-index-footer;
+    left: 0;
     bottom: 0;
-    border-bottom: 1px solid $color-divider;
-  }
-  .cellftIcon {
-    width: 10px;
-    height: 12px;
-    opacity: 0.2;
-  }
-}
-.pageBtn {
-  position: fixed;
-  bottom: 30px;
-  left: 20px;
-  right: 20px;
-  padding: 10px 0;
-  text-align: center;
-  line-height: 28px;
-  margin-left: auto;
-  margin-right: auto;
-  color: #ffffff;
-  background-color: $color-red;
-  font-size: 16px;
-  border-radius: 0;
-  &.pageBtn--golden {
-    background-color: $color-golden;
+    width: 100%;
+    padding: 20px;
+    button {
+      display: block;
+    }
+    button .buttonIcon {
+      width: 16px;
+      height: 16px;
+      margin-right: 3px;
+      vertical-align: middle;
+    }
+    button + button {
+      margin-top: 15px;
+    }
   }
 }
 </style>
+
 

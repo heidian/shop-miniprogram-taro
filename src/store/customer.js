@@ -74,6 +74,15 @@ const actions = {
       throw err
     })
   },
+  updateCustomerProfile({ commit }, payload) {
+    return API.put('/customers/customer/', payload).then(({ data }) => {
+      commit('setData', { data: data })
+      return data
+    }).catch((err) => {
+      console.log('更新用户信息失败', _.get(err, 'response.data'))
+      throw err
+    })
+  },
   getOpenID({ rootState, commit }) {
     const appid = rootState.config.appid
     const exchangeOpenID = ({ code }) => {
