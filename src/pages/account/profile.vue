@@ -1,18 +1,13 @@
 <template>
-  <view class="page--profile">
+  <view :class="$style['profile']">
     <form class="form">
-      <view class="form-item form-item--avatar">
-        <image :src="userInfo.avatar" mode="aspectFill" class="avatarImage" @tap="onSelectAvatar"></image>
+      <view :class="['form-item', $style['avatar']]">
+        <image :src="userInfo.avatar" mode="aspectFill" :class="$style['avatarImage']" @tap="onSelectAvatar"></image>
       </view>
       <view class="form-item">
         <view class="label">姓名</view>
         <input class="input" v-model="userInfo.full_name" type="text"/>
       </view>
-      <!-- <view class="form-item">
-        <view class="label">联系电话</view>
-        <input class="input" v-model="userInfo.mobile" type="digit"/>
-      </view> -->
-
       <view class="form-item">
         <view class="label">性别</view>
         <picker class="picker" mode="selector" @change="onChangeGender" :value="genderIndex" :range="genderOptions" range-key="title">
@@ -30,9 +25,13 @@
         </picker>
       </view>
     </form>
-    <view class="buttons-wrapper">
-      <button type="primary" open-type="getUserInfo" @getUserInfo="getUserInfo" :withCredentials="false">
-        <image class="buttonIcon" src="https://up.img.heidiancdn.com/o_1cgtnj1nadol7n31b8n1lfidgb0wechat.png"></image>使用微信信息
+    <view :class="$style['buttonsWrapper']">
+      <button
+        type="primary"
+        open-type="getUserInfo"
+        @getUserInfo="getUserInfo"
+        :class="$style['wechatBtn']">
+          <image :class="$style['buttonIcon']" src="https://up.img.heidiancdn.com/o_1cgtnj1nadol7n31b8n1lfidgb0wechat.png"></image>使用微信信息
       </button>
       <button class="button--dark" @tap="submitForm">保存</button>
     </view>
@@ -154,58 +153,15 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" module>
 @import '@/styles/variables';
 page {
   background-color: $color-bg-gray;
 }
-.page--profile {
+.profile {
   background-color: $color-bg-gray;
-  .form {
-    display: block;
-    overflow: hidden;
-    background-color: #fff;
-    padding-bottom: 20px;
-  }
-  .form-item {
-    position: relative;
-    &::after {
-      position: absolute;
-      content: "";
-      display: block;
-      bottom: 0;
-      right: 0;
-      left: 100px;
-      border-bottom: 1px solid $color-divider;
-    }
-    &:last-child::after {
-      left: 0;
-    }
-    padding: 3px 0 3px 100px;
-    height: 50px;  // 内容高度是 44, 整体高度是 50
-    .input {
-      display: block;
-      margin: 10px 0;
-      height: 24px;
-      line-height: 24px;
-    }
-    .picker {
-      display: block;
-      height: 44px;
-      line-height: 44px;
-      margin: 0;
-    }
-  }
-  .label {
-    position: absolute;
-    top: 0;
-    height: 50px;
-    line-height: 50px;
-    width: 80px;
-    left: 15px;
-    color: $color-text-light;
-  }
-  .form-item--avatar {
+
+  .avatar {
     display: flex;
     justify-content: center;
     height: auto;
@@ -220,24 +176,24 @@ page {
     border-radius: 50%;
     background-color: #f0f0f0;
   }
-  .buttons-wrapper {
+  .buttonsWrapper {
     position: fixed;
     z-index: $z-index-footer;
     left: 0;
     bottom: 0;
     width: 100%;
     padding: 20px;
-    button {
-      display: block;
-    }
-    button .buttonIcon {
+  }
+  button {
+    display: block;
+  }
+  .wechatBtn {
+    margin-bottom: 15px;
+    .buttonIcon {
       width: 16px;
       height: 16px;
       margin-right: 3px;
       vertical-align: middle;
-    }
-    button + button {
-      margin-top: 15px;
     }
   }
 }
