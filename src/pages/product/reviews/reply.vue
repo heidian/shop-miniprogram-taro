@@ -28,7 +28,6 @@ import _ from 'lodash'
 import { API } from '@/utils/api'
 import { handleErr } from '@/utils/errHelper'
 import { optimizeImage, backgroundImageUrl } from '@/utils/image'
-import { uploadImage } from '@/utils/uploader'
 
 import ReviewItem from './ReviewItem'
 
@@ -74,9 +73,9 @@ export default {
     onSubmit () {
       const payload = {
         reply_to_id: this.reviewId,
-        "owner_resource": "product",
-        "owner_id": this.productId,
-        "content": this.content || ''
+        'owner_resource': 'product',
+        'owner_id': this.productId,
+        'content': this.content || ''
       }
       this.pending = true
       API.post('/customers/review/', payload).then(res => {

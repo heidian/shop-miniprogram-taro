@@ -42,7 +42,6 @@ import _ from 'lodash'
 import { API } from '@/utils/api'
 import { handleErr } from '@/utils/errHelper'
 import { optimizeImage, backgroundImageUrl } from '@/utils/image'
-import { uploadImage } from '@/utils/uploader'
 
 export default {
   name: 'Post',
@@ -65,12 +64,7 @@ export default {
       backgroundColorBottom: '#f6f6f6',
     })
   },
-  computed: {
-    ...mapState(['clients']),
-    uptoken () {
-      return _.get(this.clients, 'uptoken', '')
-    }
-  },
+  computed: {},
   mounted () {
     this.fetchProductTitle()
   },
@@ -97,8 +91,8 @@ export default {
       const content = e.detail.value || ''
       this.content = content
     },
-    onUpdateImages (idx) {
-      if (!this.uptoken || !!this.uploading) {
+    onUpdateImages(idx) {
+      if (this.uploading) {
         return
       }
       const should_replace = /\d+/.test(idx)
@@ -115,7 +109,9 @@ export default {
           return
         }
         this.uploading = true
-        const promiseList = _.map(res.tempFilePaths || [], tempFilePath => uploadImage(tempFilePath, this.uptoken))
+        const promiseList = _.map(res.tempFilePaths, tempFilePath => {
+          return this.$store.dispatch('clients/uploadImage', tempFilePath)
+        })
         Promise.all(promiseList).then((uploadResults) => {
           const uploadImages = _.map(uploadResults, 'link')
           if (should_replace) {
@@ -135,9 +131,9 @@ export default {
     },
     onSubmit () {
       const payload = {
-        "owner_resource": "product",
-        "owner_id": this.productId,
-        "content": this.content || ''
+        'owner_resource': 'product',
+        'owner_id': this.productId,
+        'content': this.content || ''
       }
       if (this.images.length) {
         payload.images = _.map(this.images, image => {

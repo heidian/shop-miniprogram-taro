@@ -42,7 +42,6 @@
 import Taro from '@tarojs/taro'
 import _ from 'lodash'
 import { mapState } from 'vuex'
-import { uploadImage } from '@/utils/uploader'
 import { handleErr } from '@/utils/errHelper'
 import RequiresLogin from '@/mixins/RequiresLogin'
 
@@ -90,10 +89,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['customer', 'clients']),
-    uptoken () {
-      return _.get(this.clients, 'uptoken', '')
-    }
+    ...mapState(['customer'])
   },
   methods: {
     onChangeGender (e) {
@@ -138,8 +134,8 @@ export default {
         sourceType: ['album', 'camera'],
       }).then(res => {
         const tempFilePath = res.tempFilePaths[0]
-        uploadImage(tempFilePath, this.uptoken).then(uploadRes => {
-          if (!!uploadRes.link) this.userInfo.avatar = uploadRes.link
+        this.$store.dispatch('clients/uploadImage', tempFilePath).then(uploadRes => {
+          if (!!uploadRes.url) this.userInfo.avatar = uploadRes.url
           this.uploading = false
         }).catch(err => {
           handleErr(err)
@@ -158,7 +154,7 @@ export default {
 page {
   background-color: $color-bg-gray;
 }
-.avatar {
+.avatar:global(.form-item) {
   display: flex;
   justify-content: center;
   height: auto;
