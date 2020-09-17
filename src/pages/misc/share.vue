@@ -127,18 +127,15 @@ export default {
           page: 'pages/home',
           scene: this.shareScene
         })
-        const miniqrUrl = _.get(res.data, 'src', '') ? optimizeImage(_.get(res.data, 'src', ''), 160, 160, true) : ''
-        if (!miniqrUrl) return
+        const miniqrUrl = optimizeImage(res.data.src, 160)
         this.miniqrUrl = miniqrUrl
-        const canvasOptions = !!this.productId ?
-        {
+        const canvasOptions = !!this.productId ? {
           canvasId: '#productCanvas',
           customer: this.customer.data,
           product: this.product,
           miniqrUrl: this.miniqrUrl,
           isDark: false
-        } :
-        {
+        } : {
           canvasId: '#shopCanvas',
           customer: this.customer.data,
           miniqrUrl: this.miniqrUrl,

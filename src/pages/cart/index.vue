@@ -16,7 +16,7 @@
               <icon v-if="item.checked" type="success" size="20" color="#ff5a00"></icon>
               <icon v-else type="circle" size="20"></icon>
             </view>
-            <image class="cart__image" :src="optimizeImage(item.variant.image)" mode="aspectFill"></image>
+            <image class="cart__image" :src="optimizeImage(item.variant.image, 100)" mode="aspectFill"></image>
             <view class="cart__product">{{ item.product.title }}</view>
             <view class="cart__variant">{{ item.variant|variantTitle }}</view>
             <view class="cart__bottom">

@@ -15,7 +15,7 @@
         <image
           v-for="(line, index) in (getField('lines') || [])" :key="line.id"
           class="line-image" mode="aspectFill"
-          :src="optimizeImage(line.image, 200)"
+          :src="optimizeImage(line.image, 100)"
         ></image>
         <view style="margin-left: auto; margin-right: 0.5em; text-align: center;">
           <view>共 {{ (getField('lines') || []).length }} 件</view>

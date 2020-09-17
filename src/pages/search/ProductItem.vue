@@ -7,7 +7,7 @@
     >
       <view :class="$style['productItem']">
         <view :class="$style['imageWrapper']">
-          <image :class="$style['image']" mode="aspectFill" :src="optimizeImage(product.image)"></image>
+          <image :class="$style['image']" mode="aspectFill" :src="optimizeImage(product.image, 200)"></image>
         </view>
         <view :class="$style['textWrapper']">
           <view :class="$style['title']">{{ product.title }}</view>

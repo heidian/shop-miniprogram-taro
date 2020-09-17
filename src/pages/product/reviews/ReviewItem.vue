@@ -2,7 +2,7 @@
 <template>
   <view :class="$style['reviewItem']">
     <view :class="$style['avatar']" :style="{
-      'backgroundImage': backgroundImageUrl(reviewCustomerAvatar, 200)
+      'backgroundImage': backgroundImageUrl(reviewCustomerAvatar, 100)
     }"></view>
     <view :class="$style['caption']">
       <view :class="$style['captionHead']">

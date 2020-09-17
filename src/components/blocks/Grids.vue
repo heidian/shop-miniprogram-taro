@@ -6,7 +6,7 @@
     >
       <view class="grid__image" :style="{
         'paddingTop': paddingTop,
-        'backgroundImage': backgroundImageUrl(item.image, 600)
+        'backgroundImage': backgroundImageUrl(item.image, 200)
       }"></view>
       <text class="grid__text" v-if="textValue(item.text)">{{ textValue(item.text) }}</text>
     </view>

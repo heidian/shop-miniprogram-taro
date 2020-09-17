@@ -34,7 +34,7 @@
         <image
           v-for="line in order.lines.slice(0,3)" :key="line.id"
           :class="$style['lineImage']"
-          :src="optimizeImage(line.image, 80)"
+          :src="optimizeImage(line.image, 100)"
         ></image>
         <text v-if="order.lines.length === 1" :class="$style['lineTitle']">{{ order.lines[0].title }}</text>
         <view :class="$style['lineSummary']">

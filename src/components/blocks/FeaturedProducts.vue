@@ -14,7 +14,7 @@
       >
         <view class="image" :style="{
           'paddingTop': paddingTop,
-          'backgroundImage': backgroundImageUrl(product.image, 600)
+          'backgroundImage': backgroundImageUrl(product.image, 200)
         }"></view>
         <view class="text-wrapper" :style="{
           // 如果有底色, 就加一个左右边距

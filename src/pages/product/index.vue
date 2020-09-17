@@ -7,7 +7,7 @@
         :circular="true" :interval="5000" :autoplay="true"
       >
         <swiper-item :class="$style['productImagesSwiperItem']" v-for="image in product.images" :key="image.id">
-          <image :class="$style['productImagesSwiperItemImage']" mode="aspectFit" :src="optimizeImage(image, 600)"></image>
+          <image :class="$style['productImagesSwiperItemImage']" mode="aspectFit" :src="optimizeImage(image, 400)"></image>
         </swiper-item>
       </swiper>
       <!-- 商品价格和添加心愿单 -->

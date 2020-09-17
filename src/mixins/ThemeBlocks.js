@@ -52,7 +52,7 @@ export default (propertyName) => {
         const blocks = _.get(res.data, 'page.pageconfig.settings_data.components')
         _.forEach(blocks, block => {
           if (_.isObject(block.css.backgroundImage)) {
-            block.css.backgroundImage = backgroundImageUrl(block.css.backgroundImage, 600)
+            block.css.backgroundImage = backgroundImageUrl(block.css.backgroundImage, 400)
           }
           _.forEach(['paddingTop', 'paddingBottom', 'paddingRight', 'paddingLeft'], (prop) => {
             if (block.css[prop] && /^\d+(\.\d+)?(px)?$/.test(block.css[prop])) {
