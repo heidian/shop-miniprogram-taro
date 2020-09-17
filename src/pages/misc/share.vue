@@ -48,6 +48,7 @@ import { optimizeImage, backgroundImageUrl } from '@/utils/image'
 import { handleErr } from '@/utils/errHelper'
 import RequiresLogin from '@/mixins/RequiresLogin'
 import ShareCanvas from './share'
+import { resolve } from 'url';
 
 export default {
   name: 'Share',
@@ -85,13 +86,15 @@ export default {
     /**
      * 保证用户已登录且拿到referralCode，再去获取商品信息和后面初始化 share
      */
-    if (!this.customer.data.id) {
-      await this.$store.dispatch('customer/getCustomer')
+    try {
+      if (!this.customer.data.id) { await this.$store.dispatch('customer/getCustomer') }
+      if (this.productId) { await this.fetchProduct() }
+      this.getShareScene()
+      await this.generateMiniQr()
+      this.generateShareImage()
+    } catch (err) {
+      handleErr(err)
     }
-    if (this.productId) {
-      await this.fetchProduct()
-    }
-    this.getShareScene()
   },
   methods: {
     optimizeImage,
@@ -103,57 +106,63 @@ export default {
         scene += `&r=pdt&id=${this.productId}`
       }
       this.shareScene = scene
-      this.generateMiniQr()
     },
-    async fetchProduct() {
+    async fetchProduct () {
       // TODO 要处理 404
       const fields = _.join(['id', 'title', 'image'], ',')
-      let product = {}
-      try {
-        const res = await API.get(`/shopfront/product/${this.productId}/`, {
-          params: { fields }
-        })
-        product = res.data
-      } catch (err) {
-        console.log(err)
-      }
+      const res = await API.get(`/shopfront/product/${this.productId}/`, {
+        params: { fields }
+      })
+      const product = res.data
       this.product = product
     },
-    async generateMiniQr () {
-      if (!this.shareScene) return
-      try {
-        const res = await API.post('/weixin/wacode/', {
-          appid: this.appid,
-          page: 'pages/home',
-          scene: this.shareScene
-        })
-        const miniqrUrl = optimizeImage(res.data.src, 160)
-        this.miniqrUrl = miniqrUrl
-        const canvasOptions = !!this.productId ? {
-          canvasId: '#productCanvas',
-          customer: this.customer.data,
-          product: this.product,
-          miniqrUrl: this.miniqrUrl,
-          isDark: false
-        } : {
-          canvasId: '#shopCanvas',
-          customer: this.customer.data,
-          miniqrUrl: this.miniqrUrl,
-          isDark: false
+    generateMiniQr () {
+      return new Promise(async (resolve, reject) => {
+        if (!this.shareScene) {
+          reject('缺少参数')
         }
-        this.canvasInstance = new ShareCanvas(canvasOptions)
-        this.canvasInstance.initialize().then((tempFilePath) => {
-          this.canvasImage = tempFilePath
-          _.delay(() => {
-            this.isReady = true
-          }, 500)
-        }).catch(err => {
-          console.log(err)
-          handleErr(err)
-        })
-      } catch (err) {
+        const isShortScene = /^[a-zA-Z0-9!#$&'()*+,/:;=?@\-._~]{1,32}$/.test(this.shareScene)
+        if (!isShortScene) {
+          reject('无法生成小程序码, 请尝试使用小程序转发分享')
+        }
+        try {
+          const res = await API.post('/weixin/wacode/', {
+            appid: this.appid,
+            page: 'pages/home',
+            scene: this.shareScene
+          })
+          const miniqrUrl = optimizeImage(res.data.src, 160)
+          this.miniqrUrl = miniqrUrl
+          const canvasOptions = !!this.productId ? {
+            canvasId: '#productCanvas',
+            customer: this.customer.data,
+            product: this.product,
+            miniqrUrl: this.miniqrUrl,
+            isDark: false
+          } : {
+            canvasId: '#shopCanvas',
+            customer: this.customer.data,
+            miniqrUrl: this.miniqrUrl,
+            isDark: false
+          }
+          this.canvasOptions = canvasOptions
+          resolve(canvasOptions)
+        } catch (err) {
+          reject(err)
+        }
+      })
+    },
+    generateShareImage () {
+      this.canvasInstance = new ShareCanvas(this.canvasOptions)
+      this.canvasInstance.execGenerate().then((tempFilePath) => {
+        this.canvasImage = tempFilePath
+        _.delay(() => {
+          this.isReady = true
+        }, 500)
+      }).catch(err => {
+        console.log(err)
         handleErr(err)
-      }
+      })
     },
     onSaveImageToAblum () {
       if (this.canvasInstance && this.canvasInstance.saveCanvasToAlbum) {

@@ -112,7 +112,7 @@ export default class ShareCanvas {
     this.cursorOffsetTop = 0
   }
 
-  initialize () {
+  execGenerate () {
     return new Promise((resolve, reject) => {
       const { canvasId, customer = {}, product, miniqrUrl, isDark = false } = this.options || {}
       if (!miniqrUrl) return
@@ -222,6 +222,10 @@ export default class ShareCanvas {
     // draw user logo and text
     const avatarWidth = 50
     const avatarOffsetLeft = (this.canvasWidth - avatarWidth) / 2
+    this.ctx.save()
+    const avatarRadius = avatarWidth / 2
+    this.ctx.arc(avatarOffsetLeft + avatarRadius, this.cursorOffsetTop + avatarRadius, avatarRadius, 0, 2 * Math.PI)
+    this.ctx.clip()
     _drawImage(this.ctx, {
       image: this.loadedImages.imgAvatar,
       offsetLeft: avatarOffsetLeft,
@@ -229,6 +233,7 @@ export default class ShareCanvas {
       imageWidth: avatarWidth,
       imageHeight: avatarWidth
     })
+    this.ctx.restore()
     this.cursorOffsetTop += avatarWidth + 20
   }
 
