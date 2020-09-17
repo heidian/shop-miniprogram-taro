@@ -158,45 +158,40 @@ export default {
 page {
   background-color: $color-bg-gray;
 }
-.profile {
-  background-color: $color-bg-gray;
-
-  .avatar {
-    display: flex;
-    justify-content: center;
-    height: auto;
-    padding-left: 15px;
-    padding-right: 15px;
-    padding-top: 30px;
-    padding-bottom: 30px;
-  }
-  .avatarImage {
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    background-color: #f0f0f0;
-  }
-  .buttonsWrapper {
-    position: fixed;
-    z-index: $z-index-footer;
-    left: 0;
-    bottom: 0;
-    width: 100%;
-    padding: 20px;
-  }
+.avatar {
+  display: flex;
+  justify-content: center;
+  height: auto;
+  padding-left: 15px;
+  padding-right: 15px;
+  padding-top: 30px;
+  padding-bottom: 30px;
+}
+.avatarImage {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background-color: #f0f0f0;
+}
+.buttonsWrapper {
+  position: fixed;
+  z-index: $z-index-footer;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  padding: 20px;
   button {
+    width: 100%;
     display: block;
   }
-  .wechatBtn {
-    margin-bottom: 15px;
-    .buttonIcon {
-      width: 16px;
-      height: 16px;
-      margin-right: 3px;
-      vertical-align: middle;
-    }
+}
+.wechatBtn {
+  margin-bottom: 15px;
+  .buttonIcon {
+    width: 16px;
+    height: 16px;
+    margin-right: 3px;
+    vertical-align: middle;
   }
 }
 </style>
-
-
