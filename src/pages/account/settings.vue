@@ -116,6 +116,7 @@ page {
 }
 .buttonWrapper {
   position: fixed;
+  z-index: $z-index-footer;
   bottom: 0;
   left: 0;
   width: 100%;
