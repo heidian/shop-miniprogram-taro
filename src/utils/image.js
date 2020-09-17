@@ -1,7 +1,8 @@
 import qs from 'qs'
 import _ from 'lodash'
 
-export const optimizeImage = (url, width, height, toJpg) => {
+export const optimizeImage = (url, options) => {
+  /* options 可以是一个数字, 表示宽度, 也可以是 { width, height, format } 的格式 */
   let metafield = {}
   if (typeof url === 'object') {
     metafield = _.get(url, 'metafield') || ''
@@ -13,8 +14,19 @@ export const optimizeImage = (url, width, height, toJpg) => {
   if (!/^(https|http):\/\/(up\.img\.heidiancdn\.com)\//.test(url)) {
     return url
   }
+  if (typeof options !== 'object') {
+    // options 是一个数字, 可能还需要检查下 +options > 0
+    options = { width: +options }
+  }
+  const { width, height, format } = options
   if (!width) {
     width = 400
+  }
+  if (!format && metafield.mimeType === 'image/png' && (+metafield.size > 500 * 1024)) {
+    // if (/\.png$/.test(url) ||
+    // 小程序现在支持 webp 了, 强制转换, 任何格式都可以转换成 webp
+    // 这个还不大确定兼容性, 目前暂时还是转成 jpg, 并且只对大的 png 图片进行处理
+    format = 'jpg'  // webp
   }
   // const ratio = Math.ceil(global.devicePixelRatio || 1)
   // 小程序的 devicePixelRatio 不是这么取的, 先固定成 2
@@ -29,25 +41,18 @@ export const optimizeImage = (url, width, height, toJpg) => {
       optimUrl += qs.stringify({ [key]: value }) + '&'
     }
   })
-  if (_.isString(width)) {
-    optimQueries.push(width)
-  } else if (height) {
-    optimQueries.push(`imageView2/2/w/${width * ratio}/h/${height * ratio}/ignore-error/1`)
-  } else {
-    optimQueries.push(`imageView2/2/w/${width * ratio}/ignore-error/1`)
+  let transform = `imageView2/2/w/${width * ratio}`
+  if (height) {
+    transform += `/h/${height * ratio}`
   }
-  // if (/\.png$/.test(url) ||
-  if (!!toJpg || (metafield.mimeType === 'image/png' && (+metafield.size > 500 * 1024))) {
-    // 小程序现在支持 webp 了, 强制转换, 任何格式都可以转换成 webp
-    // 这个还不大确定兼容性, 目前暂时还是转成 jpg, 并且只对大的 png 图片进行处理
-    // optimQueries.push(`imageView2/2/format/webp/ignore-error/1`)
-    optimQueries.push(`imageView2/2/format/jpg/ignore-error/1`)
+  if (format) {
+    transform += `/format/${format}`
   }
   return optimUrl + optimQueries.join('|')
 }
 
-export const backgroundImageUrl = (imageSrc, width, height) => {
-  const safeImageSrc = optimizeImage(imageSrc, width, height).replace(
+export const backgroundImageUrl = (imageSrc, options) => {
+  const safeImageSrc = optimizeImage(imageSrc, options).replace(
     /"/g,
     '%22'
   )
