@@ -1,13 +1,13 @@
 <template>
-  <view class="page--address-edit">
+  <view :class="$style['page']">
     <form class="form">
       <view class="form-item">
         <view class="label">收货人</view>
-        <input class="input" v-model="address.data.full_name" type="text"/>
+        <input class="input" v-model="address.data.full_name" type="text" placeholder="请输入收货人姓名" />
       </view>
       <view class="form-item">
         <view class="label">联系电话</view>
-        <input class="input" v-model="address.data.mobile" type="digit"/>
+        <input class="input" v-model="address.data.mobile" type="digit" placeholder="请输入收货人手机号"/>
       </view>
       <view class="form-item">
         <view class="label">所在区域</view>
@@ -19,11 +19,11 @@
       </view>
       <view class="form-item">
         <view class="label">详细地址</view>
-        <input class="input" v-model="address.data.address1" type="text"/>
+        <input class="input" v-model="address.data.address1" type="text" placeholder="请输入收货地址"/>
       </view>
       <!-- <view>设为默认地址</view> -->
     </form>
-    <view class="buttons-wrapper">
+    <view :class="$style['buttonsWrapper']">
       <button class="button--dark" @tap="submitForm">保存</button>
     </view>
   </view>
@@ -99,64 +99,20 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" module>
 @import '@/styles/variables';
-.page--address-edit {
+page {
   background-color: $color-bg-gray;
-  .form {
+}
+.buttonsWrapper {
+  position: fixed;
+  z-index: $z-index-footer;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  padding: 20px;
+  button {
     display: block;
-    overflow: hidden;
-    background-color: #fff;
-    padding-bottom: 20px;
-  }
-  .form-item {
-    position: relative;
-    &::after {
-      position: absolute;
-      content: "";
-      display: block;
-      bottom: 0;
-      right: 0;
-      left: 100px;
-      border-bottom: 1px solid $color-divider;
-    }
-    &:last-child::after {
-      left: 0;
-    }
-    padding: 3px 0 3px 100px;
-    height: 50px;  // 内容高度是 44, 整体高度是 50
-    .input {
-      display: block;
-      margin: 10px 0;
-      height: 24px;
-      line-height: 24px;
-    }
-    .picker {
-      display: block;
-      height: 44px;
-      line-height: 44px;
-      margin: 0;
-    }
-  }
-  .label {
-    position: absolute;
-    top: 0;
-    height: 50px;
-    line-height: 50px;
-    width: 80px;
-    left: 15px;
-    color: $color-text-light;
-  }
-  .buttons-wrapper {
-    position: fixed;
-    z-index: $z-index-footer;
-    left: 0;
-    bottom: 0;
-    width: 100%;
-    padding: 20px;
-    button {
-      display: block;
-    }
   }
 }
 </style>
