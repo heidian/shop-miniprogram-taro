@@ -113,7 +113,7 @@ export default {
           return this.$store.dispatch('clients/uploadImage', tempFilePath)
         })
         Promise.all(promiseList).then((uploadResults) => {
-          const uploadImages = _.map(uploadResults, 'link')
+          const uploadImages = _.map(uploadResults, 'url')
           if (should_replace) {
             this.images[ idx ] = uploadImages[0] || ''
           } else {
