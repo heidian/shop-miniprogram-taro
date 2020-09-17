@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import Vue from 'vue'
 import Vuex from 'vuex'
 import createLogger from 'vuex/dist/logger'
@@ -17,6 +18,8 @@ Vue.use(Vuex)
 const state = () => {
   return {
     config: {},
+    campaignContext: {},
+    referralCode: '',
     globalColors: {
       '--color-bg': '#ff0000',
       '--color-text': '#000000'
@@ -40,30 +43,30 @@ const mutations = {
 }
 
 const actions = {
-  initClient({ commit, dispatch }) {
+  async initClient({ commit, dispatch }) {
     const extConfig = Taro.getExtConfigSync()
     commit('setExtConfig', extConfig)
-    // 这里一定要用 sync, 确保 onLaunch 里面调用 initCustomerAuth 的时候, 可以在其他所有方法之前
-    const customerToken = Taro.getStorageSync('customerToken')
+    const [customerToken, cartToken] = await Promise.all([
+      Taro.getStorage({ key: 'customerToken' }).then(res => res.data).catch(() => {}),
+      Taro.getStorage({ key: 'cartToken' }).then(res => res.data).catch(() => {}),
+    ])
     if (customerToken) {
-      commit('customer/setData', {
-        customerToken: customerToken,
-        isAuthenticated: true
-      })
+      commit('customer/setData', { customerToken, isAuthenticated: true })
+    }
+    if (cartToken) {
+      commit('cart/setData', { cartToken })
+    }
+    if (customerToken) {
       dispatch('customer/getCustomer')
       dispatch('partnerProfile/retrieve')
       dispatch('customer/getOpenID')
       dispatch('clients/getUploadToken')
     }
-    const cartToken = Taro.getStorageSync('cartToken')
-    if (cartToken) {
-      commit('cart/setData', {
-        cartToken: cartToken
-      })
-    }
     /* 如果一开始没有 fetch 一下 cart, 会出现的问题是 add 了以后, quantity 覆盖服务器上的 quantity
-    这里不需要判断 customerToken 或 cartToken 是否存在, 如果是没登录也没创建过 cartToken, fetch 接口会返回空的 */
-    dispatch('cart/fetch')
+    这里并不一定需要判断 customerToken 或 cartToken 是否存在, 如果是没登录也没创建过 cartToken, fetch 接口会返回空的 */
+    if (customerToken || cartToken) {
+      dispatch('cart/fetch')
+    }
   }
 }
 

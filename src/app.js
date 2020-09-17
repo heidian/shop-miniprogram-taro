@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import Vue from 'vue'
 import Taro from '@tarojs/taro'
 import qs from 'qs'
