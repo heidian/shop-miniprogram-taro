@@ -93,14 +93,15 @@ export default {
     }
   },
   created() {},
-  mounted() {
+  mounted() {},
+  onShow() {
+    // 因为依赖于登录返回以后重新获取 checkout, 这些在 onShow 里面执行
     this.$store.commit('checkout/setData', { checkoutToken: this.token })
-    this.$store.dispatch('checkout/fetch').catch((err) => {
-      if (_.get(err, 'response.status') === 400 && _.get(err,'response.data.code') === 'order_placed') {
-        const orderId = _.get(err,'response.data.order.id')
-        this.redirectToOrder(orderId)
-      }
-    })
+    if (!this.customer.isAuthenticated) {
+      Taro.navigateTo({ url: '/pages/login/index' })
+    } else {
+      this.fetchCheckout()
+    }
   },
   methods: {
     optimizeImage,
@@ -109,17 +110,30 @@ export default {
       const redirect = encodeURIComponent('/pages/orders/detail?id=' + orderId)
       Taro.reLaunch({ url: `/pages/account/index?redirect=${redirect}` })
     },
+    async fetchCheckout() {
+      Taro.showLoading({})
+      try {
+        await this.$store.dispatch('checkout/fetch')
+      } catch(err) {
+        if (_.get(err, 'response.status') === 400 && _.get(err,'response.data.code') === 'order_placed') {
+          const orderId = _.get(err,'response.data.order.id')
+          this.redirectToOrder(orderId)
+        }
+      }
+      Taro.hideLoading({})
+    },
     async pay() {
       if (this.paymentPending) {
         return
       }
       this.paymentPending = true
+      const openid = await this.$store.dispatch('customer/getOpenID')
       let res
       try {
         res = await API.post('/pingxx/charge_for_order/', {
           voucher_ids: [],
           order_token: this.token,
-          openid: this.customer.openid,
+          openid: openid,
           channel: 'wx_lite'
         })
         this.paymentPending = false

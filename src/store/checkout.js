@@ -61,7 +61,7 @@ const actions = {
             resolve(res)
             return
           }
-          const retryAfter = res.headers['retry-after'] || 10
+          const retryAfter = res.headers['Retry-After'] || 3
           if (count > 5) {
             reject(new Error('polling too long ... ' + retryAfter))
             return
