@@ -15,9 +15,18 @@ import categoriesStore from './categories'
 
 Vue.use(Vuex)
 
+/* state.config 的处理和其他 state 不同
+一定要在项目最前面就设置好 extConfig, 不要到了 onLaunch 再设置它,
+确保比如 getOpenId 等其他任何地方一定可以获得 appid */
 const state = () => {
+  const { extAppid, apiroot, shopname, shopid } = Taro.getExtConfigSync()
   return {
-    config: {},
+    config: {
+      appid: extAppid,
+      apiroot,
+      shopname,
+      shopid
+    },
     campaignContext: {},
     referralCode: '',
     globalColors: {
@@ -28,15 +37,6 @@ const state = () => {
 }
 
 const mutations = {
-  setExtConfig(state, payload) {
-    const { extAppid, apiroot, shopname, shopid } = payload
-    state.config = {
-      appid: extAppid,
-      apiroot,
-      shopname,
-      shopid
-    }
-  },
   setGlobalColors(state, payload) {
     state.globalColors = payload
   }
@@ -44,8 +44,6 @@ const mutations = {
 
 const actions = {
   async initClient({ commit, dispatch }) {
-    const extConfig = Taro.getExtConfigSync()
-    commit('setExtConfig', extConfig)
     const [customerToken, cartToken] = await Promise.all([
       Taro.getStorage({ key: 'customerToken' }).then(res => res.data).catch(() => {}),
       Taro.getStorage({ key: 'cartToken' }).then(res => res.data).catch(() => {}),
@@ -65,8 +63,6 @@ const actions = {
     if (customerToken || cartToken) {
       dispatch('cart/fetch')
     }
-
-    dispatch('customer/getOpenID')
   }
 }
 

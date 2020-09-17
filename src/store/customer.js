@@ -15,8 +15,11 @@ import { API } from '@/utils/api'
  */
 const state = () => {
   return {
+    /* openid 因为一打开小程序就需要被 analytics 用到, 不能等 initClient, 所以需要的地方都自己调用 getOpenID
+    不要直接访问 openid, 因为它有可能是一个 Promise */
     openid: '',
-    customerToken: '',  // 除了 utils/api 文件里的 interceptor, 其他地方都不要直接访问这个值
+    /* 除了 utils/api 文件里的 interceptor, 其他地方都不要直接访问 customerToken*/
+    customerToken: '',
     isAuthenticated: false,
     data: {}
   }
@@ -85,25 +88,38 @@ const actions = {
       throw err
     })
   },
-  getOpenID({ rootState, commit }) {
-    const appid = rootState.config.appid
-    const exchangeOpenID = ({ code }) => {
-      API.post('/clients/wechat-auth-openid/', {
-        js_code: code,
-        appid: appid
-      }).then((res) => {
-        const openid = res.data.openid
-        commit('setData', { openid })
-      }).catch((err) => {
-        console.log(err)
-        Taro.showModal({
-          title: '系统故障',
-          content: '获取用户信息失败 (wechat-auth-openid)',
-          showCancel: false
-        })
-      })
+  async getOpenID({ rootState, state, commit }) {
+    if (typeof state.openid === 'string' && state.openid) {
+      return state.openid
     }
-    Taro.login({ success: exchangeOpenID })
+    if (state.openid instanceof Promise) {
+      // 其他地方正在发起请求还没结束
+      return await state.openid
+    }
+    const promise = new Promise((resolve, reject) => {
+      const appid = rootState.config.appid
+      const exchangeOpenID = ({ code }) => {
+        API.post('/clients/wechat-auth-openid/', {
+          js_code: code,
+          appid: appid
+        }).then((res) => {
+          const openid = res.data.openid
+          commit('setData', { openid })
+          resolve(openid)
+          /* 直接 resolve(openid), 这样就可以 return await promise */
+        }).catch((err) => {
+          console.log(err)
+          Taro.showModal({
+            title: '系统故障',
+            content: '获取用户信息失败 (wechat-auth-openid)',
+            showCancel: false
+          })
+        })
+      }
+      Taro.login({ success: exchangeOpenID })
+    })
+    commit('setData', { openid: promise })
+    return await promise
   }
 }
 
