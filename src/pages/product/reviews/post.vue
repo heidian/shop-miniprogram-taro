@@ -16,7 +16,7 @@
     <view :class="$style['card']">
       <view :class="$style['cardHead']">添加图片</view>
       <view :class="[$style['grid'], $style['postReviewImages']]">
-        <view v-for="(image, index) in images" :key="image.id" :class="[$style['gridItem'], $style['uploader']]">
+        <view v-for="(image, index) in images" :key="index" :class="[$style['gridItem'], $style['uploader']]">
           <view :style="{'backgroundImage': backgroundImageUrl(image, 120)}" :class="$style['postReviewimage']" @tap="() => onUpdateImages(index)"></view>
         </view>
         <view :class="[$style['gridItem'], $style['uploader']]" v-if="imagesLimit > images.length">
@@ -51,7 +51,7 @@ export default {
       productId: product,
       productTitle: '',
       content: '',
-      images: [],
+      images: [],  // images 里面存的是 { src, metafield } 的格式
       uploading: false,
       pending: true,
       imagesLimit: 6
@@ -95,11 +95,11 @@ export default {
       if (this.uploading) {
         return
       }
-      const should_replace = /\d+/.test(idx)
-      const rest_count = should_replace ? 1 : this.imagesLimit - (this.images.length || 0)
-      if (!rest_count) return;
+      const shouldReplace = /\d+/.test(idx)
+      const restCount = shouldReplace ? 1 : this.imagesLimit - (this.images.length || 0)
+      if (!restCount) return;
       Taro.chooseImage({
-        count: rest_count,
+        count: restCount,
         sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
         sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
       }).then(res => {
@@ -112,15 +112,11 @@ export default {
         const promiseList = _.map(res.tempFilePaths, tempFilePath => {
           return this.$store.dispatch('clients/uploadImage', tempFilePath)
         })
-        Promise.all(promiseList).then((uploadResults) => {
-          const uploadImages = _.map(uploadResults, 'url')
-          if (should_replace) {
-            this.images[ idx ] = uploadImages[0] || ''
+        Promise.all(promiseList).then((images) => {
+          if (shouldReplace) {
+            this.images[idx] = uploadImages[0] || ''
           } else {
-            this.images = [
-              ...this.images,
-              ...uploadImages
-            ]
+            this.images = [ ...this.images, ...images ]
           }
           this.uploading = false
         }).catch(err => {
@@ -136,12 +132,7 @@ export default {
         'content': this.content || ''
       }
       if (this.images.length) {
-        payload.images = _.map(this.images, image => {
-          return {
-            src: image,
-            metafield: {}
-          }
-        })
+        payload.images = [ ...this.images ]
       }
       this.pending = true
       API.post('/customers/review/', payload).then(res => {
@@ -152,10 +143,6 @@ export default {
           mask: true,
         })
         this.pending = false
-        // try {
-        //   Taro.setStorageSync('_need_refresh_product_reviews', true)
-        // } catch (error) {}
-
         _.delay(() => {
           Taro.navigateBack({
             delta: 1

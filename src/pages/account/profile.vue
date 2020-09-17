@@ -134,8 +134,8 @@ export default {
         sourceType: ['album', 'camera'],
       }).then(res => {
         const tempFilePath = res.tempFilePaths[0]
-        this.$store.dispatch('clients/uploadImage', tempFilePath).then(uploadRes => {
-          if (!!uploadRes.url) this.userInfo.avatar = uploadRes.url
+        this.$store.dispatch('clients/uploadImage', tempFilePath).then(image => {
+          this.userInfo.avatar = image.src
           this.uploading = false
         }).catch(err => {
           handleErr(err)

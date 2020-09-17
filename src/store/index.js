@@ -59,14 +59,14 @@ const actions = {
     if (customerToken) {
       dispatch('customer/getCustomer')
       dispatch('partnerProfile/retrieve')
-      dispatch('customer/getOpenID')
-      dispatch('clients/getUploadToken')
     }
     /* 如果一开始没有 fetch 一下 cart, 会出现的问题是 add 了以后, quantity 覆盖服务器上的 quantity
     这里并不一定需要判断 customerToken 或 cartToken 是否存在, 如果是没登录也没创建过 cartToken, fetch 接口会返回空的 */
     if (customerToken || cartToken) {
       dispatch('cart/fetch')
     }
+
+    dispatch('customer/getOpenID')
   }
 }
 
