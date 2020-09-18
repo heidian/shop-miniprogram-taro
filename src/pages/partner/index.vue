@@ -156,9 +156,9 @@ export default {
     }
   },
   computed: {
-    ...mapState(['customer']),
+    ...mapState(['customer', 'partnerProfile']),
     growthValue() {
-      return 900;
+      return +this.partnerProfile.data.growth_value || 0
     }
   },
   created() {
