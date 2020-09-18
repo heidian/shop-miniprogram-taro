@@ -39,13 +39,13 @@ export default {
     }
   },
   computed: {
-    ...mapState(['customer']),
+    ...mapState(['partnerProfile']),
     disableSubmit () {
       return false
     }
   },
   mounted() {
-    const { alipay, alipay_legal_name, wechat_id } = _.cloneDeep(this.customer.data)
+    const { alipay, alipay_legal_name, wechat_id } = _.cloneDeep(this.partnerProfile.data)
     this.formData = {
       alipay, alipay_legal_name, wechat_id
     }
