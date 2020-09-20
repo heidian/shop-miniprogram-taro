@@ -1,223 +1,223 @@
 {
-	"miniprogramRoot": "dist/",
-	"projectname": "mini_heyshop_taro",
-	"description": "HeyShop国货商城小程序",
-	"appid": "wx0ebd63bd0a26f767",
-	"setting": {
-		"urlCheck": true,
-		"es6": false,
-		"enhance": false,
-		"postcss": false,
-		"preloadBackgroundData": false,
-		"minified": false,
-		"newFeature": true,
-		"coverView": true,
-		"nodeModules": false,
-		"autoAudits": false,
-		"showShadowRootInWxmlPanel": true,
-		"scopeDataCheck": false,
-		"uglifyFileName": false,
-		"checkInvalidKey": true,
-		"checkSiteMap": false,
-		"uploadWithSourceMap": true,
-		"compileHotReLoad": false,
-		"babelSetting": {
-			"ignore": [],
-			"disablePlugins": [],
-			"outputPath": ""
-		},
-		"bundle": true,
-		"useIsolateContext": true,
-		"useCompilerModule": false,
-		"userConfirmedUseCompilerModuleSwitch": true,
-		"useMultiFrameRuntime": false,
-		"useApiHook": true,
-		"packNpmManually": false,
-		"packNpmRelationList": []
-	},
-	"compileType": "miniprogram",
-	"simulatorType": "wechat",
-	"simulatorPluginLibVersion": {},
-	"libVersion": "2.12.2",
-	"condition": {
-		"search": {
-			"current": -1,
-			"list": []
-		},
-		"conversation": {
-			"current": -1,
-			"list": []
-		},
-		"plugin": {
-			"current": -1,
-			"list": []
-		},
-		"game": {
-			"current": -1,
-			"list": []
-		},
-		"gamePlugin": {
-			"current": -1,
-			"list": []
-		},
-		"miniprogram": {
-			"current": -1,
-			"list": [
-				{
-					"id": -1,
-					"name": "pages/login/index",
-					"pathName": "pages/login/index",
-					"query": "",
-					"scene": null
-				},
-				{
-					"id": -1,
-					"name": "pages/index/index",
-					"pathName": "pages/index/index",
-					"query": "",
-					"scene": null
-				},
-				{
-					"id": 2,
-					"name": "pages/product/index",
-					"pathName": "pages/product/index",
-					"query": "name=p_1e6qoioed9ijnj9",
-					"scene": null
-				},
-				{
-					"id": -1,
-					"name": "pages/cart/index",
-					"pathName": "pages/cart/index",
-					"query": "name=p_1e2v1ccbc1cfr1h19",
-					"scene": null
-				},
-				{
-					"id": 4,
-					"name": "pages/checkout/index",
-					"pathName": "pages/checkout/index",
-					"query": "token=2fc714cdcfa18c9bbf8a9fc0dff4f5298358f88c",
-					"scene": null
-				},
-				{
-					"id": -1,
-					"name": "pages/addresses/index",
-					"pathName": "pages/addresses/index",
-					"query": "",
-					"scene": null
-				},
-				{
-					"id": -1,
-					"name": "pages/addresses/edit",
-					"pathName": "pages/addresses/edit",
-					"query": "id=365116",
-					"scene": null
-				},
-				{
-					"id": -1,
-					"name": "pages/account/index",
-					"pathName": "pages/account/index",
-					"query": "",
-					"scene": null
-				},
-				{
-					"id": 8,
-					"name": "pages/account/profile",
-					"pathName": "pages/account/profile",
-					"query": "",
-					"scene": null
-				},
-				{
-					"id": -1,
-					"name": "pages/bind-alipay/index",
-					"pathName": "pages/bind-alipay/index",
-					"query": "",
-					"scene": null
-				},
-				{
-					"id": -1,
-					"name": "pages/orders/index",
-					"pathName": "pages/orders/index",
-					"query": "filter=paid",
-					"scene": null
-				},
-				{
-					"id": 11,
-					"name": "pages/misc/share",
-					"pathName": "pages/misc/share",
-					"query": "product=76878",
-					"scene": null
-				},
-				{
-					"id": 12,
-					"name": "pages/product/index",
-					"pathName": "pages/product/index",
-					"query": "name=p_1e2f4192n1b5u1t51",
-					"scene": null
-				},
-				{
-					"id": -1,
-					"name": "pages/categories/index",
-					"pathName": "pages/categories/index",
-					"query": "",
-					"scene": null
-				},
-				{
-					"id": -1,
-					"name": "pages/search/index",
-					"pathName": "pages/search/index",
-					"query": "",
-					"scene": null
-				},
-				{
-					"id": 15,
-					"name": "pages/product/reviews/index",
-					"pathName": "pages/product/reviews/index",
-					"query": "product=76878",
-					"scene": null
-				},
-				{
-					"id": 16,
-					"name": "pages/misc/landing",
-					"pathName": "pages/misc/landing",
-					"query": "product=76878&code=SJe223",
-					"scene": null
-				},
-				{
-					"id": 17,
-					"name": "pages/product/reviews/post",
-					"pathName": "pages/product/reviews/post",
-					"query": "product=76878",
-					"scene": null
-				},
-				{
-					"id": -1,
-					"name": "pages/product/reviews/reply",
-					"pathName": "pages/product/reviews/reply",
-					"query": "review=79&product=76878",
-					"scene": null
-				},
-				{
-					"id": 19,
-					"name": "pages/partner/index",
-					"pathName": "pages/partner/index",
-					"query": "",
-					"scene": null
-				},
-				{
-					"id": -1,
-					"name": "pages/static/index",
-					"pathName": "pages/static/index",
-					"query": "name=gifts",
-					"scene": null
-				},
-				{
-					"id": -1,
-					"name": "pages/home/index with scene",
-					"pathName": "pages/home/index",
-					"query": "scene=s%3Dshare%26c%3DXuh636%26r%3Dpdt%26id%3D84954",
-					"scene": null
-				}
-			]
-		}
-	}
+  "miniprogramRoot": "dist/",
+  "projectname": "mini_heyshop_taro",
+  "description": "HeyShop国货商城小程序",
+  "appid": "wx0ebd63bd0a26f767",
+  "setting": {
+    "urlCheck": true,
+    "es6": false,
+    "enhance": false,
+    "postcss": false,
+    "preloadBackgroundData": false,
+    "minified": false,
+    "newFeature": true,
+    "coverView": true,
+    "nodeModules": false,
+    "autoAudits": false,
+    "showShadowRootInWxmlPanel": true,
+    "scopeDataCheck": false,
+    "uglifyFileName": false,
+    "checkInvalidKey": true,
+    "checkSiteMap": false,
+    "uploadWithSourceMap": true,
+    "compileHotReLoad": false,
+    "useMultiFrameRuntime": false,
+    "useApiHook": true,
+    "babelSetting": {
+      "ignore": [],
+      "disablePlugins": [],
+      "outputPath": ""
+    },
+    "bundle": true,
+    "useIsolateContext": true,
+    "useCompilerModule": false,
+    "userConfirmedUseCompilerModuleSwitch": true,
+    "packNpmManually": false,
+    "packNpmRelationList": []
+  },
+  "compileType": "miniprogram",
+  "simulatorType": "wechat",
+  "simulatorPluginLibVersion": {},
+  "libVersion": "2.12.2",
+  "condition": {
+    "search": {
+      "current": -1,
+      "list": []
+    },
+    "conversation": {
+      "current": -1,
+      "list": []
+    },
+    "plugin": {
+      "current": -1,
+      "list": []
+    },
+    "game": {
+      "current": -1,
+      "list": []
+    },
+    "gamePlugin": {
+      "current": -1,
+      "list": []
+    },
+    "miniprogram": {
+      "current": -1,
+      "list": [
+        {
+          "id": -1,
+          "name": "pages/login/index",
+          "pathName": "pages/login/index",
+          "query": "",
+          "scene": null
+        },
+        {
+          "id": -1,
+          "name": "pages/index/index",
+          "pathName": "pages/index/index",
+          "query": "",
+          "scene": null
+        },
+        {
+          "id": 2,
+          "name": "pages/product/index",
+          "pathName": "pages/product/index",
+          "query": "name=p_1e6qoioed9ijnj9",
+          "scene": null
+        },
+        {
+          "id": -1,
+          "name": "pages/cart/index",
+          "pathName": "pages/cart/index",
+          "query": "name=p_1e2v1ccbc1cfr1h19",
+          "scene": null
+        },
+        {
+          "id": 4,
+          "name": "pages/checkout/index",
+          "pathName": "pages/checkout/index",
+          "query": "token=2fc714cdcfa18c9bbf8a9fc0dff4f5298358f88c",
+          "scene": null
+        },
+        {
+          "id": -1,
+          "name": "pages/addresses/index",
+          "pathName": "pages/addresses/index",
+          "query": "",
+          "scene": null
+        },
+        {
+          "id": -1,
+          "name": "pages/addresses/edit",
+          "pathName": "pages/addresses/edit",
+          "query": "id=365116",
+          "scene": null
+        },
+        {
+          "id": -1,
+          "name": "pages/account/index",
+          "pathName": "pages/account/index",
+          "query": "",
+          "scene": null
+        },
+        {
+          "id": 8,
+          "name": "pages/account/profile",
+          "pathName": "pages/account/profile",
+          "query": "",
+          "scene": null
+        },
+        {
+          "id": -1,
+          "name": "pages/bind-alipay/index",
+          "pathName": "pages/bind-alipay/index",
+          "query": "",
+          "scene": null
+        },
+        {
+          "id": -1,
+          "name": "pages/orders/index",
+          "pathName": "pages/orders/index",
+          "query": "filter=paid",
+          "scene": null
+        },
+        {
+          "id": 11,
+          "name": "pages/misc/share",
+          "pathName": "pages/misc/share",
+          "query": "product=76878",
+          "scene": null
+        },
+        {
+          "id": 12,
+          "name": "pages/product/index",
+          "pathName": "pages/product/index",
+          "query": "name=p_1e2f4192n1b5u1t51",
+          "scene": null
+        },
+        {
+          "id": -1,
+          "name": "pages/categories/index",
+          "pathName": "pages/categories/index",
+          "query": "",
+          "scene": null
+        },
+        {
+          "id": -1,
+          "name": "pages/search/index",
+          "pathName": "pages/search/index",
+          "query": "",
+          "scene": null
+        },
+        {
+          "id": 15,
+          "name": "pages/product/reviews/index",
+          "pathName": "pages/product/reviews/index",
+          "query": "product=76878",
+          "scene": null
+        },
+        {
+          "id": 16,
+          "name": "pages/misc/landing",
+          "pathName": "pages/misc/landing",
+          "query": "product=76878&code=SJe223",
+          "scene": null
+        },
+        {
+          "id": 17,
+          "name": "pages/product/reviews/post",
+          "pathName": "pages/product/reviews/post",
+          "query": "product=76878",
+          "scene": null
+        },
+        {
+          "id": -1,
+          "name": "pages/product/reviews/reply",
+          "pathName": "pages/product/reviews/reply",
+          "query": "review=79&product=76878",
+          "scene": null
+        },
+        {
+          "id": 19,
+          "name": "pages/partner/index",
+          "pathName": "pages/partner/index",
+          "query": "",
+          "scene": null
+        },
+        {
+          "id": -1,
+          "name": "pages/static/index",
+          "pathName": "pages/static/index",
+          "query": "name=gifts",
+          "scene": null
+        },
+        {
+          "id": -1,
+          "name": "pages/home/index with scene",
+          "pathName": "pages/home/index",
+          "query": "scene=s%3Dshare%26c%3DXuh636%26r%3Dpdt%26id%3D84954",
+          "scene": null
+        }
+      ]
+    }
+  }
 }

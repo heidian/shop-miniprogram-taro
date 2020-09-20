@@ -89,7 +89,7 @@ export default {
   created() {
     // 初始化过滤参数
     const defaultParams = {
-      fields: ['id', 'name', 'title', 'description', 'image', 'price', 'compare_at_price'].join(',')
+      fields: ['id', 'name', 'title', 'description', 'image', 'price', 'compare_at_price', 'metafields'].join(',')
     }
     const filter = {}
     const { category } = getCurrentInstance().router.params
