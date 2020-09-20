@@ -27,10 +27,10 @@
       <!-- 商品标题和描述 -->
       <view :class="$style['productTitle']">{{ product.title }}</view>
       <view :class="$style['productDescription']">{{ product.description }}</view>
-      <view :class="$style['productTags']">
-        <view :class="[$style['tag'], $style['tagOrange']]">立赚9.14</view>
-        <view :class="[$style['tag'], $style['tagGold']]">
-          <text class="el-icon-star-on" style="font-size: 1.2em;"></text>成长值120
+      <view :class="$style['productTags']" v-if="rebateValue">
+        <view :class="[$style['tag'], $style['tagOrange']]">立赚 {{ rebateValue }}</view>
+        <view :class="[$style['tag'], $style['tagGold']]" v-if="growthValue">
+          <text class="el-icon-star-on" style="font-size: 1.2em;"></text>成长值 {{ growthValue }}
         </view>
         <view :class="$style['tip']" @tap="showRebateTip">?</view>
       </view>
@@ -145,6 +145,15 @@ export default {
     ...mapState(['cart', 'customer']),
     body_html() {
       return _.get(this.product, 'body_html_mobile') || _.get(this.product, 'body_html')
+    },
+    rebateValue() {
+      const rebateRate = _.get(this.product, 'metafields.substores.rebate_rate')
+      if (rebateRate && this.currentVariant) {
+        return +(+rebateRate * +this.currentVariant.price).toFixed(2)
+      }
+    },
+    growthValue() {
+      return _.get(this.product, 'metafields.substores.growth_value')
     }
   },
   methods: {
@@ -155,7 +164,7 @@ export default {
       // TODO 要处理 404
       const fields = [
         'id', 'title', 'description', 'image', 'images', 'variants', 'options',
-        'body_html', 'body_html_mobile', 'published', 'published_at'
+        'body_html', 'body_html_mobile', 'published', 'published_at', 'metafields'
       ].join(',')
       let product = null
       if (this.productId) {
