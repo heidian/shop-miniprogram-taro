@@ -4,10 +4,9 @@
       <view v-if="customer.isAuthenticated" :class="$style['profileWrapper']">
         <image :class="$style['avatar']" :src="optimizeImage(customer.data.avatar, 50)"></image>
         <view>
-          <view>{{ customer.data.full_name }}</view>
+          <view>{{ customer.data.full_name || '未命名' }}</view>
           <view :class="$style['lightText']">
-            <text class="el-icon-star-on"></text>
-            {{ /*partner.level*/ '普通用户' }}
+            <text class="el-icon-star-on"></text> {{ levelTitle }}
           </view>
         </view>
       </view>
@@ -99,7 +98,7 @@
       </view>
       <view v-if="hasMore" :class="$style['loadMore']"><text class="el-icon-more"></text></view>
     </view>
-    <view :class="$style['activationBottom']">
+    <view :class="$style['activationBottom']" v-if="growthValue >= 1000 && !partnerLevel">
       <button class="button--dark button--small" style="color: #e6caa5;">免费激活合伙人身份</button>
     </view>
   </view>
@@ -161,6 +160,12 @@ export default {
   },
   computed: {
     ...mapState(['customer', 'partnerProfile']),
+    levelTitle() {
+      return ['普通会员', '国货大使', '高级国货大使'][this.level]
+    },
+    partnerLevel() {
+      return +this.partnerProfile.data.level || 0
+    },
     growthValue() {
       return +this.partnerProfile.data.growth_value || 0
     },

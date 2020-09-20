@@ -25,11 +25,11 @@
         </view>
         <view :class="$style['level']">
           <view :class="$style['levelHint']">
-            <view :class="$style['levelHintText']">当前成长值{{ points }}（达{{ pointsMax }}即可升级）</view>
-            <view :class="$style['levelHintNumber']">{{ points }}/{{ pointsMax }} <view :class="$style['textCaret']"></view></view>
+            <view :class="$style['levelHintText']">当前成长值{{ growthValue }}（达{{ 1000 }}即可升级）</view>
+            <view :class="$style['levelHintNumber']">{{ growthValue }}/{{ 1000 }} <view :class="$style['textCaret']"></view></view>
           </view>
           <view :class="$style['levelProgress']">
-            <view :class="$style['levelProgressInner']" :style="levelProgressStyle"></view>
+            <view :class="$style['levelProgressInner']" :style="{'width':`${growthValue/10}%`}"></view>
           </view>
         </view>
       </view>
@@ -148,7 +148,6 @@ export default {
   name: 'Account',
   data() {
     return {
-      pointsMax: 1000,
       promotionNavigators: [{
         url: '',
         icon: 'https://up.img.heidiancdn.com/o_1eh4kgtf1qm01d8a1hovm201gqe0up263x.png',
@@ -206,18 +205,15 @@ export default {
     InfiniteProducts
   },
   computed: {
-    ...mapState(['customer']),
+    ...mapState(['customer', 'partnerProfile']),
     levelTitle() {
-      return _.get(this.customer.data, 'level.title')
+      return ['普通会员', '国货大使', '高级国货大使'][this.partnerLevel]
     },
-    points() {
-      return _.get(this.customer.data, 'points', 0)
+    partnerLevel() {
+      return +this.partnerProfile.data.level || 0
     },
-    levelProgressStyle() {
-      const width = (this.points || 0) * 100 / this.pointsMax
-      return {
-        width: `${width}%`
-      }
+    growthValue() {
+      return +this.partnerProfile.data.growth_value || 0
     },
     balance() {
       return '0.00'
