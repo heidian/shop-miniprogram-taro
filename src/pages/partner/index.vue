@@ -78,8 +78,11 @@
       <view v-for="(product, index) in products.data" :key="product.id" :class="$style['productGrid']">
         <view :class="$style['productItem']" @tap="goToProduct(product.name)">
           <view :class="$style['productImageWrapper']" :style="{'backgroundImage': backgroundImageUrl(product.image, 200)}">
-            <view :class="[$style['productGrowthValue'], $style['goldBg']]">
-              <text class="el-icon-star-on"></text>成长值 900
+            <view
+              :class="[$style['productGrowthValue'], $style['goldBg']]"
+              v-if="product.metafields.substores && product.metafields.substores.growth_value"
+            >
+              <text class="el-icon-star-on"></text>成长值 {{ product.metafields.substores.growth_value }}
             </view>
           </view>
           <view :class="$style['productTitle']">{{ product.title }}</view>
@@ -94,6 +97,7 @@
           </view>
         </view>
       </view>
+      <view v-if="hasMore" :class="$style['loadMore']"><text class="el-icon-more"></text></view>
     </view>
     <view :class="$style['activationBottom']">
       <button class="button--dark button--small" style="color: #e6caa5;">免费激活合伙人身份</button>
@@ -159,6 +163,10 @@ export default {
     ...mapState(['customer', 'partnerProfile']),
     growthValue() {
       return +this.partnerProfile.data.growth_value || 0
+    },
+    hasMore() {
+      const { page, pageSize, count } = this.products
+      return page * pageSize < count
     }
   },
   created() {
@@ -169,14 +177,24 @@ export default {
     })
   },
   async mounted() {
-    this.updateDefaultParams({
-      fields: ['id', 'name', 'title', 'description', 'image', 'price', 'compare_at_price'].join(',')
-    }, { fetch: false })
-    await this.fetchList()
+    API.get('/shopfront/collection/', {
+      params: { name: 'high-growth-value' }
+    }).then((res) => {
+      const collectionId = _.get(res.data, 'results[0].id')
+      if (collectionId) {
+        this.updateDefaultParams({
+          fields: ['id', 'name', 'title', 'description', 'image', 'price', 'compare_at_price', 'metafields'].join(','),
+          collection: collectionId
+        }, { fetch: false })
+        this.fetchList()
+      }
+    })
   },
   onReachBottom() {
-    const { data, page, pageSize, count } = this.products
-    if (data.length < 30 && page * pageSize < count) {
+    // 高成长值商品不多, 不限制页数了
+    // const { data, page, pageSize, count } = this.products
+    // if (data.length < 30 && page * pageSize < count) {
+    if (this.hasMore) {
       this.fetchMore()
     } else {}
   },

@@ -207,8 +207,13 @@ page {
   align-items: center;
   justify-content: space-between;
 }
-
-
+.loadMore {
+  clear: both;
+  text-align: center;
+  font-size: 20px;
+  padding: 10px 15px;
+  color: $color-text-lighter;
+}
 /*
  * 底部菜单
  */
