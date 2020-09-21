@@ -45,7 +45,6 @@ export default {
   },
   watch: {
     visible (newValue) {
-      console.log('watch visible: ', newValue)
       if (newValue && !this.isVisible) {
         this.handleOpen()
       } else if (!newValue && this.isVisible) {

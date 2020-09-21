@@ -99,7 +99,7 @@
       <view v-if="hasMore" :class="$style['loadMore']"><text class="el-icon-more"></text></view>
     </view>
     <view :class="$style['activationBottom']" v-if="growthValue >= 1000 && !partnerLevel">
-      <button class="button--dark button--small" style="color: #e6caa5;">免费激活合伙人身份</button>
+      <button class="button--dark button--small" style="color: #e6caa5;" @tap="goToActivate">免费激活合伙人身份</button>
     </view>
   </view>
 </template>
@@ -161,7 +161,7 @@ export default {
   computed: {
     ...mapState(['customer', 'partnerProfile']),
     levelTitle() {
-      return ['普通会员', '国货大使', '高级国货大使'][this.level]
+      return ['普通会员', '国货大使', '高级国货大使'][this.partnerLevel]
     },
     partnerLevel() {
       return +this.partnerProfile.data.level || 0
@@ -214,10 +214,13 @@ export default {
       })
     },
     goToLogin() {
-      Taro.navigateTo('/pages/login/index')
+      Taro.navigateTo({ url: '/pages/login/index' })
     },
     goToProduct(productName) {
       Taro.navigateTo({ url: `/pages/product/index?name=${productName}` })
+    },
+    goToActivate() {
+      Taro.navigateTo({ url: '/pages/partner/activate' })
     }
   }
 }

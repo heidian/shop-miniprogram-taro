@@ -48,8 +48,7 @@
 import _ from 'lodash'
 import Taro, { getCurrentPages }from '@tarojs/taro'
 import { API } from '@/utils/api'
-import { handleErr } from '@/utils/errHelper'
-import { optimizeImage, backgroundImageUrl, DEFAULT_AVATAR } from '@/utils/image'
+import { optimizeImage } from '@/utils/image'
 
 import HsDialog from '@/components/HsDialog'
 
@@ -79,13 +78,17 @@ export default {
   },
   methods: {
     optimizeImage,
-    backgroundImageUrl,
     async getPhoneNumber(e) {
       const { errMsg, encryptedData, iv } = e.detail || {}
       if (!encryptedData || !iv) {
         // TODO 处理错误
         console.log('无法获取手机号', errMsg)
-        handleErr(errMsg)
+        Taro.showModal({
+          title: '出错了',
+          content: errMsg,
+          showCancel: false,
+          success: function(res) {}
+        })
         return
       }
       Taro.showLoading({})
@@ -132,7 +135,12 @@ export default {
         this.dialogVisible = true
       } catch (err) {
         console.log(err)
-        handleErr('验证码已失效，请联系好友重新获取。或跳过输入验证码，直接微信登录！')
+        Taro.showModal({
+          title: '出错了',
+          content: '验证码已失效，请联系好友重新获取。或跳过输入验证码，直接微信登录！',
+          showCancel: false,
+          success: function(res) {}
+        })
       }
     },
     onEnsure () {
