@@ -9,7 +9,8 @@
       <view :class="$style['referralBody']">
         <image :class="$style['referralAvatar']" :src="optimizeImage(referrerData.avatar, 100)"></image>
         <view :class="$style['referralName']">{{ referrerData.full_name }}</view>
-        <view :class="$style['referralCodeText']">{{ referralCode }}</view>
+        <view :class="$style['referralCodeText']">邀请码：{{ referralCode }}</view>
+        <view :class="$style['referralTip']">邀请人确定后将不可更改，是否确定？</view>
       </view>
       <view :class="$style['referralFooter']" slot="footer">
         <button @tap="onCancel">取消</button>
@@ -74,7 +75,9 @@ export default {
       API.post('/substores/partners/activate/', {
         referral_code: this.referralCode
       }).then(() => {
-        //
+        Taro.showToast({ title: '合伙人身份激活成功', icon: 'none', duration: 1000 })
+        this.$store.dispatch('partnerProfile/retrieve')
+        setTimeout(() => Taro.navigateBack(), 1000)
       }).catch(handleErr)
     }
   }
@@ -141,6 +144,10 @@ page {
 .referralCodeText {
   font-size: 12px;
   color: $color-text-light;
+}
+.referralTip {
+  margin-top: 15px;
+  color: $color-text-lighter;
 }
 .referralFooter {
   width: 100%;
