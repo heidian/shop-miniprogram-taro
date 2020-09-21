@@ -18,7 +18,7 @@ export const formatDate = (value) => {
     return '-';
   }
   const v = moment(value)
-  return v.isValid() ? v.format('YYYY/MM/DD') : '-'
+  return v.isValid() ? v.format('YYYY-MM-DD') : '-'
 }
 
 export const formatDateTime = (value) => {
@@ -26,5 +26,5 @@ export const formatDateTime = (value) => {
     return '-';
   }
   const v = moment(value)
-  return v.isValid() ? v.format('YYYY/MM/DD HH:mm') : '-'
+  return v.isValid() ? v.format('YYYY-MM-DD HH:mm') : '-'
 }

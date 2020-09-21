@@ -21,12 +21,14 @@
           <view v-else :class="$style['caption']">
             <navigator url="/pages/login/index" :class="$style['login']">登录</navigator>
           </view>
-          <navigator :class="$style['caret']" url="/pages/account/settings" open-type="navigate" hover-class="none"></navigator>
+          <navigator url="/pages/account/settings" open-type="navigate" hover-class="none">
+            <text class="el-icon-arrow-right" style="font-size: 1.5em;"></text>
+          </navigator>
         </view>
         <view :class="$style['level']">
           <view :class="$style['levelHint']">
             <view :class="$style['levelHintText']">当前成长值{{ growthValue }}（达{{ 1000 }}即可升级）</view>
-            <view :class="$style['levelHintNumber']">{{ growthValue }}/{{ 1000 }} <view :class="$style['textCaret']"></view></view>
+            <view :class="$style['levelHintNumber']">{{ growthValue }}/{{ 1000 }} <text class="el-icon-arrow-right"></text></view>
           </view>
           <view :class="$style['levelProgress']">
             <view :class="$style['levelProgressInner']" :style="{'width':`${growthValue/10}%`}"></view>
@@ -37,9 +39,11 @@
       <template>
         <view :class="$style['partner']">
           <text :class="$style['partnerText']">成为合伙人获取收益</text>
-          <text :class="$style['partnerBtnText']">立即升级</text>
+          <navigator
+            :class="$style['partnerBtnText']" hover-class="none"
+            url="/pages/partner/index" open-type="switchTab"
+          >立即升级</navigator>
         </view>
-
         <view :class="$style['balance']">
           <view :class="$style['balanceMain']">
             <view :class="$style['balanceValues']">
@@ -48,7 +52,7 @@
               <text :class="$style['balanceValuesHint']">自购返利￥0+邀请收益￥0</text>
             </view>
             <view :class="$style['balanceBtns']">
-              <view :class="$style['withdrawHistory']">提现记录 <view :class="$style['textCaret']"></view></view>
+              <view :class="$style['withdrawHistory']">提现记录 <text class="el-icon-arrow-right"></text></view>
               <navigator :class="$style['bindAlipay']" url="/pages/account/bind-alipay" open-type="navigate" hover-class="none">绑定支付宝</navigator>
             </view>
           </view>
@@ -72,7 +76,7 @@
         <view :class="[$style['grid'], $style['promotion']]">
           <navigator
             v-for="item in promotionNavigators" :key="item.text"
-            :url="item.url" open-type="navigate" hover-class="none"
+            :url="item.url" :open-type="item.openType" hover-class="none"
             :class="[$style['gridItem'], $style['gridNavigator']]"
           >
             <image :class="[$style['gridItemIcon'], $style['gridItemIconBigger']]" :src="item.icon" mode="aspectFit"></image>
@@ -86,9 +90,7 @@
             <navigator
               :class="$style['sectionHeadNavigator']"
               open-type="navigate" hover-class="none" url="/pages/orders/index"
-            >
-              <text>查看全部</text><view :class="$style['textCaret']"></view>
-            </navigator>
+            >查看全部 <text class="el-icon-arrow-right"></text></navigator>
           </view>
           <view :class="$style['grid']">
             <navigator
@@ -149,19 +151,23 @@ export default {
   data() {
     return {
       promotionNavigators: [{
-        url: '',
+        url: '/pages/partner/index',
+        openType: 'switchTab',
         icon: 'https://up.img.heidiancdn.com/o_1eh4kgtf1qm01d8a1hovm201gqe0up263x.png',
         text: '我的任务'
       }, {
         url: '/pages/misc/share',
+        openType: 'navigate',
         icon: 'https://up.img.heidiancdn.com/o_1eh4kgtf1lha1tl75f7phcrp30enifit.png',
         text: '邀请返现'
       }, {
         url: '',
+        openType: 'navigate',
         icon: 'https://up.img.heidiancdn.com/o_1eh4kgtf11k0p1qk31mha1qgb1rjf0awards.png',
         text: '粉丝排行榜'
       }, {
         url: '',
+        openType: 'navigate',
         icon: 'https://up.img.heidiancdn.com/o_1eh4kgtf149j1sk5bih1rpk1rfb0.png',
         text: '推广帮助'
       }],
@@ -333,26 +339,6 @@ $color-divider: rgba(#ffffff, 0.1);
   border: 1px solid $color-golden;
   border-radius: 2px;
 }
-.caret {
-  margin-right: -15px;
-  width: 40px;
-  height: 40px;
-  position: relative;
-}
-.caret::after {
-  content: '';
-  position: absolute;
-  width: 10px;
-  height: 10px;
-  border-top: 2px solid $color-text;
-  border-right: 2px solid $color-text;
-  top: 50%;
-  left: 50%;
-  margin-left: -5px;
-  margin-top: -5px;
-  transform: rotate(45deg);
-}
-
 .level {
   width: 100%;
   margin-top: 15px;
@@ -371,15 +357,6 @@ $color-divider: rgba(#ffffff, 0.1);
   align-items: center;
   color: $color-text;
   font-size: 11px;
-}
-.textCaret {
-  display: inline-block;
-  margin-left: 3px;
-  width: 6px;
-  height: 6px;
-  border-top: 1px solid $color-text-light;
-  border-right: 1px solid $color-text-light;
-  transform: rotate(45deg);
 }
 .levelProgress {
   width: 100%;

@@ -4,17 +4,22 @@
       <view v-if="customer.isAuthenticated" :class="$style['profileWrapper']">
         <image :class="$style['avatar']" :src="optimizeImage(customer.data.avatar, 50)"></image>
         <view>
-          <view>{{ customer.data.full_name || '未命名' }}</view>
+          <view :class="$style['fullName']">{{ customer.data.full_name || '未命名' }}</view>
           <view :class="$style['lightText']">
             <text class="el-icon-star-on"></text> {{ levelTitle }}
           </view>
         </view>
+        <image
+          :class="$style['heyshop']" mode="widthFix"
+          src="https://up.img.heidiancdn.com/o_1eiojj5s632c1urj1a6u1jn01l330shop3x.png"
+        >HeyShop</image>
+        <view></view>
       </view>
       <view v-else @tap="goToLogin">去登录</view>
       <template v-if="growthValue < 1000">
         <view :class="$style['growthProgressWrapper']">
           <view :class="$style['lightText']" style="margin-left: 0.5em;">当前成长值{{ growthValue }}（达1000即可升级）</view>
-          <view :class="$style['lightText']" style="margin-right: 0.5em;">{{ growthValue }}/1000</view>
+          <view :class="$style['lightText']">{{ growthValue }}/1000 <text class="el-icon-arrow-right"></text></view>
           <view :class="$style['progressBar']">
             <view :class="$style['progressBarInner']" :style="{'width':`${growthValue/10}%`}"></view>
           </view>
@@ -33,9 +38,12 @@
       <template v-else>
         <view :class="$style['growthProgressWrapper']">
           <view :class="$style['lightText']" style="margin-left: 0.5em;">当前成长值{{ growthValue }}</view>
+          <view :class="[$style['lightText'], 'el-icon-arrow-right']"></view>
         </view>
         <view :class="[$style['isPartnerWrapper'], $style['goldBg']]">
-          当前已达合伙人申请条件 | 2021.12.14 到期
+          <text v-if="!partnerLevel">当前已达合伙人申请条件</text><text v-else>HeyShop合伙人</text>
+          <text style="margin: 0 0.5em;"> | </text>
+          <text>{{ partnerProfile.data.ends_at|date }}到期</text>
         </view>
       </template>
     </view>

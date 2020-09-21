@@ -23,6 +23,7 @@
 import _ from 'lodash'
 import Taro, { getCurrentPages }from '@tarojs/taro'
 import { API } from '@/utils/api'
+import { handleErr } from '@/utils/errHelper'
 import { optimizeImage } from '@/utils/image'
 import HsDialog from '@/components/HsDialog'
 
@@ -45,7 +46,7 @@ export default {
     optimizeImage,
     async getReferrerInfo () {
       try {
-        const res = await API.get(`customers/referrer/${this.referralCode}/`)
+        const res = await API.get(`/customers/referrer/${this.referralCode}/`)
         this.referrerData = res.data
         this.dialogVisible = true
       } catch (err) {
@@ -67,6 +68,14 @@ export default {
     },
     onConfirm() {
       this.dialogVisible = false
+      this.handleActivate()
+    },
+    handleActivate() {
+      API.post('/substores/partners/activate/', {
+        referral_code: this.referralCode
+      }).then(() => {
+        //
+      }).catch(handleErr)
     }
   }
 }
