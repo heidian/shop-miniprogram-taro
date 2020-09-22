@@ -166,7 +166,7 @@ export default {
         icon: 'https://up.img.heidiancdn.com/o_1eh4kgtf11k0p1qk31mha1qgb1rjf0awards.png',
         text: '粉丝排行榜'
       }, {
-        url: '',
+        url: '/pages/partner/talent',
         openType: 'navigate',
         icon: 'https://up.img.heidiancdn.com/o_1eh4kgtf149j1sk5bih1rpk1rfb0.png',
         text: '推广帮助'

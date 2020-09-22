@@ -3,6 +3,7 @@ export default {
     'pages/home/index',
     'pages/categories/index',
     'pages/partner/index',
+    'pages/partner/talent',
     'pages/cart/index',
     'pages/account/index',
     'pages/partner/activate',
