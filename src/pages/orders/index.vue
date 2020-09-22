@@ -11,7 +11,7 @@
     </view>
     <view
       v-for="order in orders.data" :key="order.id"
-      :class="$style['orderItem']"
+      :class="$style['orderItem']" @tap="goToDetail(order.id)"
     >
       <!-- <view class="btn">text</view> -->
       <view :class="$style['header']">
@@ -51,10 +51,10 @@
 <script>
 import _ from 'lodash'
 import Taro, { getCurrentInstance } from '@tarojs/taro'
+import { mapState } from 'vuex'
 import { API } from '@/utils/api'
 import { optimizeImage } from '@/utils/image'
 import ListTable from '@/mixins/ListTable'
-import RequiresLogin from '@/mixins/RequiresLogin'
 import { OrderStatus, OrderFinancialStatus, OrderFulfillmentStatus } from './constants'
 
 const FiltersOfTab = {
@@ -68,7 +68,6 @@ const FiltersOfTab = {
 export default {
   name: 'Orders',
   mixins: [
-    RequiresLogin,
     ListTable('orders', { urlRoot: '/customers/order/' })
   ],
   data() {
@@ -81,6 +80,9 @@ export default {
       OrderFulfillmentStatus,
     }
   },
+  computed: {
+    ...mapState(['customer'])
+  },
   created() {
     Taro.setBackgroundColor({
       backgroundColor: '#f6f6f6',
@@ -92,12 +94,16 @@ export default {
     this.fetchOrders({ more: true })
   },
   async mounted() {
-    this.updateDefaultParams({
-      'fields': ['id', 'order_status', 'financial_status', 'fulfillment_status',
-                 'lines', 'total_price', 'created_at'].join(','),
-      'fields[lines]': ['id', 'image', 'title'].join(','),
-    }, { fetch: false })
-    this.fetchOrders()
+    if (!this.customer.isAuthenticated) {
+      Taro.redirectTo({ url: '/pages/login/index' })
+    } else {
+      this.updateDefaultParams({
+        'fields': ['id', 'order_status', 'financial_status', 'fulfillment_status',
+                   'lines', 'total_price', 'created_at'].join(','),
+        'fields[lines]': ['id', 'image', 'title'].join(','),
+      }, { fetch: false })
+      this.fetchOrders()
+    }
   },
   methods: {
     optimizeImage,
@@ -115,6 +121,9 @@ export default {
     onChangeTab(value) {
       this.filterName = value
       this.fetchOrders()
+    },
+    goToDetail(orderId) {
+      Taro.navigateTo({ url: '/pages/orders/detail?id=' + orderId })
     }
   }
 }
