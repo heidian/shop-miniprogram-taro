@@ -23,6 +23,7 @@
           <review-item
             :review="results[0]"
             :disableReply="true"
+            :disableDownload="true"
           />
         </view>
       </view>

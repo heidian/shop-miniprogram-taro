@@ -26,15 +26,17 @@
       </view>
       <view :class="$style['content']">
         <text :class="$style['contentText']">{{ review.content }}</text>
-        <scroll-view
-          v-if="review.images && review.images.length"
-          :scroll-x="true"
-          :scroll-y="false"
-          :class="$style['reviewItemImages']">
-          <view v-for="(image, imgIndex) in review.images" :key="image.id" :class="$style['imageItem']">
-            <image :src="optimizeImage(image, 100)" :class="$style['contentImage']" mode="aspectFill" @tap="() => onPreviewImage(imgIndex)"></image>
-          </view>
-        </scroll-view>
+        <template v-if="review.images && review.images.length">
+          <scroll-view
+            :scroll-x="true"
+            :scroll-y="false"
+            :class="$style['reviewItemImages']">
+            <view v-for="(image, imgIndex) in review.images" :key="image.id" :class="$style['imageItem']">
+              <image :src="optimizeImage(image, 100)" :class="$style['contentImage']" mode="aspectFill" @tap="() => onPreviewImage(imgIndex)"></image>
+            </view>
+          </scroll-view>
+          <view v-if="!disableDownload" :class="$style['downloadAllImages']" @tap.stop="() => downloadAll(review.images)">下载全部图片</view>
+        </template>
       </view>
       <view :class="$style['reviewItemreplies']" v-if="review.replies && review.replies.count">
         <view :class="$style['reviewItemReply']" v-for="reply in review.replies.results" :key="reply.id">
@@ -54,59 +56,115 @@
   </view>
 </template>
 <script>
-import Taro from '@tarojs/taro'
+import Taro,{ showToast } from '@tarojs/taro'
 import _ from 'lodash'
 import { API } from '@/utils/api'
 import { optimizeImage, backgroundImageUrl } from '@/utils/image'
 
-  export default {
-    props: {
-      productId: {
-        type: [Number, String],
-        default: ''
-      },
-      review: {
-        type: Object,
-        default: () => {
-          return {}
+const downloadImageTask = (url, index) => {
+  return new Promise((resolve, reject) => {
+    // Taro.showLoading({ title: `正在下载第${index + 1}张` })
+    const _downloadTask = Taro.downloadFile({ url }).then(res => {
+      console.log(index, res.tempFilePath)
+      Taro.saveImageToPhotosAlbum({
+        filePath: res.tempFilePath,
+        success: () => {  // 这里用回调的形式而不是用promise的形式，是因为在开发者工具里promise的写法可能会出现问题，6张图只能保存5张，而且没有报错
+          // Taro.showLoading({ title: `第${index + 1}张下载完成` })
+          resolve()
+        },
+        fail: () => {
+          // Taro.showLoading({ title: `第${index + 1}张保存失败` })
+          // reject(err)
+          resolve()
         }
-      },
-      disableReply: {
-        type: Boolean,
-        defaule: false
-      }
-    },
-    data () {
-      return {
+      })
+    }).catch(err => {
+      // Taro.showLoading({ title: `第${index + 1}张下载失败` })
+      resolve()
+    })
+  })
+}
 
+const downloadTasks = (images) => {
+  return _.map(images, (image, index) => {
+    if (typeof image == 'object' && image.src) {
+      return downloadImageTask(image.src, index)
+    } else {
+      return downloadImageTask(image, index)
+    }
+  })
+}
+
+export default {
+  props: {
+    productId: {
+      type: [Number, String],
+      default: ''
+    },
+    review: {
+      type: Object,
+      default: () => {
+        return {}
       }
     },
-    computed: {
-      reviewImages () {
-        return _.get(this.review, 'images', [])
-      },
-      reviewCustomerAvatar () {
-        return _.get(this.review, 'customer.avatar', 'https://up.img.heidiancdn.com/o_1dhf2esd81lde76c1rttgf31dm0oup23x.png')
-      }
+    disableDownload: {
+      type: Boolean,
+      defaule: false
     },
-    methods: {
-      optimizeImage,
-      backgroundImageUrl,
-      onPreviewImage (index=0) {
-        const imageUrls = _.map(this.reviewImages || [], 'src')
-        Taro.previewImage({
-          current: imageUrls[index],
-          urls: imageUrls
+    disableReply: {
+      type: Boolean,
+      defaule: false
+    }
+  },
+  data () {
+    return {
+
+    }
+  },
+  computed: {
+    reviewImages () {
+      return _.get(this.review, 'images', [])
+    },
+    reviewCustomerAvatar () {
+      return _.get(this.review, 'customer.avatar', 'https://up.img.heidiancdn.com/o_1dhf2esd81lde76c1rttgf31dm0oup23x.png')
+    }
+  },
+  methods: {
+    optimizeImage,
+    backgroundImageUrl,
+    onPreviewImage (index=0) {
+      const imageUrls = _.map(this.reviewImages || [], 'src')
+      Taro.previewImage({
+        current: imageUrls[index],
+        urls: imageUrls
+      })
+    },
+    onClickReply (id) {
+      if (!id) {
+        return
+      }
+      this.$emit('onClickReply', +id)
+    },
+    downloadAll (images) {
+      Taro.showLoading({ title: '正在下载' })
+      Promise.all(downloadTasks(images)).then(() => {
+        Taro.hideLoading()
+        Taro.showModal({
+          title: '下载完成',
+          content: '图片已保存至相册',
+          showCancel: false
         })
-      },
-      onClickReply (id) {
-        if (!id) {
-          return
-        }
-        this.$emit('onClickReply', +id)
-      }
+      }).catch(err => {
+        Taro.hideLoading()
+        Taro.showModal({
+          title: '下载出错',
+          content: '请重试',
+          showCancel: false
+        })
+      })
     }
   }
+}
 </script>
 
 <style lang="scss" module>
@@ -191,12 +249,23 @@ import { optimizeImage, backgroundImageUrl } from '@/utils/image'
   // justify-content: flex-start;
   // align-items: center;
 }
+.downloadAllImages {
+  width: 80px;
+  font-size: 10px;
+  line-height: 16px;
+  padding: 0 6px;
+  color: $color-text;
+  border: 1px solid;
+  display: inline-block;
+  margin-top: 8px;
+}
 .imageItem {
   display: inline-block;
   margin-left: 0;
   margin-right: 0;
   width: 80px;
   height: 80px;
+  overflow: hidden;
 }
 .imageItem + .imageItem {
   margin-left: 8px;
