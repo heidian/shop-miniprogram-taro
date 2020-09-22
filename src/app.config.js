@@ -21,6 +21,8 @@ export default {
     'pages/orders/index',
     'pages/orders/detail',
     'pages/static/index',
+    'pages/blog/index',
+    'pages/blog/article',
     'pages/misc/share',
     'pages/misc/landing',
     'pages/index/index'
