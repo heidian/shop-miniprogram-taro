@@ -9,7 +9,7 @@
       </view>
       <view :class="$style['cardFooter']">
         <text :class="$style['footerTitle']">联系带货达人，获取专属指导</text>
-        <image :class="$style['steps']" :src="optimizeImage('https://up.img.heidiancdn.com/o_1eiqb43ip18dh80os5q8t7m460img.png', 200)" mode="heightFix"></image>
+        <image :class="$style['steps']" :src="optimizeImage('https://up.img.heidiancdn.com/o_1eiqb43ip18dh80os5q8t7m460img.png', 400)" mode="heightFix"></image>
       </view>
     </view>
   </view>

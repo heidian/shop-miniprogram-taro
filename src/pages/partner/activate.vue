@@ -31,7 +31,7 @@
           <text :class="$style['stepText']">3.获取专属指导</text>
         </view>
       </view> -->
-      <image :class="$style['steps']" :src="optimizeImage('https://up.img.heidiancdn.com/o_1eiqb43ip18dh80os5q8t7m460img.png', 200)" mode="heightFix"></image>
+      <image :class="$style['steps']" :src="optimizeImage('https://up.img.heidiancdn.com/o_1eiqb43ip18dh80os5q8t7m460img.png', 400)" mode="heightFix"></image>
 
       <view :class="$style['referrals']">
         <view v-for="item in featuredReferrals" :key="item.id" :class="$style['card']" >
