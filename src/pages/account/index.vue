@@ -6,7 +6,8 @@
         <view :class="$style['main']">
           <image
             :class="$style['avatar']" mode="aspectFill"
-            :src="customer.data.avatar || 'https://up.img.heidiancdn.com/o_1cm7ccaoirfi1tdiutsn6s1odj0rofile.png?imageView2/2/w/360/ignore-error/1'"></image>
+            :src="optimizeImage(customer.data.avatar || DEFAULT_AVATAR, 50)"
+          ></image>
           <view :class="$style['caption']" v-if="customer.isAuthenticated">
             <view :class="$style['captionName']">
               <text :class="$style['fullName']">{{ customer.data.full_name || '未命名' }}</text>
@@ -19,17 +20,20 @@
             </view>
           </view>
           <view v-else :class="$style['caption']">
-            <navigator url="/pages/login/index" :class="$style['login']">登录</navigator>
+            <navigator url="/pages/login/index" :class="$style['login']">去登录</navigator>
           </view>
           <navigator url="/pages/account/settings" open-type="navigate" hover-class="none">
             <text class="el-icon-arrow-right" style="font-size: 1.5em;"></text>
           </navigator>
         </view>
         <view :class="$style['level']">
-          <view :class="$style['levelHint']">
+          <!-- <view :class="$style['levelHint']"> -->
+          <navigator :class="$style['levelHint']" url="/pages/blog/article?name=partner-intro" hover-class="none">
             <view :class="$style['levelHintText']">当前成长值{{ growthValue }}（达{{ 1000 }}即可升级）</view>
-            <view :class="$style['levelHintNumber']">{{ growthValue }}/{{ 1000 }} <text class="el-icon-arrow-right"></text></view>
-          </view>
+            <view :class="$style['levelHintNumber']">
+              <text>{{ growthValue }}/{{ 1000 }}</text><text class="el-icon-arrow-right"></text>
+            </view>
+          </navigator>
           <view :class="$style['levelProgress']">
             <view :class="$style['levelProgressInner']" :style="{'width':`${growthValue/10}%`}"></view>
           </view>
@@ -124,7 +128,7 @@
 
     <view :class="[$style['light'], $style['infiniteProducts']]">
       <view :class="$style['infiniteProductsHead']">
-        <image :class="$style['infiniteProductsLogo']" mode="aspectFill" :src="'https://up.img.heidiancdn.com/o_1eh71dvj035vlmd1251d2b14on0up412x.png'|imageUrl(300)"></image>
+        <image :class="$style['infiniteProductsLogo']" mode="aspectFill" :src="'https://up.img.heidiancdn.com/o_1eh71dvj035vlmd1251d2b14on0up412x.png'|imageUrl(400)"></image>
         <navigator :class="$style['infiniteProductsNavigator']">
           <text :class="$style['infiniteProductsNavigatorText']">查看全部</text>
           <image :class="$style['infiniteProductsNavigatorArrow']" mode="aspectFit" src="https://up.img.heidiancdn.com/o_1eh71g4odmlspfo1ubjqc196a0copy2x.png"></image>
@@ -138,9 +142,10 @@
 </template>
 
 <script>
+import _ from 'lodash'
 import Taro, { getCurrentInstance } from '@tarojs/taro'
 import { mapState } from 'vuex'
-import _ from 'lodash'
+import { optimizeImage, DEFAULT_AVATAR } from '@/utils/image'
 import { handleErr } from '@/utils/errHelper'
 
 import InfiniteProducts from '@/components/InfiniteProducts'
@@ -150,6 +155,7 @@ export default {
   name: 'Account',
   data() {
     return {
+      DEFAULT_AVATAR,
       promotionNavigators: [{
         url: '/pages/partner/index',
         openType: 'switchTab',
@@ -239,6 +245,7 @@ export default {
     this.$refs.infiniteProducts.onReachBottom()
   },
   methods: {
+    optimizeImage,
     onCopyToClipboard(content) {
       if (!content) return
       Taro.setClipboardData({ data: content }).then(() => {

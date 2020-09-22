@@ -1,29 +1,38 @@
 <template>
   <view :class="$style['page']">
     <view :class="$style['blackHeader']"> <!-- 顶部个人信息 -->
-      <view v-if="customer.isAuthenticated" :class="$style['profileWrapper']">
-        <image :class="$style['avatar']" :src="optimizeImage(customer.data.avatar, 50)"></image>
-        <view>
-          <view :class="$style['fullName']">{{ customer.data.full_name || '未命名' }}</view>
-          <view :class="$style['lightText']">
-            <text class="el-icon-star-on"></text> {{ levelTitle }}
+      <view :class="$style['profileWrapper']">
+        <template v-if="customer.isAuthenticated">
+          <image :class="$style['avatar']" :src="optimizeImage(customer.data.avatar, 50)"></image>
+          <view>
+            <view :class="$style['fullName']">{{ customer.data.full_name || '未命名' }}</view>
+            <view :class="$style['lightText']">
+              <text class="el-icon-star-on"></text> {{ levelTitle }}
+            </view>
           </view>
-        </view>
+        </template>
+        <template v-else>
+          <image :class="$style['avatar']" :src="DEFAULT_AVATAR"></image>
+          <navigator url="/pages/login/index">去登录</navigator>
+        </template>
         <image
           :class="$style['heyshop']" mode="widthFix"
           src="https://up.img.heidiancdn.com/o_1eiojj5s632c1urj1a6u1jn01l330shop3x.png"
         >HeyShop</image>
         <view></view>
       </view>
-      <view v-else @tap="goToLogin">去登录</view>
       <template v-if="growthValue < 1000">
-        <view :class="$style['growthProgressWrapper']">
+        <!-- <view :class="$style['growthProgressWrapper']"> -->
+        <navigator
+          :class="$style['growthProgressWrapper']"
+          url="/pages/blog/article?name=partner-intro" hover-class="none"
+        >
           <view :class="$style['lightText']" style="margin-left: 0.5em;">当前成长值{{ growthValue }}（达1000即可升级）</view>
           <view :class="$style['lightText']">{{ growthValue }}/1000 <text class="el-icon-arrow-right"></text></view>
           <view :class="$style['progressBar']">
             <view :class="$style['progressBarInner']" :style="{'width':`${growthValue/10}%`}"></view>
           </view>
-        </view>
+        </navigator>
         <view :class="[$style['toBePartnerWrapper'], $style['goldBg']]">
           <view>
             <view><text style="font-size: 1.8em; font-weight: bold;">5880.0</text> 元</view>
@@ -36,10 +45,14 @@
         </view>
       </template>
       <template v-else>
-        <view :class="$style['growthProgressWrapper']">
+        <!-- <view :class="$style['growthProgressWrapper']"> -->
+        <navigator
+          :class="$style['growthProgressWrapper']"
+          url="/pages/blog/article?name=partner-intro" hover-class="none"
+        >
           <view :class="$style['lightText']" style="margin-left: 0.5em;">当前成长值{{ growthValue }}</view>
           <view :class="[$style['lightText'], 'el-icon-arrow-right']"></view>
-        </view>
+        </navigator>
         <view :class="[$style['isPartnerWrapper'], $style['goldBg']]">
           <text v-if="!partnerLevel">当前已达合伙人申请条件</text><text v-else>HeyShop合伙人</text>
           <text style="margin: 0 0.5em;"> | </text>
@@ -48,10 +61,12 @@
       </template>
     </view>
     <view :class="$style['whiteSection']"> <!-- 国货大使攻略 -->
-      <image
-        style="height: 80px; display: block; width: 100%;" mode="aspectFit"
-        src="https://up.img.heidiancdn.com/o_1eialsc45bu093fkfor2q1l2d0copy3x.png"
-      ></image>
+      <navigator url="/pages/blog/article?name=partner-intro" hover-class="none">
+        <image
+          style="height: 80px; display: block; width: 100%;" mode="aspectFit"
+          src="https://up.img.heidiancdn.com/o_1eialsc45bu093fkfor2q1l2d0copy3x.png"
+        ></image>
+      </navigator>
       <view :class="$style['sectionTitle']">合伙人权益</view>
       <view :class="$style['pros']">
         <view
@@ -117,7 +132,7 @@ import _ from 'lodash'
 import Taro from '@tarojs/taro'
 import { mapState } from 'vuex'
 import { API } from '@/utils/api'
-import { optimizeImage, backgroundImageUrl } from '@/utils/image'
+import { optimizeImage, backgroundImageUrl, DEFAULT_AVATAR } from '@/utils/image'
 import ListTable from '@/mixins/ListTable'
 import Price from '@/components/Price'
 
@@ -131,6 +146,7 @@ export default {
   },
   data() {
     return {
+      DEFAULT_AVATAR,
       pros: [{
         image: 'https://up.img.heidiancdn.com/o_1eiama15ugei6gj0p2cs9tf0oup53x.png',
         title: '自购省钱',
