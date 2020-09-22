@@ -9,6 +9,9 @@
  * detail : http://weappdev.com/t/wxparse-alpha0-1-html-markdown/184
  */
 
+import _ from 'lodash'
+import { optimizeImage } from '@/utils/image'
+
 /**
  * utils函数引入
  **/
@@ -39,12 +42,27 @@ function wxParse(bindName = 'wxParseData', type='html', data='<div class="color:
   if(typeof(imagePadding) != 'undefined'){
     transData.view.imagePadding = imagePadding
   }
+  optimizeImages(transData);
   var bindData = {};
   bindData[bindName] = transData;
   that.setData(bindData)
   that.wxParseImgLoad = wxParseImgLoad;
   that.wxParseImgTap = wxParseImgTap;
 }
+
+function optimizeImages(transData) {
+  /* transData.images 是 HtmlToJson 从 transData.nodes 里面浅拷贝出来的,
+  所以直接修改 transData.images 上面的 attr 就行, 不需要去遍历 nodes, 这个很好! */
+  _.forEach(transData.images, function(image) {
+    const src = _.get(image, 'attr.src');
+    const optimizedSrc = optimizeImage(src, 600);
+    _.set(image, 'attr.src', optimizedSrc);
+    /* wxParse 里面 data-src 会取这个值, wxParseImgTap 预览图片的时候从 data-src 里面取,
+    如果这里不放原图, imageUrls 里面就会不包含 nowImgUrl, 于是预览会变成从第一张图开始 */
+    _.set(image, 'attr.originSrc', src);
+  })
+}
+
 // 图片点击事件
 function wxParseImgTap(e) {
   var that = this;
@@ -62,6 +80,11 @@ function wxParseImgTap(e) {
  * 图片视觉宽高计算函数区
  **/
 function wxParseImgLoad(e) {
+  /*
+   * by XD 不使用自动调整高宽的代码, 这里直接 return
+   */
+  return;
+
   var that = this;
   var tagFrom = e.target.dataset.from;
   var idx = e.target.dataset.idx;
