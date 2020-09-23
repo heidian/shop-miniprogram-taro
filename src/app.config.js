@@ -8,6 +8,7 @@ export default {
     'pages/account/index',
     'pages/partner/activate',
     'pages/account/bind-alipay',
+    'pages/account/bind-wechat',
     'pages/account/settings',
     'pages/account/profile',
     'pages/search/index',

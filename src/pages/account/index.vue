@@ -12,7 +12,10 @@
             <view :class="$style['captionName']">
               <text :class="$style['fullName']">{{ customer.data.full_name || '未命名' }}</text>
               <text :class="$style['levelTitle']">{{ levelTitle }}</text>
-              <navigator :class="$style['navigatorText']" url="/pages/account/settings" open-type="navigate" hover-class="none">填写微信号</navigator>
+              <navigator
+                :class="$style['navigatorText']" hover-class="none"
+                url="/pages/account/bind-wechat" open-type="navigate"
+              >填写微信号</navigator>
             </view>
             <view :class="$style['referral']">
               <text :class="$style['referralCode']">邀请ID：{{ customer.data.referral_code }}</text>
