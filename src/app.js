@@ -18,9 +18,10 @@ Taro.onPageNotFound(function({ isEntryPage, path, query }) {
   console.log('PageNotFound', isEntryPage, path, query)
   if (/^pages\/(product|static)$/.test(path)) {
     Taro.redirectTo({ url: path + '/index?' + qs.stringify(query) })
-  } else if (/^pages\/home$/.test(path)) {
-    Taro.switchTab({ url: '/pages/home/index' })
   }
+  // else if (/^pages\/home$/.test(path)) {
+  //   Taro.switchTab({ url: '/pages/home/index' })
+  // }
 })
 
 

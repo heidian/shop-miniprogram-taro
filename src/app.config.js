@@ -1,6 +1,6 @@
 export default {
   pages: [
-    'pages/home/index',
+    'pages/home',
     'pages/categories/index',
     'pages/partner/index',
     'pages/partner/talent',
@@ -31,7 +31,7 @@ export default {
   tabBar: {
     list: [
       {
-        'pagePath': 'pages/home/index',
+        'pagePath': 'pages/home',
         'iconPath': 'assets/images/tabbar/home.png',
         'selectedIconPath': 'assets/images/tabbar/home-active.png',
         'text': '首页'

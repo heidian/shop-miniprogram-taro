@@ -111,9 +111,8 @@ export default {
         if (pages.length > 1) {
           Taro.navigateBack()
         } else {
-          Taro.switchTab({ url: '/pages/home/index' })
+          Taro.switchTab({ url: '/pages/home' })
         }
-
       } catch(err) {
         Taro.hideLoading()
         console.log('登录失败', _.get(err, 'response.data', ('' + err)))

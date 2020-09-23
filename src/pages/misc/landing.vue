@@ -26,7 +26,7 @@
           :url="`/pages/product/index?id=${productId}`"
           :class="{[$style['btnItem']]: true, [$style['btnOrange']]: true}">购买商品</navigator>
         <navigator
-          :url="`/pages/home/index`" open-type="switchTab" :class="[$style['btnItem'], $style['btnBlack']]">随便逛逛</navigator>
+          :url="`/pages/home`" open-type="switchTab" :class="[$style['btnItem'], $style['btnBlack']]">随便逛逛</navigator>
       </view>
     </view>
     <view v-else :class="[$style['container'], $style['containerFull']]">
@@ -61,7 +61,7 @@
             :url="`/pages/product/index?id=${productId}`"
             :class="{[$style['btnItem']]: true, [$style['btnGolden']]: true}">立即升级</navigator>
           <navigator
-            :url="`/pages/home/index`" open-type="switchTab" :class="[$style['btnItem'], $style['btnBlack']]">随便逛逛</navigator>
+            :url="`/pages/home`" open-type="switchTab" :class="[$style['btnItem'], $style['btnBlack']]">随便逛逛</navigator>
         </view>
       </view>
     </view>
