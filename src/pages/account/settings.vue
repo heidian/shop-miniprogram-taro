@@ -36,7 +36,8 @@ export default {
       navigators: [
         { label: '微信号', value: '', hasCaret: true, url: '' },
         { label: '个人信息', value: '', hasCaret: true, url: '/pages/account/profile' },
-        { label: '账户安全', value: '', hasCaret: true, url: '' },
+        { label: '收货地址', value: '', hasCaret: true, url: '/pages/addresses/index' },
+        // { label: '账户安全', value: '', hasCaret: true, url: '' },
         { label: '联系客服', value: '', hasCaret: true, url: '', openType: 'contact' },
         { label: '关于', value: '', hasCaret: true, url: '' },
       ]

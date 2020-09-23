@@ -108,7 +108,7 @@
           </view>
         </view>
 
-        <view :class="$style['section']">
+        <!-- <view :class="$style['section']">
           <view :class="$style['sectionHead']">
             <text :class="$style['sectionHeadTitle']">我的功能</text>
           </view>
@@ -122,14 +122,14 @@
               <text :class="$style['gridItemText']">{{ item.text }}</text>
             </navigator>
           </view>
-        </view>
+        </view> -->
       </template>
     </view>
 
     <view :class="[$style['light'], $style['infiniteProducts']]">
       <view :class="$style['infiniteProductsHead']">
         <image :class="$style['infiniteProductsLogo']" mode="aspectFill" :src="'https://up.img.heidiancdn.com/o_1eh71dvj035vlmd1251d2b14on0up412x.png'|imageUrl(400)"></image>
-        <navigator :class="$style['infiniteProductsNavigator']">
+        <navigator :class="$style['infiniteProductsNavigator']" url="/pages/search/index" hover-class="none">
           <text :class="$style['infiniteProductsNavigatorText']">查看全部</text>
           <image :class="$style['infiniteProductsNavigatorArrow']" mode="aspectFit" src="https://up.img.heidiancdn.com/o_1eh71g4odmlspfo1ubjqc196a0copy2x.png"></image>
         </navigator>
@@ -157,20 +157,28 @@ export default {
     return {
       DEFAULT_AVATAR,
       promotionNavigators: [{
-        url: '/pages/partner/index',
-        openType: 'switchTab',
-        icon: 'https://up.img.heidiancdn.com/o_1eh4kgtf1qm01d8a1hovm201gqe0up263x.png',
-        text: '我的任务'
+        // url: '/pages/partner/index',
+        // openType: 'switchTab',
+        // icon: 'https://up.img.heidiancdn.com/o_1eh4kgtf1qm01d8a1hovm201gqe0up263x.png',
+        // text: '我的任务'
+        url: '/pages/coupon-codes/index',
+        openType: 'navigate',
+        icon: 'https://up.img.heidiancdn.com/o_1eitsdqi9bsv12p8h0nsija4f0coupon.png',
+        text: '优惠券'
       }, {
         url: '/pages/misc/share',
         openType: 'navigate',
         icon: 'https://up.img.heidiancdn.com/o_1eh4kgtf1lha1tl75f7phcrp30enifit.png',
         text: '邀请返现'
       }, {
-        url: '',
+        // url: '',
+        // openType: 'navigate',
+        // icon: 'https://up.img.heidiancdn.com/o_1eh4kgtf11k0p1qk31mha1qgb1rjf0awards.png',
+        // text: '粉丝排行榜'
+        url: '/pages/favorites/index',
         openType: 'navigate',
-        icon: 'https://up.img.heidiancdn.com/o_1eh4kgtf11k0p1qk31mha1qgb1rjf0awards.png',
-        text: '粉丝排行榜'
+        icon: 'https://up.img.heidiancdn.com/o_1eitsdqi473olishfgt114rm0shlist.png',
+        text: '我的收藏'
       }, {
         url: '/pages/partner/talent',
         openType: 'navigate',

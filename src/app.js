@@ -16,7 +16,7 @@ import parseScene from './utils/parseScene'
  */
 Taro.onPageNotFound(function({ isEntryPage, path, query }) {
   console.log('PageNotFound', isEntryPage, path, query)
-  if (/^pages\/(product|static)$/.test(path)) {
+  if (/^pages\/(product|static|search)$/.test(path)) {
     Taro.redirectTo({ url: path + '/index?' + qs.stringify(query) })
   } else if (/^pages\/login$/.test(path)) {
     Taro.redirectTo({ url: '/pages/login/index' })
