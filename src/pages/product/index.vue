@@ -188,9 +188,9 @@ export default {
           const res = await API.get('/shopfront/product/', {
             params: { fields, name: this.productName }
           })
+          product = res.data.results[0]
         } catch(err) { console.log(err) }
         /* res.data.results 一定是数组不会有问题, 只需要看长度就行 */
-        product = res.data.results[0]
       }
       if (product) {
         this.product = product
