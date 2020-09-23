@@ -1,3 +1,3 @@
 export default {
-  navigationBarTitleText: '合伙人'
+  navigationBarTitleText: '成为合伙人'
 }

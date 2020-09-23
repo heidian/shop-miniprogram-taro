@@ -9,6 +9,7 @@ import _ from 'lodash'
 import Taro from '@tarojs/taro'
 import { API } from '@/utils/api'
 import { backgroundImageUrl } from '@/utils/image'
+import Header from '@/components/blocks/Header'
 import FeaturedProducts from '@/components/blocks/FeaturedProducts'
 import Carousel from '@/components/blocks/Carousel'
 import Image from '@/components/blocks/Image'
@@ -19,6 +20,7 @@ import Text from '@/components/blocks/Text'
 
 const PREVIEW_THEME_ID = 13390
 const BLOCKS_MAP = {
+  'blocks/header': Header,
   'blocks/featured_products': FeaturedProducts,
   'blocks/carousel': Carousel,
   'blocks/image': Image,

@@ -1,4 +1,4 @@
 export default {
-  navigationBarTitleText: 'HeyShop',
+  navigationBarTitleText: 'HEYSHOP 商城',
   enableShareAppMessage: true
 }
