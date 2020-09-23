@@ -60,7 +60,7 @@
           <navigator
             url="/pages/partner/index"
             open-type="switchTab"
-            :class="{[$style['btnItem']]: true, [$style['btnGolden']]: true}">立即升级</navigator>
+            :class="[$style['btnItem'], $style['btnGolden']]">立即升级</navigator>
           <navigator
             :url="`/pages/home`" open-type="switchTab" :class="[$style['btnItem'], $style['btnBlack']]">随便逛逛</navigator>
         </view>
@@ -303,7 +303,7 @@ page {
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  margin-bottom: 100px;
+  margin-bottom: 50px;
 }
 .guohuoLogo {
   width: 100%;
@@ -401,7 +401,7 @@ page {
   width: 100%;
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
 }
 .btnHint {
@@ -410,11 +410,11 @@ page {
   margin-bottom: 15px;
 }
 .btnItem {
-  max-width: 160px;
+  max-width: 140px;
   flex: 1;
-  height: 50px;
+  font-size: 15px;
   line-height: 20px;
-  padding: 15px 0;
+  padding: 12px 24px;
   text-align: center;
   background-color: $color-black;
   color: #ffffff;
@@ -432,7 +432,7 @@ page {
 }
 .btnText {
   color: $color-white;
-  font-size: 16px;
+  font-size: 15px;
 }
 .btnOrange {
   background-color: $color-orange;
@@ -442,6 +442,7 @@ page {
 }
 .btnGolden {
   background-color: $color-golden;
+  color: $color-brown;
   .btnText {
     color: $color-brown;
   }
