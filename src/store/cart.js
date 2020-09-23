@@ -25,7 +25,11 @@ const mutations = {
       state.items = items
     }
     state.totalCount = _.reduce(state.items, (sum, item) => sum + (item.quantity || 0), 0)
-    state.totalPrice = _.reduce(state.items, (sum, item) => sum + (item.quantity || 0) * (+item.price || 0), 0).toFixed(2)
+    state.totalPrice = _.reduce(state.items, (sum, item) => {
+      const quantity = item.checked ? (item.quantity || 0) : 0
+      const price = +_.get(item, 'variant.price') || 0
+      return sum + quantity * price
+    }, 0).toFixed(2)
   }
 }
 

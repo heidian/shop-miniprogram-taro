@@ -14,8 +14,8 @@
       <view class="lines-summary" @tap="showLinesDrawer">
         <image
           v-for="(line, index) in (getField('lines') || [])" :key="line.id"
+          v-if="index < 3" :src="optimizeImage(line.image, 100)"
           class="line-image" mode="aspectFill"
-          :src="optimizeImage(line.image, 100)"
         ></image>
         <view style="margin-left: auto; margin-right: 0.5em; text-align: center;">
           <view>共 {{ (getField('lines') || []).length }} 件</view>
@@ -92,7 +92,13 @@ export default {
       return totalPrice
     }
   },
-  created() {},
+  created() {
+    Taro.setBackgroundColor({
+      backgroundColor: '#f6f6f6',
+      backgroundColorTop: '#f6f6f6',
+      backgroundColorBottom: '#f6f6f6'
+    })
+  },
   mounted() {},
   onShow() {
     // 因为依赖于登录返回以后重新获取 checkout, 这些在 onShow 里面执行

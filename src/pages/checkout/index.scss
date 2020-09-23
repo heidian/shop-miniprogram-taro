@@ -1,9 +1,12 @@
 @import '@/styles/variables';
 
+page {
+  background-color: $color-bg-gray;
+}
 .page--checkout {
   min-height: 100vh;
-  background-color: $color-bg-gray;
   overflow: hidden;
+  padding-bottom: 80px;
   /* section */
   > .section {
     border-radius: 6px;
@@ -69,6 +72,7 @@
     left: 0;
     width: 100%;
     background-color: #fff;
+    box-shadow: 0 -1px 4px 0 rgba(0, 0, 0, 0.03);
     padding: 10px 20px;
     display: flex;
     justify-content: space-between;
