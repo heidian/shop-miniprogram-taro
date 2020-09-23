@@ -1,11 +1,17 @@
 <template>
   <view class="block--image" :style="css">
-    <image class="image" :src="optimizeImage(settingsData.image)" mode="widthFix"></image>
+    <navigator
+      hover-class="none"
+      :url="getUrl(settingsData.url)" :open-type="getOpenType(settingsData.url)"
+    >
+      <image class="image" :src="optimizeImage(settingsData.image)" mode="widthFix"></image>
+    </navigator>
   </view>
 </template>
 
 <script>
 import { optimizeImage } from '@/utils/image'
+import parseUrl from '@/utils/parseUrl'
 
 export default {
   props: {
@@ -15,14 +21,25 @@ export default {
     },
     settingsData: {
       type: Object,
-      default: () => ({})
+      default: () => ({
+        image: {},
+        url: ''
+      })
     }
   },
   data() {
     return {}
   },
   methods: {
-    optimizeImage
+    optimizeImage,
+    getUrl(url) {
+      const parse = parseUrl(url)
+      return parse.url
+    },
+    getOpenType(url) {
+      const parse = parseUrl(url)
+      return parse.openType
+    }
   }
 }
 </script>

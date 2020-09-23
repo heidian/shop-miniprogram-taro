@@ -1,3 +1,5 @@
+/* 第一版设计稿的首页配置备份 */
+
 export default function getTestPageConfig() {
   return {
     "settings_data": {

@@ -1,15 +1,16 @@
 <template>
   <view class="block--grids" :style="css">
-    <view
+    <navigator
       v-for="(item, index) in settingsData.grids" :key="index"
-      class="grid" :style="gridStyle"
+      class="grid" :style="gridStyle" hover-class="none"
+      :url="getUrl(item.url)" :open-type="getOpenType(item.url)"
     >
       <view class="grid__image" :style="{
         'paddingTop': paddingTop,
         'backgroundImage': backgroundImageUrl(item.image, 200)
       }"></view>
       <text class="grid__text" v-if="textValue(item.text)">{{ textValue(item.text) }}</text>
-    </view>
+    </navigator>
   </view>
 </template>
 
@@ -17,6 +18,7 @@
 import _ from 'lodash'
 import Taro from '@tarojs/taro'
 import { optimizeImage, backgroundImageUrl } from '@/utils/image'
+import parseUrl from '@/utils/parseUrl'
 
 export default {
   props: {
@@ -27,7 +29,7 @@ export default {
     settingsData: {
       type: Object,
       default: () => ({
-        grids: [],  // { image, text }
+        grids: [],  // { image, text, url }
         gridGap: 0,  // px 整数
         imageRatio: 1,  // 宽高比
         textAlign: 'left',
@@ -66,6 +68,14 @@ export default {
       } else {
         return '' + textObj
       }
+    },
+    getUrl(url) {
+      const parse = parseUrl(url)
+      return parse.url
+    },
+    getOpenType(url) {
+      const parse = parseUrl(url)
+      return parse.openType
     }
   },
   filters: {
@@ -88,7 +98,9 @@ export default {
   flex-wrap: wrap;
   justify-content: flex-start;
   align-items: flex-start;
-  .grid {}
+  .grid {
+    display: block;
+  }
   .grid__image {
     background-position: center;
     background-size: cover;
