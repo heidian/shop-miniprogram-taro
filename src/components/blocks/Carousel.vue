@@ -6,8 +6,13 @@
         :indicatorDots="true" indicatorColor='#999' indicatorActiveColor='#333'
         :vertical="false" :circular="true" :autoplay="true"
       >
-        <swiper-item v-for="(image, index) in settingsData.images" :key="index">
-          <image class="carousel__image" :src="optimizeImage(image, 600)" mode="aspectFit"></image>
+        <swiper-item v-for="(item, index) in settingsData.carousel" :key="index">
+          <!-- <image class="carousel__image" :src="optimizeImage(item.image, 600)" mode="aspectFit"></image> -->
+          <navigator
+            :style="{'backgroundImage':backgroundImageUrl(item.image)}"
+            class="carousel__image" hover-class="none"
+            :url="getUrl(item.url)" :open-type="getOpenType(item.url)"
+          ></navigator>
         </swiper-item>
       </swiper>
     </view>
@@ -16,6 +21,7 @@
 
 <script>
 import { optimizeImage, backgroundImageUrl } from '@/utils/image'
+import parseUrl from '@/utils/parseUrl'
 
 export default {
   props: {
@@ -26,7 +32,7 @@ export default {
     settingsData: {
       type: Object,
       default: () => ({
-        grids: [],  // { image }
+        carousel: [],  // { image, url }
         imageRatio: 1  // 宽高比
       })
     }
@@ -42,7 +48,15 @@ export default {
   },
   methods: {
     optimizeImage,
-    backgroundImageUrl
+    backgroundImageUrl,
+    getUrl(url) {
+      const parse = parseUrl(url)
+      return parse.url
+    },
+    getOpenType(url) {
+      const parse = parseUrl(url)
+      return parse.openType
+    }
   }
 }
 </script>
@@ -69,6 +83,9 @@ export default {
     display: block;
     width: 100%;
     height: 100%;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
   }
 }
 </style>

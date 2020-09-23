@@ -19,10 +19,14 @@ export default function getTestPageConfig() {
         },
         "settings_data": {
           "imageRatio": "0.75",
-          "images": [{
-            "src": "https://up.img.heidiancdn.com/o_1egsmgnhqv33120o15791qd21iov0Bitmap.jpg"
+          "carousel": [{
+            "image": {
+              "src": "https://up.img.heidiancdn.com/o_1egsmgnhqv33120o15791qd21iov0Bitmap.jpg"
+            }
           }, {
-            "src": "https://up.img.heidiancdn.com/o_1egsmgnhqv33120o15791qd21iov0Bitmap.jpg"
+            "image": {
+              "src": "https://up.img.heidiancdn.com/o_1egsmgnhqv33120o15791qd21iov0Bitmap.jpg"
+            }
           }]
         }
       }, {
@@ -153,10 +157,14 @@ export default function getTestPageConfig() {
         },
         "settings_data": {
           "imageRatio": "0.6279",
-          "images": [{
-            "src": "https://up.img.heidiancdn.com/o_1eh1lffgq11nj1hqlcpqp64s5p0alHome.jpg"
+          "carousel": [{
+            "image": {
+              "src": "https://up.img.heidiancdn.com/o_1eh1lffgq11nj1hqlcpqp64s5p0alHome.jpg"
+            }
           }, {
-            "src": "https://up.img.heidiancdn.com/o_1eh1lffgq11nj1hqlcpqp64s5p0alHome.jpg"
+            "image": {
+              "src": "https://up.img.heidiancdn.com/o_1eh1lffgq11nj1hqlcpqp64s5p0alHome.jpg"
+            }
           }]
         }
       }, {
