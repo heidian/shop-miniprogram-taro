@@ -168,19 +168,19 @@ export default {
       ].join(',')
       let product = null
       if (this.productId) {
-        const res = await API.get(`/shopfront/product/${this.productId}/`, {
-          params: { fields }
-        }).catch(err => {
-          console.log(err)
-        })
-        product = res.data
+        try {
+          const res = await API.get(`/shopfront/product/${this.productId}/`, {
+            params: { fields }
+          })
+          product = res.data
+        } catch(err) { console.log(err) }
       } else if (this.productName) {
         /* 不要拼接 url, 用 params */
-        const res = await API.get('/shopfront/product/', {
-          params: { fields, name: this.productName }
-        }).catch(err => {
-          console.log(err)
-        })
+        try {
+          const res = await API.get('/shopfront/product/', {
+            params: { fields, name: this.productName }
+          })
+        } catch(err) { console.log(err) }
         /* res.data.results 一定是数组不会有问题, 只需要看长度就行 */
         product = res.data.results[0]
       }
@@ -189,8 +189,15 @@ export default {
         this.productId = product.id
         const variant = _.find(product.variants || [], { is_available: true }) || product.variants[0]
         this.currentVariant = variant
+        Taro.setNavigationBarTitle({
+          title: product.title
+        })
       } else {
-        // 抛出异常
+        Taro.showModal({
+          title: '找不到商品',
+          content: '商品链接错误',
+          showCancel: false
+        })
       }
     },
     showVariantsDrawer(openType) {
