@@ -156,6 +156,9 @@ import InfiniteProducts from '@/components/InfiniteProducts'
 
 export default {
   name: 'Account',
+  components: {
+    InfiniteProducts
+  },
   data() {
     return {
       DEFAULT_AVATAR,
@@ -224,8 +227,16 @@ export default {
       }]
     }
   },
-  components: {
-    InfiniteProducts
+  created() {
+    Taro.setNavigationBarColor({
+      frontColor: '#ffffff',
+      backgroundColor: '#1a1a1a'
+    })
+    Taro.setBackgroundColor({
+      backgroundColorTop: '#1a1a1a',
+      backgroundColor: '#1a1a1a',
+      backgroundColorBottom: '#f6f6f6',
+    })
   },
   computed: {
     ...mapState(['customer', 'partnerProfile']),

@@ -200,6 +200,10 @@ export default {
     }
   },
   created() {
+    Taro.setNavigationBarColor({
+      frontColor: '#ffffff',
+      backgroundColor: '#020202'
+    })
     Taro.setBackgroundColor({
       backgroundColorTop: '#020202',
       backgroundColor: '#020202',
