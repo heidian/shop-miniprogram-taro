@@ -5,7 +5,7 @@
       :is="block.componentClass"
       :css="block.css" :settingsData="block.settings_data"
     ></component>
-    <infinite-products ref="infiniteProducts"></infinite-products>
+    <!-- <infinite-products ref="infiniteProducts"></infinite-products> -->
   </view>
 </template>
 
@@ -13,7 +13,7 @@
 import _ from 'lodash'
 import Taro from '@tarojs/taro'
 import ThemeBlocks from '@/mixins/ThemeBlocks'
-import InfiniteProducts from '@/components/InfiniteProducts'
+// import InfiniteProducts from '@/components/InfiniteProducts'
 
 export default {
   name: 'Home',
@@ -21,7 +21,7 @@ export default {
     ThemeBlocks('blocks')
   ],
   components: {
-    InfiniteProducts
+    // InfiniteProducts
   },
   computed: {
     //
@@ -35,7 +35,7 @@ export default {
     })
   },
   onReachBottom() {
-    this.$refs.infiniteProducts.onReachBottom()
+    // this.$refs.infiniteProducts.onReachBottom()
   },
   async mounted() {
     await this.fetchPageConfig('home')
