@@ -15,6 +15,7 @@
         ><text :class="$style['categoryText']">{{ category.title }}</text></view>
       </view>
     </scroll-view>
+    <view :class="$style['filterBar']"></view>
     <virtual-list
       wclass="virtual-list"
       :height="listHeight"
@@ -47,7 +48,7 @@ export default {
   data() {
     const { windowHeight, windowWidth } = Taro.getSystemInfoSync()
     const ratio = 375 / windowWidth  // 这个项目的设计尺寸是 375, Taro 那里也是配置了 375 为设计尺寸, 而不是默认的 750
-    const topBarHeight = 35 / ratio  // 顶部过滤条
+    const topBarHeight = (35 + 50) / ratio  // 置顶分类和排序条
     const listHeight = windowHeight - topBarHeight
     const containerWidth = windowWidth - 2 * (5 / ratio)
     const topBottomPadding = (10 + 0) / ratio
@@ -147,7 +148,7 @@ page {
   background-color: $color-bg-gray;
 }
 .page {
-  padding-top: 35px;
+  padding-top: 35px + 50px;
   overflow: hidden;
   height: 100vh;
   :global(.virtual-list) {
@@ -184,5 +185,14 @@ page {
       border-bottom-color: $color-text;
     }
   }
+}
+.filterBar {
+  position: fixed;
+  z-index: $z-index-navbar;
+  left: 0;
+  top: 35px;
+  height: 50px;
+  width: 100%;
+  background-color: #ff0000;
 }
 </style>
