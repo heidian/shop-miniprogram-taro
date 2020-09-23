@@ -15,7 +15,21 @@
         ><text :class="$style['categoryText']">{{ category.title }}</text></view>
       </view>
     </scroll-view>
-    <view :class="$style['filterBar']"></view>
+    <view :class="$style['filterBar']">
+      <view
+        :class="{[$style['filterItem']]:true,'is-active':products.orderBy==='-published_at'}"
+        @tap="onClickOrderBy('-published_at')"
+      >新品</view>
+      <view
+        :class="{[$style['filterItem']]:true,'is-active':products.orderBy==='price'}"
+        @tap="onClickOrderBy('price')"
+      >价格</view>
+      <view
+        :class="{[$style['filterItem']]:true,'is-active':products.orderBy==='-sold_quantity'}"
+        @tap="onClickOrderBy('-sold_quantity')"
+      >销量</view>
+      <view :class="$style['filterItem']">筛选</view>
+    </view>
     <virtual-list
       wclass="virtual-list"
       :height="listHeight"
@@ -48,7 +62,7 @@ export default {
   data() {
     const { windowHeight, windowWidth } = Taro.getSystemInfoSync()
     const ratio = 375 / windowWidth  // 这个项目的设计尺寸是 375, Taro 那里也是配置了 375 为设计尺寸, 而不是默认的 750
-    const topBarHeight = (35 + 50) / ratio  // 置顶分类和排序条
+    const topBarHeight = (35 + 40) / ratio  // 置顶分类和排序条
     const listHeight = windowHeight - topBarHeight
     const containerWidth = windowWidth - 2 * (5 / ratio)
     const topBottomPadding = (10 + 0) / ratio
@@ -137,6 +151,14 @@ export default {
         await this.fetchList()
       }
       Taro.hideNavigationBarLoading()
+    },
+    onClickOrderBy(orderBy) {
+      if (this.products.orderBy === orderBy) {
+        this.updateOrderBy('', { fetch: false })
+      } else {
+        this.updateOrderBy(orderBy, { fetch: false })
+      }
+      this.fetchProducts()
     }
   }
 }
@@ -148,7 +170,7 @@ page {
   background-color: $color-bg-gray;
 }
 .page {
-  padding-top: 35px + 50px;
+  padding-top: 35px + 40px;
   overflow: hidden;
   height: 100vh;
   :global(.virtual-list) {
@@ -191,8 +213,29 @@ page {
   z-index: $z-index-navbar;
   left: 0;
   top: 35px;
-  height: 50px;
+  height: 39px;
+  border-top: 1px solid $color-divider;
   width: 100%;
-  background-color: #ff0000;
+  background-color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 15px;
+}
+.filterItem {
+  padding: 4px 9px;
+  border: 1px solid transparent;
+  width: 70px;
+  text-align: center;
+  font-size: 12px;
+  line-height: 16px;
+  border-radius: 13px;
+  color: $color-text-light;
+  background-color: $color-bg-gray;
+  &:global(.is-active) {
+    // border-color: darken($color-bg-gray, 10%);
+    border-color: $color-text;
+    color: $color-text;
+  }
 }
 </style>
