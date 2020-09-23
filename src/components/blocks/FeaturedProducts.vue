@@ -24,8 +24,9 @@
           <view class="price">
             <text class="price-sale">{{ product.price|currency }}</text>
             <text
-              v-if="+product.compare_at_price !== +product.price" class="price-compare"
+              v-if="+product.compare_at_price > +product.price" class="price-compare"
             >{{ product.compare_at_price|currency }}</text>
+            <!-- 这里一定要用 > 不能用 !==, 因为如果 compare_at_price 是 null, 那也是不等于 -->
           </view>
           <button
             class="button--round button--mini button--dark"
