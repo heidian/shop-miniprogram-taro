@@ -8,6 +8,8 @@ export default {
     'pages/cart/index',
     'pages/account/index',
     'pages/account/settings',
+    'pages/account/coupon-codes',
+    'pages/account/favorites',
     'pages/profile/edit',
     'pages/profile/alipay',
     'pages/profile/wechat',

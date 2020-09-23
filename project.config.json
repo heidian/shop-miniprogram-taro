@@ -132,6 +132,13 @@
           "pathName": "pages/checkout/index",
           "query": "token=7ae36e50747b27eb1b888c3c32639809b665b738&__key_=16008271853286",
           "scene": null
+        },
+        {
+          "id": -1,
+          "name": "pages/account/favorites",
+          "pathName": "pages/account/favorites",
+          "query": "",
+          "scene": null
         }
       ]
     }

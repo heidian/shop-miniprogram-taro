@@ -252,7 +252,10 @@ export default {
     async checkFavorite() {
       if (this.customer.isAuthenticated) {
         const { data } = await API.get('/customers/favorite/', {
-          params: { product: this.productId }
+          params: {
+            product: this.productId,
+            fields: 'id'
+          }
         })
         this.favoriteId = _.get(data, 'results[0].id', null)
       }

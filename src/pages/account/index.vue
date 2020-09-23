@@ -164,7 +164,7 @@ export default {
         // openType: 'switchTab',
         // icon: 'https://up.img.heidiancdn.com/o_1eh4kgtf1qm01d8a1hovm201gqe0up263x.png',
         // text: '我的任务'
-        url: '/pages/coupon-codes/index',
+        url: '/pages/account/coupon-codes',
         openType: 'navigate',
         icon: 'https://up.img.heidiancdn.com/o_1eitsdqi9bsv12p8h0nsija4f0coupon.png',
         text: '优惠券'
@@ -178,7 +178,7 @@ export default {
         // openType: 'navigate',
         // icon: 'https://up.img.heidiancdn.com/o_1eh4kgtf11k0p1qk31mha1qgb1rjf0awards.png',
         // text: '粉丝排行榜'
-        url: '/pages/favorites/index',
+        url: '/pages/account/favorites',
         openType: 'navigate',
         icon: 'https://up.img.heidiancdn.com/o_1eitsdqi473olishfgt114rm0shlist.png',
         text: '我的收藏'
