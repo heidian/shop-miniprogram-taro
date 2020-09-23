@@ -32,8 +32,8 @@ export default {
   },
   created() {
     Taro.setBackgroundColor({
-      backgroundColor: '#020202',
-      backgroundColorTop: '#ffffff',
+      backgroundColorTop: '#f6f6f6',
+      backgroundColor: '#f6f6f6',
       backgroundColorBottom: '#f6f6f6',
     })
     this.getFeaturedReferrers()

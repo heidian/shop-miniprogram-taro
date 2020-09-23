@@ -29,9 +29,9 @@ export default {
   created() {
     // TODO, 这里的颜色需要配置, 而不是写死
     Taro.setBackgroundColor({
-      backgroundColor: '#f6f6f6',
       backgroundColorTop: '#ffffff',
-      backgroundColorBottom: '#f6f6f6'
+      backgroundColor: '#f6f6f6',
+      backgroundColorBottom: '#f6f6f6',
     })
   },
   onReachBottom() {

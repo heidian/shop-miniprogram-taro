@@ -26,8 +26,8 @@ export default {
   },
   created() {
     Taro.setBackgroundColor({
-      backgroundColor: '#ffffff',
       backgroundColorTop: '#ffffff',
+      backgroundColor: '#ffffff',
       backgroundColorBottom: '#ffffff',
     })
   },

@@ -94,9 +94,9 @@ export default {
   },
   created() {
     Taro.setBackgroundColor({
-      backgroundColor: '#f6f6f6',
       backgroundColorTop: '#f6f6f6',
-      backgroundColorBottom: '#f6f6f6'
+      backgroundColor: '#f6f6f6',
+      backgroundColorBottom: '#f6f6f6',
     })
   },
   mounted() {},
