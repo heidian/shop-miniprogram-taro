@@ -68,11 +68,11 @@ export default {
     white-space: nowrap;
   }
   .text-animation--slideLeft {
-    animation: 10s linear 1s infinite both running slideLeft;
+    animation: 15s linear 1s infinite both running slideLeft;
     // animation: 3s linear 1s infinite reverse both running slideLeft;
   }
   .text-animation--slideRight {
-    animation: 10s linear 1s infinite both running slideRight;
+    animation: 15s linear 1s infinite both running slideRight;
     // animation: 3s linear 1s infinite reverse both running slideRight;
   }
 }
