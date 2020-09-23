@@ -18,7 +18,7 @@
     </view>
     <view v-if="hasMore" :class="$style['loadMore']"><text class="el-icon-more"></text></view>
     <template v-else>
-      <view style="margin: 20px auto 5px; text-align: center;">猜你喜欢</view>
+      <view style="margin-top: 20px; text-align: center;">猜你喜欢</view>
       <infinite-products ref="infiniteProducts"></infinite-products>
     </template>
   </view>

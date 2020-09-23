@@ -41,6 +41,7 @@
         :disabled="checkoutPending" @tap="checkout"
       >{{ checkoutPending ? '正在请求...' : '结算' }}</button>
     </view>
+    <view style="margin-top: 20px; text-align: center;">猜你喜欢</view>
     <infinite-products ref="infiniteProducts"></infinite-products>
   </view>
 </template>

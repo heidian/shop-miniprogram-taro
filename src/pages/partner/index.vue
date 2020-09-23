@@ -93,10 +93,11 @@
       </view>
     </view>
     <view :class="$style['productsWrapper']">
-      <image
+      <!-- <image
         :class="$style['productsHeader']" mode="heightFix"
         src="https://up.img.heidiancdn.com/o_1eib6m5pal6mv2n6up247mls0up413x.png"
-      ></image>
+      ></image> -->
+      <view :class="$style['productsHeader']">达人升级优选商品推荐</view>
       <view v-for="(product, index) in products.data" :key="product.id" :class="$style['productGrid']">
         <view :class="$style['productItem']" @tap="goToProduct(product.name)">
           <view :class="$style['productImageWrapper']" :style="{'backgroundImage': backgroundImageUrl(product.image, 200)}">
