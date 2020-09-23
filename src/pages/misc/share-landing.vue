@@ -58,7 +58,8 @@
         <text :class="$style['btnHint']">升级为国货大使，更多线下活动等你参与</text>
         <view :class="$style['btnsWrapper']">
           <navigator
-            :url="`/pages/product/index?id=${productId}`"
+            url="/pages/partner/index"
+            open-type="switchTab"
             :class="{[$style['btnItem']]: true, [$style['btnGolden']]: true}">立即升级</navigator>
           <navigator
             :url="`/pages/home`" open-type="switchTab" :class="[$style['btnItem'], $style['btnBlack']]">随便逛逛</navigator>
