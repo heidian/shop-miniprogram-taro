@@ -75,7 +75,7 @@ import { API } from '@/utils/api'
 import { optimizeImage, backgroundImageUrl, DEFAULT_AVATAR } from '@/utils/image'
 
 export default {
-  name: 'Landing',
+  name: 'ShareLanding',
   data () {
     const { product: productId, code: referralCode } = getCurrentInstance().router.params
     const type = !!productId ? 'product' : 'shop'

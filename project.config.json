@@ -106,9 +106,9 @@
           "scene": null
         },
         {
-          "id": -1,
-          "name": "pages/home/index with scene",
-          "pathName": "pages/home/index",
+          "id": 6,
+          "name": "pages/home with scene",
+          "pathName": "pages/home",
           "query": "scene=s%3Dshare%26c%3DXuh636%26r%3Dpdt%26id%3D84954",
           "scene": null
         },

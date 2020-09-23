@@ -25,7 +25,7 @@ export default {
     'pages/blog/index',
     'pages/blog/article',
     'pages/misc/share',
-    'pages/misc/landing',
+    'pages/misc/share-landing',
     'pages/index/index'
   ],
   tabBar: {
