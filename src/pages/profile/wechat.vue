@@ -20,7 +20,7 @@ import { handleErr } from '@/utils/errHelper'
 import RequiresLogin from '@/mixins/RequiresLogin'
 
 export default {
-  name: 'BindWechat',
+  name: 'Wechat',
   mixins: [ RequiresLogin ],
   data() {
     return {

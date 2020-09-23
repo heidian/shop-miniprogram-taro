@@ -14,7 +14,7 @@
               <text :class="$style['levelTitle']">{{ levelTitle }}</text>
               <navigator
                 :class="$style['navigatorText']" hover-class="none"
-                url="/pages/account/bind-wechat" open-type="navigate"
+                url="/pages/profile/wechat" open-type="navigate"
               >填写微信号</navigator>
             </view>
             <view :class="$style['referral']">
@@ -60,7 +60,7 @@
             </view>
             <view :class="$style['balanceBtns']">
               <view :class="$style['withdrawHistory']">提现记录 <text class="el-icon-arrow-right"></text></view>
-              <navigator :class="$style['bindAlipay']" url="/pages/account/bind-alipay" open-type="navigate" hover-class="none">绑定支付宝</navigator>
+              <navigator :class="$style['bindAlipay']" url="/pages/profile/alipay" open-type="navigate" hover-class="none">绑定支付宝</navigator>
             </view>
           </view>
           <view :class="$style['balanceDivider']"></view>

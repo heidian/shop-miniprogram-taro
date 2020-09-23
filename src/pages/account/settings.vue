@@ -34,8 +34,8 @@ export default {
   data() {
     return {
       navigators: [
-        { label: '微信号', value: '', hasCaret: true, url: '/pages/account/bind-wechat' },
-        { label: '个人信息', value: '', hasCaret: true, url: '/pages/account/profile' },
+        { label: '微信号', value: '', hasCaret: true, url: '/pages/profile/wechat' },
+        { label: '个人信息', value: '', hasCaret: true, url: '/pages/profile/edit' },
         { label: '收货地址', value: '', hasCaret: true, url: '/pages/addresses/index' },
         // { label: '账户安全', value: '', hasCaret: true, url: '' },
         { label: '联系客服', value: '', hasCaret: true, url: '', openType: 'contact' },

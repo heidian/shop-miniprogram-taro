@@ -46,7 +46,7 @@ import { handleErr } from '@/utils/errHelper'
 import RequiresLogin from '@/mixins/RequiresLogin'
 
 export default {
-  name: 'Profile',
+  name: 'ProfileEdit',
   mixins: [ RequiresLogin ],
   data() {
     return {

@@ -29,7 +29,7 @@ import { handleErr } from '@/utils/errHelper'
 import RequiresLogin from '@/mixins/RequiresLogin'
 
 export default {
-  name: 'BindAlipay',
+  name: 'Alipay',
   mixins: [ RequiresLogin ],
   data() {
     return {
