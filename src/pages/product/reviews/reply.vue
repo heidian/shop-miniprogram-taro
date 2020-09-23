@@ -13,6 +13,7 @@
       <input
         :class="$style['replyInput']"
         :value="content"
+        :focus="true"
         @confirm="onSubmit"
         @input="onInput"
         confirm-type="send"
@@ -85,9 +86,9 @@ export default {
         })
         this.content = ''
         this.pending = false
-        // try {
-        //   Taro.setStorageSync('_need_refresh_product_reviews', true)
-        // } catch (error) {}
+        try {
+          Taro.setStorageSync('_need_refresh_product_reviews', true)
+        } catch (error) {}
         this.fetchReplies(true)
       }).catch(err => {
         handleErr(err)

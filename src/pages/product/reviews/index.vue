@@ -62,6 +62,14 @@ export default {
   async mounted() {
     await this.fetchReviews()
   },
+  onShow () {
+    let need_refresh = false
+    try {
+      need_refresh = Taro.getStorageSync('_need_refresh_product_reviews')
+      Taro.removeStorageSync('_need_refresh_product_reviews')
+    } catch (error) {}
+    need_refresh && this.fetchReviews()
+  },
   computed: {},
   methods: {
     optimizeImage,
@@ -75,6 +83,7 @@ export default {
       } else {
         await this.fetchList()
       }
+      Taro.stopPullDownRefresh()
       Taro.hideNavigationBarLoading()
     },
   },
@@ -84,6 +93,9 @@ export default {
       this.fetchMore()
     }
   },
+  async onPullDownRefresh () {
+    await this.fetchReviews()
+  }
 }
 
 </script>

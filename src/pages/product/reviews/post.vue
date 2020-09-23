@@ -4,7 +4,7 @@
       <view :class="$style['cardHead']">{{ productTitle }}</view>
       <view :class="$style['cardContent']">
         <textarea
-          auto-focus
+          :auto-focus="true"
           :class="$style['textarea']"
           placeholder="我要评论…"
           placeholder-style="color: #d8d8d8;"
@@ -136,6 +136,9 @@ export default {
       }
       this.pending = true
       API.post('/customers/review/', payload).then(res => {
+        try {
+          Taro.setStorageSync('_need_refresh_product_reviews', true)
+        } catch (error) {}
         Taro.showToast({
           title: '发布成功',
           icon: 'success',
