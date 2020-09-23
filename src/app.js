@@ -18,6 +18,12 @@ Taro.onPageNotFound(function({ isEntryPage, path, query }) {
   console.log('PageNotFound', isEntryPage, path, query)
   if (/^pages\/(product|static)$/.test(path)) {
     Taro.redirectTo({ url: path + '/index?' + qs.stringify(query) })
+  } else if (/^pages\/login$/.test(path)) {
+    Taro.redirectTo({ url: '/pages/login/index' })
+  } else if (/^pages\/member$/.test(path)) {
+    Taro.switchTab({ url: '/pages/partner/index' })
+  } else if (/^pages\/(account|categories)$/.test(path)) {
+    Taro.switchTab({ url: '/pages/login/index' })
   }
   // else if (/^pages\/home$/.test(path)) {
   //   Taro.switchTab({ url: '/pages/home/index' })
