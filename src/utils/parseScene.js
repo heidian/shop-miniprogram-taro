@@ -61,6 +61,15 @@ export default function(scene) {
     const search = _.map(queryTuples, ([k, v]) => `${k}=${encodeURIComponent(v)}`).join('&')
     // page 不能是一个 tabbar, switchTab 无法带 url 参数, 要打开 tab 就直接生成对应 tab 的小程序码
     parsedSceneObj['redirect'] = `/pages/${page}?${search}`
+    if (referralCode && page === 'product/index' && query.id) {
+      // 有 referralCode 就跳转 share-landing
+      parsedSceneObj['redirect'] = `/pages/misc/share-landing?code=${referralCode}&product=${query.id}`
+    }
+  } else {
+    // 有 referralCode 就跳转 share-landing
+    if (referralCode) {
+      parsedSceneObj['redirect'] = `/pages/misc/share-landing?code=${referralCode}`
+    }
   }
   return parsedSceneObj
 }
