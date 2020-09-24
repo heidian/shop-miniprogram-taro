@@ -90,6 +90,13 @@
             <image :class="[$style['gridItemIcon'], $style['gridItemIconBigger']]" :src="item.icon" mode="aspectFit"></image>
             <text :class="$style['gridItemText']">{{ item.text }}</text>
           </navigator>
+
+          <view :class="[$style['gridItem'], $style['gridNavigator']]" @tap="onTapInvite">
+            <image
+              :class="[$style['gridItemIcon'], $style['gridItemIconBigger']]"
+              src='https://up.img.heidiancdn.com/o_1eh4kgtf1lha1tl75f7phcrp30enifit.png' mode="aspectFit"></image>
+            <text :class="$style['gridItemText']">邀请返现</text>
+          </view>
         </view>
 
         <view :class="$style['section']">
@@ -183,11 +190,6 @@ export default {
         openType: 'navigate',
         icon: 'https://up.img.heidiancdn.com/o_1eitsdqi9bsv12p8h0nsija4f0coupon.png',
         text: '优惠券'
-      }, {
-        url: '/pages/misc/share',
-        openType: 'navigate',
-        icon: 'https://up.img.heidiancdn.com/o_1eh4kgtf1lha1tl75f7phcrp30enifit.png',
-        text: '邀请返现'
       }, {
         // url: '',
         // openType: 'navigate',
@@ -300,6 +302,22 @@ export default {
       }).catch(err => {
         handleErr(err)
       })
+    },
+    onTapInvite () {
+      if (this.partnerLevel > 0) {
+        Taro.navigateTo({ url: '/pages/misc/share' })
+      } else {
+        Taro.showModal({
+          title: '提示',
+          content: '请先升级国货大使'
+        }).then((res) => {
+          if (res.confirm) {
+            Taro.switchTab({ url: '/pages/partner/index' })
+          } else {
+
+          }
+        })
+      }
     },
     throttleFetchRebates: _.throttle(function() {
       API.get('/substores/partners/rebate/summary/').then((res) => {
