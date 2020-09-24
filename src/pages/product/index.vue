@@ -73,9 +73,12 @@
         @tap="() => showVariantsDrawer('buy_now')"
       >立即购买</button>
     </view>
-    <view :class="$style['productShare']" @tap="onClickShare">
-      <text class="el-icon-share"></text>
-      <!-- <image :class="$style['productShareIcon']" src="data:image/svg+xml;base64,PHN2ZyBpZD0iQ2FwYV8xIiBlbmFibGUtYmFja2dyb3VuZD0ibmV3IDAgMCA1NTEuMTMgNTUxLjEzIiBoZWlnaHQ9IjUxMiIgdmlld0JveD0iMCAwIDU1MS4xMyA1NTEuMTMiIHdpZHRoPSI1MTIiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0ibTQ2NS4wMTYgMTcyLjIyOGgtNTEuNjY4djM0LjQ0NmgzNC40NDZ2MzEwLjAxMWgtMzQ0LjQ1N3YtMzEwLjAxMWgzNC40NDZ2LTM0LjQ0NmgtNTEuNjY5Yy05LjUyIDAtMTcuMjIzIDcuNzAzLTE3LjIyMyAxNy4yMjN2MzQ0LjQ1NmMwIDkuNTIgNy43MDMgMTcuMjIzIDE3LjIyMyAxNy4yMjNoMzc4LjkwMmM5LjUyIDAgMTcuMjIzLTcuNzAzIDE3LjIyMy0xNy4yMjN2LTM0NC40NTZjMC05LjUyLTcuNzAzLTE3LjIyMy0xNy4yMjMtMTcuMjIzeiIvPjxwYXRoIGQ9Im0yNTguMzQyIDY1LjkzMXYyNDQuMDhoMzQuNDQ2di0yNDQuMDhsNzMuOTM3IDczLjkzNyAyNC4zNTQtMjQuMzU0LTExNS41MTQtMTE1LjUxNC0xMTUuNTE0IDExNS41MTQgMjQuMzU0IDI0LjM1NHoiLz48L3N2Zz4=" mode="aspectFit" lazy-load="false"></image> -->
+    <view v-if="partnerLevel > 0"
+      :class="{[$style['productShare']]: true, [$style['isLikeIphoneX']]: isLikeIphoneX}"
+      @tap="onClickShare">
+      <!-- <text class="el-icon-share"></text> -->
+      <image :class="$style['productShareIcon']" src="https://up.img.heidiancdn.com/o_1eivho00dova1ua417h2f8hl5q0hape2x.png" mode="aspectFit" lazy-load="false"></image>
+      <text :class="$style['productShareText']">立赚</text>
     </view>
 
     <select-variant
@@ -150,8 +153,11 @@ export default {
     need_refresh && this.$refs.productReviews && this.$refs.productReviews.fetchReviews()
   },
   computed: {
-    ...mapState(['cart', 'customer', 'system']),
+    ...mapState(['cart', 'customer', 'system', 'partnerProfile']),
     ...mapGetters(['system/isLikeIphoneX']),
+    partnerLevel () {
+      return +this.partnerProfile.data.level || 0
+    },
     isLikeIphoneX () {
       return this['system/isLikeIphoneX']
     },
@@ -509,20 +515,32 @@ page {
 
 .productShare {
   position: fixed;
-  top: 15px;
+  bottom: 55px;
   right: 15px;
   width: 40px;
   height: 40px;
-  padding: 10px;
-  background-color: #ffffff;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: $color-text;
   border-radius: 50%;
+  overflow: hidden;
   box-shadow: 0 1px 5px 0px #aaaaaa;
   font-size: 18px;
   line-height: 20px;
-
-  &Icon {
-    width: 20px;
-    height: 20px;
+  color: #ffffff;
+  &.isLikeIphoneX {
+    bottom: 70px;
   }
+  &Icon {
+    width: 14px;
+    height: 14px;
+  }
+}
+.productShareText {
+  font-size: 9px;
+  line-height: 12px;
 }
 </style>
