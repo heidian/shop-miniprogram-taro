@@ -93,7 +93,8 @@
             <text :class="[$style['todoTag'], $style['goldBg']]">{{ item.tag }}</text>
           </view>
           <view :class="$style['lightText']" style="margin-top: 0.2em;">{{ item.description }}</view>
-          <button class="button--mini button--round button--dark">去完成</button>
+          <!-- <button class="button--mini button--round button--dark">去完成</button> -->
+          <navigator :url="item.url" open-type="navigate" hover-class="none" :class="$style['todoAction']">去完成</navigator>
         </view>
       </view>
     </view>
@@ -188,16 +189,19 @@ export default {
         image: 'https://up.img.heidiancdn.com/o_1eiaps8ae1mnu14kf1jlh9m51pof0copy3x.png',
         title: '完善微信资料',
         tag: '+50成长值',
+        url: '/pages/profile/wechat',
         description: '完善微信资料即可获得50成长值'
       }, {
         image: 'https://up.img.heidiancdn.com/o_1eiapsmke88a8s2bhmp91t3n0copy3x.png',
         title: '完善个人信息',
         tag: '+50成长值',
+        url: '/pages/profile/alipay',
         description: '完善个人信息即可获得50成长值'
       }, {
         image: 'https://up.img.heidiancdn.com/o_1eiapt3h71ec11mhth2420e1er90copy3x.png',
         title: '购买任意商品',
         tag: '+相应成长值',
+        url: '/pages/search/index',
         description: '购买任意商品，每笔有效订单均可获得相应成长值'
       }]
     }

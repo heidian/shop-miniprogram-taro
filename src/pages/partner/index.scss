@@ -146,11 +146,6 @@ page {
   background-position: top left;
   background-repeat: no-repeat;
   position: relative;
-  button {
-    position: absolute;
-    right: 0;
-    top: 10px;
-  }
 }
 .todoTag {
   display: inline-block;
@@ -158,6 +153,18 @@ page {
   font-size: 11px;
   font-weight: bold;
   padding: 0 5px;
+}
+.todoAction {
+  position: absolute;
+  right: 0;
+  top: 10px;
+  display: inline-block;
+  color: #fff;
+  background-color: #020202;
+  font-size: 13px;
+  line-height: 20px;
+  padding: 1px 12px;
+  border-radius: 11px;
 }
 
 
