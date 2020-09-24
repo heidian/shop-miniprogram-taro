@@ -60,7 +60,7 @@
         </view>
       </template>
       <image
-        v-if="customerQrcodeBase64"
+        v-if="!!customer.isAuthenticated && !!customer.data.mobile"
         src="https://up.img.heidiancdn.com/o_1cbbcvna21ardpe01d411d7bm9a0qrcode.svg"
         :class="$style['cardqQrcode']"
         @tap="openQrModal"/>
@@ -243,13 +243,6 @@ export default {
       }
     })
   },
-  async onShow () {
-    try {
-      if (!this.customer.data.id) { await this.$store.dispatch('customer/getCustomer') }
-    } catch (err) {
-    }
-    this.loadQrcode()
-  },
   onReachBottom() {
     // 高成长值商品不多, 不限制页数了
     // const { data, page, pageSize, count } = this.products
@@ -278,9 +271,6 @@ export default {
       Taro.navigateTo({ url: '/pages/partner/activate' })
     },
     openQrModal () {
-      this.qrDialogVisible = true
-    },
-    loadQrcode () {
       const customerQrcodeBase64 = drawImg(this.customer.data.mobile, {
         typeNumber: 4,
         errorCorrectLevel: 'M',
@@ -289,6 +279,7 @@ export default {
       if (customerQrcodeBase64) {
         this.customerQrcodeBase64 = customerQrcodeBase64
       }
+      this.qrDialogVisible = true
     }
   }
 }
