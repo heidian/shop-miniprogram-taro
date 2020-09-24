@@ -27,7 +27,6 @@ Conflicting order between:
 第二种方法更适合 React, 在 Vue 中还是用第一种. 第一种方式 Taro 默认没有实现, 我们自己修改了 config/index.js 文件
 
 
-
 #### WxParse
 参考了这个项目 https://github.com/NervJS/taro-sample-weapp/tree/vue/src/pages
 Vue 的 template 和小程序原生的 template 标签重名了, 所以要用 WxParse 必须使用小程序原生组件来实现, 事实上这样实现反而简单
@@ -36,8 +35,6 @@ WxParse 的小程序自定义组件定义在 components/wxParse/index.js
 
 
 ### @tarojs/mini-runner
-~~package.json 里降级这个库版本到 "3.0.7"，因为一些环境版本的因素，项目编译的时候会报错`Cannot read property 'buildTemplate' of undefined `。后续如果Taro版本更新后，可以尝试把相关依赖也同步更新，看是不是可以顺利编译了。~~
-
 如果遇到编译问题，建议先运行`taro doctor`，检查和保证依赖版本和本地、全局taro版本是否一致
 
 ```
@@ -55,3 +52,5 @@ taro doctor
 
 1. `npm install -g @tarojs/cli@3.0.11`  升级全局taro版本；
 2. 逐个更新本地项目中的taro相关依赖版本。
+
+目前固定 taro 版本到最新的稳定版 3.0.9, 新的 3.0.11 版本的 initPxTransform 有问题, 应该是改过规则了
