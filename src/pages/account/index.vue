@@ -309,7 +309,7 @@ export default {
       } else {
         Taro.showModal({
           title: '邀请返现',
-          content: '请先升级国货大使，邀请朋友一起赚钱吧！',
+          content: '快快升级为国货大使，解锁邀请返现、购物返利等更多福利吧！',
           showCancel: false
         }).then((res) => {
           if (res.confirm) {

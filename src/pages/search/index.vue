@@ -3,15 +3,15 @@
     <scroll-view
       :class="$style['categoriesBar']"
       :scroll-x="true" :enhanced="true" :show-scrollbar="false"
-      :scroll-into-view="activeCategoryId ? `search-category-${activeCategoryId}` : null"
+      :scroll-into-view="activeRootCategoryId ? `search-category-${activeRootCategoryId}` : null"
       :scroll-with-animation="true"
     >
       <view :class="$style['categoriesInner']">
         <view
           v-for="category in categories.data" :key="category.id"
-          :class="[$style['categoryItem'], (category.id === activeCategoryId) && 'is-active']"
+          :class="[$style['categoryItem'], (category.id === activeRootCategoryId) && 'is-active']"
           :id="`search-category-${category.id}`"
-          @tap="() => filterCategory(category.id)"
+          @tap="() => filterRootCategory(category.id)"
         ><text :class="$style['categoryText']">{{ category.title }}</text></view>
       </view>
     </scroll-view>
@@ -28,7 +28,20 @@
         :class="{[$style['filterItem']]:true,'is-active':products.orderBy==='-sold_quantity'}"
         @tap="onClickOrderBy('-sold_quantity')"
       >销量</view>
-      <view :class="$style['filterItem']">筛选</view>
+      <view
+        :class="{[$style['filterItem']]:true,'is-active':+products.filter.category!==activeRootCategoryId}"
+        @tap="subCategoryDrawerVisible = !subCategoryDrawerVisible"
+      >筛选</view>
+      <view :class="[$style['subCategoriesWrapper'], subCategoryDrawerVisible && 'is-visible']">
+        <view
+          @tap="() => filterRootCategory(activeRootCategoryId)"
+          :class="[$style['subCategoryItem'], (activeRootCategoryId === +products.filter.category) && 'is-active']"
+        >全部</view>
+        <view
+          v-for="item in activeSubCategories" :key="item.id" @tap="() => filterSubCategory(item.id)"
+          :class="[$style['subCategoryItem'], (item.id === +products.filter.category) && 'is-active']"
+        >{{ item.title }}</view>
+      </view>
     </view>
     <virtual-list
       wclass="virtual-list"
@@ -78,7 +91,8 @@ export default {
       listHeight: listHeight,
       itemHeight: parseInt(itemHeight + 1),  // 最后加个1
       ProductItem,
-      activeCategoryId: null
+      activeRootCategoryId: null,
+      subCategoryDrawerVisible: false
     }
   },
   created() {
@@ -99,9 +113,14 @@ export default {
     listLength() {
       // 向上取整
       return parseInt((this.products.data.length + 1) / 2)
+    },
+    activeSubCategories() {
+      const category = _.find(this.categories.data, { id: this.activeRootCategoryId })
+      return category ? category.children : []
     }
   },
-  created() {
+  created() {},
+  async mounted() {
     // 初始化过滤参数
     const defaultParams = {
       fields: ['id', 'name', 'title', 'description', 'image', 'price', 'compare_at_price', 'metafields'].join(',')
@@ -109,13 +128,13 @@ export default {
     const filter = {}
     const { category } = getCurrentInstance().router.params
     filter.category = category
-    this.$store.commit('lists/products/setParams', {
-      filter, defaultParams
-    })
-  },
-  async mounted() {
     // 因为要处理 activeCategory, 这里先 await 一下, categories 全局只取一次, 这样问题不大
     await this.$store.dispatch('categories/list')
+    if (!filter.category) {
+      // 默认一定要选中一个分类, 这个版本 search 页面不能显示全部商品, 之后再支持更多过滤
+      filter.category = this.categories.data[0].id
+    }
+    this.$store.commit('lists/products/setParams', { filter, defaultParams })
     this.fetchProducts()
   },
   methods: {
@@ -134,9 +153,15 @@ export default {
         this.fetchProducts({ more: true })
       }
     },
-    filterCategory(categoryId) {
-      // 虽然 fetchProducts 里面也会计算 activeCategoryId, 但这里早点设置也没事
-      this.activeCategoryId = categoryId
+    filterRootCategory(categoryId) {
+      // 虽然 fetchProducts 里面也会计算 activeRootCategoryId, 但这里早点设置也没事
+      this.subCategoryDrawerVisible = false
+      this.activeRootCategoryId = categoryId
+      this.updateFilter({ category: categoryId }, { partial: false, fetch: false })
+      this.fetchProducts()
+    },
+    filterSubCategory(categoryId) {
+      this.subCategoryDrawerVisible = false
       this.updateFilter({ category: categoryId }, { partial: false, fetch: false })
       this.fetchProducts()
     },
@@ -147,7 +172,7 @@ export default {
         await this.fetchMore()
       } else {
         // TODO active category
-        this.activeCategoryId = this.getRootCategoryId(this.products.filter.category)
+        this.activeRootCategoryId = this.getRootCategoryId(this.products.filter.category)
         await this.fetchList()
       }
       Taro.hideNavigationBarLoading()
@@ -205,6 +230,7 @@ page {
   &:global(.is-active) {
     .categoryText {
       border-bottom-color: $color-text;
+      font-weight: bold;
     }
   }
 }
@@ -234,8 +260,41 @@ page {
   background-color: $color-bg-gray;
   &:global(.is-active) {
     // border-color: darken($color-bg-gray, 10%);
-    border-color: $color-text;
+    // border-color: $color-text;
+    background-color: darken($color-bg-gray, 10%);
     color: $color-text;
+    font-weight: bold;
+  }
+}
+.subCategoriesWrapper {
+  position: absolute;
+  z-index: $z-index-navbar;
+  padding: 15px;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  background-color: #fff;
+  border-top: 1px solid $color-divider;
+  box-shadow: 0 5px 5px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: flex-start;
+  opacity: 0;
+  visibility: hidden;
+  transition: all .35s ease-in-out;
+  &:global(.is-visible) {
+    opacity: 1;
+    visibility: visible;
+  }
+}
+.subCategoryItem {
+  padding: 8px 15px;
+  font-size: 13px;
+  color: $color-text-light;
+  &:global(.is-active) {
+    color: $color-text;
+    font-weight: bold;
   }
 }
 </style>
