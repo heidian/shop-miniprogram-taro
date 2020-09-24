@@ -57,7 +57,8 @@ import Price from '@/components/Price'
 export default {
   name: 'InfiniteProduct',
   mixins: [
-    ListTable('products', { urlRoot: '/shopfront/product/' })
+    // ListTable('products', { urlRoot: '/shopfront/product/' })
+    ListTable('products', { storeName: 'lists/infiniteProducts' })
   ],
   components: {
     Price
@@ -71,9 +72,10 @@ export default {
     //
   },
   async mounted() {
-    this.updateDefaultParams({
-      fields: ['id', 'name', 'title', 'description', 'image', 'price', 'compare_at_price', 'metafields'].join(',')
-    }, { fetch: false })
+    // 这个在 store 里面设置了
+    // this.updateDefaultParams({
+    //   fields: ['id', 'name', 'title', 'description', 'image', 'price', 'compare_at_price', 'metafields'].join(',')
+    // }, { fetch: false })
     await this.fetchList()
   },
   methods: {

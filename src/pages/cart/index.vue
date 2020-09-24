@@ -94,6 +94,12 @@ export default {
   onReachBottom() {
     this.$refs.infiniteProducts.onReachBottom()
   },
+  onShow() {
+    // infiniteProducts store 不会每次都去获取, 这里反复调用没关系
+    // 这里 onShow 的时候调用, 目的是可以让 infiniteProducts 定期刷新下, 不一定要放 cart 页面, 放在 account 页面也行
+    // this.$refs.infiniteProducts.fetchList()
+    this.$store.dispatch('lists/infiniteProducts/list')
+  },
   methods: {
     optimizeImage,
     setItemQuantity: _.debounce(function(quantity, itemId) {
