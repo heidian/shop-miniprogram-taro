@@ -41,6 +41,13 @@ page {
     background-color: #020202;
   }
 }
+.cardqQrcode {
+  width: 48px;
+  height: 49px;
+  position: absolute;
+  top: 18px;
+  right: 18px;
+}
 .profileWrapper {
   margin-bottom: 20px;
   display: flex;
@@ -62,6 +69,7 @@ page {
 .heyshop {
   width: 120px;
   margin-left: auto;
+  margin-right: 50px;
 }
 .growthProgressWrapper {
   margin: 15px auto;
@@ -240,5 +248,57 @@ page {
   button {
     display: block;
     width: 100%;
+  }
+}
+
+.dialogHeader {
+  width: 100%;
+  padding: 30px 20px 10px;
+  font-size: 18px;
+  font-weight: 600;
+  color: $color-text;
+  text-align: center;
+}
+.dialogBody {
+  width: 100%;
+  padding: 10px 20px 30px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.dialogQr {
+  width: 200px;
+  height: 200px;
+}
+
+.dialogTips {
+  position: relative;
+  overflow: visible;
+  margin-top: 20px;
+  color: $color-text-lighter;
+  &::before {
+    display: block;
+    content: "";
+    position: absolute;
+    left: -30px;
+    top: 50%;
+    width: 25px;
+    height: 0;
+    margin-top: -1px;
+    border-top: 1px solid $color-text-lighter;
+  }
+  &::after {
+    display: block;
+    content: "";
+    position: absolute;
+    right: -30px;
+    top: 50%;
+    width: 25px;
+    height: 0;
+    margin-top: -1px;
+    // background-color: aqua;
+    border-top: 1px solid $color-text-lighter;
   }
 }

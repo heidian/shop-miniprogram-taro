@@ -59,6 +59,11 @@
           <text>{{ partnerProfile.data.ends_at|date }}到期</text>
         </view>
       </template>
+      <image
+        v-if="customerQrcodeBase64"
+        src="https://up.img.heidiancdn.com/o_1cbbcvna21ardpe01d411d7bm9a0qrcode.svg"
+        :class="$style['cardqQrcode']"
+        @tap="openQrModal"/>
     </view>
     <view :class="$style['whiteSection']"> <!-- 国货大使攻略 -->
       <navigator url="/pages/blog/article?name=partner-intro" hover-class="none">
@@ -98,7 +103,7 @@
         src="https://up.img.heidiancdn.com/o_1eib6m5pal6mv2n6up247mls0up413x.png"
       ></image> -->
       <view :class="$style['productsHeader']">达人升级优选商品推荐</view>
-      <view v-for="(product, index) in products.data" :key="product.id" :class="$style['productGrid']">
+      <view v-for="(product) in products.data" :key="product.id" :class="$style['productGrid']">
         <view :class="$style['productItem']" @tap="goToProduct(product.name)">
           <view :class="$style['productImageWrapper']" :style="{'backgroundImage': backgroundImageUrl(product.image, 200)}">
             <view
@@ -125,6 +130,13 @@
     <view :class="$style['activationBottom']" v-if="growthValue >= 1000 && !partnerLevel">
       <button class="button--dark button--small" style="color: #e6caa5;" @tap="goToActivate">免费激活合伙人身份</button>
     </view>
+    <hs-dialog :visible.sync="qrDialogVisible">
+      <view :class="$style['dialogHeader']" slot="header">会员扫码</view>
+      <view :class="$style['dialogBody']">
+        <image :class="$style['dialogQr']" :src="customerQrcodeBase64" mode="aspectFill"></image>
+        <view :class="$style['dialogTips']">结算时请向店员出示此码</view>
+      </view>
+    </hs-dialog>
   </view>
 </template>
 
@@ -133,9 +145,13 @@ import _ from 'lodash'
 import Taro from '@tarojs/taro'
 import { mapState } from 'vuex'
 import { API } from '@/utils/api'
+// const QR = require('../../utils/weapp-qrcode.js')
+import { drawImg } from '@/utils/weapp-qrcode'
+
 import { optimizeImage, backgroundImageUrl, DEFAULT_AVATAR } from '@/utils/image'
 import ListTable from '@/mixins/ListTable'
 import Price from '@/components/Price'
+import HsDialog from '@/components/HsDialog'
 
 export default {
   name: 'Partner',
@@ -143,11 +159,14 @@ export default {
     ListTable('products', { urlRoot: '/shopfront/product/' })
   ],
   components: {
-    Price
+    Price,
+    'hs-dialog': HsDialog
   },
   data() {
     return {
       DEFAULT_AVATAR,
+      qrDialogVisible: false,
+      customerQrcodeBase64: "",
       pros: [{
         image: 'https://up.img.heidiancdn.com/o_1eiama15ugei6gj0p2cs9tf0oup53x.png',
         title: '自购省钱',
@@ -224,6 +243,13 @@ export default {
       }
     })
   },
+  async onShow () {
+    try {
+      if (!this.customer.data.id) { await this.$store.dispatch('customer/getCustomer') }
+    } catch (err) {
+    }
+    this.loadQrcode()
+  },
   onReachBottom() {
     // 高成长值商品不多, 不限制页数了
     // const { data, page, pageSize, count } = this.products
@@ -250,6 +276,19 @@ export default {
     },
     goToActivate() {
       Taro.navigateTo({ url: '/pages/partner/activate' })
+    },
+    openQrModal () {
+      this.qrDialogVisible = true
+    },
+    loadQrcode () {
+      const customerQrcodeBase64 = drawImg(this.customer.data.mobile, {
+        typeNumber: 4,
+        errorCorrectLevel: 'M',
+        size: 200
+      })
+      if (customerQrcodeBase64) {
+        this.customerQrcodeBase64 = customerQrcodeBase64
+      }
     }
   }
 }
