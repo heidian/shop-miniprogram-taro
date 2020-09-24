@@ -176,7 +176,7 @@ export default {
   onShareAppMessage (res) {
     return {
       title: this.shareTitle,
-      path: `/pages/home?scene=${this.shareScene}`,
+      path: `/pages/home?scene=${encodeURIComponent(this.shareScene)}`,
       imageUrl: this.shareImage,
       success: res => {},
       fail: () => {},
