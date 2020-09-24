@@ -7,6 +7,7 @@ import store from './store/index'
 import { formatCurrency, formatDate, formatDateTime } from './utils/formatters'
 import { optimizeImage } from './utils/image'
 import parseScene from './utils/parseScene'
+import analytics from './utils/analytics'
 
 // Vue.config.productionTip = false
 
@@ -72,10 +73,15 @@ Vue.filter('imageUrl', (value, width, height) => optimizeImage(value, width, hei
  */
 try {
   wx.onAppRoute(res => {
-    console.log('DEBUG: 检测到路由变化 (优化一下这部分的代码, 移动到 analytics 单独的包里)\n', res)
+    // console.log('DEBUG: 检测到路由变化 (优化一下这部分的代码, 移动到 analytics 单独的包里)\n', res)
+    try {
+      analytics.page()
+    } catch(err) {
+      console.log('analytics.page', err)
+    }
   })
 } catch(err) {
-  console.log(err)
+  console.log('wx.onAppRoute', err)
 }
 
 

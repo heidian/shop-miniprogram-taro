@@ -33,7 +33,7 @@ export default {
       const { append } = options || {}
       const now = (new Date()).valueOf()
       if (!append && state.lastRefreshed && (now - state.lastRefreshed) < 30 * 1000) {
-        console.log('wait to refresh', now - state.lastRefreshed)
+        // console.log('wait to refresh', now - state.lastRefreshed)
         return Promise.resolve({
           count: state.count, data: []
         })
