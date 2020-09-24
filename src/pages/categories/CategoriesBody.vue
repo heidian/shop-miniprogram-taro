@@ -20,7 +20,11 @@
         :scroll-anchoring="true"
         :show-scrollbar="false"
       >
-        <view :class="$style['categoryImage']" :style="{'backgroundImage': backgroundImageUrl((item.image && item.image.src) ? item.image : 'https://up.img.heidiancdn.com/o_1edbf7v8a12v35o415qak731pij0pic_hd.jpg?imageView2/2/w/800/ignore-error/1', 400)}"></view>
+        <view
+          :class="$style['categoryImage']"
+          :style="{'backgroundImage': backgroundImageUrl((item.image && item.image.src) ? item.image : 'https://up.img.heidiancdn.com/o_1edbf7v8a12v35o415qak731pij0pic_hd.jpg?imageView2/2/w/800/ignore-error/1', 400)}"
+          @tap="onTapItem"
+        ></view>
         <view :class="$style['subCategoryWrapper']">
           <view v-for="subItem in item.children" :key="subItem.id" :class="$style['subItem']"
             @tap="onTapSubItem(subItem.id)"
@@ -61,6 +65,9 @@ export default {
     backgroundImageUrl,
     onTapSubItem (id) {
       Taro.navigateTo({ url: `/pages/search/index?category=${id}` })
+    },
+    onTapItem () {
+      Taro.navigateTo({ url: '/pages/search/index' })
     },
     onAnimationfinish (e) {
       const index = e.detail.current
