@@ -35,7 +35,7 @@
         <view :class="$style['tip']" @tap="showRebateTip">?</view>
       </view>
     </view>
-    <view :class="$style['pageSection']">
+    <view :class="$style['pageSection']" v-if="!hideSelectedVariant">
       <view :class="$style['cell']" @tap="() => showVariantsDrawer('')">
         <view :class="$style['cellLabel']">已选</view>
         <view :class="$style['cellValue']">{{ currentVariant.title }}</view>
@@ -154,6 +154,9 @@ export default {
     ...mapGetters(['system/isLikeIphoneX']),
     isLikeIphoneX () {
       return this['system/isLikeIphoneX']
+    },
+    hideSelectedVariant () {
+      return _.isEmpty(_.get(this.product, 'options'))
     },
     body_html() {
       return _.get(this.product, 'body_html_mobile') || _.get(this.product, 'body_html')
