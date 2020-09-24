@@ -110,6 +110,7 @@ export default class ShareCanvas {
     this.canvasHeight = null
     this.canvasImages = {}
     this.cursorOffsetTop = 0
+    this.needStop = false
   }
 
   execGenerate () {
@@ -139,7 +140,10 @@ export default class ShareCanvas {
       .fields({ node: true, size: true })
       .exec(async (res) => {
         // init canvas and ctx
-        if (!res || !res.length) return;
+        if (!res || !res.length) {
+          reject('节点错误');
+          return;
+        }
         this.canvas = res[0].node
         this.ctx = this.canvas.getContext('2d')
         const canvas_width = 375
@@ -179,7 +183,9 @@ export default class ShareCanvas {
           this._dwarShareTitle(full_name, '给你分享一个好店', 'white')
           this._drawShopMiniQr()
         }
+        // resolve()
         setTimeout(() => {
+          if (!!this.needStop) return;
           Taro.canvasToTempFilePath({
             canvas: this.canvas,
             success: (res) => {
@@ -187,7 +193,7 @@ export default class ShareCanvas {
               resolve(res.tempFilePath)
             },
             fail: (err) => {
-              reject(err)
+              reject(!!this.needStop ? '取消生成图片': err)
             }
           })
         }, 200)
@@ -412,6 +418,10 @@ export default class ShareCanvas {
         Taro.hideLoading()
       }
     })
+  }
+
+  stopTask () {
+    this.needStop = true
   }
 }
 

@@ -173,6 +173,9 @@ export default {
       this.canvasImageReady = true
     }
   },
+  beforeDestroy () {
+    this.canvasInstance && this.canvasInstance.stopTask && this.canvasInstance.stopTask()
+  },
   onShareAppMessage (res) {
     return {
       title: this.shareTitle,
@@ -200,6 +203,7 @@ $color-bg-toast: rgba(#000000, 0.6);
 $color-border: #bbbbbb;
 $color-box-shadow: rgba(#000000, 0.08);
 $color-bg-btn-save: #222222;
+$canvas-width: 66.666667vw;
 
 page {
   background-color: $color-bg-gray;
@@ -238,7 +242,7 @@ page {
   border-radius: 8px;
 }
 .canvasImageWrapper {
-  width: 66.666667vw;
+  width: $canvas-width;
   margin: 30px auto 0;
   border-radius: 8px;
   box-shadow: 0 3px 20px 0 $color-box-shadow;
@@ -268,7 +272,7 @@ page {
   opacity: 1;
 }
 .actionSave {
-  margin: 60px auto 25px;
+  margin: 30px auto 25px;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -282,6 +286,9 @@ page {
 .btnSave {
   max-width: 320px;
   width: 100%;
+  max-width: $canvas-width;
+  margin-left: auto;
+  margin-right: auto;
   // height: 50px;
   // line-height: 20px;
   // padding: 15px 0;
