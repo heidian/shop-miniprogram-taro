@@ -157,7 +157,7 @@ export default {
       }
       const credential = _.get(res.data, 'charge.charge_essentials.credential.wx_lite')
       const orderId = _.get(res.data, 'order.id')
-      console.log(credential)
+      // console.log(credential)
       Taro.requestPayment({
         ...credential,
         success: (res) => { console.log(res) },

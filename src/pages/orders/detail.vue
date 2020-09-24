@@ -39,10 +39,23 @@
     <view :class="$style['section']">
       <view>总计: <price :price="orderData.total_price" :keepZero="true" :highlight="true"></price></view>
       <view :class="$style['dividerHorizontal']"></view>
-      <view :class="$style['statusLine']">支付方式: {{ orderData.selected_channel }}</view>
+      <view :class="$style['statusLine']">支付方式: {{ PaymentChannels[orderData.selected_channel] }}</view>
       <view :class="$style['statusLine']">订单编号: {{ orderData.order_number }}</view>
       <view :class="$style['statusLine']">下单时间: {{ orderData.created_at|datetime }}</view>
+      <view :class="$style['statusLine']">订单状态: {{ OrderStatus[orderData.order_status] }}</view>
+      <view :class="$style['statusLine']">交易状态: {{ OrderFinancialStatus[orderData.financial_status] }}</view>
+      <view :class="$style['statusLine']">发货状态: {{ OrderFulfillmentStatus[orderData.fulfillment_status] }}</view>
       <!-- <view>成交时间: {{ orderData.closed_at|datetime }}</view> -->
+    </view>
+    <view :class="$style['footer']" v-if="continuePay">
+      <view>
+        <text>未付款金额:</text>
+        <price :price="orderData.unpaid_price" :highlight="true" :keepZero="true"></price>
+      </view>
+      <button
+        :class="[$style['buttonPayForOrder'], 'button--round', 'button--orange']"
+        :disabled="paymentPending" @tap="pay"
+      >{{ paymentPending ? '正在支付...' : '继续付款' }}</button>
     </view>
     <infinite-products ref="infiniteProducts"></infinite-products>
   </view>
@@ -57,7 +70,7 @@ import { API } from '@/utils/api'
 import { optimizeImage, backgroundImageUrl } from '@/utils/image'
 import Price from '@/components/Price'
 import InfiniteProducts from '@/components/InfiniteProducts'
-import { OrderStatus, OrderFinancialStatus, OrderFulfillmentStatus } from './constants'
+import { OrderStatus, OrderFinancialStatus, OrderFulfillmentStatus, PaymentChannels } from './constants'
 
 export default {
   name: 'Order',
@@ -70,8 +83,13 @@ export default {
     const { id } = getCurrentInstance().router.params
     return {
       pending: false,
+      paymentPending: false,
       orderId: id,
       orderData: null,
+      OrderStatus,
+      OrderFinancialStatus,
+      OrderFulfillmentStatus,
+      PaymentChannels,
     }
   },
   computed: {
@@ -87,6 +105,9 @@ export default {
       } else {
         return ''
       }
+    },
+    continuePay() {
+      return this.orderData.order_status === 'open' && (this.orderData.financial_status === 'pending' || this.orderData.financial_status === 'partially_paid')
     }
   },
   mounted() {
@@ -118,6 +139,39 @@ export default {
         })
       }
       this.pending = false
+    },
+    async pay() {
+      if (this.paymentPending) {
+        return
+      }
+      this.paymentPending = true
+      const openid = await this.$store.dispatch('customer/getOpenID')
+      let res
+      try {
+        res = await API.post('/pingxx/charge_for_order/', {
+          voucher_ids: [],
+          order_token: this.orderData.token,
+          openid: openid,
+          channel: 'wx_lite'
+        })
+        this.paymentPending = false
+      } catch(err) {
+        Taro.showModal({ title: '发起支付失败', showCancel: false })
+        this.paymentPending = false
+        return
+      }
+      const credential = _.get(res.data, 'charge.charge_essentials.credential.wx_lite')
+      const orderId = _.get(res.data, 'order.id')
+      // console.log(credential)
+      Taro.requestPayment({
+        ...credential,
+        success: (res) => { console.log(res) },
+        fail: (res) => { console.log(res) },
+        complete: () => {
+          // 支付成功或者失败都跳转订单页面
+          this.fetchOrder()
+        }
+      })
     }
   }
 }
@@ -206,6 +260,19 @@ page {
   & + .statusLine {
     margin-top: 10px;
   }
+}
+.footer {
+  position: fixed;
+  z-index: $z-index-footer;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: #fff;
+  box-shadow: 0 -1px 4px 0 rgba(0, 0, 0, 0.03);
+  padding: 10px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 .loading {
   text-align: center;

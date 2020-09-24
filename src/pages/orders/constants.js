@@ -17,3 +17,16 @@ export const OrderFulfillmentStatus = {
   'partially_fulfilled': '部分发货',
   'fulfilled': '已发货',
 }
+
+export const PaymentChannels = {
+  'wx': '微信',
+  'wx_pub': '微信',
+  'wx_pub_qr': '微信付款码',
+  'wx_pub_scan': '微信付款码',
+  'wx_wap': '微信',
+  'wx_lite': '微信小程序',
+  'alipay_wap': '支付宝',
+  'alipay_pc_direct': '支付宝',
+  'alipay_qr': '支付宝付款码',
+  'alipay_scan': '支付宝付款码',
+}

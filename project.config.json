@@ -104,6 +104,13 @@
           "pathName": "pages/checkout/index",
           "query": "token=14f230fae63ade38c8f19ecbcaa030dc613f629e",
           "scene": null
+        },
+        {
+          "id": 6,
+          "name": "pages/orders/detail",
+          "pathName": "pages/orders/detail",
+          "query": "id=5042958",
+          "scene": null
         }
       ]
     }
