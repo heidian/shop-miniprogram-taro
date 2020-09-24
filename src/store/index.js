@@ -11,6 +11,7 @@ import qiniuStore from './qiniu'
 import cartStore from './cart'
 import checkoutStore from './checkout'
 import exampleStore from './example'
+import systemStore from './system'
 import categoriesStore from './categories'
 
 Vue.use(Vuex)
@@ -113,6 +114,7 @@ export default new Vuex.Store({
     qiniu: qiniuStore,
     checkout: checkoutStore,
     example: exampleStore,
+    system: systemStore,
     categories: categoriesStore,
   },
   state,

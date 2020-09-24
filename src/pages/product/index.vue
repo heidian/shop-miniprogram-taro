@@ -1,5 +1,5 @@
 <template>
-  <view :class="$style['page']">
+  <view :class="{[$style['page']]: true, [$style['pageIphoneX']]: isLikeIphoneX}">
     <view :class="$style['pageSection']">
       <swiper
         :class="$style['productImages']"
@@ -54,7 +54,7 @@
     </view>
     <!-- 猜你喜欢这个板块不要 pageSection -->
     <related-products v-if="productId" :productId="productId"/>
-    <view :class="$style['footer']">
+    <view :class="{[$style['footer']]: true, [$style['isLikeIphoneX']]: true}">
       <button :class="[$style['iconBtn'], $style['footerIconBtn']]" open-type="contact">
         <view class="el-icon-headset"></view>
         <view :class="$style['iconBtnText']">客服</view>
@@ -85,6 +85,7 @@
       :variant="currentVariant"
       @selectVariant="onSelectVariant"
       @close="onCloseVariantsDrawer"
+      :isLikeIphoneX="isLikeIphoneX"
     ></select-variant>
   </view>
 </template>
@@ -92,7 +93,7 @@
 <script>
 import Taro, { getCurrentInstance } from '@tarojs/taro'
 // import '@tarojs/taro/html.css'
-import { mapState } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 import _ from 'lodash'
 import { API } from '@/utils/api'
 import { optimizeImage, backgroundImageUrl } from '@/utils/image'
@@ -150,7 +151,11 @@ export default {
     need_refresh && this.$refs.productReviews && this.$refs.productReviews.fetchReviews()
   },
   computed: {
-    ...mapState(['cart', 'customer']),
+    ...mapState(['cart', 'customer', 'system']),
+    ...mapGetters(['system/isLikeIphoneX']),
+    isLikeIphoneX () {
+      return this['system/isLikeIphoneX']
+    },
     body_html() {
       return _.get(this.product, 'body_html_mobile') || _.get(this.product, 'body_html')
     },
@@ -289,6 +294,9 @@ page {
   padding-bottom: 50px;
   position: relative;
 }
+.page.pageIphoneX {
+  padding-bottom: 65px;
+}
 .iconBtn {
   width: 30px;
   height: 30px;
@@ -332,6 +340,10 @@ page {
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+  &.isLikeIphoneX {
+    height: 65px;
+    padding-bottom: 22px;
+  }
 }
 .footerBtn {
   margin-left: 10px;

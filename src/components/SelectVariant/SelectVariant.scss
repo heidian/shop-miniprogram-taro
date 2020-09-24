@@ -89,6 +89,7 @@
 /* buttons */
 .buttonsWrapper {
   display: flex;
+  width: 100%;
   align-items: center;
   justify-content: space-evenly;
   overflow: hidden;
@@ -98,5 +99,8 @@
     flex: 1;
     margin: 5px;
     width: 100%;
+  }
+  &.isLikeIphoneX {
+    padding-bottom: 20px;
   }
 }

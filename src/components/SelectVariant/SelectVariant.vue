@@ -28,7 +28,7 @@
       <view>数量</view>
       <input-number :class="$style['quantityInput']" :min="1" v-model="quantity"></input-number>
     </view>
-    <view :class="$style['buttonsWrapper']">
+    <view :class="{[$style['buttonsWrapper']]: true, [$style['isLikeIphoneX']]: isLikeIphoneX}">
       <button v-if="openType !== 'buy_now'"
         class="button--blue button--small button--round"
         @tap="onClickAddToCart"
@@ -58,6 +58,10 @@ export default {
     InputNumber
   },
   props: {
+    isLikeIphoneX: {
+      type: Boolean,
+      default: false
+    },
     // 通过 props 里的 visible 来控制 open 和 close, 首次 mounted 的时候就是 visible 也会触发 open 事件
     visible: {
       type: Boolean,
