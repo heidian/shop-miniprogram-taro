@@ -33,3 +33,7 @@ Conflicting order between:
 Vue 的 template 和小程序原生的 template 标签重名了, 所以要用 WxParse 必须使用小程序原生组件来实现, 事实上这样实现反而简单
 WxParse 的小程序自定义组件定义在 components/wxParse/index.js
 并且在 product 页面的 index.config.js 里面通过 usingComponents 引入
+
+
+### @tarojs/mini-runner
+package.json 里降级这个库版本到 "3.0.7"，因为一些环境版本的因素，项目编译的时候会报错`Cannot read property 'buildTemplate' of undefined `。后续如果Taro版本更新后，可以尝试把相关依赖也同步更新，看是不是可以顺利编译了。
