@@ -38,7 +38,7 @@
       </view>
       <button
         class="button--round button--orange button--small"
-        :disabled="checkoutPending" @tap="checkout"
+        :disabled="checkoutPending || cartIsEmpty" @tap="checkout"
       >{{ checkoutPending ? '正在请求...' : '结算' }}</button>
     </view>
     <view style="margin-top: 20px; text-align: center;">猜你喜欢</view>
@@ -75,7 +75,10 @@ export default {
   computed: {
     ...mapState('cart', {
       cart: (state) => state
-    })
+    }),
+    cartIsEmpty() {
+      return _.isEmpty(_.filter(this.cart.items, item => item.checked))
+    }
   },
   created() {
     Taro.setBackgroundColor({
