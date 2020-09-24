@@ -29,19 +29,22 @@
         @tap="onClickOrderBy('-sold_quantity')"
       >销量</view>
       <view
-        :class="{[$style['filterItem']]:true,'is-active':+products.filter.category!==activeRootCategoryId}"
+        :class="{
+          [$style['filterItem']]: true,
+          'is-active': activeRootCategoryId && +products.filter.category !== activeRootCategoryId
+        }"
         @tap="subCategoryDrawerVisible = !subCategoryDrawerVisible"
       >筛选</view>
-      <view :class="[$style['subCategoriesWrapper'], subCategoryDrawerVisible && 'is-visible']">
-        <view
-          @tap="() => filterRootCategory(activeRootCategoryId)"
-          :class="[$style['subCategoryItem'], (activeRootCategoryId === +products.filter.category) && 'is-active']"
-        >全部</view>
-        <view
-          v-for="item in activeSubCategories" :key="item.id" @tap="() => filterSubCategory(item.id)"
-          :class="[$style['subCategoryItem'], (item.id === +products.filter.category) && 'is-active']"
-        >{{ item.title }}</view>
-      </view>
+    </view>
+    <view :class="[$style['subCategoriesWrapper'], subCategoryDrawerVisible && 'is-visible']">
+      <view
+        @tap="() => filterRootCategory(activeRootCategoryId)"
+        :class="[$style['subCategoryItem'], (activeRootCategoryId === +products.filter.category) && 'is-active']"
+      >全部</view>
+      <view
+        v-for="item in activeSubCategories" :key="item.id" @tap="() => filterSubCategory(item.id)"
+        :class="[$style['subCategoryItem'], (item.id === +products.filter.category) && 'is-active']"
+      >{{ item.title }}</view>
     </view>
     <virtual-list
       wclass="virtual-list"
@@ -267,25 +270,26 @@ page {
   }
 }
 .subCategoriesWrapper {
-  position: absolute;
-  z-index: $z-index-navbar;
+  position: fixed;
+  z-index: $z-index-navbar - 1;
   padding: 15px;
-  top: 100%;
+  top: 35px + 40px;
   left: 0;
   width: 100%;
   background-color: #fff;
-  border-top: 1px solid $color-divider;
   box-shadow: 0 5px 5px rgba(0, 0, 0, 0.05);
   display: flex;
   flex-wrap: wrap;
   align-items: flex-start;
   justify-content: flex-start;
-  opacity: 0;
+  // opacity: 0;
   visibility: hidden;
+  transform: translate3d(0, -100%, 0);
   transition: all .35s ease-in-out;
   &:global(.is-visible) {
-    opacity: 1;
+    // opacity: 1;
     visibility: visible;
+    transform: translate3d(0, 0, 0);
   }
 }
 .subCategoryItem {
