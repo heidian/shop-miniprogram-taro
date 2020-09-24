@@ -56,11 +56,11 @@
           <view :class="$style['balanceMain']">
             <view :class="$style['balanceValues']">
               <text :class="$style['balanceValuesLabel']">账户余额（元）</text>
-              <text :class="$style['balanceValuesNumber']">{{ balance }}</text>
-              <text :class="$style['balanceValuesHint']">自购返利￥0+邀请收益￥0</text>
+              <text :class="$style['balanceValuesNumber']">{{ rebateSummary.balance }}</text>
+              <text :class="$style['balanceValuesHint']">自购返利 {{ (+rebateSummary.summary.order_paid)|currency }} + 邀请收益 {{ ((+rebateSummary.summary.referee_order_paid)+(+rebateSummary.summary.referral))|currency }}</text>
             </view>
             <view :class="$style['balanceBtns']">
-              <view :class="$style['withdrawHistory']">提现记录 <text class="el-icon-arrow-right"></text></view>
+              <!-- <view :class="$style['withdrawHistory']">提现记录 <text class="el-icon-arrow-right"></text></view> -->
               <navigator v-if="!hasBindAlipay" :class="$style['bindAlipay']" url="/pages/profile/alipay" open-type="navigate" hover-class="none">绑定支付宝</navigator>
             </view>
           </view>
@@ -68,11 +68,11 @@
           <view :class="$style['balanceSummary']">
             <view :class="$style['balanceSummaryItem']">
               <view :class="$style['balanceSummaryLabel']">今日预估奖励</view>
-              <view :class="$style['balanceSummaryValue']">0</view>
+              <view :class="$style['balanceSummaryValue']">{{ rebateSummary.total_today|currency }}</view>
             </view>
             <view :class="$style['balanceSummaryItem']">
               <view :class="$style['balanceSummaryLabel']">本月预估奖励</view>
-              <view :class="$style['balanceSummaryValue']">0</view>
+              <view :class="$style['balanceSummaryValue']">{{ rebateSummary.total_this_month|currency }}</view>
             </view>
             <view :class="$style['balanceSummaryItem']">
               <view :class="$style['balanceSummaryLabel']">已邀请粉丝</view>
@@ -149,11 +149,10 @@
 import _ from 'lodash'
 import Taro, { getCurrentInstance } from '@tarojs/taro'
 import { mapState } from 'vuex'
+import { API } from '@/utils/api'
 import { optimizeImage, DEFAULT_AVATAR } from '@/utils/image'
 import { handleErr } from '@/utils/errHelper'
-
 import InfiniteProducts from '@/components/InfiniteProducts'
-
 
 export default {
   name: 'Account',
@@ -163,6 +162,17 @@ export default {
   data() {
     return {
       DEFAULT_AVATAR,
+      rebateSummary: {
+        'summary': {
+          'order_paid': '0.00',
+          'referee_order_paid': '0.00',
+          'referral': '0.00',
+        },
+        'balance': '0.00',
+        'withdrawn': '0.00',
+        'total_today': '0.00',
+        'total_this_month': '0.00',
+      },
       promotionNavigators: [{
         // url: '/pages/partner/index',
         // openType: 'switchTab',
@@ -269,7 +279,9 @@ export default {
     }
   },
   mounted() {},
-  onShow() {},
+  onShow() {
+    this.fetchRebates()
+  },
   onReachBottom() {
     this.$refs.infiniteProducts.onReachBottom()
   },
@@ -278,14 +290,18 @@ export default {
     onCopyToClipboard(content) {
       if (!content) return
       Taro.setClipboardData({ data: content }).then(() => {
-        Taro.showToast({ title: "复制成功" })
+        Taro.showToast({ title: '复制成功' })
       }).catch(err => {
         handleErr(err)
       })
     },
-    logout() {
-      this.$store.dispatch('customer/logout')
-    }
+    fetchRebates: _.throttle(function() {
+      if (this.customer.isAuthenticated) {
+        API.get('/substores/partners/rebate/summary/').then((res) => {
+          this.rebateSummary = res.data
+        }).catch((err) => {})
+      }
+    }, 1000)
   }
 }
 </script>
