@@ -44,6 +44,7 @@
 <script>
 import Taro from '@tarojs/taro'
 import _ from 'lodash'
+import { mapState, mapGetters } from 'vuex'
 import { API } from '@/utils/api'
 import { handleErr } from '@/utils/errHelper'
 import Price from '@/components/Price'
@@ -58,10 +59,6 @@ export default {
     InputNumber
   },
   props: {
-    isLikeIphoneX: {
-      type: Boolean,
-      default: false
-    },
     // 通过 props 里的 visible 来控制 open 和 close, 首次 mounted 的时候就是 visible 也会触发 open 事件
     visible: {
       type: Boolean,
@@ -94,7 +91,13 @@ export default {
       pending: true
     }
   },
-  computed: {},
+  computed: {
+    ...mapState(['system']),
+    ...mapGetters(['system/isLikeIphoneX']),
+    isLikeIphoneX () {
+      return this['system/isLikeIphoneX']
+    },
+  },
   methods: {
     onDrawerClose() {
       this.isVisible = false

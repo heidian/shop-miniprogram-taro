@@ -6,8 +6,14 @@
 import _ from 'lodash'
 import Taro from '@tarojs/taro'
 
-const state = {
-  data: {}
+const state = () => {
+  let systemInfo = {}
+  try {
+    systemInfo = Taro.getSystemInfoSync()
+  } catch (error) {}
+  return {
+    ...systemInfo
+  }
 }
 
 const mutations = {
@@ -27,7 +33,7 @@ const actions = {
 
 const getters = {
   isLikeIphoneX (state) {
-    const { statusBarHeight, system } = state.data
+    const { statusBarHeight, system } = state
     return statusBarHeight > 20 && /iOS/.test(system)
   }
 }

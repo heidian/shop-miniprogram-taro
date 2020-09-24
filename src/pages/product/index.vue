@@ -54,7 +54,7 @@
     </view>
     <!-- 猜你喜欢这个板块不要 pageSection -->
     <related-products v-if="productId" :productId="productId"/>
-    <view :class="{[$style['footer']]: true, [$style['isLikeIphoneX']]: true}">
+    <view :class="{[$style['footer']]: true, [$style['isLikeIphoneX']]: isLikeIphoneX}">
       <button :class="[$style['iconBtn'], $style['footerIconBtn']]" open-type="contact">
         <view class="el-icon-headset"></view>
         <view :class="$style['iconBtnText']">客服</view>
@@ -85,7 +85,6 @@
       :variant="currentVariant"
       @selectVariant="onSelectVariant"
       @close="onCloseVariantsDrawer"
-      :isLikeIphoneX="isLikeIphoneX"
     ></select-variant>
   </view>
 </template>
