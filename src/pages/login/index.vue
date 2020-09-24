@@ -46,7 +46,7 @@
 
 <script>
 import _ from 'lodash'
-import Taro, { getCurrentPages }from '@tarojs/taro'
+import Taro, { getCurrentPages } from '@tarojs/taro'
 import { API } from '@/utils/api'
 import { optimizeImage } from '@/utils/image'
 
@@ -92,19 +92,13 @@ export default {
         return
       }
       Taro.showLoading({})
-      const context = {}
-      if (!!this.referrerData && !!this.referralCode) {
-        context.referrer__referral_code = this.referralCode
-      }
       try {
         const res = await this.$store.dispatch('customer/login', {
           appid: this.appid,
           js_code: this.getJsCode(),
           encryptedData: encryptedData,
           iv: iv,
-          grant_type: 'wechat_mini_phone',
-          source_name: 'miniprogram',
-          context
+          grant_type: 'wechat_mini_phone'
         })
         Taro.hideLoading()
         const pages = getCurrentPages()
@@ -142,8 +136,9 @@ export default {
         })
       }
     },
-    onEnsure () {
+    onEnsure() {
       this.referralCode = this.tmpCode
+      this.$store.commit('setReferralCode', this.tmpCode)
       this.dialogVisible = false
     }
   }

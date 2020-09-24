@@ -88,7 +88,21 @@ const actions = {
   }
 }
 
-const getters = {}
+const getters = {
+  getApiCampaignContext(state) {
+    const context = {}
+    _.forEach(['name', 'source', 'medium', 'term', 'content'], (field) => {
+      const value = state.campaignContext[field]
+      if (value) {
+        context[`campaign_${field}`] = value
+      }
+    })
+    if (state.referralCode) {
+      context.referrer__referral_code = state.referralCode
+    }
+    return context
+  }
+}
 
 export default new Vuex.Store({
   modules: {

@@ -140,7 +140,8 @@ export default {
       })
       this.checkoutPending = true
       this.$store.dispatch('checkout/create', {
-        lines
+        cartToken: this.cart.cartToken,
+        lines: lines,
       }).then(({ token }) => {
         this.checkoutPending = false
         Taro.navigateTo({ url: `/pages/checkout/index?token=${token}` })

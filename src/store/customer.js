@@ -38,10 +38,13 @@ const mutations = {
 }
 
 const actions = {
-  async login({ commit, dispatch }, payload) {
+  async login({ rootGetters, commit, dispatch }, payload) {
+    console.log('getApiCampaignContext', rootGetters.getApiCampaignContext)
     try {
       const { data } = await API.post('/customers/login/', {
-        ...payload
+        ...payload,
+        context: rootGetters.getApiCampaignContext,
+        source_name: 'miniprogram'
       }, {
         headers: { 'Authorization': '' }
       })

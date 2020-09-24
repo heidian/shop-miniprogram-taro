@@ -35,14 +35,17 @@ const mutations = {
 }
 
 const actions = {
-  async create({ state, commit }, { lines }) {
+  async create({ rootGetters, state, commit }, { lines, cartToken }) {
     if (state.pending) {
       throw new Error('请稍后重试')  // 避免点太快重复创建 checkout
     }
     commit('setData', { pending: true })
     try {
       const { data } = await API.post('/checkout/', {
-        lines: lines
+        cart_token: cartToken,
+        lines: lines,
+        context: rootGetters.getApiCampaignContext,
+        source_name: 'miniprogram'
       }, {
         headers: { accept: 'application/json;version=2.0' }
       })
