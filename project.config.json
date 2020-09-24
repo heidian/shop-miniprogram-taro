@@ -97,6 +97,13 @@
           "pathName": "pages/account/coupon-codes",
           "query": "",
           "scene": null
+        },
+        {
+          "id": -1,
+          "name": "pages/checkout/index",
+          "pathName": "pages/checkout/index",
+          "query": "token=14f230fae63ade38c8f19ecbcaa030dc613f629e",
+          "scene": null
         }
       ]
     }

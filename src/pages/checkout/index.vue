@@ -15,7 +15,7 @@
     </view>
     <view :class="$style['section']">
       <!-- <view class="section__header">商品</view> -->
-      <view :class="$style['linesSummary']" @tap="showLinesDrawer">
+      <view :class="$style['linesSummary']" @tap="productsDrawerVisible=true">
         <image
           v-for="(line, index) in (getField('lines') || [])" :key="line.id"
           v-if="index < 3" :src="optimizeImage(line.image, 100)"
@@ -27,7 +27,7 @@
         </view>
         <view :class="$style['caret']"><text class="el-icon-arrow-right"></text></view>
       </view>
-      <view :class="$style['couponCodesSummary']" @tap="showCouponCodesDrawer">
+      <view :class="$style['couponCodesSummary']" @tap="couponCodesDrawerVisible=true">
         <view>优惠券</view>
         <view style="margin-left: auto; margin-right: 0.5em;" :class="$style['textTip']">
           <template v-if="getField('coupon_codes[0]')">已选择优惠券: {{ getField('coupon_codes[0].title') }}</template>
@@ -62,6 +62,7 @@
       >{{ paymentPending ? '正在支付...' : '立即支付' }}</button>
     </view>
     <available-coupon-codes :visible.sync="couponCodesDrawerVisible"></available-coupon-codes>
+    <checkout-products :visible.sync="productsDrawerVisible"></checkout-products>
   </view>
 </template>
 
@@ -73,11 +74,13 @@ import { API } from '@/utils/api'
 import { optimizeImage, backgroundImageUrl } from '@/utils/image'
 import Price from '@/components/Price'
 import AvailableCouponCodes from './AvailableCouponCodes'
+import CheckoutProducts from './CheckoutProducts'
 
 export default {
   name: 'Checkout',
   components: {
     Price,
+    CheckoutProducts,
     AvailableCouponCodes
   },
   data() {
@@ -85,6 +88,7 @@ export default {
     return {
       token,
       paymentPending: false,
+      productsDrawerVisible: false,
       couponCodesDrawerVisible: false
     }
   },
@@ -166,12 +170,6 @@ export default {
     },
     getField(path, defaultValue) {
       return _.get(this.checkout.data, path, defaultValue)
-    },
-    showLinesDrawer() {
-      console.log('showLinesDrawer')
-    },
-    showCouponCodesDrawer() {
-      this.couponCodesDrawerVisible = true
     },
     goToAddress() {
       Taro.navigateTo({ url: '/pages/addresses/index?intent=checkout' })

@@ -37,6 +37,7 @@ import { formatDateTime } from '@/utils/formatters'
 import DrawerBottom from '@/components/DrawerBottom'
 
 export default {
+  name: 'AvailableCouponCodes',
   props: {
     visible: {
       type: Boolean,
