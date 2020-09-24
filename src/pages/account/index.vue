@@ -57,7 +57,7 @@
             <view :class="$style['balanceValues']">
               <text :class="$style['balanceValuesLabel']">账户余额（元）</text>
               <text :class="$style['balanceValuesNumber']">{{ rebateSummary.balance }}</text>
-              <text :class="$style['balanceValuesHint']">自购返利 {{ (+rebateSummary.summary.order_paid)|currency }} + 邀请收益 {{ ((+rebateSummary.summary.referee_order_paid)+(+rebateSummary.summary.referral))|currency }}</text>
+              <text :class="$style['balanceValuesHint']">自购返利{{ (+rebateSummary.summary.order_paid)|currency }} + 邀请收益{{ ((+rebateSummary.summary.referee_order_paid)+(+rebateSummary.summary.referral))|currency }}</text>
             </view>
             <view :class="$style['balanceBtns']">
               <!-- <view :class="$style['withdrawHistory']">提现记录 <text class="el-icon-arrow-right"></text></view> -->
@@ -360,7 +360,7 @@ $color-divider: rgba(#ffffff, 0.1);
 .darkMode {
   background-color: $color-bg;
   color: $color-text;
-  padding: 25px 20px 50px;
+  padding: 10px 20px 50px;
 }
 .main {
   width: 100%;
