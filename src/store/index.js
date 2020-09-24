@@ -61,14 +61,16 @@ const actions = {
       commit('cart/setData', { cartToken })
     }
     /* 下面这些不是非常关键, 目前都用异步处理 */
+    const promises = []
     if (campaignContext && !_.isEmpty(campaignContext)) {
-      Taro.setStorage({
+      const promise = Taro.setStorage({
         key: '_campaign_context',
         data: { ...campaignContext, timestamp: (new Date()).valueOf() }
       })
       commit('setCampaignContext', campaignContext)
+      promises.push(promise)
     } else {
-      Taro.getStorage({ key: '_campaign_context' }).then((res) => {
+      const promise = Taro.getStorage({ key: '_campaign_context' }).then((res) => {
         const campaignContext = _.omit(res.data, ['timestamp'])
         const timestamp = res.data.timestamp
         if (!timestamp || ((new Date()).valueOf() - timestamp) > 1000 * 86400 * 7) {
@@ -77,15 +79,19 @@ const actions = {
           commit('setCampaignContext', campaignContext)
         }
       }).catch((err) => {/* 不存在, 什么也不处理 */})
+      promises.push(promise)
     }
     if (referralCode) {
-      Taro.setStorage({ key: '_referral_code', data: referralCode })
+      const promise = Taro.setStorage({ key: '_referral_code', data: referralCode })
       commit('setReferralCode', referralCode)
+      promises.push(promise)
     } else {
-      Taro.getStorage({ key: '_referral_code' }).then((res) => {
+      const promise = Taro.getStorage({ key: '_referral_code' }).then((res) => {
         commit('setReferralCode', res.data)
       }).catch((err) => {/* 不存在, 什么也不处理 */})
+      promises.push(promise)
     }
+    return Promise.all(promises)
   }
 }
 
