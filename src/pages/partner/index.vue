@@ -3,7 +3,7 @@
     <view :class="$style['blackHeader']"> <!-- 顶部个人信息 -->
       <view :class="$style['profileWrapper']">
         <template v-if="customer.isAuthenticated">
-          <image :class="$style['avatar']" :src="optimizeImage(customer.data.avatar, 50)"></image>
+          <image :class="$style['avatar']" :src="optimizeImage(customer.data.avatar || DEFAULT_AVATAR, 50)"></image>
           <view>
             <view :class="$style['fullName']">{{ customer.data.full_name || '未命名' }}</view>
             <view :class="$style['lightText']">
@@ -72,7 +72,9 @@
           src="https://up.img.heidiancdn.com/o_1eialsc45bu093fkfor2q1l2d0copy3x.png"
         ></image>
       </navigator>
-      <view :class="$style['sectionTitle']">合伙人权益</view>
+      <view :class="$style['sectionTitle']">
+        <text :class="$style['sectionTitleText']">合伙人权益</text>
+      </view>
       <view :class="$style['pros']">
         <view
           v-for="(item, index) in pros" :key="index" :class="$style['proItem']"
@@ -82,7 +84,9 @@
           <view :class="$style['lightText']">{{ item.description }}</view>
         </view>
       </view>
-      <view :class="$style['sectionTitle']">获取成长值</view>
+      <view :class="$style['sectionTitle']">
+        <text :class="$style['sectionTitleText']">获取成长值</text>
+      </view>
       <view :class="$style['todos']">
         <view
           v-for="(item, index) in todos" :key="index" :class="$style['todoItem']"

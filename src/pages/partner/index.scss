@@ -123,6 +123,24 @@ page {
   font-size: 18px;
   font-weight: bold;
 }
+.sectionTitleText {
+  display: inline-block;
+  position: relative;
+  &::before, &::after {
+    content: "";
+    position: absolute;
+    width: 36px;
+    border-top: 1px solid $color-text;
+    top: 50%;
+    margin-top: -1rpx;
+  }
+  &::before {
+    left: -36px - 15px;
+  }
+  &::after {
+    right: -36px - 15px;
+  }
+}
 .pros {
   @include clearfix();
 }
