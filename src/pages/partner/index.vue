@@ -243,6 +243,12 @@ export default {
       }
     })
   },
+  onShow() {
+    // 下面做了 throttle, 不会频繁获取
+    if (this.customer.isAuthenticated) {
+      this.throttleFetchCustomer()
+    }
+  },
   onReachBottom() {
     // 高成长值商品不多, 不限制页数了
     // const { data, page, pageSize, count } = this.products
@@ -254,6 +260,10 @@ export default {
   methods: {
     optimizeImage,
     backgroundImageUrl,
+    throttleFetchCustomer: _.throttle(function() {
+      // this.$store.dispatch('customer/getCustomer')  // 目前看起来不需要
+      this.$store.dispatch('partnerProfile/retrieve')
+    }, 5000, { leading: true, trailing: false }),
     scrollToProducts() {
       const className = this.$style['productsWrapper']
       Taro.pageScrollTo({

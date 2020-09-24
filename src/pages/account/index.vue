@@ -76,7 +76,7 @@
             </view>
             <view :class="$style['balanceSummaryItem']">
               <view :class="$style['balanceSummaryLabel']">已邀请粉丝</view>
-              <view :class="$style['balanceSummaryValue']">0</view>
+              <view :class="$style['balanceSummaryValue']">{{ refereesCount }}</view>
             </view>
           </view>
         </view>
@@ -162,6 +162,7 @@ export default {
   data() {
     return {
       DEFAULT_AVATAR,
+      refereesCount: 0,
       rebateSummary: {
         'summary': {
           'order_paid': '0.00',
@@ -280,7 +281,12 @@ export default {
   },
   mounted() {},
   onShow() {
-    this.fetchRebates()
+    // 下面做了 throttle, 不会频繁获取
+    if (this.customer.isAuthenticated) {
+      this.throttleFetchRebates()
+      this.throttleFetchCustomer()
+      this.throttleFetchReferees()
+    }
   },
   onReachBottom() {
     this.$refs.infiniteProducts.onReachBottom()
@@ -295,13 +301,22 @@ export default {
         handleErr(err)
       })
     },
-    fetchRebates: _.throttle(function() {
-      if (this.customer.isAuthenticated) {
-        API.get('/substores/partners/rebate/summary/').then((res) => {
-          this.rebateSummary = res.data
-        }).catch((err) => {})
-      }
-    }, 1000)
+    throttleFetchRebates: _.throttle(function() {
+      API.get('/substores/partners/rebate/summary/').then((res) => {
+        this.rebateSummary = res.data
+      }).catch((err) => {})
+    }, 5000, { leading: true, trailing: false }),
+    throttleFetchCustomer: _.throttle(function() {
+      // this.$store.dispatch('customer/getCustomer')  // 目前看起来不需要
+      this.$store.dispatch('partnerProfile/retrieve')
+    }, 5000, { leading: true, trailing: false }),
+    throttleFetchReferees: _.throttle(function() {
+      API.get('/customers/referee/', {
+        params: { page_size: 1 }
+      }).then((res) => {
+        this.refereesCount = res.data.count
+      }).catch((err) => {})
+    }, 30000, { leading: true, trailing: false })
   }
 }
 </script>
