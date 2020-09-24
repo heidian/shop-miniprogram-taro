@@ -13,6 +13,7 @@
               <text :class="$style['fullName']">{{ customer.data.full_name || '未命名' }}</text>
               <text :class="$style['levelTitle']">{{ levelTitle }}</text>
               <navigator
+                v-if="!hasWechatId"
                 :class="$style['navigatorText']" hover-class="none"
                 url="/pages/profile/wechat" open-type="navigate"
               >填写微信号</navigator>
@@ -44,7 +45,7 @@
       </view>
 
       <template>
-        <view :class="$style['partner']">
+        <view :class="$style['partner']" v-if="!partnerLevel">
           <text :class="$style['partnerText']">成为合伙人获取收益</text>
           <navigator
             :class="$style['partnerBtnText']" hover-class="none"
@@ -60,7 +61,7 @@
             </view>
             <view :class="$style['balanceBtns']">
               <view :class="$style['withdrawHistory']">提现记录 <text class="el-icon-arrow-right"></text></view>
-              <navigator :class="$style['bindAlipay']" url="/pages/profile/alipay" open-type="navigate" hover-class="none">绑定支付宝</navigator>
+              <navigator v-if="!hasBindAlipay" :class="$style['bindAlipay']" url="/pages/profile/alipay" open-type="navigate" hover-class="none">绑定支付宝</navigator>
             </view>
           </view>
           <view :class="$style['balanceDivider']"></view>
@@ -248,6 +249,12 @@ export default {
     },
     growthValue() {
       return +this.partnerProfile.data.growth_value || 0
+    },
+    hasWechatId () {
+      return this.partnerProfile.data.wechat_id
+    },
+    hasBindAlipay () {
+      return this.partnerProfile.data.alipay
     },
     balance() {
       return '0.00'
