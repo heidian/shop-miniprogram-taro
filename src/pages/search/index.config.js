@@ -1,3 +1,4 @@
 export default {
-  navigationBarTitleText: '全部商品'
+  navigationBarTitleText: '全部商品',
+  enableShareAppMessage: true
 }
