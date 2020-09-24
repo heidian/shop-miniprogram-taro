@@ -7,7 +7,10 @@
         <view :class="$style['address']">{{ getField('shipping_address.address1') }}{{ getField('shipping_address.address2') }}</view>
         <view :class="$style['contact']">{{ getField('shipping_address.full_name') }} {{ getField('shipping_address.mobile') }}</view>
       </view>
-      <view v-else><text class="el-icon-circle-plus-outline"></text>添加收货地址</view>
+      <view v-else>
+        <text class="el-icon-circle-plus-outline" style="margin-right: 10px"></text>
+        <text>添加收货地址</text>
+      </view>
       <view :class="$style['caret']" style="margin-left: auto;"><text class="el-icon-arrow-right"></text></view>
     </view>
     <view :class="$style['section']">

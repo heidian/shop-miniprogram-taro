@@ -308,14 +308,13 @@ export default {
         Taro.navigateTo({ url: '/pages/misc/share' })
       } else {
         Taro.showModal({
-          title: '提示',
-          content: '请先升级国货大使'
+          title: '邀请返现',
+          content: '请先升级国货大使，邀请朋友一起赚钱吧！',
+          showCancel: false
         }).then((res) => {
           if (res.confirm) {
             Taro.switchTab({ url: '/pages/partner/index' })
-          } else {
-
-          }
+          } else {}
         })
       }
     },

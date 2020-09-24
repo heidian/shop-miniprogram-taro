@@ -3,28 +3,28 @@
     <form class="form">
       <view class="form-item">
         <view class="label">收货人</view>
-        <input class="input" v-model="address.data.full_name" type="text" placeholder="请输入收货人姓名" />
+        <input class="input" v-model="addressData.full_name" type="text" placeholder="请输入收货人姓名" />
       </view>
       <view class="form-item">
         <view class="label">联系电话</view>
-        <input class="input" v-model="address.data.mobile" type="digit" placeholder="请输入收货人手机号"/>
+        <input class="input" v-model="addressData.mobile" type="digit" placeholder="请输入收货人手机号"/>
       </view>
       <view class="form-item">
         <view class="label">所在区域</view>
         <picker class="picker" mode="region" @change="onRegionChange" :value="regionValue">
           <view class="picker">
-            {{address.data.province}} {{address.data.city}} {{address.data.district}}
+            {{addressData.province}} {{addressData.city}} {{addressData.district}}
           </view>
         </picker>
       </view>
       <view class="form-item">
         <view class="label">详细地址</view>
-        <input class="input" v-model="address.data.address1" type="text" placeholder="请输入收货地址"/>
+        <input class="input" v-model="addressData.address1" type="text" placeholder="请输入收货地址"/>
       </view>
       <!-- <view>设为默认地址</view> -->
     </form>
     <view :class="$style['buttonsWrapper']">
-      <button class="button--dark" @tap="submitForm">保存</button>
+      <button :disabled="pending" class="button--dark" @tap="submitForm">保存</button>
     </view>
   </view>
 </template>
@@ -38,57 +38,62 @@ export default {
   name: 'AddresseEdit',
   data() {
     return {
-      address: {
-        data: {
-          place_code: null,
-          province: '',
-          city: '',
-          district: '',
-          address1: '',
-          address2: '',
-          full_name: '',
-          mobile: ''
-        },
-        id: null,
-        pending: false
-      }
+      addressData: {
+        place_code: null,
+        province: '',
+        city: '',
+        district: '',
+        address1: '',
+        address2: '',
+        full_name: '',
+        mobile: ''
+      },
+      addressId: null,
+      pending: false
     }
   },
   computed: {
     regionValue() {
-      const { province, city, district } = this.address.data
+      const { province, city, district } = this.addressData
       return [province, city, district]
     }
   },
   mounted() {
     const { id } = getCurrentInstance().router.params
     if (id) {
-      this.address.id = id
+      this.addressId = id
       this.fetchAddress()
     }
   },
   methods: {
     async fetchAddress() {
-      this.address.pending = true
+      this.pending = true
       try {
-        const { data } = await API.get(`/customers/address/${this.address.id}/`)
-        this.address.data = data
+        const { data } = await API.get(`/customers/address/${this.addressId}/`)
+        this.addressData = data
       } catch(err) {
         Taro.showToast({ title: '读取地址信息失败', icon: 'none', duration: 1000 })
       }
-      this.address.pending = false
+      this.pending = false
     },
     async submitForm() {
+      this.pending = true
       try {
-        const { data } = await API.put(`/customers/address/${this.address.id}/`, this.address.data)
+        if (this.addressId) {
+          await API.put(`/customers/address/${this.addressId}/`, this.addressData)
+        } else {
+          await API.post(`/customers/address/`, this.addressData)
+        }
+        Taro.navigateBack()
       } catch(err) {
         Taro.showToast({ title: '保存失败', icon: 'none', duration: 1000 })
       }
+      this.pending = false
     },
     onRegionChange(e) {
       const { code, value } = e.detail
-      this.address.data = {
-        ...this.address.data,
+      this.addressData = {
+        ...this.addressData,
         province: value[0] || '',
         city: value[1] || '',
         district: value[2] || '',
