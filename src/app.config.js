@@ -29,6 +29,7 @@ export default {
     'pages/blog/article',
     'pages/misc/share',
     'pages/misc/share-landing',
+    'pages/misc/webview',
     'pages/index/index'
   ],
   tabBar: {
