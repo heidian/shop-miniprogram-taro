@@ -30,7 +30,13 @@
         </movable-area>
       </view>
     </view>
-    <view v-else :class="$style['emptyCartText']">购物车是空的</view>
+    <view v-else :class="$style['emptyCart']">
+      <image
+        :class="$style['emptyCartImage']"mode="widthFix"
+        src="https://up.img.heidiancdn.com/o_1cb4m55ljp1m92j1rpfk421up70ingbag.png"
+      ></image>
+      <view>您的购物车没有商品</view>
+    </view>
     <view :class="$style['footer']">
       <view>
         <text>总计:</text>
@@ -264,10 +270,15 @@ page {
   text-align: center;
   color: #fff;
 }
-.emptyCartText {
-  padding: 40px 20px;
+.emptyCart {
+  padding: 20px;
   text-align: center;
   color: $color-text-light;
+}
+.emptyCartImage {
+  width: 80px;
+  display: block;
+  margin: 50px auto;
 }
 .footer {
   position: fixed;
