@@ -68,24 +68,6 @@ Vue.filter('imageUrl', (value, width, height) => optimizeImage(value, width, hei
 
 
 /*
- * 监听路由变化, 用于发送 analytics 数据
- * 不要在 analytics 以外的场景使用 wx.onAppRoute, 这是个未公开的 API, 不能依赖于它
- */
-try {
-  wx.onAppRoute(res => {
-    // console.log('DEBUG: 检测到路由变化 (优化一下这部分的代码, 移动到 analytics 单独的包里)\n', res)
-    try {
-      analytics.page()
-    } catch(err) {
-      console.log('analytics.page', err)
-    }
-  })
-} catch(err) {
-  console.log('wx.onAppRoute', err)
-}
-
-
-/*
  * Vue 渲染入口
  */
 const App = new Vue({
@@ -94,7 +76,13 @@ const App = new Vue({
     const queryScene = decodeURIComponent(_.get(options, 'query.scene', ''))
     const { campaignContext, referralCode, redirect } = parseScene(queryScene)
     /* initClient 里面只是做一些 storage 相关的处理, 其他 dispatch 都直接在 onLaunch 里面调用 */
-    this.$store.dispatch('initClient', { campaignContext, referralCode })
+    this.$store.dispatch('initClient', {
+      campaignContext,
+      referralCode
+    }).then(() => {
+      // analytics.listenToRoute 要放在 initClient 以后确保 campaignContext 已经有了
+      analytics.listenToRoute()
+    }).catch((err) => { console.log(err) })
     if (this.$store.state.customer.isAuthenticated) {
       this.$store.dispatch('customer/getCustomer')
       this.$store.dispatch('partnerProfile/retrieve')

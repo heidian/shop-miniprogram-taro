@@ -80,6 +80,27 @@ function getPageContext() {
 class Analytics {
   constructor() {}
 
+  listenToRoute() {
+    /*
+     * 监听路由变化, 用于发送 analytics 数据
+     * 不要在 analytics 以外的场景使用 wx.onAppRoute, 这是个未公开的 API, 不能依赖于它
+     */
+    try {
+      wx.onAppRoute(res => {
+        // console.log('DEBUG: 检测到路由变化 (优化一下这部分的代码, 移动到 analytics 单独的包里)\n', res)
+        try {
+          this.page()
+        } catch(err) {
+          console.log('analytics.page', err)
+        }
+      })
+    } catch(err) {
+      console.log('wx.onAppRoute', err)
+    }
+    // 立即执行一次落地页的 pageview, 因为 listenToRoute 是在 App.onLaunch 最后调用的, wx.onAppRoute 监听不到落地页
+    this.page()
+  }
+
   _pageContext() {
     return {
       ...getPageContext(),
@@ -184,7 +205,6 @@ class Analytics {
 const analytics = new Analytics()
 
 !(function () {
-  return
   async function empty() {
     console.log(
       '开发环境下不发送 Analytics 数据, 如需测试请移除此代码',
