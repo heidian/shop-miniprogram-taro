@@ -160,8 +160,7 @@ export default {
           this.isReady = true
         }, 500)
       }).catch(err => {
-        console.log(err)
-        handleErr(err)
+        Taro.showToast({ title: typeof err === 'string' ? err : '图片生成失败' })
       })
     },
     onSaveImageToAblum () {
