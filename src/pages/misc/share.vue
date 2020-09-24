@@ -48,7 +48,6 @@ import { optimizeImage, backgroundImageUrl } from '@/utils/image'
 import { handleErr } from '@/utils/errHelper'
 import RequiresLogin from '@/mixins/RequiresLogin'
 import ShareCanvas from './share'
-import { resolve } from 'url';
 
 export default {
   name: 'Share',

@@ -1,5 +1,6 @@
 import Taro from '@tarojs/taro'
 import _ from 'lodash'
+import { handleErr } from '@/utils/errHelper'
 
 const SHOP_BG_IMG = 'https://up.img.heidiancdn.com/o_1eib7kl4hise1fom1d0h1lem1qln03.jpg?imageView2/2/w/800/ignore-error/1'
 
@@ -412,6 +413,10 @@ export default class ShareCanvas {
           showCancel: false,
           confirmText: '我知道了'
         })
+      },
+      fail: (err) => {
+        console.log('@@@@@ ERROR saveCanvasToAlbum: ', err)
+        handleErr(err)
       },
       complete: (res) => {
         this.isSaving = false
