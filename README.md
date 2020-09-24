@@ -36,4 +36,22 @@ WxParse 的小程序自定义组件定义在 components/wxParse/index.js
 
 
 ### @tarojs/mini-runner
-package.json 里降级这个库版本到 "3.0.7"，因为一些环境版本的因素，项目编译的时候会报错`Cannot read property 'buildTemplate' of undefined `。后续如果Taro版本更新后，可以尝试把相关依赖也同步更新，看是不是可以顺利编译了。
+~~package.json 里降级这个库版本到 "3.0.7"，因为一些环境版本的因素，项目编译的时候会报错`Cannot read property 'buildTemplate' of undefined `。后续如果Taro版本更新后，可以尝试把相关依赖也同步更新，看是不是可以顺利编译了。~~
+
+如果遇到编译问题，建议先运行`taro doctor`，检查和保证依赖版本和本地、全局taro版本是否一致
+
+```
+taro doctor
+
+检查依赖
+  [!] 依赖 @tarojs/components 可更新到最新版本 3.0.11，当前安装版本为 3.0.5
+  [✗] 依赖 @tarojs/mini-runner (3.0.11) 与当前使用的 Taro CLI (3.0.5) 版本不一致, 请更新为统一的版本
+  [!] 依赖 @tarojs/runtime 可更新到最新版本 3.0.11，当前安装版本为 3.0.5
+  [!] 依赖 @tarojs/taro 可更新到最新版本 3.0.11，当前安装版本为 3.0.5
+  [✗] 依赖 @tarojs/webpack-runner (3.0.11) 与当前使用的 Taro CLI (3.0.5) 版本不一致, 请更新为统一的版本
+  [!] 依赖 babel-preset-taro 可更新到最新版本 3.0.11，当前安装版本为 3.0.5
+  [!] 依赖 eslint-config-taro 可更新到最新版本 3.0.11，当前安装版本为 3.0.5
+```
+
+1. `npm install -g @tarojs/cli@3.0.11`  升级全局taro版本；
+2. 逐个更新本地项目中的taro相关依赖版本。
