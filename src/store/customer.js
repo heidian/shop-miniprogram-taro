@@ -73,13 +73,17 @@ const actions = {
     // 登出以后重新获取 cart, 这时 header 里的 carttoken 是错的, 但是没关系, 接口会直接忽略并返回空数据
     commit('partnerProfile/setData', { data: {} }, { root: true })  // 登出以后清空 partnerProfile
   },
-  getCustomer({ commit }) {
+  getCustomer({ commit, dispatch }) {
     return API.get('/customers/customer/').then(({ data }) => {
       commit('setData', { data: data })
       return data
     }).catch((err) => {
       console.log('获取用户信息失败', _.get(err, 'response.data'))
-      throw err
+      if (_.get(err, 'response.status') == 401 || _.get(err, 'response.status') == 403) {
+        dispatch('logout')
+      } else {
+        throw err
+      }
     })
   },
   updateCustomer({ commit }, payload) {

@@ -75,7 +75,7 @@ const actions = {
         } else {
           commit('setCampaignContext', campaignContext)
         }
-      })
+      }).catch((err) => {/* 不存在, 什么也不处理 */})
     }
     if (referralCode) {
       Taro.setStorage({ key: '_referral_code', data: referralCode })
@@ -83,7 +83,7 @@ const actions = {
     } else {
       Taro.getStorage({ key: '_referral_code' }).then((res) => {
         commit('setReferralCode', res.data)
-      })
+      }).catch((err) => {/* 不存在, 什么也不处理 */})
     }
   }
 }
