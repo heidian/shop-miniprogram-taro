@@ -45,6 +45,10 @@ const interceptor = async function (chain) {
 Taro.addInterceptor(interceptor)
 
 function combineURLs(baseURL, relativeURL, searchQuery) {
+  if (/^(http|https):\/\/.+/.test(relativeURL)) {
+    baseURL = relativeURL
+    relativeURL = ''
+  }
   const fullURL = relativeURL ?
     baseURL.replace(/\/+$/, '') + '/' + relativeURL.replace(/^\/+/, '') :
     baseURL
