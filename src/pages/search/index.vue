@@ -285,7 +285,7 @@ page {
   // opacity: 0;
   visibility: hidden;
   transform: translate3d(0, -100%, 0);
-  transition: all .35s ease-in-out;
+  transition: all .1s ease-in-out;
   &:global(.is-visible) {
     // opacity: 1;
     visibility: visible;

@@ -154,12 +154,9 @@ export default {
   },
   computed: {
     ...mapState(['cart', 'customer', 'system', 'partnerProfile']),
-    ...mapGetters(['system/isLikeIphoneX']),
+    ...mapGetters('system', ['isLikeIphoneX']),
     partnerLevel () {
       return +this.partnerProfile.data.level || 0
-    },
-    isLikeIphoneX () {
-      return this['system/isLikeIphoneX']
     },
     hideSelectedVariant () {
       return _.isEmpty(_.get(this.product, 'options'))
@@ -253,6 +250,7 @@ export default {
         } catch(err) { console.log(err) }
       } else {
         try {
+          this.favoriteId = '0'  // 这么放一个假 id 让 UI 上的收藏标记立即变亮
           const { data } = await API.post('/customers/favorite/', {
             'owner_resource': 'product',
             'owner_id': this.productId,
