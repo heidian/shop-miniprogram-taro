@@ -1,3 +1,3 @@
 export default {
-  navigationBarTitleText: '账户信息'
+  navigationBarTitleText: '账户设置'
 }

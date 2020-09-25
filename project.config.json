@@ -92,24 +92,10 @@
           "scene": null
         },
         {
-          "id": -1,
-          "name": "pages/account/coupon-codes",
-          "pathName": "pages/account/coupon-codes",
-          "query": "",
-          "scene": null
-        },
-        {
           "id": 5,
           "name": "pages/checkout/index",
           "pathName": "pages/checkout/index",
           "query": "token=a8cedff38129d1f6549b1172845919de8591f098",
-          "scene": null
-        },
-        {
-          "id": 6,
-          "name": "pages/orders/detail",
-          "pathName": "pages/orders/detail",
-          "query": "id=5042958",
           "scene": null
         }
       ]

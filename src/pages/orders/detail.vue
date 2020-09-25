@@ -184,6 +184,7 @@ page {
   background-color: $color-bg-gray;
 }
 .page {
+  padding-bottom: 64px;
   > .section {
     border-radius: 6px;
     background-color: #fff;
