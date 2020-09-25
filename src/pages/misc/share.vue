@@ -69,6 +69,8 @@ import { handleErr } from '@/utils/errHelper'
 import RequiresLogin from '@/mixins/RequiresLogin'
 import ShareCanvas from './share'
 
+const SHOP_BG_IMG = 'https://up.img.heidiancdn.com/o_1eib7kl4hise1fom1d0h1lem1qln03.jpg?imageView2/2/w/800/ignore-error/1'
+
 export default {
   name: 'Share',
   mixins: [ RequiresLogin ],
@@ -98,6 +100,7 @@ export default {
       return _.get(this.customer.data, 'full_name', '你的好友') + '给你分享以下好物'
     },
     shareImage () {
+      // return this.productId ? optimizeImage(_.get(this.product, 'image'), 400) : SHOP_BG_IMG
       return optimizeImage(_.get(this.product, 'image'), 400)
     }
   },
@@ -291,7 +294,7 @@ page {
   left: 1000px;
   top: 0;
   width: 375px;
-  height: 785px;
+  height: 780px;
 }
 .canvasImage{
   display: block;
