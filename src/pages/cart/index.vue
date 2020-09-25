@@ -162,11 +162,13 @@ export default {
         Taro.navigateTo({ url: `/pages/checkout/index?token=${token}` })
       }).catch((err) => {
         this.checkoutPending = false
-        Taro.showModal({
-          title: '创建结算失败',
-          content: _.get(err, 'response.data.detail') || ('' + err),
-          showCancel: false
-        })
+        handleErr(err)
+        // checkout 创建接口的报错信息可能是在 non_field_errors 里面的
+        // Taro.showModal({
+        //   title: '创建结算失败',
+        //   content: _.get(err, 'response.data.detail') || ('' + err),
+        //   showCancel: false
+        // })
       })
     }
   },
