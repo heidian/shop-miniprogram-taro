@@ -135,8 +135,22 @@ export default {
       }
       Taro.hideLoading({})
     },
+    checkShippingAddress() {
+      if (!this.getField('requires_shipping')) {
+        return true
+      }
+      const complete = _.every([
+        'province', 'city', 'district', 'address1', 'full_name', 'mobile'
+      ], (field) => !!this.getField(`shipping_address.${field}`))
+      if (complete) {
+        return true
+      } else {
+        Taro.showToast({ title: '您填写的收货人信息错误, 请更正后再次提交', icon: 'none', duration: 3000 })
+        return false
+      }
+    },
     async pay() {
-      if (this.paymentPending) {
+      if (!this.checkShippingAddress() || this.paymentPending) {
         return
       }
       this.paymentPending = true
