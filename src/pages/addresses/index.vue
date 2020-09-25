@@ -34,17 +34,16 @@ export default {
   ],
   data() {
     const { intent } = getCurrentInstance().router.params
+    let addressIdOnCheckout = null
+    if (intent === 'checkout') {
+      addressIdOnCheckout = _.get(this.$store.state.checkout.data, 'shipping_address.customer_address_id')
+    }
     return {
-      intent: intent || null
+      intent: intent || null,
+      addressIdOnCheckout
     }
   },
-  computed: {
-    addressIdOnCheckout() {
-      if (this.intent === 'checkout') {
-        return _.get(this.$store.state.checkout.data, 'shipping_address.customer_address_id')
-      }
-    }
-  },
+  computed: {},
   async mounted() {
     await this.fetchList()
     if (this.intent === 'checkout' && _.isEmpty(this.addresses.data)) {
@@ -71,6 +70,10 @@ export default {
     },
     goToEdit(address) {
       if (address) {
+        if (address.id === this.addressIdOnCheckout) {
+          // 取消 check 的状态, 这样编辑完返回的时候, 用户会意识到要点一下刚刚编辑的地址才能更新到 checkout 上
+          this.addressIdOnCheckout = null
+        }
         Taro.navigateTo({ url: '/pages/addresses/edit?id=' + address.id })
       } else {
         Taro.navigateTo({ url: '/pages/addresses/edit' })
