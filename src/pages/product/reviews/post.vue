@@ -143,6 +143,7 @@ export default {
           mask: true,
         })
         this.pending = false
+        this.$store.dispatch('lists/reviews/getFirstReview', this.productId)
         _.delay(() => {
           Taro.navigateBack({
             delta: 1

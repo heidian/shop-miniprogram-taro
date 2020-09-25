@@ -4,7 +4,7 @@
       <review-item :review="review" :disableReply="true" />
     </view>
     <view :class="$style['replyCard']" v-if="replies.length">
-      <view :class="$style['cardHead']" style="font-size: 15px; margin-bottom: 15px;">全部回复（{{ replies.length }}）</view>
+      <view :class="$style['cardHead']">全部回复（{{ replies.length }}）</view>
       <view :class="$style['repliesContainer']">
         <review-item v-for="item in replies" :key="item.id" :review="item" :disableReply="true" />
       </view>
@@ -145,6 +145,8 @@ page {
   font-size: 17px;
   font-weight: 600;
   color: $color-dark;
+  font-size: 15px;
+  margin-bottom: 15px;
 }
 .review-reply__content {
   margin-top: 20px;

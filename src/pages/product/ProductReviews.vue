@@ -2,15 +2,15 @@
   <view :class="$style['sectionInner']">
     <!-- Taro 是先用 vue 完全编译好输出节点再一次性填充到一个 wxml 模板里, 这里的 key 写法和 vue 一样 -->
       <view :class="$style['sectionHead']">
-        <text :class="$style['sectionTitle']">{{ sectionTitle || '评论' }}（{{count}}）</text>
+        <text :class="$style['sectionTitle']">{{ sectionTitle || '评论' }}（{{reviewTotalCount}}）</text>
         <navigator
-          v-if="count > 0"
+          v-if="reviewTotalCount > 0"
           :class="$style['reviewsMore']"
           :url="`/pages/product/reviews/index?product=${productId}`">查看全部</navigator>
       </view>
       <view :class="$style['sectionContainer']">
         <navigator
-          v-if="count === 0"
+          v-if="reviewTotalCount === 0"
           :url="`/pages/product/reviews/post?product=${ productId }`"
           :class="$style['navigatorNew']">
           <image
@@ -21,7 +21,7 @@
         </navigator>
         <view v-else :class="$style['reviewItemWrapper']">
           <review-item
-            :review="results[0]"
+            :review="firstReviewData"
             :disableReply="true"
             :disableDownload="true"
           />
@@ -34,6 +34,7 @@
 
 <script>
 import Taro from '@tarojs/taro'
+import { mapState } from 'vuex'
 import _ from 'lodash'
 import { API } from '@/utils/api'
 import { optimizeImage, backgroundImageUrl } from '@/utils/image'
@@ -59,43 +60,20 @@ export default {
   components: {
     ReviewItem
   },
+  computed: {
+    ...mapState('lists/reviews', {
+      reviewTotalCount: (state) => state.reviewTotalCount,
+      firstReviewPending: (state) => state.firstReviewPending,
+      firstReviewData: (state) => state.firstReviewData
+    }),
+  },
   data() {
-    return {
-      pending: false,
-      count: 0,
-      results: []
-    }
+    return {}
   },
   mounted() {
-    this.fetchReviews()
+    this.$store.dispatch('lists/reviews/getFirstReview', this.productId)
   },
-  methods: {
-    optimizeImage,
-    backgroundImageUrl,
-    textValue (textObj) {
-      if (_.isString(textObj)) {
-        return textObj
-      } else if (_.isObject(textObj)) {
-        return _.get(textObj, 'value')
-      } else {
-        return '' + textObj
-      }
-    },
-    fetchReviews () {
-      if (!!this.pending) return
-      const params = {
-        product: this.productId,
-        page_size: 1,
-        page: 1
-      }
-      API.get(`/shopfront/review/`, { params }).then((res) => {
-        const { count, results } = res.data || {}
-        this.count = count
-        this.results = results || []
-        this.pending = false
-      }).catch(err => {})
-    }
-  }
+  methods: {}
 }
 </script>
 
@@ -121,7 +99,6 @@ export default {
 .sectionContainer {
   margin: 10px auto;
 }
-.reviewItemWrapper {}
 .reviewsMore {
   display: flex;
   align-items: center;
