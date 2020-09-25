@@ -49,7 +49,13 @@ const actions = {
       }, {
         headers: { accept: 'application/json;version=2.0' }
       })
-      commit('setData', { checkoutToken: data.token, pending: false })
+      commit('setData', {
+        checkoutToken: data.token,
+        pending: false,
+        data: {},
+        availableCouponCodes: [],
+        availableVouchers: [],
+      })
       return data
     } catch(err) {
       commit('setData', { pending: false })
