@@ -83,9 +83,13 @@ function _imagesPromiseList(canvas, imageSrcList) {
   const promiseList = _.map(imageSrcList, src => {
     return new Promise((resolve, reject) => {
       const image = canvas.createImage()
-      image.src = src
-      image.onload = () => {
+      if (!src) {
         resolve(image)
+      } else {
+        image.src = src
+        image.onload = () => {
+          resolve(image)
+        }
       }
     })
   })
