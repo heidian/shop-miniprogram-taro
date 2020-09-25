@@ -7,6 +7,14 @@ const callForActivation = _.once(function() {
   // if (/^pages\/partner/.test(_.get(currentPage, 'route'))) {
   //   return
   // }
+  const now = (new Date()).valueOf()
+  const muteCallForActivation = Taro.getStorageSync('muteCallForActivation')
+  const muteDuration = 7 * 86400 * 1000
+  if (muteCallForActivation && now - muteCallForActivation < muteDuration) {
+    return
+  } else if (muteCallForActivation) {
+    Taro.removeStorageSync('muteCallForActivation')
+  }
   Taro.showModal({
     title: '激活合伙人身份',
     content: '您已达到合伙人申请条件, 请前往会员页面免费激活合伙人身份',
@@ -19,7 +27,7 @@ const callForActivation = _.once(function() {
       if (res.confirm) {
         Taro.switchTab({ url: '/pages/partner/index' })
       } else if (res.cancel) {
-        console.log('用户点击取消')
+        Taro.setStorageSync('muteCallForActivation', (new Date()).valueOf())
       }
     }
   })
