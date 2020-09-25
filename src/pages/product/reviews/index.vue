@@ -48,22 +48,20 @@ export default {
       backgroundColor: '#f6f6f6',
       backgroundColorBottom: '#f6f6f6',
     })
-    // 初始化过滤参数
-    const defaultParams = {}
-    const filter = {}
     const { product: productId } = getCurrentInstance().router.params
-    if (!productId) return
     this.productId = +productId
-    filter.product = productId
-    this.$store.commit('lists/reviews/setParams', {
-      filter, defaultParams
-    })
   },
   async mounted() {
+    // 初始化过滤参数
+    if (!this.productId) return
+    const defaultParams = {
+      product: this.productId
+    }
+    this.$store.commit('lists/reviews/setParams', {
+      defaultParams,
+      pageSize: 10
+    })
     await this.fetchReviews()
-  },
-  onShow () {
-    this.fetchReviews()
   },
   computed: {},
   methods: {

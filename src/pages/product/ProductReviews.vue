@@ -22,6 +22,7 @@
         <view v-else :class="$style['reviewItemWrapper']">
           <review-item
             :review="firstReviewData"
+            :productId="productId"
             :disableReply="true"
             :disableDownload="true"
           />
@@ -62,16 +63,24 @@ export default {
   },
   computed: {
     ...mapState('lists/reviews', {
-      reviewTotalCount: (state) => state.reviewTotalCount,
-      firstReviewPending: (state) => state.firstReviewPending,
-      firstReviewData: (state) => state.firstReviewData
+      reviewTotalCount: (state) => state.count,
+      firstReviewPending: (state) => state.pending,
+      firstReviewData: (state) => state.data[0]
     }),
   },
   data() {
     return {}
   },
-  mounted() {
-    this.$store.dispatch('lists/reviews/getFirstReview', this.productId)
+  async mounted() {
+    // this.$store.dispatch('lists/reviews/getFirstReview', this.productId)
+    const defaultParams = {
+      product: this.productId
+    }
+    this.$store.commit('lists/reviews/setParams', {
+      defaultParams,
+      pageSize: 1
+    })
+    await this.$store.dispatch('lists/reviews/list')
   },
   methods: {}
 }

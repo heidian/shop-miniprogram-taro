@@ -11,9 +11,9 @@ export default {
   state () {
     return {
       ...state(),
-      reviewTotalCount: 0,
-      firstReviewPending: false,
-      firstReviewData: {}
+      // reviewTotalCount: 0,
+      // firstReviewPending: false,
+      // firstReviewData: {}
     }
   },
   getters: {
@@ -21,34 +21,34 @@ export default {
   },
   mutations: {
     ...mutations,
-    resetFirstReview (state) {
-      state.reviewTotalCount = 0
-      state.firstReviewPending = false
-      state.firstReviewData = {}
-    },
-    startFetchFirstReview (state) {
-      state.firstReviewPending = true
-    },
-    setFirstReview (state, { count, results }) {
-      state.reviewTotalCount = count || 0
-      state.firstReviewData = _.head(results) || {}
-      state.firstReviewPending = false
-    }
+    // resetFirstReview (state) {
+    //   state.reviewTotalCount = 0
+    //   state.firstReviewPending = false
+    //   state.firstReviewData = {}
+    // },
+    // startFetchFirstReview (state) {
+    //   state.firstReviewPending = true
+    // },
+    // setFirstReview (state, { count, results }) {
+    //   state.reviewTotalCount = count || 0
+    //   state.firstReviewData = _.head(results) || {}
+    //   state.firstReviewPending = false
+    // }
   },
   actions: {
     ...actions,
-    getFirstReview ({ state, commit }, productId) {
-      if (!!state.firstReviewPending) return
-      commit('startFetchFirstReview')
-      const params = {
-        product: productId,
-        page_size: 1,
-        page: 1
-      }
-      API.get(`/shopfront/review/`, { params }).then((res) => {
-        commit('setFirstReview', res.data || {})
-      }).catch(err => {})
-    }
+    // getFirstReview ({ state, commit }, productId) {
+    //   if (!!state.firstReviewPending) return
+    //   commit('startFetchFirstReview')
+    //   const params = {
+    //     product: productId,
+    //     page_size: 1,
+    //     page: 1
+    //   }
+    //   API.get(`/shopfront/review/`, { params }).then((res) => {
+    //     commit('setFirstReview', res.data || {})
+    //   }).catch(err => {})
+    // }
   }
 }
 

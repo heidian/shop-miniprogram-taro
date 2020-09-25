@@ -38,7 +38,7 @@
           <view v-if="!disableDownload" :class="$style['downloadAllImages']" @tap.stop="() => downloadAll(review.images)">下载全部图片</view>
         </template>
       </view>
-      <view :class="$style['reviewItemreplies']" v-if="review.replies && review.replies.count">
+      <view :class="$style['reviewItemreplies']" v-if="!hideReplies && review.replies && review.replies.count">
         <view :class="$style['reviewItemReply']" v-for="reply in review.replies.results" :key="reply.id">
           <text :class="$style['replyFullname']">{{ reply.customer && reply.customer.full_name || '未命名用户' }}：</text>
           <text :class="$style['replyContent']">{{ reply.content }}</text>
@@ -114,6 +114,10 @@ export default {
     disableReply: {
       type: Boolean,
       defaule: false
+    },
+    hideReplies: {
+      type: Boolean,
+      default: false
     }
   },
   data () {

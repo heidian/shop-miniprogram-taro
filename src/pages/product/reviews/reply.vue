@@ -1,7 +1,7 @@
 <template>
   <view :class="$style['reply']">
     <view :class="$style['replyCard']">
-      <review-item :review="review" :disableReply="true" />
+      <review-item :review="review" :disableReply="true" :hideReplies="true"/>
     </view>
     <view :class="$style['replyCard']" v-if="replies.length">
       <view :class="$style['cardHead']">全部回复（{{ replies.length }}）</view>
@@ -87,6 +87,7 @@ export default {
         this.content = ''
         this.pending = false
         this.fetchReplies(true)
+        this.$store.dispatch('lists/reviews/list')
       }).catch(err => {
         handleErr(err)
         this.pending = false

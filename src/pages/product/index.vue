@@ -45,7 +45,7 @@
       </view>
     </view>
     <view :class="$style['pageSection']" v-if="product.id">
-      <product-reviews :productId="product.id" ref="productReviews"/>
+      <product-reviews :productId="product.id"/>
     </view>
     <view :class="$style['pageSection']" v-if="body_html">
       <view :class="$style['pageSectionTitle']">图文详情</view>
@@ -143,9 +143,6 @@ export default {
   async mounted() {
     await this.fetchProduct()
     this.checkFavorite()
-  },
-  onShow () {
-    this.$refs.productReviews && this.$refs.productReviews.fetchReviews()
   },
   computed: {
     ...mapState(['cart', 'customer', 'system', 'partnerProfile']),
@@ -277,7 +274,6 @@ export default {
   async onPullDownRefresh () {
     await this.fetchProduct()
     await this.checkFavorite()
-    this.$refs.productReviews && this.$refs.productReviews.fetchReviews()
     Taro.stopPullDownRefresh()
   }
 }
