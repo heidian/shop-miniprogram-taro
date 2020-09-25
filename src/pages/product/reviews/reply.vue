@@ -86,9 +86,6 @@ export default {
         })
         this.content = ''
         this.pending = false
-        try {
-          Taro.setStorageSync('_need_refresh_product_reviews', true)
-        } catch (error) {}
         this.fetchReplies(true)
       }).catch(err => {
         handleErr(err)

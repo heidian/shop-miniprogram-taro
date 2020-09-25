@@ -63,12 +63,7 @@ export default {
     await this.fetchReviews()
   },
   onShow () {
-    let need_refresh = false
-    try {
-      need_refresh = Taro.getStorageSync('_need_refresh_product_reviews')
-      Taro.removeStorageSync('_need_refresh_product_reviews')
-    } catch (error) {}
-    need_refresh && this.fetchReviews()
+    this.fetchReviews()
   },
   computed: {},
   methods: {

@@ -136,9 +136,6 @@ export default {
       }
       this.pending = true
       API.post('/customers/review/', payload).then(res => {
-        try {
-          Taro.setStorageSync('_need_refresh_product_reviews', true)
-        } catch (error) {}
         Taro.showToast({
           title: '发布成功',
           icon: 'success',

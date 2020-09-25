@@ -145,12 +145,7 @@ export default {
     this.checkFavorite()
   },
   onShow () {
-    let need_refresh = false
-    try {
-      need_refresh = Taro.getStorageSync('_need_refresh_product_reviews')
-      Taro.removeStorageSync('_need_refresh_product_reviews')
-    } catch (error) {}
-    need_refresh && this.$refs.productReviews && this.$refs.productReviews.fetchReviews()
+    this.$refs.productReviews && this.$refs.productReviews.fetchReviews()
   },
   computed: {
     ...mapState(['cart', 'customer', 'system', 'partnerProfile']),
