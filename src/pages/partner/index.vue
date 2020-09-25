@@ -19,7 +19,11 @@
           :class="$style['heyshop']" mode="widthFix"
           src="https://up.img.heidiancdn.com/o_1eiojj5s632c1urj1a6u1jn01l330shop3x.png"
         >HeyShop</image>
-        <view></view>
+        <image
+          v-if="customer.isAuthenticated && customer.data.mobile"
+          src="https://up.img.heidiancdn.com/o_1cbbcvna21ardpe01d411d7bm9a0qrcode.svg"
+          :class="$style['cardQrCode']"
+          @tap="openQrModal"/>
       </view>
       <template v-if="growthValue < 1000">
         <!-- <view :class="$style['growthProgressWrapper']"> -->
@@ -59,11 +63,6 @@
           <text>{{ partnerProfile.data.ends_at|date }}到期</text>
         </view>
       </template>
-      <image
-        v-if="!!customer.isAuthenticated && !!customer.data.mobile"
-        src="https://up.img.heidiancdn.com/o_1cbbcvna21ardpe01d411d7bm9a0qrcode.svg"
-        :class="$style['cardqQrcode']"
-        @tap="openQrModal"/>
     </view>
     <view :class="$style['whiteSection']"> <!-- 国货大使攻略 -->
       <navigator url="/pages/blog/article?name=partner-intro" hover-class="none">
@@ -288,7 +287,7 @@ export default {
     goToActivate() {
       Taro.navigateTo({ url: '/pages/partner/activate' })
     },
-    openQrModal () {
+    openQrModal() {
       const customerQrcodeBase64 = drawImg(this.customer.data.mobile, {
         typeNumber: 4,
         errorCorrectLevel: 'M',
