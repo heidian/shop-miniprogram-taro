@@ -7,7 +7,7 @@
       </view>
     </form>
     <view :class="$style['buttonsWrapper']">
-      <button class="button--dark" @tap="submitForm">保存</button>
+      <button :disabled="submitDisabled" class="button--dark" @tap="submitForm">保存</button>
     </view>
   </view>
 </template>
@@ -29,12 +29,15 @@ export default {
     }
   },
   computed: {
-    ...mapState(['partnerProfile'])
+    ...mapState(['partnerProfile']),
+    submitDisabled() {
+      return !this.formData.wechat_id
+    }
   },
   mounted() {
-    const { alipay, alipay_legal_name, wechat_id } = _.cloneDeep(this.partnerProfile.data)
+    const { wechat_id } = _.cloneDeep(this.partnerProfile.data)
     this.formData = {
-      alipay, alipay_legal_name, wechat_id
+      wechat_id
     }
   },
   methods: {

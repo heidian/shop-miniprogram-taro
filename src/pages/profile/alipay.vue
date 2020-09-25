@@ -16,7 +16,7 @@
       <navigator :class="$style['navigator']" hover-class="none">《HeyShop支付相关协议》</navigator>
     </view>
     <view :class="$style['buttonsWrapper']">
-      <button class="button--dark" @tap="submitForm">保存</button>
+      <button :disabled="submitDisabled" class="button--dark" @tap="submitForm">保存</button>
     </view>
   </view>
 </template>
@@ -40,14 +40,14 @@ export default {
   },
   computed: {
     ...mapState(['partnerProfile']),
-    disableSubmit () {
-      return false
+    submitDisabled () {
+      return !this.formData.alipay || !this.formData.alipay_legal_name
     }
   },
   mounted() {
-    const { alipay, alipay_legal_name, wechat_id } = _.cloneDeep(this.partnerProfile.data)
+    const { alipay, alipay_legal_name } = _.cloneDeep(this.partnerProfile.data)
     this.formData = {
-      alipay, alipay_legal_name, wechat_id
+      alipay, alipay_legal_name
     }
   },
   methods: {
