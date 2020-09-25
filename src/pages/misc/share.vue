@@ -3,37 +3,57 @@
     [$style['page']]: true,
     [$style['disableScroll']]: !isReady
   }">
-    <view v-if="canvasImage" :class="$style['canvasImageWrapper']">
+    <view :class="{[$style['canvasImageWrapper']]: true, [$style['isProduct']]: !!productId, [$style['ready']]: canvasImageReady}">
       <image
+        v-if="canvasImage"
         :src="canvasImage"
         mode="widthFix"
         @load="onLoadCanvasImage"
         :class="[$style['canvasImage'], canvasImageReady && $style['imageVisible']]"
         :show-menu-by-longpress="true"></image>
+
+    <view v-if="!isReady && !canvasImageReady" :class="$style['pending']">
+        <image
+          mode="aspectFit"
+          :class="$style['pendingIcon']"
+          :src="'https://up.img.heidiancdn.com/o_1ehtu4aarjjg1t5dfa5nrjsg30shop2x.png'|imageUrl(100)"></image>
+        <view :class="$style['pendingText']">正在加载素材，请稍等</view>
+      </view>
     </view>
-    <view v-if="isReady" :class="$style['actionSave']">
+    <view :class="$style['containerInnter']">
+      <text :class="$style['saveHint']">保存图片，将好货分享给朋友们吧</text>
+      <view :class="$style['btnsWrapper']">
+        <button
+          :class="['button', 'button--round', 'button--orange', $style['btnItem']]"
+          hover-class="hover-class"
+          type="primary"
+          open-type="share">
+          <text :class="$style['btnText']">分享给好友</text>
+        </button>
+        <button
+          :class="['button', 'button--round', 'button--dark', $style['btnItem']]"
+          hover-class="hover-class"
+          type="primary"
+          :disabled="!isReady"
+          @tap="onSaveImageToAblum">
+          <text :class="['el-icon-download', $style['btnIcon']]"></text>
+          <text :class="$style['btnText']">保存图片</text>
+        </button>
+      </view>
+    </view>
+
+    <!-- <view v-if="isReady" :class="$style['actionSave']">
       <text :class="$style['saveHint']">保存图片，将好货分享给朋友们吧</text>
       <button
         :class="['button', 'button--round', 'button--dark', $style['btnSave']]"
         hover-class="hover-class"
         type="primary"
         @tap="onSaveImageToAblum">
-        <!-- <image
-          src="https://up.img.heidiancdn.com/o_1ehtmvja215282udkv0448118b0icon2x.png"
-          mode="scaleToFill"
-          :class="$style['btnIcon']"></image> -->
         <text :class="['el-icon-download', $style['btnIcon']]"></text>
         <text :class="$style['btnText']">保存图片</text>
       </button>
-    </view>
+    </view> -->
 
-    <view v-if="!isReady && !canvasImageReady" :class="$style['pending']">
-      <image
-        mode="aspectFit"
-        :class="$style['pendingIcon']"
-        :src="'https://up.img.heidiancdn.com/o_1ehtu4aarjjg1t5dfa5nrjsg30shop2x.png'|imageUrl(100)"></image>
-      <view :class="$style['pendingText']">正在加载素材，请稍等</view>
-    </view>
     <canvas id="productCanvas" type="2d" :class="$style['productCanvas']"></canvas>
     <canvas id="shopCanvas" type="2d" :class="$style['shopCanvas']"></canvas>
   </view>
@@ -204,7 +224,10 @@ $color-bg-toast: rgba(#000000, 0.6);
 $color-border: #bbbbbb;
 $color-box-shadow: rgba(#000000, 0.08);
 $color-bg-btn-save: #222222;
+$color-white: #ffffff;
 $canvas-width: 66.666667vw;
+$canvas-height: 138.666667vw;
+$canvas-height-product: 145.777778vw;
 
 page {
   background-color: $color-bg-gray;
@@ -217,7 +240,7 @@ page {
   overflow: hidden;
 }
 .pending {
-  position: fixed;
+  position: absolute;
   top: 0;
   right: 0;
   bottom: 0;
@@ -244,10 +267,17 @@ page {
 }
 .canvasImageWrapper {
   width: $canvas-width;
+  height: auto;
+  min-height: $canvas-height;
   margin: 30px auto 0;
   border-radius: 8px;
-  box-shadow: 0 3px 20px 0 $color-box-shadow;
   overflow: hidden;
+  &.isProduct {
+    min-height: $canvas-height-product;
+  }
+  &.ready {
+    box-shadow: 0 3px 20px 0 $color-box-shadow;
+  }
 }
 .productCanvas {
   position: fixed;
@@ -279,40 +309,60 @@ page {
   justify-content: flex-start;
   align-items: center;
 }
+
+.containerInnter {
+  margin: 30px auto 25px;
+  width: 100%;
+  padding: 0 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+}
+
 .saveHint {
   font-size: 14px;
   color: $color-text-hint;
   margin-bottom: 20px;
+  text-align: center;
 }
-.btnSave {
-  max-width: 320px;
+
+.btnsWrapper {
   width: 100%;
-  max-width: $canvas-width;
-  margin-left: auto;
-  margin-right: auto;
-  // height: 50px;
-  // line-height: 20px;
-  // padding: 15px 0;
-  // text-align: center;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.btnItem {
+  max-width: 140px;
+  flex: 1;
+  font-size: 15px;
+  padding: 12px 0 !important;
+  text-align: center;
   background-color: $color-bg-btn-save;
   color: #ffffff;
   display: flex;
   justify-content: center;
   align-items: center;
-  // border-radius: 25px;
   box-shadow: 0 1px 4px 0 $color-box-shadow;
   &::after {
     display: none;
   }
+  & + & {
+    margin-left: 10px;
+  }
 }
+.btnText {
+  color: $color-white;
+  font-size: 15px;
+}
+
 .btnIcon {
-  // width: 19px;
-  // height: 19px;
   font-size: 19px;
   margin-right: 5px;
 }
-.btnText {
-  font-size: 16px;
-}
+
 
 </style>
