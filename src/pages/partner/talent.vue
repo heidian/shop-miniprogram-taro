@@ -38,39 +38,22 @@ export default {
     })
   },
   async mounted() {
-    const parent = await this.getParent()
-    if (_.isEmpty(parent)) {
-      await this.getFeaturedReferrers()
-    }
+    API.get('/substores/partners/talent/parent/').then((res) => {
+      this.referrals = [res.data]
+    }).catch((err) => {
+      API.get('/substores/partners/talent/', {
+        params: { page_size: 5 }
+      }).then((res) => {
+        this.referrals = res.data.results
+      }).catch((err) => {})
+    })
   },
   methods: {
     optimizeImage,
-    async getParent () {
-      try {
-        const res = await API.get(`/substores/partners/talent/parent/`)
-        this.referrals = [res.data]
-        return res.data
-      } catch (err) {
-        console.log(err)
-      }
-    },
-    async getFeaturedReferrers () {
-      try {
-        const res = await API.get(`/substores/partners/talent/`, {
-          params: {
-            page_size: 5
-          }
-        })
-        const { results = [] } = res.data
-        this.referrals = results
-      } catch (err) {
-        console.log(err)
-      }
-    },
-    copyWechat (content) {
+    copyWechat(content) {
       if (!content) return
       Taro.setClipboardData({ data: content }).then(() => {
-        Taro.showToast({ title: "复制成功" })
+        Taro.showToast({ title: '复制成功' })
       }).catch(err => {
         handleErr(err)
       })
