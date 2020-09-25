@@ -12,10 +12,12 @@
         } : {}"
         @tap="goToProduct(product.name)"
       >
-        <view class="image" :style="{
-          'paddingTop': paddingTop,
-          'backgroundImage': backgroundImageUrl(product.image, 200)
-        }"></view>
+        <view class="image-wrapper" :style="{'paddingTop': paddingTop}">
+          <image
+            class="image" mode="aspectFill" :lazy-load="true"
+            :src="optimizeImage(product.image, 200)"
+          ></image>
+        </view>
         <view class="text-wrapper" :style="{
           // 如果有底色, 就加一个左右边距
           'padding': settingsData.backgroundColor ? '0.5em' : '0.5em 0'
@@ -120,10 +122,15 @@ export default {
   .product-item {
     overflow: hidden;
   }
+  .image-wrapper {
+    position: relative;
+  }
   .image {
-    background-position: center;
-    background-size: cover;
-    background-repeat: no-repeat;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
   }
   .text-wrapper {
     button {
