@@ -31,8 +31,11 @@ const state = () => {
     campaignContext: {},
     referralCode: '',
     globalColors: {
-      '--color-bg': '#ff0000',
-      '--color-text': '#000000'
+      '--color-bg': '#f6f6f6',
+      '--color-text': '#262626',
+      '--color-text-light': '#666666',
+      '--color-orange': '#ff5a00',
+      '--color-blue': '#284179',
     }
   }
 }
