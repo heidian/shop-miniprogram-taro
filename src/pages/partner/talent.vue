@@ -36,7 +36,6 @@ export default {
       backgroundColor: '#f6f6f6',
       backgroundColorBottom: '#f6f6f6',
     })
-    this.getFeaturedReferrers()
   },
   async mounted() {
     const parent = await this.getParent()
