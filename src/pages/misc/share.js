@@ -123,7 +123,7 @@ export default class ShareCanvas {
       const colorTitle = isDark ? 'white' : '#262626'
       const colorTitleLight = isDark ? '#646464' : '#C8C8C8'
       const titleLogo = 'https://up.img.heidiancdn.com/o_1ehu3f2q4fb5tmt19ql1gcnnic0hite2x.png'
-      const avatar = _getCanvasImageUrl(_.get(customer, 'avatar', 'https://up.img.heidiancdn.com/o_1cm7ccaoirfi1tdiutsn6s1odj0rofile.png?imageView2/2/w/360/ignore-error/1'), 100, 100, true, true)
+      const avatar = _getCanvasImageUrl(_.get(customer, 'avatar', '') || 'https://up.img.heidiancdn.com/o_1cm7ccaoirfi1tdiutsn6s1odj0rofile.png?imageView2/2/w/360/ignore-error/1', 100, 100, true, true)
       const tags = 'https://up.img.heidiancdn.com/o_1eh9lrgqd10eok5o9mgbv31s1d0oup22x.png?imageView2/2/w/800/ignore-error/1'
       const full_name = _.get(customer, 'full_name', '')
       if (!_.isEmpty(product)) {
