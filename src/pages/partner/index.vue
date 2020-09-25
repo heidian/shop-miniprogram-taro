@@ -199,7 +199,7 @@ export default {
         image: 'https://up.img.heidiancdn.com/o_1eiapsmke88a8s2bhmp91t3n0copy3x.png',
         title: '完善个人信息',
         tag: '+50成长值',
-        url: '/pages/profile/alipay',
+        url: '/pages/profile/edit',
         description: '完善个人信息即可获得50成长值'
       }, {
         image: 'https://up.img.heidiancdn.com/o_1eiapt3h71ec11mhth2420e1er90copy3x.png',
