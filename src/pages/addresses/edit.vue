@@ -84,6 +84,7 @@ export default {
         } else {
           await API.post(`/customers/address/`, this.addressData)
         }
+        this.$store.dispatch('lists/addresses/list')  // 刷新一下地址列表
         Taro.navigateBack()
       } catch(err) {
         Taro.showToast({ title: '保存失败', icon: 'none', duration: 1000 })

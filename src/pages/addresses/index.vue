@@ -23,19 +23,19 @@
 import _ from 'lodash'
 import Taro, { getCurrentInstance } from '@tarojs/taro'
 import RequiresLogin from '@/mixins/RequiresLogin'
+import ListTable from '@/mixins/ListTable'
 import { API } from '@/utils/api'
 
 export default {
   name: 'Addresses',
-  mixins: [ RequiresLogin ],
+  mixins: [
+    RequiresLogin,
+    ListTable('addresses', { storeName: 'lists/addresses' })
+  ],
   data() {
     const { intent } = getCurrentInstance().router.params
     return {
-      intent: intent || null,
-      addresses: {
-        data: [],
-        pending: false
-      }
+      intent: intent || null
     }
   },
   computed: {
@@ -45,26 +45,14 @@ export default {
       }
     }
   },
-  mounted() {},
-  onShow() {
-    // 因为编辑返回以后要刷新列表
-    this.fetchAddresses()
+  async mounted() {
+    await this.fetchList()
+    if (this.intent === 'checkout' && _.isEmpty(this.addresses.data)) {
+      // 如果是 checkout 选择地址, 到了这一页没有地址, 直接去新建
+      this.goToEdit()
+    }
   },
   methods: {
-    async fetchAddresses() {
-      this.addresses.pending = true
-      try {
-        const { data } = await API.get('/customers/address/')
-        this.addresses.data = data
-      } catch(err) {
-        Taro.showToast({ title: '地址列表获取失败', icon: 'none', duration: 1000 })
-      }
-      this.addresses.pending = false
-      if (this.intent === 'checkout' && _.isEmpty(this.addresses.data)) {
-        // 如果是 checkout 选择地址, 到了这一页没有地址, 直接去新建
-        this.goToEdit()
-      }
-    },
     handleSelect(address) {
       if (this.intent === 'checkout') {
         Taro.showLoading({})
