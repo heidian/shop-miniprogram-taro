@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import moment from 'moment'
 import ListStore from '../factory/List'
 // export default ListStore('/shopfront/product/')
@@ -27,17 +28,17 @@ export default {
   },
   actions: {
     ...actions,
-    list(context, options) {
-      // 注意, 这个逻辑的存在, 使得更新 filter 等等失效了, 但是 infiniteProducts 现在不需要更新 filter 等
-      const { state, commit } = context
-      const { append } = options || {}
+    refreshList({ state, commit, dispatch }) {
+      // refreshList 是给 infiniteProducts 板块出现在用户面前时候刷新用, 用来取消首页加上的 filter,
+      // 除非首页人工点了分类过滤过 (会重置 lastRefreshed), 不然这个方法不会频繁取数据
+      commit('setFilter', {})
       const now = (new Date()).valueOf()
-      if (!append && state.lastRefreshed && (now - state.lastRefreshed) < 30 * 1000) {
+      if (state.lastRefreshed && (now - state.lastRefreshed) < 30 * 1000) {
         // console.log('wait to refresh', now - state.lastRefreshed)
         return Promise.resolve({
           count: state.count, data: []
         })
-      } else if (!append && state.lastRefreshed && (now - state.lastRefreshed) >= 30 * 1000) {
+      } else if (state.lastRefreshed && (now - state.lastRefreshed) >= 30 * 1000) {
         let page = state.page + 1
         if (page * state.pageSize > state.count) {
           page = 1
@@ -45,7 +46,16 @@ export default {
         commit('setPage', page)
       }
       commit('setLastRefreshed', now)
-      return actions.list.call(this, context, options)
+      return dispatch('list')
+    },
+    listMore({ state, commit, dispatch }) {
+      const { count, pending, page, pageSize, data } = state
+      if (pending || page * pageSize >= count || data.length >= 30 ) {
+        // 正在加载或者没有更多数据了, 就停止; 初始条件下 page, pageSize, count 都是 0, 这个条件也满足
+        return { count, data: [] }
+      }
+      commit('setPage', page + 1)
+      return dispatch('list', { append: true })
     }
   }
 }

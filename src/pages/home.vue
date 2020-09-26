@@ -21,7 +21,7 @@
         ><text :class="$style['categoryText']">{{ category.title }}</text></view>
       </view>
     </scroll-view>
-    <infinite-products ref="infiniteProducts"></infinite-products>
+    <infinite-products></infinite-products>
   </view>
 </template>
 
@@ -41,12 +41,16 @@ export default {
     InfiniteProducts
   },
   data() {
-    return {
-      activeRootCategoryId: null
-    }
+    return {}
   },
   computed: {
     ...mapState(['categories']),
+    ...mapState('lists/infiniteProducts', {
+      infiniteProducts: (state) => state
+    }),
+    activeRootCategoryId() {
+      return +this.infiniteProducts.filter.category
+    }
   },
   created() {
     // TODO, 这里的颜色需要配置, 而不是写死
@@ -57,7 +61,7 @@ export default {
     })
   },
   onReachBottom() {
-    this.$refs.infiniteProducts.onReachBottom()
+    this.$store.dispatch('lists/infiniteProducts/listMore')
   },
   async mounted() {
     this.fetchPageConfig('home')
@@ -65,7 +69,6 @@ export default {
   },
   methods: {
     filterRootCategory(categoryId) {
-      this.activeRootCategoryId = categoryId
       this.$store.commit('lists/infiniteProducts/setLastRefreshed', null)
       this.$store.commit('lists/infiniteProducts/setFilter', { category: categoryId })
       this.$store.commit('lists/infiniteProducts/setPage', 1)

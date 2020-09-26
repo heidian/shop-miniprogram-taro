@@ -48,47 +48,40 @@
 </template>
 
 <script>
+/*
+一般来说, 调用 InfiniteProducts 组件的页面,
+只需在自己的 onReachBottom 调用 this.$store.dispatch('lists/infiniteProducts/listMore') 就行
+最多是 tab 页面在 onShow 里面加一下 this.$store.dispatch('lists/infiniteProducts/refreshList')
+其他任何代码都不用写
+*/
 import _ from 'lodash'
 import Taro from '@tarojs/taro'
-import ListTable from '@/mixins/ListTable'
+import { mapState } from 'vuex'
 import { optimizeImage } from '@/utils/image'
 import Price from '@/components/Price'
 
 export default {
-  name: 'InfiniteProduct',
-  mixins: [
-    // ListTable('products', { urlRoot: '/shopfront/product/' })
-    ListTable('products', { storeName: 'lists/infiniteProducts' })
-  ],
+  name: 'InfiniteProducts',
   components: {
     Price
   },
   data() {
-    return {
-      viewMore: false
-    }
+    return {}
   },
   computed: {
-    //
+    ...mapState('lists/infiniteProducts', {
+      products: (state) => state
+    }),
+    viewMore() {
+      const { data, page, pageSize, count } = this.products
+      return count && (data.length >= 30 || page * pageSize >= count)
+    }
   },
-  async mounted() {
-    // 这个在 store 里面设置了
-    // this.updateDefaultParams({
-    //   fields: ['id', 'name', 'title', 'description', 'image', 'price', 'compare_at_price', 'metafields'].join(',')
-    // }, { fetch: false })
-    await this.fetchList()
+  mounted() {
+    this.$store.dispatch('lists/infiniteProducts/refreshList')
   },
   methods: {
     optimizeImage,
-    onReachBottom() {
-      const { data, page, pageSize, count } = this.products
-      if (data.length < 30 && page * pageSize < count) {
-        this.fetchMore()
-      } else {
-        // 显示 "点击查看更多" 进入全部商品列表
-        this.viewMore = true
-      }
-    },
     goToProduct(productName) {
       /* 没有特别原因不要用 wx 的方法, 全部用 Taro 上的方法 */
       Taro.navigateTo({ url: `/pages/product/index?name=${productName}` })

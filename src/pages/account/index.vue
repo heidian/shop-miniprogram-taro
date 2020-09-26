@@ -146,7 +146,7 @@
         </navigator>
       </view>
       <view :class="$style['infiniteProductsBody']">
-        <infiniteProducts ref="infiniteProducts"></infiniteProducts>
+        <infiniteProducts></infiniteProducts>
       </view>
     </view>
   </view>
@@ -291,7 +291,7 @@ export default {
     }
   },
   onReachBottom() {
-    this.$refs.infiniteProducts.onReachBottom()
+    this.$store.dispatch('lists/infiniteProducts/listMore')
   },
   methods: {
     optimizeImage,

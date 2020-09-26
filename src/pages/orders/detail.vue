@@ -57,7 +57,7 @@
         :disabled="paymentPending" @tap="pay"
       >{{ paymentPending ? '正在支付...' : '继续付款' }}</button>
     </view>
-    <infinite-products ref="infiniteProducts"></infinite-products>
+    <infinite-products></infinite-products>
   </view>
   <view v-else :class="$style['loading']"><text class="el-icon-more"></text></view>
 </template>
@@ -118,9 +118,9 @@ export default {
     }
   },
   onReachBottom() {
-    if (this.$refs.infiniteProducts) {
-      // 加载完订单之前没有 infiniteProducts
-      this.$refs.infiniteProducts.onReachBottom()
+    if (!this.pending && this.orderData) {
+      // 加载完订单之前没必要刷新 infiniteProducts
+      this.$store.dispatch('lists/infiniteProducts/listMore')
     }
   },
   methods: {

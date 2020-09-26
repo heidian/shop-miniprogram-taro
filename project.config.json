@@ -97,6 +97,13 @@
           "pathName": "pages/checkout/index",
           "query": "token=a8cedff38129d1f6549b1172845919de8591f098",
           "scene": null
+        },
+        {
+          "id": -1,
+          "name": "pages/cart/index",
+          "pathName": "pages/cart/index",
+          "query": "",
+          "scene": null
         }
       ]
     }

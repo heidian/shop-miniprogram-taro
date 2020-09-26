@@ -19,7 +19,7 @@
     <view v-if="hasMore" :class="$style['loadMore']"><text class="el-icon-more"></text></view>
     <template v-else>
       <view style="margin-top: 20px; text-align: center;">猜你喜欢</view>
-      <infinite-products ref="infiniteProducts"></infinite-products>
+      <infinite-products></infinite-products>
     </template>
   </view>
 </template>
@@ -62,8 +62,8 @@ export default {
   onReachBottom() {
     if (this.hasMore) {
       this.fetchFavorites({ more: true })
-    } else if (this.$refs.infiniteProducts) {
-      this.$refs.infiniteProducts.onReachBottom()
+    } else {
+      this.$store.dispatch('lists/infiniteProducts/listMore')
     }
   },
   mounted() {
