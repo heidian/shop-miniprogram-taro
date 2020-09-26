@@ -17,8 +17,8 @@ import Grids from '@/components/blocks/Grids'
 import Text from '@/components/blocks/Text'
 
 // import getTestPageConfig from './_getTestPageConfig'
+// const PREVIEW_THEME_ID = 13390
 
-const PREVIEW_THEME_ID = 13390
 const BLOCKS_MAP = {
   'blocks/header': Header,
   'blocks/featured_products': FeaturedProducts,
@@ -44,7 +44,7 @@ export default (propertyName) => {
           'fields[shop]': 'id',
           'fields[page]': 'title,pageconfig',
           'scope': 'miniprogram',
-          'preview_theme_id': PREVIEW_THEME_ID,  // 上线以后要删掉
+          // 'preview_theme_id': PREVIEW_THEME_ID,  // 上线以后要删掉
           'page_type': pageType
         }
         if (pageName) {
