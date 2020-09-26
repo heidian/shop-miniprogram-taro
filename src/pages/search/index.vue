@@ -229,10 +229,12 @@ page {
     padding-top: 5px;
     border-bottom: 2px solid transparent;
     line-height: 35px - 5px - 2px;
+    color: $color-text-light;
   }
   &:global(.is-active) {
     .categoryText {
       border-bottom-color: $color-text;
+      color: $color-text;
       font-weight: bold;
     }
   }
