@@ -5,14 +5,14 @@
       class="grid" :style="gridStyle"
     >
       <view
-        class="product-item"
+        :class="{'product-item': true, 'product-item__fullwidth': +settingsData.columns === 1}"
         :style="settingsData.backgroundColor ? {
           'borderRadius': '4px',  // 如果有底色, 就加一个圆角
           'backgroundColor': settingsData.backgroundColor
         } : {}"
         @tap="goToProduct(product.name)"
       >
-        <view class="image-wrapper" :style="{'paddingTop': paddingTop}">
+        <view class="image-wrapper" :style="{'paddingTop': imagePaddingTop}">
           <image
             class="image" mode="aspectFill" :lazy-load="true"
             :src="optimizeImage(product.image, 200)"
@@ -20,21 +20,22 @@
         </view>
         <view class="text-wrapper" :style="{
           // 如果有底色, 就加一个左右边距
-          'padding': settingsData.backgroundColor ? '0.5em' : '0.5em 0'
+          'padding': textWrapperPadding
         }">
           <view class="title">{{ product.title }}</view>
-          <view class="price">
-            <text class="price-sale">{{ product.price|currency }}</text>
-            <text
-              v-if="+product.compare_at_price > +product.price" class="price-compare"
-            >{{ product.compare_at_price|currency }}</text>
-            <!-- 这里一定要用 > 不能用 !==, 因为如果 compare_at_price 是 null, 那也是不等于 -->
+          <view>
+            <price
+              class="price" :highlight="false" :keepZero="false"
+              :price="product.price" :compareAtPrice="product.compare_at_price"
+            ></price>
           </view>
-          <button
-            class="button--round button--mini button--dark"
-            v-if="settingsData.buyButton"
-            :style="{'backgroundColor': settingsData.buyButtonBackground}"
-          >购买</button>
+          <view>
+            <button
+              class="button--round button--mini button--dark"
+              v-if="settingsData.buyButton"
+              :style="{'backgroundColor': settingsData.buyButtonBackground}"
+            >购买</button>
+          </view>
         </view>
       </view>
     </view>
@@ -46,8 +47,12 @@ import _ from 'lodash'
 import Taro from '@tarojs/taro'
 import { API } from '@/utils/api'
 import { optimizeImage, backgroundImageUrl } from '@/utils/image'
+import Price from '@/components/Price'
 
 export default {
+  components: {
+    Price
+  },
   props: {
     css: {
       type: Object,
@@ -85,9 +90,16 @@ export default {
       style['fontSize'] = columns >= 3 ? '0.75em' : (columns === 2 ? '0.95em' : '1em')
       return style
     },
-    paddingTop() {
+    imagePaddingTop() {
       const percent = (100 / (+this.settingsData.imageRatio || 1)).toFixed(6)
       return `${percent}%`
+    },
+    textWrapperPadding() {
+      if (this.settingsData.backgroundColor) {
+        return +this.settingsData.columns === 1 ? '0.5em 1em' : '0.5em 0.5em'
+      } else {
+        return +this.settingsData.columns === 1 ? '0 1em' : '0.5em 0'
+      }
     }
   },
   mounted() {
@@ -99,7 +111,10 @@ export default {
     async fetchProducts() {
       this.products.pending = true
       const res = await API.get('/shopfront/product/', {
-        params: { ...this.settingsData.productsQuery }
+        params: {
+          ...this.settingsData.productsQuery,
+          fields: ['id', 'name', 'title', 'description', 'image', 'price', 'compare_at_price', 'metafields'].join(',')
+        }
       })
       this.products = {
         data: res.data.results,
@@ -122,6 +137,23 @@ export default {
   .product-item {
     overflow: hidden;
   }
+  .product-item__fullwidth {
+    position: relative;
+    padding-right: percentage(2/3);
+    .text-wrapper {
+      position: absolute;
+      right: 0;
+      top: 0;
+      width: percentage(2/3);
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      button, .price {
+        margin: 0;
+      }
+    }
+  }
   .image-wrapper {
     position: relative;
   }
@@ -134,8 +166,8 @@ export default {
   }
   .text-wrapper {
     button {
-      display: block;
-      margin: 1em auto 0.5em;
+      margin-top: 1em;
+      margin-bottom: 0.5em;
       width: 70px;
     }
   }
@@ -152,16 +184,6 @@ export default {
   .price {
     margin-top: 0.2em;
     margin-bottom: 0.2em;
-  }
-  .price-sale {
-    font-weight: 500;
-    font-size: 1.1em;
-  }
-  .price-compare {
-    font-size: 0.85em;
-    margin-left: 0.1em;
-    opacity: 0.6;
-    text-decoration: line-through;
   }
 }
 </style>
