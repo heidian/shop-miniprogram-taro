@@ -278,6 +278,7 @@ page {
 }
 .emptyCartImage {
   width: 80px;
+  height: auto;
   display: block;
   margin: 50px auto;
 }
