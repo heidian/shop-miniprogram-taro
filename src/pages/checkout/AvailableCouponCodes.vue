@@ -1,26 +1,30 @@
 <template>
   <drawer-bottom
     :visible="isVisible" @close="onClose" @open="onOpen"
-    header="优惠券" class="checkout__coupon_codes"
+    header="优惠券" :class="$style['couponCodes']"
   >
-    <scroll-view :scrollY="true" :scrollWithAnimation="true" class="coupon-codes-list">
-      <view v-if="pending" class="loading-text">正在加载</view>
+    <scroll-view :scrollY="true" :scrollWithAnimation="true" :class="$style['list']">
+      <view :class="$style['redeem']">
+        <input type="text" name="couponPrefix" :class="$style['input']" placeholder="输入优惠码兑换优惠券" v-model="codePrefix"/>
+        <button type="primary" class="btn button--small button--dark" :class="$style['btnRedeen']" @tap="redeemCoupon">兑换</button>
+      </view>
+      <view v-if="pending" :class="$style['loadingText']">正在加载</view>
       <template v-else>
         <view
           v-for="(couponCode, index) in availableCouponCodes" :key="`${couponCode.id}-${index}`"
-          class="coupon-codes-item" @tap="() => handleSelect(couponCode.id)"
+          :class="$style['item']" @tap="() => handleSelect(couponCode.id)"
         >
-          <image class="image"></image>
-          <view class="caption">
-            <view class="title">{{ couponCode.title }}</view>
-            <view class="verbose_title">{{ couponCode.verbose_title }}</view>
-            <view class="start-end">
+          <image :class="$style['image']"></image>
+          <view :class="$style['caption']">
+            <view :class="$style['title']">{{ couponCode.title }}</view>
+            <view :class="$style['verboseTitle']">{{ couponCode.verbose_title }}</view>
+            <view :class="$style['startEnd']">
               {{ couponCode.ends_at ? `截止 ${formatDateTime(couponCode.ends_at)}` : '无截止时间' }}
             </view>
           </view>
           <icon
             v-if="usedCouponCodeId === couponCode.id"
-            type="success" size="20" color="#ff5a00" class="check"
+            type="success" size="20" color="#ff5a00" :class="$style['check']"
           ></icon>
         </view>
       </template>
@@ -49,7 +53,8 @@ export default {
   },
   data() {
     return {
-      isVisible: !!this.visible
+      isVisible: !!this.visible,
+      codePrefix: ''
     }
   },
   computed: {
@@ -94,7 +99,22 @@ export default {
         } catch(err) {}
       }
       Taro.hideLoading()
-    }
+    },
+    async redeemCoupon () {
+      console.log('@@@@@ this.codePrefix', this.codePrefix)
+      if (this.codePrefix) {
+        Taro.showLoading({ title: '优惠券兑换中' })
+        try {
+          await this.$store.dispatch('checkout/addCoupon', { codePrefix: this.codePrefix })
+          Taro.showToast({title: '兑换成功'})
+          Taro.hideLoading()
+          this.codePrefix = ''
+          this.isVisible = false
+        } catch (err) {
+          Taro.showToast({ title: '使用优惠券失败', icon: 'none', duration: 2000 })
+        }
+      }
+    },
   },
   watch: {
     visible(newValue) {
@@ -104,18 +124,18 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" module>
 @import '@/styles/variables';
-.checkout__coupon_codes {
-  .loading-text {
+.couponCodes {
+  .loadingText {
     padding: 20px;
     text-align: center;
     color: $color-text-lighter;
   }
-  .coupon-codes-list {
+  .list {
     height: 60vh;
   }
-  .coupon-codes-item {
+  .item {
     height: 80px;
     border-radius: 8px;
     overflow: hidden;
@@ -138,13 +158,13 @@ export default {
       flex-direction: column;
       justify-content: space-between;
       align-items: flex-start;
-      >.title, >.verbose_title, >.start-end {
+      >.title, >.verboseTitle, >.startEnd {
         overflow: hidden;
         white-space: nowrap;
         max-width: 100%;
         text-overflow: ellipsis;
       }
-      >.verbose_title, >.start-end {
+      >.verboseTitle, >.startEnd {
         color: $color-text-lighter;
         font-size: 0.8em;
       }
@@ -154,6 +174,29 @@ export default {
       right: 10px;
       top: 30px;
     }
+  }
+  .redeem {
+    margin-top: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
+    padding: 0px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .input {
+    flex: 1;
+    display: block;
+    padding-left: 10px;
+    height: 36px;
+    line-height: 36px;
+  }
+  .btnRedeen {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
   }
 }
 </style>
