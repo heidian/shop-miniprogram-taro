@@ -196,7 +196,7 @@ export default {
         this.listHeight + scrollOffset > (this.listLength * this.itemHeight - 100)
       ) {
         // this.listReachBottom()
-        // this.fetchProducts({ more: true })
+        this.fetchProducts({ more: true })
       }
     },
     filterRootCategory(categoryId) {
