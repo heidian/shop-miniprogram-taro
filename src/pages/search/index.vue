@@ -1,5 +1,5 @@
 <template>
-  <view :class="$style['page']" :style="pageStyle">
+  <view :class="$style['page']" :style="{'paddingTop': pagePaddingTop}">
     <custom-nav
       :q="products.filter.q"
       @submit="onSubmitSearch"
@@ -8,7 +8,7 @@
     />
     <scroll-view
       :class="$style['categoriesBar']"
-      :style="categoriesBarStyle"
+      :style="{'top': categoriesBarTop}"
       :scroll-x="true" :enhanced="true" :show-scrollbar="false"
       :scroll-into-view="activeRootCategoryId ? `search-category-${activeRootCategoryId}` : null"
       :scroll-with-animation="true"
@@ -22,7 +22,7 @@
         ><text :class="$style['categoryText']">{{ category.title }}</text></view>
       </view>
     </scroll-view>
-    <view :class="$style['filterBar']" :style="filtersBarStyle">
+    <view :class="$style['filterBar']" :style="{'top': filtersBarTop}">
       <view
         :class="{[$style['filterItem']]:true,'is-active':products.orderBy==='-published_at'}"
         @tap="onClickOrderBy('-published_at')"
@@ -43,7 +43,10 @@
         @tap="subCategoryDrawerVisible = !subCategoryDrawerVisible"
       >筛选</view>
     </view>
-    <view :class="[$style['subCategoriesWrapper'], subCategoryDrawerVisible && 'is-visible']">
+    <view
+      :class="[$style['subCategoriesWrapper'], subCategoryDrawerVisible && 'is-visible']"
+      :style="{'top': subCategoriesWrapperTop}"
+    >
       <view
         @tap="() => filterRootCategory(activeRootCategoryId)"
         :class="[$style['subCategoryItem'], (activeRootCategoryId === +products.filter.category) && 'is-active']"
@@ -86,9 +89,10 @@ export default {
     CustomNav
   },
   data() {
-    const { windowHeight, windowWidth } = Taro.getSystemInfoSync()
+    const { windowHeight, windowWidth, statusBarHeight } = this.$store.state.system
+    const customNavHeight = statusBarHeight + 44
     const ratio = 375 / windowWidth  // 这个项目的设计尺寸是 375, Taro 那里也是配置了 375 为设计尺寸, 而不是默认的 750
-    const topBarHeight = (35 + 40) / ratio  // 置顶分类和排序条
+    const topBarHeight = (customNavHeight + 35 + 40) / ratio  // 置顶分类和排序条
     const listHeight = windowHeight - topBarHeight
     const containerWidth = windowWidth - 2 * (5 / ratio)
     const topBottomPadding = (10 + 0) / ratio
@@ -120,37 +124,34 @@ export default {
     ...mapGetters('categories', [
       'getRootCategoryId'
     ]),
-    statusBarHeight () {
+    statusBarHeight() {
       return _.get(this.system, 'statusBarHeight', 20)
     },
-    customNavHeight () {
+    customNavHeight() {
       return this.statusBarHeight + 44
     },
     customNavStyle () {
       return {
-        height: Taro.pxTransform(this.customNavHeight),
-        paddingTop: Taro.pxTransform(this.statusBarHeight + 3)
+        'height': Taro.pxTransform(this.customNavHeight),
+        'paddingTop': Taro.pxTransform(this.statusBarHeight + 3)
       }
     },
-    pageStyle () {
-      return {
-        'paddingTop': Taro.pxTransform(this.customNavHeight + 35 + 40)
-      }
-    },
-    categoriesBarStyle () {
-      return {
-        'top': Taro.pxTransform(this.customNavHeight)
-      }
-    },
-    filtersBarStyle () {
-      return {
-        'top': Taro.pxTransform(this.customNavHeight + 35)
-      }
-    },
-    homeBtnStyle () {
+    homeBtnStyle() {
       return {
         'top': Taro.pxTransform(this.statusBarHeight + 3)
       }
+    },
+    pagePaddingTop() {
+      return Taro.pxTransform(this.customNavHeight + 35 + 40)
+    },
+    categoriesBarTop() {
+      return Taro.pxTransform(this.customNavHeight)
+    },
+    filtersBarTop() {
+      return Taro.pxTransform(this.customNavHeight + 35)
+    },
+    subCategoriesWrapperTop() {
+      return Taro.pxTransform(this.customNavHeight + 35 + 40)
     },
     listData() {
       return _.chunk(this.products.data, 2)
@@ -195,7 +196,7 @@ export default {
         this.listHeight + scrollOffset > (this.listLength * this.itemHeight - 100)
       ) {
         // this.listReachBottom()
-        this.fetchProducts({ more: true })
+        // this.fetchProducts({ more: true })
       }
     },
     filterRootCategory(categoryId) {
@@ -247,7 +248,7 @@ page {
   background-color: $color-bg-gray;
 }
 .page {
-  padding-top: 35px + 40px;
+  // padding-top: 35px + 40px;  // inline 动态定义
   overflow: hidden;
   height: 100vh;
   :global(.virtual-list) {
@@ -258,7 +259,7 @@ page {
   position: fixed;
   z-index: $z-index-navbar;
   left: 0;
-  top: 0;
+  // top: 0;  // inline 动态定义
   height: 35px;
   width: 100%;
   background-color: #fff;
@@ -292,7 +293,7 @@ page {
   position: fixed;
   z-index: $z-index-navbar;
   left: 0;
-  top: 35px;
+  // top: 35px;  // inline 动态定义
   height: 39px;
   border-top: 1px solid $color-divider;
   width: 100%;
@@ -324,7 +325,7 @@ page {
   position: fixed;
   z-index: $z-index-navbar - 1;
   padding: 15px;
-  top: 35px + 40px;
+  // top: 35px + 40px;  // inline 动态定义
   left: 0;
   width: 100%;
   background-color: #fff;
