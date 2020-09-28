@@ -129,16 +129,24 @@ export default {
       this.handleActivate()
     },
     handleActivate() {
+      Taro.showLoading({ title: '正在激活' })
       API.post('/substores/partners/activate/', {
         referral_code: this.referralCode
       }).then(() => {
+        Taro.hideLoading()
         Taro.showToast({ title: '合伙人身份激活成功', icon: 'none', duration: 1000 })
         this.$store.dispatch('partnerProfile/retrieve')
         setTimeout(() => Taro.navigateBack(), 1000)
       }).catch(handleErr)
     },
     pickReferral (code) {
-      this.referralCode = code
+      Taro.pageScrollTo({
+        scrollTop: 0,
+        duration: 300,
+        success: () => {
+          this.referralCode = code
+        }
+      })
     }
   }
 }
