@@ -4,7 +4,7 @@
     header="选择" :class="$style['drawerBody']"
   >
     <view :class="$style['header']">
-      <image :class="$style['variantImage']" :src="selectedVariant.image|imageUrl(200)" mode="aspectFill"></image>
+      <image :class="$style['variantImage']" :src="selectedVariant.image|imageUrl(200)" mode="aspectFill" @tap="onPreviewImage"></image>
       <view :class="$style['headerCaption']">
         <price
           :class="$style['variantPrice']" :highlight="true" :keepZero="true"
@@ -186,6 +186,15 @@ export default {
         handleErr(err)
       })
     },
+    onPreviewImage () {
+      const url = _.get(this.selectedVariant, 'image.src')
+      if (url) {
+        Taro.previewImage({
+          curent: 0,
+          urls: [url]
+        })
+      }
+    }
   },
   watch: {
     visible(newValue) {

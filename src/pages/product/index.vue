@@ -6,8 +6,8 @@
         indicatorColor='#999' indicatorActiveColor='#333' :indicatorDots="true"
         :circular="true" :interval="5000" :autoplay="true"
       >
-        <swiper-item :class="$style['productImagesSwiperItem']" v-for="image in product.images" :key="image.id">
-          <image :class="$style['productImagesSwiperItemImage']" mode="aspectFit" :src="optimizeImage(image, 400)"></image>
+        <swiper-item :class="$style['productImagesSwiperItem']" v-for="(image, index) in product.images" :key="image.id">
+          <image :class="$style['productImagesSwiperItemImage']" mode="aspectFit" :src="optimizeImage(image, 400)" @tap="() => previewImage(product.images, index, 'src')"></image>
         </swiper-item>
       </swiper>
       <!-- 商品价格和添加心愿单 -->
@@ -268,6 +268,12 @@ export default {
         title: '立赚说明',
         content: '成为 HeyShop 会员/国货大使后，无论是自购或是分享商品，均可获得返现哦！',
         showCancel: false
+      })
+    },
+    previewImage (images, index, key) {
+      Taro.previewImage({
+        current: index,
+        urls: _.map(images, `${key}`)
       })
     }
   },
