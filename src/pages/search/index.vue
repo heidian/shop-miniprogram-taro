@@ -89,12 +89,15 @@ export default {
     CustomNav
   },
   data() {
-    const { windowHeight, windowWidth, statusBarHeight } = this.$store.state.system
+    // const { windowHeight, windowWidth, statusBarHeight } = this.$store.state.system
+    // 这里用 screenHeight, 因为 search 页面用了自定义顶部, windowHeight 包含了顶部菜单的高度, 和 screenHeight 是一样的,
+    // 而且 windowHeight 并没有存入 $store.state.system
+    const { screenHeight, screenWidth, statusBarHeight } = this.$store.state.system
     const customNavHeight = statusBarHeight + 44
-    const ratio = 375 / windowWidth  // 这个项目的设计尺寸是 375, Taro 那里也是配置了 375 为设计尺寸, 而不是默认的 750
+    const ratio = 375 / screenWidth  // 这个项目的设计尺寸是 375, Taro 那里也是配置了 375 为设计尺寸, 而不是默认的 750
     const topBarHeight = (customNavHeight + 35 + 40) / ratio  // 置顶分类和排序条
-    const listHeight = windowHeight - topBarHeight
-    const containerWidth = windowWidth - 2 * (5 / ratio)
+    const listHeight = screenHeight - topBarHeight
+    const containerWidth = screenWidth - 2 * (5 / ratio)
     const topBottomPadding = (10 + 0) / ratio
     const leftRightPadding = (2 * 5) / ratio
     const textPadding = (5 + 5) / ratio

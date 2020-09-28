@@ -11,8 +11,9 @@ const state = () => {
   try {
     const info = Taro.getSystemInfoSync()
     /*
-     * 不是所有的值都是永远固定的, 比如 windowHeight 和 windowWidth 其实会变
-     * 在设置了自定义顶部的时候, windowHeight 会更大, 因为 windowHeight 的意思是内容高度
+     * 不是所有的值都是永远固定的, 比如 windowHeight 和 windowWidth 其实每个页面不同
+     * 在设置了自定义顶部的页面, windowHeight 会更大, 在没有 tabbar 的页面, windowHeight 也会更大
+     * 因为 windowHeight 的意思是内容高度, 一般都需要用的时候实时从 getSystemInfo 里面取
      * 所以 system store 这里只放不会改变的信息, 如果有需要就再加
      */
     systemInfo = _.pick(info, [
