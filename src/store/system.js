@@ -9,30 +9,38 @@ import Taro from '@tarojs/taro'
 const state = () => {
   let systemInfo = {}
   try {
-    systemInfo = Taro.getSystemInfoSync()
-  } catch (error) {}
-  return {
-    ...systemInfo
+    const info = Taro.getSystemInfoSync()
+    /*
+     * 不是所有的值都是永远固定的, 比如 windowHeight 和 windowWidth 其实会变
+     * 在设置了自定义顶部的时候, windowHeight 会更大, 因为 windowHeight 的意思是内容高度
+     * 所以 system store 这里只放不会改变的信息, 如果有需要就再加
+     */
+    systemInfo = _.pick(info, [
+      'screenHeight', 'screenWidth', 'statusBarHeight', 'pixelRatio', 'devicePixelRatio',
+      'system', 'model', 'brand', 'platform', 'version', 'SDKVersion',
+    ])
+  } catch (error) {
+    systemInfo = {
+      screenHeight: 667,
+      screenWidth: 375,
+      statusBarHeight: 20,
+      pixelRatio: 2,
+      devicePixelRatio: 2,
+    }
   }
+  return systemInfo
 }
 
 const mutations = {
-  setData (state, payload) {
+  setData(state, payload) {
     state.data = _.cloneDeep(payload)
   }
 }
 
-const actions = {
-  getSystemInfo (context, number) {
-    try {
-      const res = Taro.getSystemInfoSync()
-      context.commit('setData', res)
-    } catch (error) {}
-  }
-}
+const actions = {}
 
 const getters = {
-  isLikeIphoneX (state) {
+  isLikeIphoneX(state) {
     const { statusBarHeight, system } = state
     return statusBarHeight > 20 && /iOS/.test(system)
   }

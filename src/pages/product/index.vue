@@ -145,7 +145,7 @@ export default {
     this.checkFavorite()
   },
   computed: {
-    ...mapState(['cart', 'customer', 'system', 'partnerProfile']),
+    ...mapState(['cart', 'customer', 'partnerProfile']),
     ...mapGetters('system', ['isLikeIphoneX']),
     partnerLevel () {
       return +this.partnerProfile.data.level || 0

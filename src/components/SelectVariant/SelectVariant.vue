@@ -92,11 +92,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['system']),
-    ...mapGetters(['system/isLikeIphoneX']),
-    isLikeIphoneX () {
-      return this['system/isLikeIphoneX']
-    },
+    ...mapGetters('system', ['isLikeIphoneX'])
   },
   methods: {
     onDrawerClose() {

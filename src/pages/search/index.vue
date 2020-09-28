@@ -124,21 +124,18 @@ export default {
     ...mapGetters('categories', [
       'getRootCategoryId'
     ]),
-    statusBarHeight() {
-      return _.get(this.system, 'statusBarHeight', 20)
-    },
     customNavHeight() {
-      return this.statusBarHeight + 44
+      return this.system.statusBarHeight + 44
     },
     customNavStyle () {
       return {
         'height': Taro.pxTransform(this.customNavHeight),
-        'paddingTop': Taro.pxTransform(this.statusBarHeight + 3)
+        'paddingTop': Taro.pxTransform(this.system.statusBarHeight + 3)
       }
     },
     homeBtnStyle() {
       return {
-        'top': Taro.pxTransform(this.statusBarHeight + 3)
+        'top': Taro.pxTransform(this.system.statusBarHeight + 3)
       }
     },
     pagePaddingTop() {
