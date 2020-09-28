@@ -148,6 +148,9 @@ export default {
       }
     },
     checkout() {
+      if (this.checkoutPending) {
+        return
+      }
       const items = _.filter(this.cart.items, item => item.checked)
       const lines = _.map(items, item => {
         return { variant_id: item.variant.id, quantity: item.quantity }

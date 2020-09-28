@@ -74,7 +74,6 @@ Vue.mixin({
    */
   onLoad() {
     const params = getCurrentInstance().router.params || {}
-    console.log('page onload', params)
     if (params.redirect) {
       // 这个参数目前只作用于下单成功以后 "返回个人中心并跳转订单详情页", 当然落地页不一定要是 account
       // 目前带 redirect 参数一定是 reLaunch 过来的, 只能在 onLoad 里面调用, (到达当前页面后, 触发 redirect 到目标页)

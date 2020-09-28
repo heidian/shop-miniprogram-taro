@@ -47,19 +47,19 @@ export default {
     }
   },
   methods: {
-    onSubmitSearch () {
+    onSubmitSearch() {
       this.$emit('submit', this.cachedQ)
     }
-  },
+  }
 }
 </script>
 
 <style lang="scss" module>
 @import '@/styles/variables.scss';
-
 .customNav {
   width: 100%;
   position: fixed;
+  z-index: $z-index-navbar;
   top: 0;
   left: 0;
   right: 0;
@@ -95,4 +95,3 @@ export default {
   }
 }
 </style>
-

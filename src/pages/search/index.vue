@@ -202,12 +202,14 @@ export default {
       // 虽然 fetchProducts 里面也会计算 activeRootCategoryId, 但这里早点设置也没事
       this.subCategoryDrawerVisible = false
       this.activeRootCategoryId = categoryId
-      this.updateFilter({ category: categoryId }, { partial: false, fetch: false })
+      // 因为有 partial: false, 这里其实不需要专门把 q 重置为空, 为了避免混淆, 现在先这么保留着
+      this.updateFilter({ q: '', category: categoryId }, { partial: false, fetch: false })
       this.fetchProducts()
     },
     filterSubCategory(categoryId) {
       this.subCategoryDrawerVisible = false
-      this.updateFilter({ category: categoryId }, { partial: false, fetch: false })
+      // 因为有 partial: false, 这里其实不需要专门把 q 重置为空, 为了避免混淆, 现在先这么保留着
+      this.updateFilter({ q: '', category: categoryId }, { partial: false, fetch: false })
       this.fetchProducts()
     },
     async fetchProducts({ more = false } = {}) {
@@ -230,8 +232,9 @@ export default {
       }
       this.fetchProducts()
     },
-    onSubmitSearch (q) {
-      this.updateFilter({ q, category: null }, { partial: false, fetch: false })
+    onSubmitSearch(q) {
+      // 因为有 partial: false, 这里其实不需要专门把 category 重置为空, 为了避免混淆, 现在先这么保留着
+      this.updateFilter({ q, category: '' }, { partial: false, fetch: false })
       this.fetchProducts()
     }
   }
