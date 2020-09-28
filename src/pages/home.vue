@@ -27,7 +27,7 @@
 
 <script>
 import _ from 'lodash'
-import Taro from '@tarojs/taro'
+import Taro, { getCurrentInstance } from '@tarojs/taro'
 import { mapState } from 'vuex'
 import ThemeBlocks from '@/mixins/ThemeBlocks'
 import InfiniteProducts from '@/components/InfiniteProducts'

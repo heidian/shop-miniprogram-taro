@@ -53,17 +53,7 @@ const mutations = {
 }
 
 const actions = {
-  initClient({ commit, dispatch }, { campaignContext, referralCode } = {}) {
-    /* initClient 里面只是做一些 storage 相关的处理, 其他 dispatch 都直接在 onLaunch 里面调用 */
-    const customerToken = Taro.getStorageSync('customerToken')
-    if (customerToken) {
-      commit('customer/setData', { customerToken, isAuthenticated: true })
-    }
-    const cartToken = Taro.getStorageSync('cartToken')
-    if (cartToken) {
-      commit('cart/setData', { cartToken })
-    }
-    /* 下面这些不是非常关键, 目前都用异步处理 */
+  initScene({ commit, dispatch }, { campaignContext, referralCode } = {}) {
     const promises = []
     if (campaignContext && !_.isEmpty(campaignContext)) {
       const promise = Taro.setStorage({

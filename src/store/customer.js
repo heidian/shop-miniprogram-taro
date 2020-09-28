@@ -9,13 +9,13 @@ import Taro from '@tarojs/taro'
 import { API } from '@/utils/api'
 
 /*
- * onLaunch 会在每次打开网页的时候调用 initClient action 来读取 storate 里面的 customerToken,
+ * onLaunch 会在每次打开网页的时候来读取 storate 里面的 customerToken,
  * 判断 customerToken 是否有效然后设置 isAuthenticated
  * 其他地方使用 isAuthenticated 来判断当前用户是否登录
  */
 const state = () => {
   return {
-    /* openid 因为一打开小程序就需要被 analytics 用到, 不能等 initClient, 所以需要的地方都自己调用 getOpenID
+    /* openid 因为一打开小程序就需要被 analytics 用到, 不能等 onLaunch 里面处理, 所以需要的地方都自己调用 getOpenID
     不要直接访问 openid, 因为它有可能是一个 Promise */
     openid: '',
     /* 除了 utils/api 文件里的 interceptor, 其他地方都不要直接访问 customerToken*/

@@ -273,14 +273,6 @@ export default {
       return '0.00'
     }
   },
-  onLoad() {
-    // 带 redirect 参数一定是 reLaunch 过来的, 只能在 onLoad 里面调用, (到达当前页面后, 触发 redirect 到目标页)
-    // 因为 account 是一个 tab, 这个参数会一直存在生命周期里, 一定不要在其他方法里处理这个它, 不然可能导致被多次处理
-    const { redirect } = getCurrentInstance().router.params
-    if (redirect) {
-      Taro.navigateTo({ url: decodeURIComponent(redirect) })
-    }
-  },
   mounted() {},
   onShow() {
     // 下面做了 throttle, 不会频繁获取

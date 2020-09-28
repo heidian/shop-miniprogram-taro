@@ -3,7 +3,7 @@ import Taro from '@tarojs/taro'
 import { API } from '@/utils/api'
 
 /*
- * onLaunch 会在每次打开网页的时候调用 initClient action 来读取 storate 里面的 customerToken,
+ * onLaunch 会在每次打开网页的时候来读取 storate 里面的 customerToken,
  */
 const state = () => {
   return {
