@@ -1,8 +1,8 @@
 <template>
   <view :class="$style['page']" :style="pageStyle">
     <custom-nav
-      :q.sync="products.q"
-      @submit="onSubmitSeaarch"
+      :q="products.filter.q"
+      @submit="onSubmitSearch"
       :customStyle="customNavStyle"
       :homeBtnStyle="homeBtnStyle"
     />
@@ -129,7 +129,7 @@ export default {
     customNavStyle () {
       return {
         height: Taro.pxTransform(this.customNavHeight),
-        paddingTop: Taro.pxTransform(this.statusBarHeight + 6)
+        paddingTop: Taro.pxTransform(this.statusBarHeight + 3)
       }
     },
     pageStyle () {
@@ -149,7 +149,7 @@ export default {
     },
     homeBtnStyle () {
       return {
-        'top': Taro.pxTransform(this.statusBarHeight + 6)
+        'top': Taro.pxTransform(this.statusBarHeight + 3)
       }
     },
     listData() {
@@ -230,7 +230,7 @@ export default {
       }
       this.fetchProducts()
     },
-    onSubmitSeaarch (q) {
+    onSubmitSearch (q) {
       this.updateFilter({ q, category: null }, { partial: false, fetch: false })
       this.fetchProducts()
     }

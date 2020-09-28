@@ -4,8 +4,7 @@
       :class="$style['input']"
       type="text"
       placeholder="搜索商品关键词"
-      :value="cachedQ"
-      @input="onChangeQ"
+      v-model="cachedQ"
       confirm-type="search"
       @confirm="onSubmitSearch">
     <navigator :class="$style['home']" :style="homeBtnStyle" url="/pages/home" open-type="switchTab" hover-class="none">
@@ -39,18 +38,15 @@ export default {
   },
   data() {
     return {
-      cachedQ: ''
+      cachedQ: this.q || ''
     }
   },
   watch: {
     q (newValue) {
-      this.cachedQ = !!newValue
+      this.cachedQ = newValue || ''
     }
   },
   methods: {
-    onChangeQ (e) {
-      this.cachedQ = e.detail.value || ''
-    },
     onSubmitSearch () {
       this.$emit('submit', this.cachedQ)
     }
