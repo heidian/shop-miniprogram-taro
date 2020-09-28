@@ -1,7 +1,14 @@
 <template>
-  <view :class="$style['page']">
+  <view :class="$style['page']" :style="pageStyle">
+    <custom-nav
+      :q.sync="products.q"
+      @submit="onSubmitSeaarch"
+      :customStyle="customNavStyle"
+      :homeBtnStyle="homeBtnStyle"
+    />
     <scroll-view
       :class="$style['categoriesBar']"
+      :style="categoriesBarStyle"
       :scroll-x="true" :enhanced="true" :show-scrollbar="false"
       :scroll-into-view="activeRootCategoryId ? `search-category-${activeRootCategoryId}` : null"
       :scroll-with-animation="true"
@@ -15,7 +22,7 @@
         ><text :class="$style['categoryText']">{{ category.title }}</text></view>
       </view>
     </scroll-view>
-    <view :class="$style['filterBar']">
+    <view :class="$style['filterBar']" :style="filtersBarStyle">
       <view
         :class="{[$style['filterItem']]:true,'is-active':products.orderBy==='-published_at'}"
         @tap="onClickOrderBy('-published_at')"
@@ -64,6 +71,7 @@ import _ from 'lodash'
 import Taro, { getCurrentInstance } from '@tarojs/taro'
 import { mapState, mapGetters } from 'vuex'
 import ProductItem from './ProductItem'
+import CustomNav from './CustomNav'
 import ListTable from '@/mixins/ListTable'
 
 const listTableMixin = ListTable('products', { storeName: 'lists/products' })
@@ -74,7 +82,9 @@ export default {
   mixins: [
     listTableMixin  // 这个 mixin 会定义一个叫 products 的 computed 对象
   ],
-  components: {},
+  components: {
+    CustomNav
+  },
   data() {
     const { windowHeight, windowWidth } = Taro.getSystemInfoSync()
     const ratio = 375 / windowWidth  // 这个项目的设计尺寸是 375, Taro 那里也是配置了 375 为设计尺寸, 而不是默认的 750
@@ -106,10 +116,42 @@ export default {
     })
   },
   computed: {
-    ...mapState(['categories']),
+    ...mapState(['categories', 'system']),
     ...mapGetters('categories', [
       'getRootCategoryId'
     ]),
+    statusBarHeight () {
+      return _.get(this.system, 'statusBarHeight', 20)
+    },
+    customNavHeight () {
+      return this.statusBarHeight + 44
+    },
+    customNavStyle () {
+      return {
+        height: Taro.pxTransform(this.customNavHeight),
+        paddingTop: Taro.pxTransform(this.statusBarHeight + 6)
+      }
+    },
+    pageStyle () {
+      return {
+        'paddingTop': Taro.pxTransform(this.customNavHeight + 35 + 40)
+      }
+    },
+    categoriesBarStyle () {
+      return {
+        'top': Taro.pxTransform(this.customNavHeight)
+      }
+    },
+    filtersBarStyle () {
+      return {
+        'top': Taro.pxTransform(this.customNavHeight + 35)
+      }
+    },
+    homeBtnStyle () {
+      return {
+        'top': Taro.pxTransform(this.statusBarHeight + 6)
+      }
+    },
     listData() {
       return _.chunk(this.products.data, 2)
     },
@@ -186,6 +228,10 @@ export default {
       } else {
         this.updateOrderBy(orderBy, { fetch: false })
       }
+      this.fetchProducts()
+    },
+    onSubmitSeaarch (q) {
+      this.updateFilter({ q, category: null }, { partial: false, fetch: false })
       this.fetchProducts()
     }
   }

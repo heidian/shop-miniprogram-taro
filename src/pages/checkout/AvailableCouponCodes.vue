@@ -101,7 +101,6 @@ export default {
       Taro.hideLoading()
     },
     async redeemCoupon () {
-      console.log('@@@@@ this.codePrefix', this.codePrefix)
       if (this.codePrefix) {
         Taro.showLoading({ title: '优惠券兑换中' })
         try {
