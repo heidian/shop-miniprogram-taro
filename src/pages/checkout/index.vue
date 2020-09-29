@@ -106,15 +106,22 @@ export default {
       backgroundColorBottom: '#f6f6f6',
     })
   },
-  mounted() {},
-  onShow() {
-    // 因为依赖于登录返回以后重新获取 checkout, 这些在 onShow 里面执行
+  mounted() {
+    // 不需要在 onShow 里面 fetchCheckout, 无需考虑返回的时候更新 checkout 的情况,
+    // 因为 store 里每一次调用完一个更新方法, 比如 update_address, 都会自行发起一次 fetch
     this.$store.commit('checkout/setData', { checkoutToken: this.token })
     if (!this.customer.isAuthenticated) {
       Taro.navigateTo({ url: '/pages/login/index' })
     } else {
       this.fetchCheckout()
     }
+  },
+  onShow() {
+    // if (!this.customer.isAuthenticated) {
+    //   Taro.navigateTo({ url: '/pages/login/index' })
+    // } else {
+    //   this.fetchCheckout()
+    // }
   },
   methods: {
     optimizeImage,

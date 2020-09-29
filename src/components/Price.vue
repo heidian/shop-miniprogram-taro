@@ -65,7 +65,7 @@ export default {
       this._compareAtPrice = this.compareAtPrice
       const priceValue = formatCurrency(this.price, { keepZero: this.keepZero })
       const compareValue = formatCurrency(this.compareAtPrice, { keepZero: this.keepZero })
-      this.priceValue = priceValue,
+      this.priceValue = priceValue
       // 这里一定要用 > 不能用 !=, 因为如果 compare_at_price 是 null, 那也是不等于
       this.compareValue = (parseFloat(this.compareAtPrice) > parseFloat(this.price)) ? compareValue : null
     }
