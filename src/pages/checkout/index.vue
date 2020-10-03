@@ -100,6 +100,7 @@ export default {
     }
   },
   created() {
+    this.$store.commit('checkout/setData', { checkoutToken: this.token })
     Taro.setBackgroundColor({
       backgroundColorTop: '#f6f6f6',
       backgroundColor: '#f6f6f6',
@@ -107,21 +108,24 @@ export default {
     })
   },
   mounted() {
-    // 不需要在 onShow 里面 fetchCheckout, 无需考虑返回的时候更新 checkout 的情况,
-    // 因为 store 里每一次调用完一个更新方法, 比如 update_address, 都会自行发起一次 fetch
-    this.$store.commit('checkout/setData', { checkoutToken: this.token })
-    if (!this.customer.isAuthenticated) {
-      Taro.navigateTo({ url: '/pages/login/index' })
-    } else {
-      this.fetchCheckout()
-    }
-  },
-  onShow() {
+    /*
+     * 需要在 onShow 里面 fetchCheckout,
+     * 虽然无需考虑返回的时候更新 checkout 的情况, 因为 store 里每一次调用完一个更新方法, 比如 update_address
+     * 但是需要考虑登录成功以后返回 checkout 页面的情况
+     * 所以现在有一个问题就是地址选择以后返回 checkout 页面会 fetch 两次
+     */
     // if (!this.customer.isAuthenticated) {
     //   Taro.navigateTo({ url: '/pages/login/index' })
     // } else {
     //   this.fetchCheckout()
     // }
+  },
+  onShow() {
+    if (!this.customer.isAuthenticated) {
+      Taro.navigateTo({ url: '/pages/login/index' })
+    } else {
+      this.fetchCheckout()
+    }
   },
   methods: {
     optimizeImage,
