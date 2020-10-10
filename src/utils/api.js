@@ -2,10 +2,8 @@ import qs from 'qs'
 import Taro from '@tarojs/taro'
 import store from '../store/index'
 
-// config/dev.js 里面定义了 API_URL, 但现在取的是 ext.json 的
-const APIRoot = API_URL
 const getAPIRoot = () => {
-  return store.state.config.apiroot  // || APIRoot
+  return store.state.config.apiroot
 }
 
 const getDefaultHeaders = () => {

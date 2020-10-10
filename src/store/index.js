@@ -20,14 +20,22 @@ Vue.use(Vuex)
 一定要在项目最前面就设置好 extConfig, 不要到了 onLaunch 再设置它,
 确保比如 getOpenId 等其他任何地方一定可以获得 appid */
 const state = () => {
-  const { extAppid, apiroot, shopname, shopid } = Taro.getExtConfigSync()
+  const config = {
+    // config/dev.js 里面定义了 API_URL, 但现在取的是 ext.json 的
+    apiroot: API_URL,
+    shopname: 'normal',
+    shopid: 4149,
+    appid: '',
+  }
+  if (Taro.getEnv() === 'WEAPP') {
+    const { extAppid, apiroot, shopname, shopid } = Taro.getExtConfigSync()
+    config.appid = extAppid
+    config.apiroot = apiroot
+    config.shopname = shopname
+    config.shopid = shopid
+  }
   return {
-    config: {
-      appid: extAppid,
-      apiroot,
-      shopname,
-      shopid
-    },
+    config: config,
     campaignContext: {},
     referralCode: '',
     globalColors: {
