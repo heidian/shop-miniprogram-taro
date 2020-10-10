@@ -1,7 +1,49 @@
+// const { WebpackConfigDumpPlugin } = require('webpack-config-dump-plugin');
 var _ = require('lodash')
 var path = require('path')
 function resolve(dir) {
   return path.join(__dirname, '..', dir)
+}
+
+function configLodashPlugin(chain) {
+  // https://cnodejs.org/topic/5846b2883ebad99b336b1e06
+  // 这么做是可以的, 再配合上面的 copy, 但是要处理一下 global 变量
+  // chain.externals({lodash: 'require("npm/lodash/lodash.min.js")'})
+  chain.plugin('lodash-webpack-plugin').use(
+    require('lodash-webpack-plugin')
+  ).init((Plugin, args) => {
+    return new Plugin({
+      'paths': true,
+      // 支持 deep path, 比如 _.get(obj, 'a.b.c')
+      'collections': true,
+      // 支持 collection 方法, 比如 _.forEach 不光可以循环一个 Array 还可以循环一个 Object, 不然 Object 就只能用 _.forIn
+      'shorthands': true
+      // 支持 shorthands, 也就是 _.property 或 _.matchesProperty 这种, 这样在 _.find 的时候, 可以传一个 object 作为搜索条件
+    })
+  });
+  chain.merge({
+    optimization: { splitChunks: { cacheGroups: { lodash: {
+      name: 'lodash',
+      priority: 1000,
+      test: (module) => /node_modules[\\/]lodash/.test(module.context)
+    }}}}
+  })
+}
+
+function configWebpackDump(chain, name) {
+  // 输出一下 webpack 的配置
+  chain.plugin('webpack-config-dump-plugin').use(
+    WebpackConfigDumpPlugin
+  ).init((Plugin, args) => {
+    return new Plugin({
+      outputPath: './',
+      name: name,
+      depth: 4,
+      keepCircularReferences: true,
+      showFunctionNames: true,
+      includeFalseValues: true
+    })
+  });
 }
 
 const config = {
@@ -44,37 +86,8 @@ const config = {
   framework: 'vue',
   mini: {
     webpackChain(chain, webpack) {
-      // https://cnodejs.org/topic/5846b2883ebad99b336b1e06
-      // 这么做是可以的, 再配合上面的 copy, 但是要处理一下 global 变量
-      // chain.externals({lodash: 'require("npm/lodash/lodash.min.js")'})
-      chain.plugin('lodash-webpack-plugin').use(
-        require('lodash-webpack-plugin')
-      ).init((Plugin, args) => {
-        return new Plugin({
-          'paths': true,
-          // 支持 deep path, 比如 _.get(obj, 'a.b.c')
-          'collections': true,
-          // 支持 collection 方法, 比如 _.forEach 不光可以循环一个 Array 还可以循环一个 Object, 不然 Object 就只能用 _.forIn
-          'shorthands': true
-          // 支持 shorthands, 也就是 _.property 或 _.matchesProperty 这种, 这样在 _.find 的时候, 可以传一个 object 作为搜索条件
-        })
-      });
-      chain.merge({
-        optimization: {
-          splitChunks: {
-            cacheGroups: {
-              lodash: {
-                name: 'lodash',
-                priority: 1000,
-                test(module) {
-                  return /node_modules[\\/]lodash/.test(module.context)
-                }
-              }
-            }
-          }
-        }
-      })
-
+      // configWebpackDump(chain, 'webpack.config.mini.js')
+      configLodashPlugin(chain)
       /* 加一条 scss loader, 支持 vuejs 中 <style lang="scss" module> 这种形式的 css modules */
       const ruleStore = chain.module.rule('scss').oneOfs.store
       const oneOf0 = ruleStore.get('0')  // import 'xxx.module.scss' 方式的 css modules 配置, 下面的 postcss.cssModules.enable 开启后会自动生成
@@ -133,6 +146,31 @@ const config = {
   h5: {
     publicPath: '/',
     staticDirectory: 'static',
+    webpackChain(chain, webpack) {
+      // configWebpackDump(chain, 'webpack.config.h5.js')
+      configLodashPlugin(chain)
+      // /* 加一条 scss loader, 支持 vuejs 中 <style lang="scss" module> 这种形式的 css modules */
+      const ruleStore = chain.module.rule('css').oneOfs.store
+      const oneOf0 = ruleStore.get('0')  // import 'xxx.module.scss' 方式的 css modules 配置, 下面的 postcss.cssModules.enable 开启后会自动生成
+      const oneOf1 = ruleStore.get('1')  // 其他 scss 文件, 常规的 scss loader
+      ruleStore.set('2', oneOf1)
+      // 删掉确保下面的 chain.module.rule('scss').oneOf('1') 会创建一个新的对象, 避免 resourceQuery 操作影响了一个共用的 store
+      ruleStore.delete('1')
+      const usesStore = oneOf0.uses.store
+      const uses = _.map(['0'], key => {
+        const store = usesStore.get(key).store
+        return {
+          loader: store.get('loader'),
+          options: _.cloneDeep(store.get('options'))
+        }
+      })
+      chain.module.rule('css').oneOf('1').resourceQuery(/module/)
+        .use(0).loader(uses[0]['loader']).options(uses[0]['options']).end()
+    },
+    commonChunks(commonChunks) {
+      commonChunks.push('lodash')
+      return commonChunks
+    },
     postcss: {
       autoprefixer: {
         enable: true,
