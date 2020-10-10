@@ -16,7 +16,7 @@
       <navigator :class="$style['navigator']" hover-class="none">《HeyShop支付相关协议》</navigator>
     </view>
     <view :class="$style['buttonsWrapper']">
-      <button :disabled="submitDisabled" class="button--dark" @tap="submitForm">保存</button>
+      <button :disabled="submitDisabled" class="button button--dark" @tap="submitForm">保存</button>
     </view>
   </view>
 </template>
@@ -91,7 +91,7 @@ page {
   bottom: 0;
   width: 100%;
   padding: 20px;
-  button {
+  :global(.button) {
     display: block;
   }
 }

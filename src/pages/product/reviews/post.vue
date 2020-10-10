@@ -26,7 +26,7 @@
     </view>
     <view :class="$style['postReviewft']">
       <button
-        class="button--round button--dark"
+        class="button button--round button--dark"
         :class="$style['submitBtn']"
         :disabled="!content || !!pending || !!uploading"
         @tap="onSubmit"

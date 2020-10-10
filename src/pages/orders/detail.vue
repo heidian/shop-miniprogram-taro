@@ -34,7 +34,7 @@
         <price :price="-discount.discount_price" :keepZero="true"></price>
       </view>
       <view :class="$style['dividerHorizontal']"></view>
-      <button :class="$style['customerService']" open-type="contact"><text class="el-icon-headset"></text> 联系客服</button>
+      <button :class="['button', $style['customerService']]" open-type="contact"><text class="el-icon-headset"></text> 联系客服</button>
     </view>
     <view :class="$style['section']">
       <view>总计: <price :price="orderData.total_price" :keepZero="true" :highlight="true"></price></view>
@@ -53,7 +53,7 @@
         <price :price="orderData.unpaid_price" :highlight="true" :keepZero="true"></price>
       </view>
       <button
-        :class="[$style['buttonPayForOrder'], 'button--round', 'button--orange']"
+        :class="[$style['buttonPayForOrder'], 'button', 'button--round', 'button--orange']"
         :disabled="paymentPending" @tap="pay"
       >{{ paymentPending ? '正在支付...' : '继续付款' }}</button>
     </view>

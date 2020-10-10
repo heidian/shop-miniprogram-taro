@@ -2,7 +2,7 @@
   <view :class="$style['settings']">
     <view :class="$style['navigators']">
       <template v-for="item in navigators">
-        <button v-if="item.openType" :class="$style['cell']" :key="item.label" :open-type="item.openType">
+        <button v-if="item.openType" :class="['button', $style['cell']]" :key="item.label" :open-type="item.openType">
           <view :class="$style['cellLabel']">{{ item.label }}</view>
           <view :class="$style['cellValue']"></view>
           <view :class="$style['cellFt']">
@@ -19,7 +19,7 @@
       </template>
     </view>
     <view :class="$style['buttonWrapper']">
-      <button type="warn" @tap="handleLogout">登出</button>
+      <button class="button" type="warn" @tap="handleLogout">登出</button>
     </view>
   </view>
 </template>
@@ -122,7 +122,7 @@ page {
   left: 0;
   width: 100%;
   padding: 15px;
-  button {
+  :global(.button) {
     display: block;
     width: 100%;
   }

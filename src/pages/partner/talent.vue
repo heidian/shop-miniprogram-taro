@@ -5,7 +5,7 @@
         <image :class="$style['avatar']" :src="optimizeImage(item.avatar || DEFAULT_AVATAR)" mode="aspectFill"></image>
         <text :class="$style['title']">{{ item.full_name }}</text>
         <text :class="$style['wechat']">微信号：{{ item.wechat_id }}</text>
-        <button :class="['button--small', 'button--dark', 'button--round', $style['cardBtn']]" @tap="() => copyWechat(item.wechat_id)">复制微信号</button>
+        <button :class="['button', 'button--small', 'button--dark', 'button--round', $style['cardBtn']]" @tap="() => copyWechat(item.wechat_id)">复制微信号</button>
       </view>
       <view :class="$style['cardFooter']">
         <text :class="$style['footerTitle']">联系带货达人，获取专属指导</text>

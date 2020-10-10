@@ -15,12 +15,12 @@
         >
         <button
           v-if="!referralCode"
-          type="primary" class="button--dark" style="margin-left: 10px;"
+          type="primary" class="button button--dark" style="margin-left: 10px;"
           :disabled="!!pending || !tmpCode || !!referrerData" @tap="getReferrerInfo"
         >确定</button>
       </view>
       <button
-        :class="[$style['loginButton']]" type="primary"
+        :class="['button', $style['loginButton']]" type="primary"
         open-type="getPhoneNumber" @getPhoneNumber="getPhoneNumber"
       >
         <image
@@ -37,8 +37,8 @@
         <view :class="$style['referralCodeText']">{{ tmpCode }}</view>
       </view>
       <view :class="$style['referralFooter']" slot="footer">
-        <button @tap="dialogVisible = false">取消</button>
-        <button @tap="onEnsure">确定</button>
+        <button class="button" @tap="dialogVisible = false">取消</button>
+        <button class="button" @tap="onEnsure">确定</button>
       </view>
     </hs-dialog>
   </view>
@@ -180,7 +180,7 @@ export default {
 }
 .footer {
   width: 100%;
-  button {
+  :global(.button) {
     border-radius: 0;
   }
 }
@@ -247,11 +247,11 @@ export default {
   justify-content: flex-start;
   align-items: center;
   border-top: 1px solid $color-divider;
-  button {
+  :global(.button) {
     flex: 1;
     border-radius: 0;
     background-color: transparent;
-    & + button {
+    & + :global(.button) {
       border-left: 1px solid $color-divider;
       color: $color-orange;
     }

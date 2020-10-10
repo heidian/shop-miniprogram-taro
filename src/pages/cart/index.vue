@@ -43,7 +43,7 @@
         <price :price="cart.totalPrice" :highlight="true" :keepZero="true"></price>
       </view>
       <button
-        class="button--round button--orange button--small"
+        class="button button--round button--orange button--small"
         :disabled="checkoutPending || cartIsEmpty" @tap="checkout"
       >{{ checkoutPending ? '正在请求...' : '结算' }}</button>
     </view>

@@ -14,7 +14,7 @@
     </view>
     <view :class="$style['buttonWrapper']">
       <!-- 这里不能写 @tap="goToEdit", 这样会有一个事件参数 e 传给 goToEdit, 影响函数判断 -->
-      <button :class="['button--dark']" @tap="() => goToEdit()">添加新地址</button>
+      <button class="button button--dark" @tap="() => goToEdit()">添加新地址</button>
     </view>
   </view>
 </template>
@@ -124,7 +124,7 @@ export default {
   bottom: 0;
   width: 100%;
   padding: 15px;
-  button {
+  :global(.button) {
     display: block;
     width: 100%;
   }

@@ -1,7 +1,6 @@
-// button 标签是小程序和网页通用的, 这里定义样式的时候可以不用 css
 // button 和 form 的组件的常规高度都固定在 44px
 // button 不带 class 的时候不改变任何颜色, 也就是保留小程序默认的颜色, 比如 <button type="primary"> 还是可以很好的显示的
-button {
+.button {
   display: inline-block;
   font-size: 15px;
   line-height: 20px;
@@ -15,13 +14,13 @@ button {
   }
 }
 
-button.button--round {
+.button--round {
   border-radius: 22px;
   padding-left: 30px;
   padding-right: 30px;
 }
 
-button.button--small {
+.button--small {
   font-size: 13px;
   padding: 8px 16px;
   border-radius: 4px;
@@ -32,7 +31,7 @@ button.button--small {
   }
 }
 
-button.button--mini {
+.button--mini {
   font-size: 11px;
   padding: 1px 8px;
   border-radius: 3px;
@@ -43,7 +42,7 @@ button.button--mini {
   }
 }
 
-button.button--orange {
+.button--orange {
   color: #fff;
   background-color: $color-orange;
   &.button-hover {
@@ -55,7 +54,7 @@ button.button--orange {
     background-color: lighten($color-orange, 30%);
   }
 }
-button.button--blue {
+.button--blue {
   color: #fff;
   background-color: $color-blue;
   &.button-hover {
@@ -67,7 +66,7 @@ button.button--blue {
     background-color: lighten($color-blue, 40%);
   }
 }
-button.button--dark {
+.button--dark {
   color: #fff;
   background-color: #020202;
   &.button-hover {

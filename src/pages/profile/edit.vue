@@ -30,10 +30,10 @@
         type="primary"
         open-type="getUserInfo"
         @getUserInfo="getUserInfo"
-        :class="$style['wechatBtn']">
+        :class="['button', $style['wechatBtn']]">
           <image :class="$style['buttonIcon']" src="https://up.img.heidiancdn.com/o_1cgtnj1nadol7n31b8n1lfidgb0wechat.png"></image>使用微信信息
       </button>
-      <button class="button--dark" @tap="submitForm">保存</button>
+      <button class="button button--dark" @tap="submitForm">保存</button>
     </view>
   </view>
 </template>
@@ -176,7 +176,7 @@ page {
   bottom: 0;
   width: 100%;
   padding: 20px;
-  button {
+  :global(.button) {
     width: 100%;
     display: block;
   }

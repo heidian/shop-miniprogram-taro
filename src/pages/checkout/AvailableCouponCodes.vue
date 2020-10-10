@@ -5,8 +5,8 @@
   >
     <scroll-view :scrollY="true" :scrollWithAnimation="true" :class="$style['list']">
       <view :class="$style['redeem']">
-        <input type="text" name="couponPrefix" :class="$style['input']" placeholder="输入优惠码兑换优惠券" v-model="codePrefix"/>
-        <button type="primary" class="btn button--small button--dark" :class="$style['btnRedeen']" @tap="redeemCoupon">兑换</button>
+        <input type="text" :class="$style['input']" placeholder="输入优惠码兑换优惠券" v-model="codePrefix"/>
+        <button type="primary" :class="['button', 'button--small', 'button--dark', $style['btnRedeen']]" @tap="redeemCoupon">兑换</button>
       </view>
       <view v-if="pending" :class="$style['loadingText']">正在加载</view>
       <template v-else>
@@ -100,7 +100,7 @@ export default {
       }
       Taro.hideLoading()
     },
-    async redeemCoupon () {
+    async redeemCoupon() {
       if (this.codePrefix) {
         Taro.showLoading({ title: '优惠券兑换中' })
         try {

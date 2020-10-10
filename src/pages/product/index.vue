@@ -55,7 +55,7 @@
     <!-- 猜你喜欢这个板块不要 pageSection -->
     <related-products v-if="productId" :productId="productId"/>
     <view :class="{[$style['footer']]: true, [$style['isLikeIphoneX']]: isLikeIphoneX}">
-      <button :class="[$style['iconBtn'], $style['footerIconBtn']]" open-type="contact">
+      <button :class="['button', $style['iconBtn'], $style['footerIconBtn']]" open-type="contact">
         <view class="el-icon-headset"></view>
         <view :class="$style['iconBtnText']">客服</view>
       </button>
@@ -65,11 +65,11 @@
         <text v-if="cart.totalCount" :class="$style['footerIconBtnCartCount']">{{ cart.totalCount > 10 ? '10+' : cart.totalCount }}</text>
       </navigator>
       <button
-        :class="[$style['footerBtn'], 'button--blue', 'button--small', 'button--round']"
+        :class="[$style['footerBtn'], 'button', 'button--blue', 'button--small', 'button--round']"
         @tap="() => showVariantsDrawer('add_to_cart')"
       >加入购物车</button>
       <button
-        :class="[$style['footerBtn'], 'button--orange', 'button--small', 'button--round']"
+        :class="[$style['footerBtn'], 'button', 'button--orange', 'button--small', 'button--round']"
         @tap="() => showVariantsDrawer('buy_now')"
       >立即购买</button>
     </view>

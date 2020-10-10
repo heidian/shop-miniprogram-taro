@@ -43,7 +43,7 @@
             <view :class="$style['lightText']">预计每年为您省赚</view>
           </view>
           <button
-            class="button--dark button--round button--small"
+            class="button button--dark button--round button--small"
             style="color: #e6caa5;" @tap="scrollToProducts"
           >成为合伙人</button>
         </view>
@@ -96,7 +96,7 @@
             <text :class="[$style['todoTag'], $style['goldBg']]">{{ item.tag }}</text>
           </view>
           <view :class="$style['lightText']" style="margin-top: 0.2em;">{{ item.description }}</view>
-          <!-- <button class="button--mini button--round button--dark">去完成</button> -->
+          <!-- <button class="button button--mini button--round button--dark">去完成</button> -->
           <navigator :url="item.url" open-type="navigate" hover-class="none" :class="$style['todoAction']">去完成</navigator>
         </view>
       </view>
@@ -123,7 +123,7 @@
               :highlight="false" :keepZero="false"
               :price="product.price" :compareAtPrice="product.compare_at_price"
             ></price>
-            <button class="button--dark button--round button--mini" @tap="goToProduct(product.name)">
+            <button class="button button--dark button--round button--mini" @tap="goToProduct(product.name)">
               <text class="el-icon-shopping-cart"></text>去购买
             </button>
           </view>
@@ -132,7 +132,7 @@
       <view v-if="hasMore" :class="$style['loadMore']"><text class="el-icon-more"></text></view>
     </view>
     <view :class="$style['activationBottom']" v-if="growthValue >= 1000 && !partnerLevel">
-      <button class="button--dark button--small" style="color: #e6caa5;" @tap="goToActivate">免费激活合伙人身份</button>
+      <button class="button button--dark button--small" style="color: #e6caa5;" @tap="goToActivate">免费激活合伙人身份</button>
     </view>
     <hs-dialog :visible.sync="qrDialogVisible">
       <view :class="$style['dialogHeader']" slot="header">会员扫码</view>

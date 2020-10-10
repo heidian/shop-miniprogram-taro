@@ -31,7 +31,7 @@
           </view>
           <view>
             <button
-              class="button--round button--mini button--dark"
+              class="button button--round button--mini button--dark"
               v-if="settingsData.buyButton"
               :style="{'backgroundColor': settingsData.buyButtonBackground}"
             >购买</button>
@@ -165,7 +165,7 @@ export default {
     height: 100%;
   }
   .text-wrapper {
-    button {
+    .button {
       margin-top: 1em;
       margin-bottom: 0.5em;
       width: 70px;

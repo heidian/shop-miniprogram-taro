@@ -1,8 +1,8 @@
 <template>
   <view :class="$style['page']">
     <view :class="$style['form']">
-      <input v-model="referralCode" type="text" placeholder="请输入邀请码" />
-      <button @tap="onSubmitReferralCode">确定</button>
+      <input :class="$style['input']" v-model="referralCode" type="text" placeholder="请输入邀请码" />
+      <button class="button" @tap="onSubmitReferralCode">确定</button>
     </view>
     <view :class="$style['tips']">邀请码可向你的HeyShop小程序推荐者索取获得，或者也可以选择一位我们推荐的优质带货达人作为你的邀请人，加入TA的团队一起玩转带货。</view>
     <view :class="$style['featured']" v-if="featuredReferrals && featuredReferrals.length">
@@ -38,7 +38,7 @@
           <image :class="$style['cardAvatar']" :src="optimizeImage(item.avatar || DEFAULT_AVATAR)" mode="aspectFill"></image>
           <text :class="$style['cardTitle']">{{ item.full_name }}</text>
           <text :class="$style['cardBiography']">{{ item.biography }}</text>
-          <button :class="['button--small', 'button--dark', 'button--round', $style['cardBtn']]" @tap="() => pickReferral(item.referral_code)">选TA</button>
+          <button :class="['button', 'button--small', 'button--dark', 'button--round', $style['cardBtn']]" @tap="() => pickReferral(item.referral_code)">选TA</button>
         </view>
       </view>
     </view>
@@ -51,8 +51,8 @@
         <view :class="$style['referralTip']">邀请人确定后将不可更改，是否确定？</view>
       </view>
       <view :class="$style['referralFooter']" slot="footer">
-        <button @tap="onCancel">取消</button>
-        <button @tap="onConfirm">确定</button>
+        <button class="button" @tap="onCancel">取消</button>
+        <button class="button" @tap="onConfirm">确定</button>
       </view>
     </hs-dialog>
   </view>
@@ -170,7 +170,7 @@ page {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  input {
+  .input {
     display: block;
     width: 100%;
     flex: 1;
@@ -179,7 +179,7 @@ page {
     padding: 10px;
     height: 44px;
   }
-  button {
+  :global(.button) {
     border-radius: 0;
     margin-left: 10px;
     box-shadow: 0 4px 10px 0 rgba(0, 0, 0, 0.1);
@@ -228,11 +228,11 @@ page {
   justify-content: flex-start;
   align-items: center;
   border-top: 1px solid $color-divider;
-  button {
+  :global(.button) {
     flex: 1;
     border-radius: 0;
     background-color: transparent;
-    & + button {
+    & + :global(.button) {
       border-left: 1px solid $color-divider;
       color: $color-orange;
     }

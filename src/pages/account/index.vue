@@ -20,7 +20,7 @@
             </view>
             <view :class="$style['referral']">
               <text :class="$style['referralCode']">邀请ID：{{ customer.data.referral_code }}</text>
-              <button :class="$style['btnCopy']" @tap="onCopyToClipboard(customer.data.referral_code)">复制</button>
+              <button :class="['button', $style['btnCopy']]" @tap="onCopyToClipboard(customer.data.referral_code)">复制</button>
             </view>
           </view>
           <view v-else :class="$style['caption']">
