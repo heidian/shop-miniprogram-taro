@@ -11,25 +11,38 @@ import analytics from './utils/analytics'
 
 // Vue.config.productionTip = false
 
+/*
+ * 处理一些 H5 和 小程序 的兼容性问题
+ */
+
+if (Taro.getEnv() === 'WEB') {
+  const original = Taro.pxTransform
+  Taro.pxTransform = function(size, designWidth) {
+    return original.call(Taro, size, designWidth || 375)
+  }
+}
+
 
 /*
  * 处理旧的路由, 重定向到新的路由
  */
-Taro.onPageNotFound(function({ isEntryPage, path, query }) {
-  console.log('PageNotFound', isEntryPage, path, query)
-  if (/^pages\/(product|static|search)$/.test(path)) {
-    Taro.redirectTo({ url: path + '/index?' + qs.stringify(query) })
-  } else if (/^pages\/login$/.test(path)) {
-    Taro.redirectTo({ url: '/pages/login/index' })
-  } else if (/^pages\/member$/.test(path)) {
-    Taro.switchTab({ url: '/pages/partner/index' })
-  } else if (/^pages\/(account|categories)$/.test(path)) {
-    Taro.switchTab({ url: '/pages/login/index' })
-  }
-  // else if (/^pages\/home$/.test(path)) {
-  //   Taro.switchTab({ url: '/pages/home/index' })
-  // }
-})
+ if (Taro.getEnv() === 'WEAPP') {
+  Taro.onPageNotFound(function({ isEntryPage, path, query }) {
+    console.log('PageNotFound', isEntryPage, path, query)
+    if (/^pages\/(product|static|search)$/.test(path)) {
+      Taro.redirectTo({ url: path + '/index?' + qs.stringify(query) })
+    } else if (/^pages\/login$/.test(path)) {
+      Taro.redirectTo({ url: '/pages/login/index' })
+    } else if (/^pages\/member$/.test(path)) {
+      Taro.switchTab({ url: '/pages/partner/index' })
+    } else if (/^pages\/(account|categories)$/.test(path)) {
+      Taro.switchTab({ url: '/pages/login/index' })
+    }
+    // else if (/^pages\/home$/.test(path)) {
+    //   Taro.switchTab({ url: '/pages/home/index' })
+    // }
+  })
+}
 
 
 /*
