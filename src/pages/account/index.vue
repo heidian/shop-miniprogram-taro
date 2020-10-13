@@ -341,10 +341,11 @@ $color-divider: rgba(#ffffff, 0.1);
   flex-direction: row;
   justify-content: flex-start;
   align-items: center;
+  margin-bottom: 30px;
 }
 .avatar {
-  width: 46px;
-  height: 46px;
+  width: 50px;
+  height: 50px;
   border-radius: 50%;
   margin-right: 10px;
   overflow: hidden;
@@ -364,8 +365,8 @@ $color-divider: rgba(#ffffff, 0.1);
   margin-right: 5px;
 }
 .cardQrCode {
-  width: 45px;
-  height: 45px;
+  width: 50px;
+  height: 50px;
 }
 .loginLink {
   flex: 1;
@@ -400,7 +401,7 @@ $color-divider: rgba(#ffffff, 0.1);
 
 /* balance */
 .balance {
-  margin-top: 30px;
+  margin-top: 15px;
   width: 100%;
   padding: 20px;
   border-radius: 10px;
@@ -507,9 +508,6 @@ $color-divider: rgba(#ffffff, 0.1);
   font-size: 13px;
   line-height: 1;
   color: $color-text-light;
-}
-.promotion {
-  margin-top: 30px;
 }
 .section {
   margin-top: 45px;
