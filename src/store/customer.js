@@ -39,7 +39,6 @@ const mutations = {
 
 const actions = {
   async login({ rootGetters, commit, dispatch }, payload) {
-    console.log('getApiCampaignContext', rootGetters.getApiCampaignContext)
     try {
       const { data } = await API.post('/customers/login/', {
         ...payload,

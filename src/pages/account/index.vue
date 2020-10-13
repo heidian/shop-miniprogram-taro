@@ -8,7 +8,7 @@
             :class="$style['avatar']" mode="aspectFill"
             :src="optimizeImage(customer.data.avatar || DEFAULT_AVATAR, 50)"
           ></image>
-          <navigator url="/pages/account/settings" open-type="navigate" hover-class="none">
+          <navigator url="/pages/profile/edit" open-type="navigate" hover-class="none">
             <view :class="$style['fullName']">{{ customer.data.full_name || '未命名' }}</view>
             <view :class="$style['levelTitle']">
               <text class="el-icon-star-on"></text>{{ partnerProfile.data.level_title }}
@@ -313,6 +313,7 @@ export default {
 </script>
 
 <style lang="scss" module>
+@import '@/styles/mixins';
 $color-bg: #1a1a1a;
 $color-bg-light: #373737;
 $color-bg-lighter: #f6f6f6;
@@ -353,6 +354,8 @@ $color-divider: rgba(#ffffff, 0.1);
 .fullName {
   font-size: 15px;
   margin-bottom: 2px;
+  max-width: 100px;
+  @include ellipsis();
 }
 .levelTitle {
   font-size: 12px;

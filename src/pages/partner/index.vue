@@ -8,13 +8,13 @@
           <view>
             <view :class="$style['fullNameAndLevel']">
               <view :class="$style['fullName']">{{ customer.data.full_name || '未命名' }}</view>
-              <view :class="$style['lightText']">
+              <view :class="$style['levelTitle']">
                 <text class="el-icon-star-on"></text>{{ partnerProfile.data.level_title }}
               </view>
-              <navigator
+              <!-- <navigator
                 :class="$style['wechatIdLink']" hover-class="none"
                 url="/pages/profile/wechat" open-type="navigate"
-              >填写微信号</navigator>
+              >填写微信号</navigator> -->
             </view>
             <view :class="$style['referralCodeWrapper']">
               <text :class="$style['referralCode']">邀请码: {{ customer.data.referral_code }}</text>
@@ -55,6 +55,10 @@
         <text style="margin: 0 0.5em;"> | </text>
         <text>{{ partnerProfile.data.ends_at|date }}到期</text>
       </view>
+      <navigator :class="$style['talentLink']" url="/pages/partner/talent">
+        <image :class="$style['talentLinkImage']" src="https://up.img.heidiancdn.com/o_1eh4kgtf149j1sk5bih1rpk1rfb0.png" mode="aspectFit"></image>
+        推广帮助
+      </navigator>
     </view>
     <view :class="$style['whiteSection']"> <!-- 国货大使攻略 -->
       <navigator url="/pages/blog/article?name=partner-intro" hover-class="none">
