@@ -90,6 +90,13 @@
           "pathName": "pages/account/index",
           "query": "",
           "scene": null
+        },
+        {
+          "id": 4,
+          "name": "pages/partner/rebate",
+          "pathName": "pages/partner/rebate",
+          "query": "",
+          "scene": null
         }
       ]
     }
