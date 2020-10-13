@@ -56,7 +56,7 @@
           <view :class="$style['balanceMain']">
             <navigator :class="$style['balanceValues']" url="/pages/partner/rebates" hover-class="none">
               <text :class="$style['balanceValuesLabel']">账户余额（元）</text>
-              <text :class="$style['balanceValuesNumber']">{{ rebateSummary.balance }}</text>
+              <price :class="$style['balanceValuesNumber']" :price="rebateSummary.balance"></price>
               <text :class="$style['balanceValuesHint']">自购返利{{ (+rebateSummary.summary.order_paid)|currency }} + 邀请收益{{ ((+rebateSummary.summary.referee_order_paid)+(+rebateSummary.summary.referral))|currency }}</text>
             </navigator>
             <view :class="$style['balanceBtns']">
@@ -68,11 +68,11 @@
           <view :class="$style['balanceSummary']">
             <navigator :class="$style['balanceSummaryItem']" url="/pages/partner/rebates" hover-class="none">
               <view :class="$style['balanceSummaryLabel']">今日预估奖励</view>
-              <view :class="$style['balanceSummaryValue']">{{ rebateSummary.total_today|currency }}</view>
+              <price :class="$style['balanceSummaryValue']" :price="rebateSummary.total_today"></price>
             </navigator>
             <navigator :class="$style['balanceSummaryItem']" url="/pages/partner/rebates" hover-class="none">
               <view :class="$style['balanceSummaryLabel']">本月预估奖励</view>
-              <view :class="$style['balanceSummaryValue']">{{ rebateSummary.total_this_month|currency }}</view>
+              <price :class="$style['balanceSummaryValue']" :price="rebateSummary.total_this_month"></price>
             </navigator>
             <navigator :class="$style['balanceSummaryItem']" url="/pages/partner/referees" hover-class="none">
               <view :class="$style['balanceSummaryLabel']">已邀请粉丝</view>
@@ -159,11 +159,13 @@ import { mapState } from 'vuex'
 import { API } from '@/utils/api'
 import { optimizeImage, DEFAULT_AVATAR } from '@/utils/image'
 import { handleErr } from '@/utils/errHelper'
+import Price from '@/components/Price'
 import InfiniteProducts from '@/components/InfiniteProducts'
 
 export default {
   name: 'Account',
   components: {
+    Price,
     InfiniteProducts
   },
   data() {
