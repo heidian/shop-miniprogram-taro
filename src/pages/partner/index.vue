@@ -16,15 +16,6 @@
           <image :class="$style['avatar']" mode="aspectFill" :src="DEFAULT_AVATAR"></image>
           <navigator url="/pages/login/index">去登录</navigator>
         </template>
-        <image
-          :class="$style['heyshop']" mode="widthFix"
-          src="https://up.img.heidiancdn.com/o_1eiojj5s632c1urj1a6u1jn01l330shop3x.png"
-        >HeyShop</image>
-        <image
-          v-if="customer.isAuthenticated && customer.data.mobile"
-          src="https://up.img.heidiancdn.com/o_1cbbcvna21ardpe01d411d7bm9a0qrcode.svg"
-          :class="$style['cardQrCode']"
-          @tap="openQrModal"/>
       </view>
       <!-- url="/pages/blog/article?name=partner-intro" -->
       <navigator :class="$style['growthProgressWrapper']" url="/pages/partner/growth-value-changes" hover-class="none">
@@ -121,13 +112,6 @@
     <view :class="$style['activationBottom']" v-if="growthValue >= 1000 && !partnerLevel">
       <button class="button button--dark button--small" style="color: #e6caa5;" @tap="goToActivate">免费激活国货大使身份</button>
     </view>
-    <hs-dialog :visible.sync="qrDialogVisible">
-      <view :class="$style['dialogHeader']" slot="header">会员扫码</view>
-      <view :class="$style['dialogBody']">
-        <image :class="$style['dialogQr']" :src="customerQrcodeBase64" mode="aspectFill"></image>
-        <view :class="$style['dialogTips']">结算时请向店员出示此码</view>
-      </view>
-    </hs-dialog>
   </view>
 </template>
 
@@ -136,13 +120,9 @@ import _ from 'lodash'
 import Taro from '@tarojs/taro'
 import { mapState } from 'vuex'
 import { API } from '@/utils/api'
-// const QR = require('../../utils/weapp-qrcode.js')
-import { drawImg } from '@/utils/weapp-qrcode'
-
 import { optimizeImage, backgroundImageUrl, DEFAULT_AVATAR } from '@/utils/image'
 import ListTable from '@/mixins/ListTable'
 import Price from '@/components/Price'
-import HsDialog from '@/components/HsDialog'
 
 export default {
   name: 'Partner',
@@ -151,13 +131,10 @@ export default {
   ],
   components: {
     Price,
-    'hs-dialog': HsDialog
   },
   data() {
     return {
       DEFAULT_AVATAR,
-      qrDialogVisible: false,
-      customerQrcodeBase64: '',
       achievements: {},
       pros: [{
         image: 'https://up.img.heidiancdn.com/o_1eiama15ugei6gj0p2cs9tf0oup53x.png',
@@ -286,17 +263,6 @@ export default {
     },
     goToActivate() {
       Taro.navigateTo({ url: '/pages/partner/activate' })
-    },
-    openQrModal() {
-      const customerQrcodeBase64 = drawImg(this.customer.data.mobile, {
-        typeNumber: 4,
-        errorCorrectLevel: 'M',
-        size: 200
-      })
-      if (customerQrcodeBase64) {
-        this.customerQrcodeBase64 = customerQrcodeBase64
-      }
-      this.qrDialogVisible = true
     }
   }
 }
