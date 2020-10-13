@@ -25,38 +25,30 @@
           :class="$style['cardQrCode']"
           @tap="openQrModal"/>
       </view>
-      <template v-if="growthValue < 1000">
-        <!-- url="/pages/blog/article?name=partner-intro" -->
-        <navigator :class="$style['growthProgressWrapper']" url="/pages/partner/growth-value-changes" hover-class="none">
-          <view :class="$style['lightText']" style="margin-left: 0.5em;">当前成长值{{ growthValue }}（达1000即可升级）</view>
-          <view :class="$style['lightText']">{{ growthValue }}/1000 <text class="el-icon-arrow-right"></text></view>
-          <view :class="$style['progressBar']">
-            <view :class="$style['progressBarInner']" :style="{'width':`${growthValue/10}%`}"></view>
-          </view>
-        </navigator>
-        <view :class="[$style['toBePartnerWrapper'], $style['goldBg']]">
-          <view>
-            <view><text style="font-size: 1.8em; font-weight: bold;">5880.0</text> 元</view>
-            <view :class="$style['lightText']">预计每年为您省赚</view>
-          </view>
-          <button
-            class="button button--dark button--round button--small"
-            style="color: #e6caa5;" @tap="scrollToProducts"
-          >成为国货大使</button>
+      <!-- url="/pages/blog/article?name=partner-intro" -->
+      <navigator :class="$style['growthProgressWrapper']" url="/pages/partner/growth-value-changes" hover-class="none">
+        <view :class="$style['lightText']" style="margin-left: 0.5em;">当前成长值{{ growthValue }}（达1000即可升级）</view>
+        <view :class="$style['lightText']">{{ growthValue }}/1000 <text class="el-icon-arrow-right"></text></view>
+        <view :class="$style['progressBar']" v-if="growthValue < 1000">
+          <view :class="$style['progressBarInner']" :style="{'width':`${growthValue/10}%`}"></view>
         </view>
-      </template>
-      <template v-else>
-        <!-- url="/pages/blog/article?name=partner-intro" -->
-        <navigator :class="$style['growthProgressWrapper']" url="/pages/partner/growth-value-changes" hover-class="none">
-          <view :class="$style['lightText']" style="margin-left: 0.5em;">当前成长值{{ growthValue }}</view>
-          <view :class="[$style['lightText'], 'el-icon-arrow-right']"></view>
-        </navigator>
-        <view :class="[$style['isPartnerWrapper'], $style['goldBg']]">
-          <text v-if="!partnerLevel">当前已达国货大使申请条件</text><text v-else>HeyShop国货大使</text>
-          <text style="margin: 0 0.5em;"> | </text>
-          <text>{{ partnerProfile.data.ends_at|date }}到期</text>
+      </navigator>
+      <view v-if="growthValue < 1000" :class="[$style['toBePartnerWrapper'], $style['goldBg']]">
+        <view>
+          <view><text style="font-size: 1.8em; font-weight: bold;">5880.0</text> 元</view>
+          <view :class="$style['lightText']">预计每年为您省赚</view>
         </view>
-      </template>
+        <button
+          class="button button--dark button--round button--small"
+          style="color: #e6caa5;" @tap="scrollToProducts"
+        >成为国货大使</button>
+      </view>
+      <view v-else :class="[$style['isPartnerWrapper'], $style['goldBg']]">
+        <text v-if="!partnerLevel">当前已达国货大使申请条件</text>
+        <text v-else>HeyShop国货大使</text>
+        <text style="margin: 0 0.5em;"> | </text>
+        <text>{{ partnerProfile.data.ends_at|date }}到期</text>
+      </view>
     </view>
     <view :class="$style['whiteSection']"> <!-- 国货大使攻略 -->
       <navigator url="/pages/blog/article?name=partner-intro" hover-class="none">
