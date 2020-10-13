@@ -8,33 +8,26 @@
             :class="$style['avatar']" mode="aspectFill"
             :src="optimizeImage(customer.data.avatar || DEFAULT_AVATAR, 50)"
           ></image>
-          <view>
+          <navigator url="/pages/account/settings" open-type="navigate" hover-class="none">
             <view :class="$style['fullName']">{{ customer.data.full_name || '未命名' }}</view>
             <view :class="$style['levelTitle']">
               <text class="el-icon-star-on"></text>{{ partnerProfile.data.level_title }}
             </view>
-          </view>
-          <image
-            :class="$style['heyshop']" mode="widthFix"
-            src="https://up.img.heidiancdn.com/o_1eiojj5s632c1urj1a6u1jn01l330shop3x.png"
-          >HeyShop</image>
-          <image
-            v-if="customer.isAuthenticated && customer.data.mobile"
-            src="https://up.img.heidiancdn.com/o_1cbbcvna21ardpe01d411d7bm9a0qrcode.svg"
-            :class="$style['cardQrCode']"
-            @tap="openQrModal"/>
-          <navigator :class="$style['settingsCaret']" url="/pages/account/settings" open-type="navigate" hover-class="none">
-            <text class="el-icon-arrow-right"></text>
           </navigator>
         </template>
         <template v-else>
           <image :class="$style['avatar']" mode="aspectFill" :src="DEFAULT_AVATAR"></image>
           <navigator url="/pages/login/index" :class="$style['loginLink']" hover-class="none">去登录</navigator>
-          <image
-            :class="$style['heyshop']" mode="widthFix"
-            src="https://up.img.heidiancdn.com/o_1eiojj5s632c1urj1a6u1jn01l330shop3x.png"
-          >HeyShop</image>
         </template>
+        <image
+          :class="$style['heyshop']" mode="widthFix"
+          src="https://up.img.heidiancdn.com/o_1eiojj5s632c1urj1a6u1jn01l330shop3x.png"
+        >HeyShop</image>
+        <image
+          v-if="customer.isAuthenticated && customer.data.mobile"
+          src="https://up.img.heidiancdn.com/o_1cbbcvna21ardpe01d411d7bm9a0qrcode.svg"
+          :class="$style['cardQrCode']"
+          @tap="openQrModal"/>
       </view>
       <view :class="$style['partner']" v-if="!partnerLevel">
         <text :class="$style['partnerText']">成为国货大使获取收益</text>
@@ -71,25 +64,24 @@
           </navigator>
         </view>
       </view>
-
-      <view :class="[$style['grid'], $style['promotion']]">
-        <navigator
-          v-for="item in promotionNavigators" :key="item.text"
-          :url="item.url" :open-type="item.openType" hover-class="none"
-          :class="[$style['gridItem'], $style['gridNavigator']]"
-        >
-          <image :class="[$style['gridItemIcon'], $style['gridItemIconBigger']]" :src="item.icon" mode="aspectFit"></image>
-          <text :class="$style['gridItemText']">{{ item.text }}</text>
-        </navigator>
-
-        <view :class="[$style['gridItem'], $style['gridNavigator']]" @tap="onTapInvite">
-          <image
-            :class="[$style['gridItemIcon'], $style['gridItemIconBigger']]"
-            src='https://up.img.heidiancdn.com/o_1eh4kgtf1lha1tl75f7phcrp30enifit.png' mode="aspectFit"></image>
-          <text :class="$style['gridItemText']">邀请返现</text>
+      <!-- <view :class="$style['section']">
+        <view :class="$style['grid']">
+          <navigator
+            v-for="item in promotionNavigators" :key="item.text"
+            :url="item.url" :open-type="item.openType" hover-class="none"
+            :class="[$style['gridItem'], $style['gridNavigator']]"
+          >
+            <image :class="[$style['gridItemIcon'], $style['gridItemIconBigger']]" :src="item.icon" mode="aspectFit"></image>
+            <text :class="$style['gridItemText']">{{ item.text }}</text>
+          </navigator>
+          <view :class="[$style['gridItem'], $style['gridNavigator']]" @tap="onTapInvite">
+            <image
+              :class="[$style['gridItemIcon'], $style['gridItemIconBigger']]"
+              src='https://up.img.heidiancdn.com/o_1eh4kgtf1lha1tl75f7phcrp30enifit.png' mode="aspectFit"></image>
+            <text :class="$style['gridItemText']">邀请返现</text>
+          </view>
         </view>
-      </view>
-
+      </view> -->
       <view :class="$style['section']">
         <view :class="$style['sectionHead']">
           <text :class="$style['sectionHeadTitle']">我的订单</text>
@@ -109,7 +101,7 @@
           </navigator>
         </view>
       </view>
-      <!-- <view :class="$style['section']">
+      <view :class="$style['section']">
         <view :class="$style['sectionHead']">
           <text :class="$style['sectionHeadTitle']">我的功能</text>
         </view>
@@ -123,7 +115,7 @@
             <text :class="$style['gridItemText']">{{ item.text }}</text>
           </navigator>
         </view>
-      </view> -->
+      </view>
     </view>
     <view :class="$style['infiniteProducts']">
       <view :class="$style['infiniteProductsHead']">
@@ -225,21 +217,21 @@ export default {
         text: '已取消'
       }],
       otherNavigators: [{
-        url: '',
+        url: '/pages/account/coupon-codes',
         icon: 'https://up.img.heidiancdn.com/o_1eh4ipmqf1f1k1foe13541saq1o9e0hape2x.png',
         text: '优惠券'
-      }, {
-        url: '',
-        icon: '',
-        text: '礼品卡'
       }, {
         url: '/pages/addresses/index',
         icon: 'https://up.img.heidiancdn.com/o_1eh4ipmqg1sv31rko9toam31q1m0hape2x.png',
         text: '收货地址'
       }, {
-        url: '',
+        url: '/pages/account/favorites',
         icon: 'https://up.img.heidiancdn.com/o_1eh4ipmqgbe6ker5eg12j31g560path2x.png',
         text: '我的收藏'
+      }, {
+        url: '/pages/account/settings',
+        icon: '',
+        text: '设置'
       }]
     }
   },
@@ -366,7 +358,7 @@ $color-divider: rgba(#ffffff, 0.1);
   color: $color-text-light;
 }
 .heyshop {
-  width: 100px;
+  width: 120px;
   height: auto;
   margin-left: auto;
   margin-right: 5px;
@@ -374,11 +366,6 @@ $color-divider: rgba(#ffffff, 0.1);
 .cardQrCode {
   width: 45px;
   height: 45px;
-}
-.settingsCaret {
-  padding: 5px 10px;
-  margin-right: -15px;
-  font-size: 20px;
 }
 .loginLink {
   flex: 1;
@@ -494,7 +481,6 @@ $color-divider: rgba(#ffffff, 0.1);
   color: $color-text;
   line-height: 1;
 }
-
 .grid {
   width: 100%;
   display: flex;
@@ -522,13 +508,11 @@ $color-divider: rgba(#ffffff, 0.1);
   line-height: 1;
   color: $color-text-light;
 }
-
 .promotion {
   margin-top: 30px;
 }
-
 .section {
-  margin-top: 30px;
+  margin-top: 45px;
 }
 .sectionHead {
   width: 100%;
@@ -541,8 +525,9 @@ $color-divider: rgba(#ffffff, 0.1);
 }
 .sectionHeadTitle {
   font-size: 15px;
-  font-weight: 600;
+  font-weight: bold;
   color: $color-text;
+  padding-left: 3px;
 }
 .sectionHeadNavigator {
   display: flex;
