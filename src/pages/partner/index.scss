@@ -315,12 +315,14 @@ page {
   padding: 10px 15px;
   color: $color-text-lighter;
 }
+
 /*
  * 底部菜单
  */
 
-.activationBottom {
+.ctaBottom {
   position: fixed;
+  z-index: $z-index-footer;
   bottom: 0;
   left: 0;
   width: 100%;
@@ -330,5 +332,15 @@ page {
   :global(.button) {
     display: block;
     width: 100%;
+    color: #e6caa5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .inviteButtonImage {
+    width: 16px;
+    height: 16px;
+    display: block;
+    margin-right: 5px;
   }
 }

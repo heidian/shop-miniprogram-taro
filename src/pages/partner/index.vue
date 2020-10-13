@@ -49,9 +49,11 @@
           style="color: #e6caa5;" @tap="scrollToProducts"
         >成为国货大使</button>
       </view>
+      <view v-else-if="!partnerLevel" :class="[$style['isPartnerWrapper'], $style['goldBg']]">
+        <text>当前已达国货大使申请条件</text>
+      </view>
       <view v-else :class="[$style['isPartnerWrapper'], $style['goldBg']]">
-        <text v-if="!partnerLevel">当前已达国货大使申请条件</text>
-        <text v-else>HeyShop国货大使</text>
+        <text>HeyShop国货大使</text>
         <text style="margin: 0 0.5em;"> | </text>
         <text>{{ partnerProfile.data.ends_at|date }}到期</text>
       </view>
@@ -127,8 +129,17 @@
       </view>
       <view v-if="hasMore" :class="$style['loadMore']"><text class="el-icon-more"></text></view>
     </view>
-    <view :class="$style['activationBottom']" v-if="growthValue >= 1000 && !partnerLevel">
-      <button class="button button--dark button--small" style="color: #e6caa5;" @tap="goToActivate">免费激活国货大使身份</button>
+    <view :class="$style['ctaBottom']" v-if="growthValue >= 1000 && !partnerLevel">
+      <button class="button button--dark button--small" @tap="goToActivate">免费激活国货大使身份</button>
+    </view>
+    <view :class="$style['ctaBottom']" v-if="partnerLevel">
+      <button class="button button--dark button--small" @tap="goToInvite">
+        <image
+          :class="$style['inviteButtonImage']"
+          src='https://up.img.heidiancdn.com/o_1eh4kgtf1lha1tl75f7phcrp30enifit.png' mode="aspectFit"
+        ></image>
+        <text>邀请返现</text>
+      </button>
     </view>
   </view>
 </template>
@@ -281,14 +292,14 @@ export default {
         duration: 350
       })
     },
-    goToLogin() {
-      Taro.navigateTo({ url: '/pages/login/index' })
-    },
     goToProduct(productName) {
       Taro.navigateTo({ url: `/pages/product/index?name=${productName}` })
     },
     goToActivate() {
       Taro.navigateTo({ url: '/pages/partner/activate' })
+    },
+    goToInvite() {
+      Taro.navigateTo({ url: '/pages/misc/share' })
     }
   }
 }
