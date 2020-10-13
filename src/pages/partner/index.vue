@@ -164,7 +164,8 @@ export default {
     return {
       DEFAULT_AVATAR,
       qrDialogVisible: false,
-      customerQrcodeBase64: "",
+      customerQrcodeBase64: '',
+      achievements: {},
       pros: [{
         image: 'https://up.img.heidiancdn.com/o_1eiama15ugei6gj0p2cs9tf0oup53x.png',
         title: '自购省钱',
@@ -203,14 +204,14 @@ export default {
         tag: '+50成长值',
         url: '/pages/profile/wechat',
         description: '完善微信资料即可获得50成长值',
-        actionText: '去完善',
+        actionText: this.achievements['complete_wechat_id'] ? '已完成' : '去完善',
       }, {
         image: 'https://up.img.heidiancdn.com/o_1eiapsmke88a8s2bhmp91t3n0copy3x.png',
         title: '完善个人信息',
         tag: '+50成长值',
         url: '/pages/profile/edit',
         description: '完善个人信息即可获得50成长值',
-        actionText: '去完善',
+        actionText: this.achievements['complete_personal_profile'] ? '已完成' : '去完善',
       }, {
         image: 'https://up.img.heidiancdn.com/o_1eiapt3h71ec11mhth2420e1er90copy3x.png',
         title: '购买任意商品',
@@ -250,6 +251,7 @@ export default {
     // 下面做了 throttle, 不会频繁获取
     if (this.customer.isAuthenticated) {
       this.throttleFetchCustomer()
+      this.throttleFetchAchievement()
     }
   },
   onReachBottom() {
@@ -266,6 +268,15 @@ export default {
     throttleFetchCustomer: _.throttle(function() {
       // this.$store.dispatch('customer/getCustomer')  // 目前看起来不需要
       this.$store.dispatch('partnerProfile/retrieve')
+    }, 5000, { leading: true, trailing: false }),
+    throttleFetchAchievement: _.throttle(function() {
+      API.get('/substores/partners/growth_value_change/', {
+        params: { kind: 'achievement' }
+      }).then((res) => {
+        const achievements = {}
+        _.forEach(res.data.results, (item) => achievements[item.achievement_name] = true)
+        this.achievements = achievements
+      })
     }, 5000, { leading: true, trailing: false }),
     scrollToProducts() {
       const className = this.$style['productsWrapper']

@@ -26,7 +26,7 @@
       </view>
     </form>
     <view :class="$style['buttonsWrapper']">
-      <button open-type="getUserInfo" @getUserInfo="getUserInfo" :class="['button', $style['wechatBtn']]">
+      <button open-type="getUserInfo" @getUserInfo="getUserInfo" :class="['button', $style['wechatBtn']]" type="primary">
         <image :class="$style['buttonIcon']" src="https://up.img.heidiancdn.com/o_1cgtnj1nadol7n31b8n1lfidgb0wechat.png"></image>使用微信信息
       </button>
       <button class="button button--dark" @tap="submitForm">保存</button>
