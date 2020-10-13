@@ -27,7 +27,7 @@
       </view>
       <template v-if="growthValue < 1000">
         <!-- url="/pages/blog/article?name=partner-intro" -->
-        <navigator :class="$style['growthProgressWrapper']" url="/pages/partner/growth-value-change" hover-class="none">
+        <navigator :class="$style['growthProgressWrapper']" url="/pages/partner/growth-value-changes" hover-class="none">
           <view :class="$style['lightText']" style="margin-left: 0.5em;">当前成长值{{ growthValue }}（达1000即可升级）</view>
           <view :class="$style['lightText']">{{ growthValue }}/1000 <text class="el-icon-arrow-right"></text></view>
           <view :class="$style['progressBar']">
@@ -47,7 +47,7 @@
       </template>
       <template v-else>
         <!-- url="/pages/blog/article?name=partner-intro" -->
-        <navigator :class="$style['growthProgressWrapper']" url="/pages/partner/growth-value-change" hover-class="none">
+        <navigator :class="$style['growthProgressWrapper']" url="/pages/partner/growth-value-changes" hover-class="none">
           <view :class="$style['lightText']" style="margin-left: 0.5em;">当前成长值{{ growthValue }}</view>
           <view :class="[$style['lightText'], 'el-icon-arrow-right']"></view>
         </navigator>

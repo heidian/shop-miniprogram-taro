@@ -25,7 +25,7 @@ import { mapState } from 'vuex'
 import ListTable from '@/mixins/ListTable'
 
 export default {
-  name: 'GrowthValueChange',
+  name: 'GrowthValueChanges',
   mixins: [
     ListTable('growthValueChanges', { urlRoot: '/substores/partners/growth_value_change/' })
   ],

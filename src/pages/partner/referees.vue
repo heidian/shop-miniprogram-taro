@@ -12,7 +12,7 @@ import { mapState } from 'vuex'
 import ListTable from '@/mixins/ListTable'
 
 export default {
-  name: 'Referee',
+  name: 'Referees',
   mixins: [
     ListTable('referees', { urlRoot: '/substores/partners/referee/' })
   ],

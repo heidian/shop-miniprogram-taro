@@ -28,7 +28,7 @@ import Price from '@/components/Price'
 import ListTable from '@/mixins/ListTable'
 
 export default {
-  name: 'Rebate',
+  name: 'Rebates',
   mixins: [
     ListTable('rebates', { urlRoot: '/substores/partners/rebate/' })
   ],
