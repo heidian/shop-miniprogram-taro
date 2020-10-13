@@ -26,11 +26,8 @@
           @tap="openQrModal"/>
       </view>
       <template v-if="growthValue < 1000">
-        <!-- <view :class="$style['growthProgressWrapper']"> -->
-        <navigator
-          :class="$style['growthProgressWrapper']"
-          url="/pages/blog/article?name=partner-intro" hover-class="none"
-        >
+        <!-- url="/pages/blog/article?name=partner-intro" -->
+        <navigator :class="$style['growthProgressWrapper']" url="/pages/partner/growth-value-change" hover-class="none">
           <view :class="$style['lightText']" style="margin-left: 0.5em;">当前成长值{{ growthValue }}（达1000即可升级）</view>
           <view :class="$style['lightText']">{{ growthValue }}/1000 <text class="el-icon-arrow-right"></text></view>
           <view :class="$style['progressBar']">
@@ -49,11 +46,8 @@
         </view>
       </template>
       <template v-else>
-        <!-- <view :class="$style['growthProgressWrapper']"> -->
-        <navigator
-          :class="$style['growthProgressWrapper']"
-          url="/pages/blog/article?name=partner-intro" hover-class="none"
-        >
+        <!-- url="/pages/blog/article?name=partner-intro" -->
+        <navigator :class="$style['growthProgressWrapper']" url="/pages/partner/growth-value-change" hover-class="none">
           <view :class="$style['lightText']" style="margin-left: 0.5em;">当前成长值{{ growthValue }}</view>
           <view :class="[$style['lightText'], 'el-icon-arrow-right']"></view>
         </navigator>
