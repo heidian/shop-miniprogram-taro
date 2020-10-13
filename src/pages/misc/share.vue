@@ -26,14 +26,12 @@
         <button
           :class="['button', 'button--round', 'button--orange', $style['btnItem']]"
           hover-class="hover-class"
-          type="primary"
           open-type="share">
           <text :class="$style['btnText']">分享给好友</text>
         </button>
         <button
           :class="['button', 'button--round', 'button--dark', $style['btnItem']]"
           hover-class="hover-class"
-          type="primary"
           :disabled="!isReady"
           @tap="onSaveImageToAblum">
           <text :class="['el-icon-download', $style['btnIcon']]"></text>
@@ -333,39 +331,22 @@ page {
 .btnsWrapper {
   width: 100%;
   display: flex;
-  flex-direction: row;
   justify-content: center;
   align-items: center;
 }
 
 .btnItem {
-  max-width: 140px;
-  flex: 1;
-  font-size: 15px;
-  padding: 12px 0 !important;
-  text-align: center;
-  background-color: $color-bg-btn-save;
-  color: #ffffff;
+  width: 150px;
   display: flex;
   justify-content: center;
   align-items: center;
   box-shadow: 0 1px 4px 0 $color-box-shadow;
-  &::after {
-    display: none;
-  }
   & + & {
     margin-left: 10px;
   }
 }
-.btnText {
-  color: $color-white;
-  font-size: 15px;
-}
-
 .btnIcon {
   font-size: 19px;
   margin-right: 5px;
 }
-
-
 </style>
