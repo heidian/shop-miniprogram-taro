@@ -2,34 +2,39 @@
   <view :class="$style['page']">
     <!-- 普通的跳转页面, 只需要 url 就行了 -->
     <view :class="$style['darkMode']">
-      <view :class="$style['customer']">
-        <view :class="$style['main']">
+      <view :class="$style['main']">
+        <template v-if="customer.isAuthenticated">
           <image
             :class="$style['avatar']" mode="aspectFill"
             :src="optimizeImage(customer.data.avatar || DEFAULT_AVATAR, 50)"
           ></image>
-          <view :class="$style['caption']" v-if="customer.isAuthenticated">
-            <view :class="$style['captionName']">
-              <text :class="$style['fullName']">{{ customer.data.full_name || '未命名' }}</text>
-              <text :class="$style['levelTitle']">{{ partnerProfile.data.level_title }}</text>
-              <navigator
-                v-if="!hasWechatId"
-                :class="$style['navigatorText']" hover-class="none"
-                url="/pages/profile/wechat" open-type="navigate"
-              >填写微信号</navigator>
-            </view>
-            <view :class="$style['referral']">
-              <text :class="$style['referralCode']">邀请ID：{{ customer.data.referral_code }}</text>
-              <button :class="['button', $style['btnCopy']]" @tap="onCopyToClipboard(customer.data.referral_code)">复制</button>
+          <view>
+            <view :class="$style['fullName']">{{ customer.data.full_name || '未命名' }}</view>
+            <view :class="$style['levelTitle']">
+              <text class="el-icon-star-on"></text> {{ partnerProfile.data.level_title }}
             </view>
           </view>
-          <view v-else :class="$style['caption']">
-            <navigator url="/pages/login/index" :class="$style['login']">去登录</navigator>
-          </view>
-          <navigator url="/pages/account/settings" open-type="navigate" hover-class="none">
-            <text class="el-icon-arrow-right" style="font-size: 1.5em;"></text>
+          <image
+            :class="$style['heyshop']" mode="widthFix"
+            src="https://up.img.heidiancdn.com/o_1eiojj5s632c1urj1a6u1jn01l330shop3x.png"
+          >HeyShop</image>
+          <image
+            v-if="customer.isAuthenticated && customer.data.mobile"
+            src="https://up.img.heidiancdn.com/o_1cbbcvna21ardpe01d411d7bm9a0qrcode.svg"
+            :class="$style['cardQrCode']"
+            @tap="openQrModal"/>
+          <navigator :class="$style['settingsCaret']" url="/pages/account/settings" open-type="navigate" hover-class="none">
+            <text class="el-icon-arrow-right"></text>
           </navigator>
-        </view>
+        </template>
+        <template v-else>
+          <image :class="$style['avatar']" mode="aspectFill" :src="DEFAULT_AVATAR"></image>
+          <navigator url="/pages/login/index" :class="$style['loginLink']" hover-class="none">去登录</navigator>
+          <image
+            :class="$style['heyshop']" mode="widthFix"
+            src="https://up.img.heidiancdn.com/o_1eiojj5s632c1urj1a6u1jn01l330shop3x.png"
+          >HeyShop</image>
+        </template>
       </view>
       <view :class="$style['partner']" v-if="!partnerLevel">
         <text :class="$style['partnerText']">成为国货大使获取收益</text>
@@ -47,7 +52,7 @@
           </navigator>
           <view :class="$style['balanceBtns']">
             <!-- <view :class="$style['withdrawHistory']">提现记录 <text class="el-icon-arrow-right"></text></view> -->
-            <navigator v-if="!hasBindAlipay" :class="$style['bindAlipay']" url="/pages/profile/alipay" open-type="navigate" hover-class="none">绑定支付宝</navigator>
+            <navigator :class="$style['bindAlipay']" url="/pages/profile/alipay" open-type="navigate" hover-class="none">绑定支付宝</navigator>
           </view>
         </view>
         <view :class="$style['balanceDivider']"></view>
@@ -104,7 +109,6 @@
           </navigator>
         </view>
       </view>
-
       <!-- <view :class="$style['section']">
         <view :class="$style['sectionHead']">
           <text :class="$style['sectionHeadTitle']">我的功能</text>
@@ -121,7 +125,6 @@
         </view>
       </view> -->
     </view>
-
     <view :class="[$style['light'], $style['infiniteProducts']]">
       <view :class="$style['infiniteProductsHead']">
         <image :class="$style['infiniteProductsLogo']" mode="aspectFill" :src="'https://up.img.heidiancdn.com/o_1eh71dvj035vlmd1251d2b14on0up412x.png'|imageUrl(400)"></image>
@@ -134,6 +137,13 @@
         <infiniteProducts></infiniteProducts>
       </view>
     </view>
+    <hs-dialog :visible.sync="qrDialogVisible">
+      <view :class="$style['dialogHeader']" slot="header">会员扫码</view>
+      <view :class="$style['dialogBody']">
+        <image :class="$style['dialogQr']" :src="customerQrcodeBase64" mode="aspectFill"></image>
+        <view :class="$style['dialogTips']">结算时请向店员出示此码</view>
+      </view>
+    </hs-dialog>
   </view>
 </template>
 
@@ -143,19 +153,24 @@ import Taro, { getCurrentInstance } from '@tarojs/taro'
 import { mapState } from 'vuex'
 import { API } from '@/utils/api'
 import { optimizeImage, DEFAULT_AVATAR } from '@/utils/image'
+import { drawImg } from '@/utils/weapp-qrcode'
 import { handleErr } from '@/utils/errHelper'
 import Price from '@/components/Price'
 import InfiniteProducts from '@/components/InfiniteProducts'
+import HsDialog from '@/components/HsDialog'
 
 export default {
   name: 'Account',
   components: {
     Price,
-    InfiniteProducts
+    InfiniteProducts,
+    HsDialog,
   },
   data() {
     return {
       DEFAULT_AVATAR,
+      qrDialogVisible: false,
+      customerQrcodeBase64: '',
       refereesCount: 0,
       rebateSummary: {
         'summary': {
@@ -243,15 +258,6 @@ export default {
     ...mapState(['customer', 'partnerProfile']),
     partnerLevel() {
       return +this.partnerProfile.data.level || 0
-    },
-    hasWechatId () {
-      return this.partnerProfile.data.wechat_id
-    },
-    hasBindAlipay () {
-      return this.partnerProfile.data.alipay
-    },
-    balance() {
-      return '0.00'
     }
   },
   mounted() {},
@@ -306,7 +312,18 @@ export default {
       }).then((res) => {
         this.refereesCount = res.data.count
       }).catch((err) => {})
-    }, 30000, { leading: true, trailing: false })
+    }, 30000, { leading: true, trailing: false }),
+    openQrModal() {
+      const customerQrcodeBase64 = drawImg(this.customer.data.mobile, {
+        typeNumber: 4,
+        errorCorrectLevel: 'M',
+        size: 200
+      })
+      if (customerQrcodeBase64) {
+        this.customerQrcodeBase64 = customerQrcodeBase64
+      }
+      this.qrDialogVisible = true
+    }
   }
 }
 </script>
@@ -341,60 +358,39 @@ $color-divider: rgba(#ffffff, 0.1);
   justify-content: flex-start;
   align-items: center;
 }
-.login {
-  font-size: 16px;
-}
 .avatar {
   width: 50px;
   height: 50px;
   border-radius: 25px;
+  margin-right: 10px;
   overflow: hidden;
 }
-.caption {
-  flex: 1;
-  padding: 0 0 0 15px;
-  font-size: 12px;
-}
-.captionName {
-  width: 100%;
-  display: flex;
-  justify-content: flex-start;
-  align-items: baseline;
-}
-.referral {
-  margin-top: 5px;
-  width: 100%;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-}
 .fullName {
-  font-size: 15px;
+  margin-bottom: 2px;
+  margin-left: 2px;
 }
 .levelTitle {
-  margin-left: 10px;
+  font-size: 13px;
   color: $color-text-light;
 }
-.navigatorText {
-  margin-left: 10px;
-  color: $color-golden;
+.heyshop {
+  width: 100px;
+  height: auto;
+  margin-left: auto;
+  margin-right: 5px;
 }
-.referralCode {
-  line-height: 1;
-  padding: 4px 6px;
-  background-color: $color-bg-dark;
-  border-radius: 2px;
+.cardQrCode {
+  width: 48px;
+  height: 49px;
 }
-.btnCopy {
-  background-color: transparent;
-  font-size: 12px !important;
-  padding: 3px 6px;
-  margin: 0;
-  margin-left: 10px;
-  line-height: 1;
-  color: $color-golden;
-  border: 1px solid $color-golden;
-  border-radius: 2px;
+.settingsCaret {
+  padding: 10px;
+  margin-right: -15px;
+  font-size: 20px;
+}
+.loginLink {
+  flex: 1;
+  padding: 10px 0;
 }
 
 /* partner */
@@ -570,7 +566,6 @@ $color-divider: rgba(#ffffff, 0.1);
   right: 0;
   border-right: 1px solid $color-divider;
 }
-
 .light {
   padding: 20px 0;
   background-color: $color-bg-lighter;
@@ -601,4 +596,55 @@ $color-divider: rgba(#ffffff, 0.1);
   width: 22px;
   height: 6px;
 }
+
+// qr dialog
+.dialogHeader {
+  width: 100%;
+  padding: 30px 20px 10px;
+  font-size: 18px;
+  font-weight: 600;
+  text-align: center;
+}
+.dialogBody {
+  width: 100%;
+  padding: 10px 20px 30px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.dialogQr {
+  width: 200px;
+  height: 200px;
+}
+.dialogTips {
+  position: relative;
+  overflow: visible;
+  margin-top: 20px;
+  color: #aaaaaa;
+  &::before {
+    display: block;
+    content: "";
+    position: absolute;
+    left: -30px;
+    top: 50%;
+    width: 25px;
+    height: 0;
+    margin-top: -1px;
+    border-top: 1px solid #aaaaaa;
+  }
+  &::after {
+    display: block;
+    content: "";
+    position: absolute;
+    right: -30px;
+    top: 50%;
+    width: 25px;
+    height: 0;
+    margin-top: -1px;
+    // background-color: aqua;
+    border-top: 1px solid #aaaaaa;
+  }
+}
+
 </style>

@@ -3,7 +3,8 @@
     <view :class="$style['blackHeader']"> <!-- 顶部个人信息 -->
       <view :class="$style['profileWrapper']">
         <template v-if="customer.isAuthenticated">
-          <image :class="$style['avatar']" :src="optimizeImage(customer.data.avatar || DEFAULT_AVATAR, 50)"></image>
+          <image :class="$style['avatar']" mode="aspectFill"
+            :src="optimizeImage(customer.data.avatar || DEFAULT_AVATAR, 50)"></image>
           <view>
             <view :class="$style['fullName']">{{ customer.data.full_name || '未命名' }}</view>
             <view :class="$style['lightText']">
@@ -12,7 +13,7 @@
           </view>
         </template>
         <template v-else>
-          <image :class="$style['avatar']" :src="DEFAULT_AVATAR"></image>
+          <image :class="$style['avatar']" mode="aspectFill" :src="DEFAULT_AVATAR"></image>
           <navigator url="/pages/login/index">去登录</navigator>
         </template>
         <image
