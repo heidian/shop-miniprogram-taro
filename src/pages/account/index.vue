@@ -125,7 +125,7 @@
         </view>
       </view> -->
     </view>
-    <view :class="[$style['light'], $style['infiniteProducts']]">
+    <view :class="$style['infiniteProducts']">
       <view :class="$style['infiniteProductsHead']">
         <image :class="$style['infiniteProductsLogo']" mode="aspectFill" :src="'https://up.img.heidiancdn.com/o_1eh71dvj035vlmd1251d2b14on0up412x.png'|imageUrl(400)"></image>
         <navigator :class="$style['infiniteProductsNavigator']" url="/pages/search/index" hover-class="none">
@@ -566,7 +566,7 @@ $color-divider: rgba(#ffffff, 0.1);
   right: 0;
   border-right: 1px solid $color-divider;
 }
-.light {
+.infiniteProducts {
   padding: 20px 0;
   background-color: $color-bg-lighter;
 }
