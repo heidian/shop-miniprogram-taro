@@ -34,14 +34,14 @@
         <image :class="$style['title']" mode="aspectFill" :src="titleLogo|imageUrl(180)"></image>
         <image :class="$style['referralAvatar']" mode="aspectFill" :src="(referrerData.avatar || DEFAULT_AVATAR)|imageUrl(180)"></image>
         <view :class="$style['referralFullname']">
-          <text style="font-weight: bold;">{{ referrerData.full_name || '你的朋友' }}</text><text>邀请你成为HeyShop合伙人</text>
+          <text style="font-weight: bold;">{{ referrerData.full_name || '你的朋友' }}</text><text>邀请你成为HeyShop国货大使</text>
         </view>
       </view>
       <view :class="$style['card']">
         <image :class="$style['guohuoLogo']" mode="widthFix" :src="guohuoLogo|imageUrl(400)"></image>
         <view :class="$style['guohuoTitle']">
           <view :class="$style['decoLeft']"></view>
-          <text :class="$style['text']">合伙人权益</text>
+          <text :class="$style['text']">国货大使权益</text>
           <view :class="$style['decoRight']"></view>
         </view>
         <view :class="$style['grid']">

@@ -1,3 +1,3 @@
 export default {
-  navigationBarTitleText: '激活合伙人身份'
+  navigationBarTitleText: '激活国货大使身份'
 }

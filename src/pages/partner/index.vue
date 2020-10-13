@@ -45,7 +45,7 @@
           <button
             class="button button--dark button--round button--small"
             style="color: #e6caa5;" @tap="scrollToProducts"
-          >成为合伙人</button>
+          >成为国货大使</button>
         </view>
       </template>
       <template v-else>
@@ -58,7 +58,7 @@
           <view :class="[$style['lightText'], 'el-icon-arrow-right']"></view>
         </navigator>
         <view :class="[$style['isPartnerWrapper'], $style['goldBg']]">
-          <text v-if="!partnerLevel">当前已达合伙人申请条件</text><text v-else>HeyShop合伙人</text>
+          <text v-if="!partnerLevel">当前已达国货大使申请条件</text><text v-else>HeyShop国货大使</text>
           <text style="margin: 0 0.5em;"> | </text>
           <text>{{ partnerProfile.data.ends_at|date }}到期</text>
         </view>
@@ -72,7 +72,7 @@
         ></image>
       </navigator>
       <view :class="$style['sectionTitle']">
-        <text :class="$style['sectionTitleText']">合伙人权益</text>
+        <text :class="$style['sectionTitleText']">国货大使权益</text>
       </view>
       <view :class="$style['pros']">
         <view
@@ -132,7 +132,7 @@
       <view v-if="hasMore" :class="$style['loadMore']"><text class="el-icon-more"></text></view>
     </view>
     <view :class="$style['activationBottom']" v-if="growthValue >= 1000 && !partnerLevel">
-      <button class="button button--dark button--small" style="color: #e6caa5;" @tap="goToActivate">免费激活合伙人身份</button>
+      <button class="button button--dark button--small" style="color: #e6caa5;" @tap="goToActivate">免费激活国货大使身份</button>
     </view>
     <hs-dialog :visible.sync="qrDialogVisible">
       <view :class="$style['dialogHeader']" slot="header">会员扫码</view>

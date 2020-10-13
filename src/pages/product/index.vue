@@ -266,7 +266,7 @@ export default {
     showRebateTip() {
       Taro.showModal({
         title: '立赚说明',
-        content: '成为 HeyShop 会员/国货大使后，无论是自购或是分享商品，均可获得返现哦！',
+        content: '成为 HeyShop 国货大使后，无论是自购或是分享商品，均可获得返现哦！',
         showCancel: false
       })
     },

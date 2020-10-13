@@ -1,4 +1,4 @@
 export default {
-  navigationBarTitleText: '成为合伙人',
+  navigationBarTitleText: '成为国货大使',
   enableShareAppMessage: true
 }

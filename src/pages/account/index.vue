@@ -46,7 +46,7 @@
 
       <template>
         <view :class="$style['partner']" v-if="!partnerLevel">
-          <text :class="$style['partnerText']">成为合伙人获取收益</text>
+          <text :class="$style['partnerText']">成为国货大使获取收益</text>
           <navigator
             :class="$style['partnerBtnText']" hover-class="none"
             url="/pages/partner/index" open-type="switchTab"

@@ -65,20 +65,6 @@
       "list": [
         {
           "id": -1,
-          "name": "pages/misc/share",
-          "pathName": "pages/misc/share",
-          "query": "product=76878",
-          "scene": null
-        },
-        {
-          "id": -1,
-          "name": "pages/misc/landing",
-          "pathName": "pages/misc/landing",
-          "query": "product=76878&code=SJe223",
-          "scene": null
-        },
-        {
-          "id": -1,
           "name": "pages/static/index",
           "pathName": "pages/static/index",
           "query": "name=gifts",
@@ -100,15 +86,8 @@
         },
         {
           "id": -1,
-          "name": "pages/cart/index",
-          "pathName": "pages/cart/index",
-          "query": "",
-          "scene": null
-        },
-        {
-          "id": -1,
-          "name": "pages/search/index",
-          "pathName": "pages/search/index",
+          "name": "pages/account/index",
+          "pathName": "pages/account/index",
           "query": "",
           "scene": null
         }

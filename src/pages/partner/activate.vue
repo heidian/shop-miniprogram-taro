@@ -134,7 +134,7 @@ export default {
         referral_code: this.referralCode
       }).then(() => {
         Taro.hideLoading()
-        Taro.showToast({ title: '合伙人身份激活成功', icon: 'none', duration: 1000 })
+        Taro.showToast({ title: '国货大使身份激活成功', icon: 'none', duration: 1000 })
         this.$store.dispatch('partnerProfile/retrieve')
         setTimeout(() => Taro.navigateBack(), 1000)
       }).catch(handleErr)

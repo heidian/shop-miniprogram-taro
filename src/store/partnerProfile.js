@@ -16,8 +16,8 @@ const callForActivation = _.once(function() {
     Taro.removeStorageSync('muteCallForActivation')
   }
   Taro.showModal({
-    title: '激活合伙人身份',
-    content: '您已达到合伙人申请条件, 请前往会员页面免费激活合伙人身份',
+    title: '激活国货大使身份',
+    content: '您已达到国货大使申请条件, 请前往会员页面免费激活国货大使身份',
     showCancel: true,
     cancelText: '不再提醒',
     cancelColor: '#aaaaaa',
@@ -60,7 +60,7 @@ const actions = {
       }
       return data
     }).catch((err) => {
-      console.log('获取合伙人信息失败', _.get(err, 'response.data'))
+      console.log('获取国货大使信息失败', _.get(err, 'response.data'))
       throw err
     })
   },
@@ -69,7 +69,7 @@ const actions = {
       commit('setData', { data: data })
       return data
     }).catch((err) => {
-      console.log('更新合伙人信息失败', _.get(err, 'response.data'))
+      console.log('更新国货大使信息失败', _.get(err, 'response.data'))
       throw err
     })
   }
