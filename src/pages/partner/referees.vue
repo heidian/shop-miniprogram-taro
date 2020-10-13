@@ -39,6 +39,13 @@ export default {
       //
     }
   },
+  created() {
+    Taro.setBackgroundColor({
+      backgroundColorTop: '#ffffff',
+      backgroundColor: '#f6f6f6',
+      backgroundColorBottom: '#f6f6f6',
+    })
+  },
   computed: {
     ...mapState(['customer']),
     hasMore() {
@@ -76,10 +83,14 @@ export default {
 <style lang="scss" module>
 @import "@/styles/mixins";
 @import "@/styles/variables";
+page {
+  background-color: $color-bg-gray;
+}
 .page {
   //
 }
 .item {
+  background-color: #fff;
   padding: 15px;
   border-bottom: 1px solid $color-divider;
   display: flex;
