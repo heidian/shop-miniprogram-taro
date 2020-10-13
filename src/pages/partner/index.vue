@@ -6,20 +6,34 @@
           <image :class="$style['avatar']" mode="aspectFill"
             :src="optimizeImage(customer.data.avatar || DEFAULT_AVATAR, 50)"></image>
           <view>
-            <view :class="$style['fullName']">{{ customer.data.full_name || '未命名' }}</view>
-            <view :class="$style['lightText']">
-              <text class="el-icon-star-on"></text> {{ partnerProfile.data.level_title }}
+            <view :class="$style['fullNameAndLevel']">
+              <view :class="$style['fullName']">{{ customer.data.full_name || '未命名' }}</view>
+              <view :class="$style['lightText']">
+                <text class="el-icon-star-on"></text>{{ partnerProfile.data.level_title }}
+              </view>
+              <navigator
+                :class="$style['wechatIdLink']" hover-class="none"
+                url="/pages/profile/wechat" open-type="navigate"
+              >填写微信号</navigator>
+            </view>
+            <view :class="$style['referralCodeWrapper']">
+              <text :class="$style['referralCode']">邀请码: {{ customer.data.referral_code }}</text>
+              <button :class="['button', 'button--mini', $style['btnCopy']]" @tap="copyReferralCode">复制</button>
             </view>
           </view>
         </template>
         <template v-else>
           <image :class="$style['avatar']" mode="aspectFill" :src="DEFAULT_AVATAR"></image>
-          <navigator url="/pages/login/index">去登录</navigator>
+          <navigator url="/pages/login/index" :class="$style['loginLink']" hover-class="none">去登录</navigator>
         </template>
+        <!-- <image
+          :class="$style['heyshop']" mode="widthFix"
+          src="https://up.img.heidiancdn.com/o_1eiojj5s632c1urj1a6u1jn01l330shop3x.png"
+        >HeyShop</image> -->
       </view>
       <!-- url="/pages/blog/article?name=partner-intro" -->
       <navigator :class="$style['growthProgressWrapper']" url="/pages/partner/growth-value-changes" hover-class="none">
-        <view :class="$style['lightText']" style="margin-left: 0.5em;">当前成长值{{ growthValue }}（达1000即可升级）</view>
+        <view :class="$style['lightText']">当前成长值{{ growthValue }}（达1000即可升级）</view>
         <view :class="$style['lightText']">{{ growthValue }}/1000 <text class="el-icon-arrow-right"></text></view>
         <view :class="$style['progressBar']" v-if="growthValue < 1000">
           <view :class="$style['progressBarInner']" :style="{'width':`${growthValue/10}%`}"></view>
@@ -235,6 +249,14 @@ export default {
   methods: {
     optimizeImage,
     backgroundImageUrl,
+    copyReferralCode() {
+      const content = this.customer.data.referral_code
+      Taro.setClipboardData({ data: content }).then(() => {
+        Taro.showToast({ title: '复制成功' })
+      }).catch(err => {
+        Taro.showToast({ title: '复制失败' })
+      })
+    },
     throttleFetchCustomer: _.throttle(function() {
       // this.$store.dispatch('customer/getCustomer')  // 目前看起来不需要
       this.$store.dispatch('partnerProfile/retrieve')

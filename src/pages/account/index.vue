@@ -11,7 +11,7 @@
           <view>
             <view :class="$style['fullName']">{{ customer.data.full_name || '未命名' }}</view>
             <view :class="$style['levelTitle']">
-              <text class="el-icon-star-on"></text> {{ partnerProfile.data.level_title }}
+              <text class="el-icon-star-on"></text>{{ partnerProfile.data.level_title }}
             </view>
           </view>
           <image
@@ -274,14 +274,6 @@ export default {
   },
   methods: {
     optimizeImage,
-    onCopyToClipboard(content) {
-      if (!content) return
-      Taro.setClipboardData({ data: content }).then(() => {
-        Taro.showToast({ title: '复制成功' })
-      }).catch(err => {
-        handleErr(err)
-      })
-    },
     onTapInvite () {
       if (this.partnerLevel > 0) {
         Taro.navigateTo({ url: '/pages/misc/share' })
@@ -359,18 +351,18 @@ $color-divider: rgba(#ffffff, 0.1);
   align-items: center;
 }
 .avatar {
-  width: 50px;
-  height: 50px;
-  border-radius: 25px;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
   margin-right: 10px;
   overflow: hidden;
 }
 .fullName {
+  font-size: 15px;
   margin-bottom: 2px;
-  margin-left: 2px;
 }
 .levelTitle {
-  font-size: 13px;
+  font-size: 12px;
   color: $color-text-light;
 }
 .heyshop {
@@ -380,11 +372,11 @@ $color-divider: rgba(#ffffff, 0.1);
   margin-right: 5px;
 }
 .cardQrCode {
-  width: 48px;
-  height: 49px;
+  width: 45px;
+  height: 45px;
 }
 .settingsCaret {
-  padding: 10px;
+  padding: 5px 10px;
   margin-right: -15px;
   font-size: 20px;
 }
@@ -421,7 +413,7 @@ $color-divider: rgba(#ffffff, 0.1);
 
 /* balance */
 .balance {
-  margin-top: 15px;
+  margin-top: 30px;
   width: 100%;
   padding: 20px;
   border-radius: 10px;
