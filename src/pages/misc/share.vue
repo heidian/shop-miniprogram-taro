@@ -45,7 +45,6 @@
       <button
         :class="['button', 'button--round', 'button--dark', $style['btnSave']]"
         hover-class="hover-class"
-        type="primary"
         @tap="onSaveImageToAblum">
         <text :class="['el-icon-download', $style['btnIcon']]"></text>
         <text :class="$style['btnText']">保存图片</text>

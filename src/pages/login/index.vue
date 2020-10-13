@@ -15,7 +15,7 @@
         >
         <button
           v-if="!referralCode"
-          type="primary" class="button button--dark" style="margin-left: 10px;"
+          class="button button--dark" style="margin-left: 10px;"
           :disabled="!!pending || !tmpCode || !!referrerData" @tap="getReferrerInfo"
         >确定</button>
       </view>

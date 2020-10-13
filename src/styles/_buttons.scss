@@ -1,5 +1,6 @@
 // button 和 form 的组件的常规高度都固定在 44px
 // button 不带 class 的时候不改变任何颜色, 也就是保留小程序默认的颜色, 比如 <button type="primary"> 还是可以很好的显示的
+// 但如果要其他颜色比如加了 button--orange, 就不能写 type="primary", 不然样式的优先级很难预测, 这个可能是小程序的 bug
 .button {
   display: inline-block;
   font-size: 15px;

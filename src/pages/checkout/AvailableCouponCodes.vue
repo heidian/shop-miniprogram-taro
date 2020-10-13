@@ -6,7 +6,7 @@
     <scroll-view :scrollY="true" :scrollWithAnimation="true" :class="$style['list']">
       <view :class="$style['redeem']">
         <input type="text" :class="$style['input']" placeholder="输入优惠码兑换优惠券" v-model="codePrefix"/>
-        <button type="primary" :class="['button', 'button--small', 'button--dark', $style['btnRedeen']]" @tap="redeemCoupon">兑换</button>
+        <button :class="['button', 'button--small', 'button--dark', $style['btnRedeen']]" @tap="redeemCoupon">兑换</button>
       </view>
       <view v-if="pending" :class="$style['loadingText']">正在加载</view>
       <template v-else>
