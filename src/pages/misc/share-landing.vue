@@ -23,7 +23,7 @@
       <image :class="$style['tags']" mode="aspectFit" :src="tagsUrl|imageUrl(400)"></image>
       <view :class="$style['btnsWrapper']">
         <navigator
-          :url="`/pages/product/index?id=${productId}`"
+          :url="`/pages/product/index?id=${productId}`" open-type="redirectTo"
           :class="{[$style['btnItem']]: true, [$style['btnOrange']]: true}">购买商品</navigator>
         <navigator
           :url="`/pages/home`" open-type="switchTab" :class="[$style['btnItem'], $style['btnBlack']]">随便逛逛</navigator>
@@ -58,8 +58,7 @@
         <text :class="$style['btnHint']">升级为国货大使，更多线下活动等你参与</text>
         <view :class="$style['btnsWrapper']">
           <navigator
-            url="/pages/partner/index"
-            open-type="switchTab"
+            url="/pages/partner/index" open-type="switchTab"
             :class="[$style['btnItem'], $style['btnGolden']]">立即升级</navigator>
           <navigator
             :url="`/pages/home`" open-type="switchTab" :class="[$style['btnItem'], $style['btnBlack']]">随便逛逛</navigator>
@@ -120,9 +119,6 @@ export default {
       backgroundColorTop: '#ffffff',
       backgroundColor: '#f6f6f6',
       backgroundColorBottom: '#f6f6f6',
-    })
-    Taro.setNavigationBarTitle({
-      title: this.type === 'product' ? '分享' : 'HEYSHOP'
     })
   },
   computed: {},

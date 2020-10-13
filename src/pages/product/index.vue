@@ -73,14 +73,15 @@
         @tap="() => showVariantsDrawer('buy_now')"
       >立即购买</button>
     </view>
-    <view v-if="partnerLevel > 0"
+    <view
+      v-if="customer.isAuthenticated && partnerProfile.data.level > 0"
       :class="{[$style['productShare']]: true, [$style['isLikeIphoneX']]: isLikeIphoneX}"
-      @tap="onClickShare">
+      @tap="shareDrawerVisible=true"
+    >
       <!-- <text class="el-icon-share"></text> -->
-      <image :class="$style['productShareIcon']" src="https://up.img.heidiancdn.com/o_1eivho00dova1ua417h2f8hl5q0hape2x.png" mode="aspectFit" lazy-load="false"></image>
+      <image :class="$style['productShareIcon']" src="https://up.img.heidiancdn.com/o_1eivho00dova1ua417h2f8hl5q0hape2x.png" mode="aspectFit"></image>
       <text :class="$style['productShareText']">立赚</text>
     </view>
-
     <select-variant
       :visible="variantsDrawer.visible"
       :openType="variantsDrawer.openType"
@@ -89,6 +90,7 @@
       @selectVariant="onSelectVariant"
       @close="onCloseVariantsDrawer"
     ></select-variant>
+    <share-drawer v-if="productId" :visible.sync="shareDrawerVisible" :productId="productId"></share-drawer>
   </view>
 </template>
 
@@ -103,6 +105,7 @@ import Price from '@/components/Price'
 import SelectVariant from '@/components/SelectVariant/SelectVariant'
 import RelatedProducts from './RelatedProducts'
 import ProductReviews from './ProductReviews'
+import ShareDrawer from './ShareDrawer'
 
 export default {
   name: 'Product',
@@ -111,6 +114,7 @@ export default {
     RelatedProducts,
     ProductReviews,
     SelectVariant,
+    ShareDrawer,
     Price
   },
   data() {
@@ -119,7 +123,7 @@ export default {
     /* 服务器端取下来的数据放入 this.[propertyName] 以后, 其他处理过的数据不要放进 this.[propertyName], 直接放在 this 下面,
     data() 方法返回的属性和本地变量名称用驼峰, 其他 object 的 key 不做限制 */
     return {
-      productId: id,
+      productId: +id || null,
       productName: name,
       product: {
         variants: []
@@ -128,6 +132,7 @@ export default {
         visible: false,
         openType: ''
       },
+      shareDrawerVisible: false,
       currentVariant: {},
       favoriteId: null,
       pending: true
@@ -147,10 +152,7 @@ export default {
   computed: {
     ...mapState(['cart', 'customer', 'partnerProfile']),
     ...mapGetters('system', ['isLikeIphoneX']),
-    partnerLevel () {
-      return +this.partnerProfile.data.level || 0
-    },
-    hideSelectedVariant () {
+    hideSelectedVariant() {
       return _.isEmpty(_.get(this.product, 'options'))
     },
     body_html() {
@@ -164,6 +166,23 @@ export default {
     },
     growthValue() {
       return _.get(this.product, 'metafields.substores.growth_value')
+    }
+  },
+  onShareAppMessage() {
+    // this.customer.isAuthenticated
+    if (!this.product.id) {
+      // 还没有 fetch 完
+      return {}
+    }
+    let shareScene = `r=pdt&id=${this.productId}`
+    if (this.customer.isAuthenticated && this.partnerProfile.data.level > 0) {
+      const referralCode = this.customer.data.referral_code
+      shareScene += `&s=share&c=${referralCode}`
+    }
+    return {
+      title: this.product.title,
+      path: `/pages/home?scene=${encodeURIComponent(shareScene)}`,
+      imageUrl: this.optimizeImage(this.product.image, 400),
     }
   },
   methods: {
@@ -223,12 +242,6 @@ export default {
     onCloseVariantsDrawer() {
       // 这里一定要监听 close 然后把 visible 变成 false, 不然再点击打开, 组件检测不到变化
       this.variantsDrawer = { visible: false, openType: '' }
-    },
-    // onNavigateToCart() {
-    //   Taro.switchTab({ url: '/pages/cart/index' })
-    // },
-    onClickShare() {
-      Taro.navigateTo({ url: `/pages/misc/share?product=${this.product.id}` })
     },
     addToFavorite: _.throttle(async function() {
       if (!this.customer.isAuthenticated) {
@@ -529,10 +542,10 @@ page {
   &.isLikeIphoneX {
     bottom: 70px;
   }
-  &Icon {
-    width: 14px;
-    height: 14px;
-  }
+}
+.productShareIcon {
+  width: 14px;
+  height: 14px;
 }
 .productShareText {
   font-size: 9px;

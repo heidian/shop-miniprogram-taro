@@ -1,3 +1,3 @@
 export default {
-  navigationBarTitleText: '分享',
+  navigationBarTitleText: 'HEYSHOP 商城',
 }

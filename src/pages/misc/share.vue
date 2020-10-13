@@ -132,7 +132,7 @@ export default {
     optimizeImage,
     backgroundImageUrl,
     getShareScene () {
-      const referralCode = this.customer.data.referral_code
+      // const referralCode = this.customer.data.referral_code
       let scene = `s=share&c=${this.referralCode}`
       if (this.productId) {
         scene += `&r=pdt&id=${this.productId}`
