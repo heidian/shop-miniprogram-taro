@@ -30,111 +30,96 @@
             <text class="el-icon-arrow-right" style="font-size: 1.5em;"></text>
           </navigator>
         </view>
-        <view :class="$style['level']">
-          <!-- <navigator :class="$style['levelHint']" url="/pages/blog/article?name=partner-intro" hover-class="none"> -->
-          <navigator :class="$style['levelHint']" url="/pages/partner/growth-value-changes" hover-class="none">
-            <view :class="$style['levelHintText']">当前成长值{{ growthValue }}（达{{ 1000 }}即可升级）</view>
-            <view :class="$style['levelHintNumber']">
-              <text>{{ growthValue }}/{{ 1000 }}</text><text class="el-icon-arrow-right"></text>
-            </view>
+      </view>
+      <view :class="$style['partner']" v-if="!partnerLevel">
+        <text :class="$style['partnerText']">成为国货大使获取收益</text>
+        <navigator
+          :class="$style['partnerBtnText']" hover-class="none"
+          url="/pages/partner/index" open-type="switchTab"
+        >立即升级</navigator>
+      </view>
+      <view :class="$style['balance']">
+        <view :class="$style['balanceMain']">
+          <navigator :class="$style['balanceValues']" url="/pages/partner/rebates" hover-class="none">
+            <text :class="$style['balanceValuesLabel']">账户余额（元）</text>
+            <price :class="$style['balanceValuesNumber']" :price="rebateSummary.balance"></price>
+            <text :class="$style['balanceValuesHint']">自购返利{{ (+rebateSummary.summary.order_paid)|currency }} + 邀请收益{{ ((+rebateSummary.summary.referee_order_paid)+(+rebateSummary.summary.referral))|currency }}</text>
           </navigator>
-          <view :class="$style['levelProgress']">
-            <view :class="$style['levelProgressInner']" :style="{'width':`${growthValue/10}%`}"></view>
+          <view :class="$style['balanceBtns']">
+            <!-- <view :class="$style['withdrawHistory']">提现记录 <text class="el-icon-arrow-right"></text></view> -->
+            <navigator v-if="!hasBindAlipay" :class="$style['bindAlipay']" url="/pages/profile/alipay" open-type="navigate" hover-class="none">绑定支付宝</navigator>
           </view>
+        </view>
+        <view :class="$style['balanceDivider']"></view>
+        <view :class="$style['balanceSummary']">
+          <navigator :class="$style['balanceSummaryItem']" url="/pages/partner/rebates" hover-class="none">
+            <view :class="$style['balanceSummaryLabel']">今日预估奖励</view>
+            <price :class="$style['balanceSummaryValue']" :price="rebateSummary.total_today"></price>
+          </navigator>
+          <navigator :class="$style['balanceSummaryItem']" url="/pages/partner/rebates" hover-class="none">
+            <view :class="$style['balanceSummaryLabel']">本月预估奖励</view>
+            <price :class="$style['balanceSummaryValue']" :price="rebateSummary.total_this_month"></price>
+          </navigator>
+          <navigator :class="$style['balanceSummaryItem']" url="/pages/partner/referees" hover-class="none">
+            <view :class="$style['balanceSummaryLabel']">已邀请粉丝</view>
+            <view :class="$style['balanceSummaryValue']">{{ refereesCount }}</view>
+          </navigator>
         </view>
       </view>
 
-      <template>
-        <view :class="$style['partner']" v-if="!partnerLevel">
-          <text :class="$style['partnerText']">成为国货大使获取收益</text>
-          <navigator
-            :class="$style['partnerBtnText']" hover-class="none"
-            url="/pages/partner/index" open-type="switchTab"
-          >立即升级</navigator>
-        </view>
-        <view :class="$style['balance']">
-          <view :class="$style['balanceMain']">
-            <navigator :class="$style['balanceValues']" url="/pages/partner/rebates" hover-class="none">
-              <text :class="$style['balanceValuesLabel']">账户余额（元）</text>
-              <price :class="$style['balanceValuesNumber']" :price="rebateSummary.balance"></price>
-              <text :class="$style['balanceValuesHint']">自购返利{{ (+rebateSummary.summary.order_paid)|currency }} + 邀请收益{{ ((+rebateSummary.summary.referee_order_paid)+(+rebateSummary.summary.referral))|currency }}</text>
-            </navigator>
-            <view :class="$style['balanceBtns']">
-              <!-- <view :class="$style['withdrawHistory']">提现记录 <text class="el-icon-arrow-right"></text></view> -->
-              <navigator v-if="!hasBindAlipay" :class="$style['bindAlipay']" url="/pages/profile/alipay" open-type="navigate" hover-class="none">绑定支付宝</navigator>
-            </view>
-          </view>
-          <view :class="$style['balanceDivider']"></view>
-          <view :class="$style['balanceSummary']">
-            <navigator :class="$style['balanceSummaryItem']" url="/pages/partner/rebates" hover-class="none">
-              <view :class="$style['balanceSummaryLabel']">今日预估奖励</view>
-              <price :class="$style['balanceSummaryValue']" :price="rebateSummary.total_today"></price>
-            </navigator>
-            <navigator :class="$style['balanceSummaryItem']" url="/pages/partner/rebates" hover-class="none">
-              <view :class="$style['balanceSummaryLabel']">本月预估奖励</view>
-              <price :class="$style['balanceSummaryValue']" :price="rebateSummary.total_this_month"></price>
-            </navigator>
-            <navigator :class="$style['balanceSummaryItem']" url="/pages/partner/referees" hover-class="none">
-              <view :class="$style['balanceSummaryLabel']">已邀请粉丝</view>
-              <view :class="$style['balanceSummaryValue']">{{ refereesCount }}</view>
-            </navigator>
-          </view>
-        </view>
+      <view :class="[$style['grid'], $style['promotion']]">
+        <navigator
+          v-for="item in promotionNavigators" :key="item.text"
+          :url="item.url" :open-type="item.openType" hover-class="none"
+          :class="[$style['gridItem'], $style['gridNavigator']]"
+        >
+          <image :class="[$style['gridItemIcon'], $style['gridItemIconBigger']]" :src="item.icon" mode="aspectFit"></image>
+          <text :class="$style['gridItemText']">{{ item.text }}</text>
+        </navigator>
 
-        <view :class="[$style['grid'], $style['promotion']]">
+        <view :class="[$style['gridItem'], $style['gridNavigator']]" @tap="onTapInvite">
+          <image
+            :class="[$style['gridItemIcon'], $style['gridItemIconBigger']]"
+            src='https://up.img.heidiancdn.com/o_1eh4kgtf1lha1tl75f7phcrp30enifit.png' mode="aspectFit"></image>
+          <text :class="$style['gridItemText']">邀请返现</text>
+        </view>
+      </view>
+
+      <view :class="$style['section']">
+        <view :class="$style['sectionHead']">
+          <text :class="$style['sectionHeadTitle']">我的订单</text>
           <navigator
-            v-for="item in promotionNavigators" :key="item.text"
-            :url="item.url" :open-type="item.openType" hover-class="none"
-            :class="[$style['gridItem'], $style['gridNavigator']]"
+            :class="$style['sectionHeadNavigator']"
+            open-type="navigate" hover-class="none" url="/pages/orders/index"
+          >查看全部 <text class="el-icon-arrow-right"></text></navigator>
+        </view>
+        <view :class="$style['grid']">
+          <navigator
+            v-for="(item, index) in orderNavigators" :key="index"
+            open-type="navigate" hover-class="none" :url="item.url"
+            :class="[$style['gridItem'], $style['gridNavigator'], $style['gridNavigatorDivider']]"
           >
-            <image :class="[$style['gridItemIcon'], $style['gridItemIconBigger']]" :src="item.icon" mode="aspectFit"></image>
+            <image :class="$style['gridItemIcon']" :src="item.icon" mode="aspectFit"></image>
             <text :class="$style['gridItemText']">{{ item.text }}</text>
           </navigator>
-
-          <view :class="[$style['gridItem'], $style['gridNavigator']]" @tap="onTapInvite">
-            <image
-              :class="[$style['gridItemIcon'], $style['gridItemIconBigger']]"
-              src='https://up.img.heidiancdn.com/o_1eh4kgtf1lha1tl75f7phcrp30enifit.png' mode="aspectFit"></image>
-            <text :class="$style['gridItemText']">邀请返现</text>
-          </view>
         </view>
+      </view>
 
-        <view :class="$style['section']">
-          <view :class="$style['sectionHead']">
-            <text :class="$style['sectionHeadTitle']">我的订单</text>
-            <navigator
-              :class="$style['sectionHeadNavigator']"
-              open-type="navigate" hover-class="none" url="/pages/orders/index"
-            >查看全部 <text class="el-icon-arrow-right"></text></navigator>
-          </view>
-          <view :class="$style['grid']">
-            <navigator
-              v-for="(item, index) in orderNavigators" :key="index"
-              open-type="navigate" hover-class="none" :url="item.url"
-              :class="[$style['gridItem'], $style['gridNavigator'], $style['gridNavigatorDivider']]"
-            >
-              <image :class="$style['gridItemIcon']" :src="item.icon" mode="aspectFit"></image>
-              <text :class="$style['gridItemText']">{{ item.text }}</text>
-            </navigator>
-          </view>
+      <!-- <view :class="$style['section']">
+        <view :class="$style['sectionHead']">
+          <text :class="$style['sectionHeadTitle']">我的功能</text>
         </view>
-
-        <!-- <view :class="$style['section']">
-          <view :class="$style['sectionHead']">
-            <text :class="$style['sectionHeadTitle']">我的功能</text>
-          </view>
-          <view :class="$style['grid']">
-            <navigator
-              v-for="item in otherNavigators" :key="item.text"
-              open-type="navigate" hover-class="none" :url="item.url"
-              :class="[$style['gridItem'], $style['gridNavigator'], $style['gridNavigatorDivider']]"
-            >
-              <image :class="$style['gridItemIcon']" :src="item.icon" mode="aspectFit"></image>
-              <text :class="$style['gridItemText']">{{ item.text }}</text>
-            </navigator>
-          </view>
-        </view> -->
-      </template>
+        <view :class="$style['grid']">
+          <navigator
+            v-for="item in otherNavigators" :key="item.text"
+            open-type="navigate" hover-class="none" :url="item.url"
+            :class="[$style['gridItem'], $style['gridNavigator'], $style['gridNavigatorDivider']]"
+          >
+            <image :class="$style['gridItemIcon']" :src="item.icon" mode="aspectFit"></image>
+            <text :class="$style['gridItemText']">{{ item.text }}</text>
+          </navigator>
+        </view>
+      </view> -->
     </view>
 
     <view :class="[$style['light'], $style['infiniteProducts']]">
@@ -258,9 +243,6 @@ export default {
     ...mapState(['customer', 'partnerProfile']),
     partnerLevel() {
       return +this.partnerProfile.data.level || 0
-    },
-    growthValue() {
-      return +this.partnerProfile.data.growth_value || 0
     },
     hasWechatId () {
       return this.partnerProfile.data.wechat_id
@@ -413,39 +395,6 @@ $color-divider: rgba(#ffffff, 0.1);
   color: $color-golden;
   border: 1px solid $color-golden;
   border-radius: 2px;
-}
-.level {
-  width: 100%;
-  margin-top: 15px;
-}
-.levelHint {
-  width: 100%;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 12px;
-  color: $color-text-light;
-}
-.levelHintNumber {
-  display: flex;
-  align-items: center;
-  color: $color-text;
-  font-size: 11px;
-}
-.levelProgress {
-  width: 100%;
-  margin-top: 8px;
-  overflow: hidden;
-  height: 8px;
-  border-radius: 4px;
-  background-color: $color-bg-progress;
-}
-.levelProgressInner {
-  display: block;
-  width: 0;
-  height: 100%;
-  background-color: $color-golden;
 }
 
 /* partner */
