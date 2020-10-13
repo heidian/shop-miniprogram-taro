@@ -230,7 +230,7 @@ export default {
         text: '我的收藏'
       }, {
         url: '/pages/account/settings',
-        icon: '',
+        icon: 'https://up.img.heidiancdn.com/o_1ekhnbg86slc5db7a82t13q10ttings.png',
         text: '设置'
       }]
     }

@@ -35,8 +35,8 @@ export default {
     return {
       navigators: [
         { label: '个人信息', value: '', hasCaret: true, url: '/pages/profile/edit' },
-        { label: '收货地址', value: '', hasCaret: true, url: '/pages/addresses/index' },
-        { label: '微信号', value: '', hasCaret: true, url: '/pages/profile/wechat' },
+        // { label: '收货地址', value: '', hasCaret: true, url: '/pages/addresses/index' },
+        { label: '设置微信号', value: '', hasCaret: true, url: '/pages/profile/wechat' },
         { label: '绑定支付宝', value: '', hasCaret: true, url: '/pages/profile/alipay' },
         // { label: '账户安全', value: '', hasCaret: true, url: '' },
         { label: '联系客服', value: '', hasCaret: true, url: '', openType: 'contact' },
