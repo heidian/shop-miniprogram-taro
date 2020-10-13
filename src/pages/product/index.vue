@@ -520,13 +520,12 @@ page {
 .productHtml {
   padding: 0 15px;
 }
-
 .productShare {
   position: fixed;
-  bottom: 55px;
+  bottom: 65px;
   right: 15px;
-  width: 40px;
-  height: 40px;
+  width: 44px;
+  height: 44px;
   padding: 0;
   display: flex;
   flex-direction: column;
@@ -536,11 +535,9 @@ page {
   border-radius: 50%;
   overflow: hidden;
   box-shadow: 0 1px 5px 0px #aaaaaa;
-  font-size: 18px;
-  line-height: 20px;
   color: #ffffff;
   &.isLikeIphoneX {
-    bottom: 70px;
+    bottom: 80px;
   }
 }
 .productShareIcon {
@@ -548,7 +545,7 @@ page {
   height: 14px;
 }
 .productShareText {
-  font-size: 9px;
-  line-height: 12px;
+  font-size: 10px;
+  line-height: 15px;
 }
 </style>
