@@ -11,7 +11,7 @@
           <view :class="$style['caption']" v-if="customer.isAuthenticated">
             <view :class="$style['captionName']">
               <text :class="$style['fullName']">{{ customer.data.full_name || '未命名' }}</text>
-              <text :class="$style['levelTitle']">{{ levelTitle }}</text>
+              <text :class="$style['levelTitle']">{{ partnerProfile.data.level_title }}</text>
               <navigator
                 v-if="!hasWechatId"
                 :class="$style['navigatorText']" hover-class="none"
@@ -254,9 +254,6 @@ export default {
   },
   computed: {
     ...mapState(['customer', 'partnerProfile']),
-    levelTitle() {
-      return ['普通会员', '国货大使', '高级国货大使'][this.partnerLevel]
-    },
     partnerLevel() {
       return +this.partnerProfile.data.level || 0
     },

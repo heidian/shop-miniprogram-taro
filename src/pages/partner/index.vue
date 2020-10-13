@@ -7,7 +7,7 @@
           <view>
             <view :class="$style['fullName']">{{ customer.data.full_name || '未命名' }}</view>
             <view :class="$style['lightText']">
-              <text class="el-icon-star-on"></text> {{ levelTitle }}
+              <text class="el-icon-star-on"></text> {{ partnerProfile.data.level_title }}
             </view>
           </view>
         </template>
@@ -211,9 +211,6 @@ export default {
   },
   computed: {
     ...mapState(['customer', 'partnerProfile']),
-    levelTitle() {
-      return ['普通会员', '国货大使', '高级国货大使'][this.partnerLevel]
-    },
     partnerLevel() {
       return +this.partnerProfile.data.level || 0
     },
