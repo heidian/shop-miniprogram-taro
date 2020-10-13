@@ -97,6 +97,20 @@
           "pathName": "pages/partner/index",
           "query": "",
           "scene": null
+        },
+        {
+          "id": -1,
+          "name": "pages/misc/share",
+          "pathName": "pages/misc/share",
+          "query": "product=85453",
+          "scene": null
+        },
+        {
+          "id": -1,
+          "name": "pages/product/index",
+          "pathName": "pages/product/index",
+          "query": "name=p_1egnisqjut5r1ieb",
+          "scene": null
         }
       ]
     }

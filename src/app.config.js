@@ -53,7 +53,7 @@ export default {
         'pagePath': 'pages/partner/index',
         'iconPath': 'assets/images/tabbar/member.png',
         'selectedIconPath': 'assets/images/tabbar/member.png',
-        'text': '会员'
+        'text': '国货大使'
       },
       {
         'pagePath': 'pages/cart/index',

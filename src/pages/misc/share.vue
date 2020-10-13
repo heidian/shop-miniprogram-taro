@@ -101,6 +101,19 @@ export default {
       return optimizeImage(_.get(this.product, 'image'), 400)
     }
   },
+  beforeDestroy () {
+    this.canvasInstance && this.canvasInstance.stopTask && this.canvasInstance.stopTask()
+  },
+  onShareAppMessage (res) {
+    return {
+      title: this.shareTitle,
+      path: `/pages/home?scene=${encodeURIComponent(this.shareScene)}`,
+      imageUrl: this.shareImage,
+      success: res => {},
+      fail: () => {},
+      complete: () => {}
+    }
+  },
   async mounted () {
     /**
      * 保证用户已登录且拿到referralCode，再去获取商品信息和后面初始化 share
@@ -193,21 +206,7 @@ export default {
     onLoadCanvasImage (e) {
       this.canvasImageReady = true
     }
-  },
-  beforeDestroy () {
-    this.canvasInstance && this.canvasInstance.stopTask && this.canvasInstance.stopTask()
-  },
-  onShareAppMessage (res) {
-    return {
-      title: this.shareTitle,
-      path: `/pages/home?scene=${encodeURIComponent(this.shareScene)}`,
-      imageUrl: this.shareImage,
-      success: res => {},
-      fail: () => {},
-      complete: () => {}
-    }
   }
-
 }
 </script>
 
