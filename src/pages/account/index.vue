@@ -319,7 +319,7 @@ export default {
       this.$store.dispatch('partnerProfile/retrieve')
     }, 5000, { leading: true, trailing: false }),
     throttleFetchReferees: _.throttle(function() {
-      API.get('/customers/referee/', {
+      API.get('/substores/partners/referee/', {
         params: { page_size: 1 }
       }).then((res) => {
         this.refereesCount = res.data.count

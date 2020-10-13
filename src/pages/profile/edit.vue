@@ -106,6 +106,7 @@ export default {
       this.$store.dispatch('customer/updateCustomer', this.userInfo).then(data => {
         this.pending = false
         Taro.showToast({ title: '更新成功' })
+        setTimeout(() => Taro.navigateBack(), 1000)
       }).catch(err => {
         this.pending = false
         handleErr(err)
