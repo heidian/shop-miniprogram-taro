@@ -129,5 +129,6 @@ export default new Vuex.Store({
   actions,
   getters,
   strict: true,  // any mutations to Vuex state outside of mutation handlers will throw an Error
-  plugins: process.env.NODE_ENV === 'development' ? [createLogger()] : []
+  // 太卡了, logger 先去掉
+  // plugins: process.env.NODE_ENV === 'development' ? [createLogger()] : [],
 })
