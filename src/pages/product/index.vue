@@ -7,7 +7,7 @@
         :circular="true" :interval="5000" :autoplay="true"
       >
         <swiper-item :class="$style['productImagesSwiperItem']" v-for="(image, index) in product.images" :key="image.id">
-          <image :class="$style['productImagesSwiperItemImage']" mode="aspectFit" :src="optimizeImage(image, 400)" @tap="() => previewImage(product.images, index, 'src')"></image>
+          <image :class="$style['productImagesSwiperItemImage']" mode="aspectFit" :src="optimizeImage(image, 400)" @tap="() => previewImage(image, product.images)"></image>
         </swiper-item>
       </swiper>
       <!-- 商品价格和添加心愿单 -->
@@ -283,14 +283,14 @@ export default {
         showCancel: false
       })
     },
-    previewImage (images, index, key) {
+    previewImage(image, images) {
       Taro.previewImage({
-        current: index,
-        urls: _.map(images, `${key}`)
+        current: _.get(image, 'src'),
+        urls: _.map(images, 'src')
       })
     }
   },
-  async onPullDownRefresh () {
+  async onPullDownRefresh() {
     await this.fetchProduct()
     await this.checkFavorite()
     Taro.stopPullDownRefresh()

@@ -186,7 +186,7 @@ export default {
       const url = _.get(this.selectedVariant, 'image.src')
       if (url) {
         Taro.previewImage({
-          curent: 0,
+          curent: url,
           urls: [url]
         })
       }
