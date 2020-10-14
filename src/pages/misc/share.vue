@@ -94,7 +94,9 @@ export default {
       return this.$store.state.config.appid
     },
     shareTitle () {
-      return _.get(this.customer.data, 'full_name', '你的好友') + '给你分享以下好物'
+      const prefix = _.get(this.customer.data, 'full_name') || '你的好友'
+      const suffix = this.productId ? '给你分享以下好物' : '邀请你成为HeyShop国货大使'
+      return prefix + suffix
     },
     shareImage () {
       // return this.productId ? optimizeImage(_.get(this.product, 'image'), 400) : SHOP_BG_IMG
