@@ -61,7 +61,7 @@ export default {
     Taro.setBackgroundColor({
       backgroundColorTop: '#ffffff',
       backgroundColor: '#f6f6f6',
-      backgroundColorBottom: '#f6f6f6',
+      backgroundColorBottom: '#ffffff',
     })
   },
   onReachBottom() {
@@ -92,7 +92,7 @@ export default {
 <style lang="scss" module>
 @import '@/styles/variables';
 page {
-  background-color: $color-bg-gray;
+  // background-color: $color-bg-gray;
 }
 .page {
   //

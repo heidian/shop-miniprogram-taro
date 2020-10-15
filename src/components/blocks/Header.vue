@@ -20,6 +20,11 @@ export default {
   },
   mounted() {
     Taro.setNavigationBarColor(this.settingsData)
+    if (this.settingsData.backgroundColor) {
+      Taro.setBackgroundColor({
+        backgroundColorTop: this.settingsData.backgroundColor
+      })
+    }
   }
 }
 </script>
