@@ -50,7 +50,7 @@
     <view :class="$style['footer']" v-if="continuePay">
       <view>
         <text>未付款金额:</text>
-        <price :price="orderData.unpaid_price" :highlight="true" :keepZero="true"></price>
+        <price :price="orderData.payable_price" :highlight="true" :keepZero="true"></price>
       </view>
       <button
         :class="[$style['buttonPayForOrder'], 'button', 'button--round', 'button--orange']"
