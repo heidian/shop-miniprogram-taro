@@ -5,6 +5,8 @@ RUN mkdir /workspace/ -p
 COPY . /workspace/
 WORKDIR /workspace/
 
+RUN rm .npmrc
+
 # RUN npm config set registry http://nexus.daocloud.io/repository/daocloud-npm
 RUN npm install
 RUN npm install -g @tarojs/cli@3.0.9
