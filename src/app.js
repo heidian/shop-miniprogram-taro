@@ -80,33 +80,37 @@ Vue.filter('currency', (value, options) => formatCurrency(value, options))
 Vue.filter('imageUrl', (value, width, height) => optimizeImage(value, width, height))
 
 
-Vue.mixin({
-  /*
-   * 注意, 千万不要在任何其他页面里定义 onLoad, 如果定义了就会覆盖这个 mixin,
-   * 如果覆盖了, 那这一页就不能再作为分享小程序码的落地页了
-   */
-  onLoad() {
-    const params = getCurrentInstance().router.params || {}
-    if (params.redirect) {
-      // 这个参数目前只作用于下单成功以后 "返回个人中心并跳转订单详情页", 当然落地页不一定要是 account
-      // 目前带 redirect 参数一定是 reLaunch 过来的, 只能在 onLoad 里面调用, (到达当前页面后, 触发 redirect 到目标页)
-      // 因为 account 是一个 tab, 这个参数会一直存在生命周期里, 一定不要在其他方法里处理这个它, 不然可能导致被多次处理
-      Taro.navigateTo({ url: decodeURIComponent(params.redirect) })
-    } else if (params.scene) {
-      // const queryScene = decodeURIComponent(_.get(options, 'query.scene', ''))
-      const queryScene = decodeURIComponent(params.scene)
-      const { campaignContext, referralCode, redirect } = parseScene(queryScene)
-      this.$store.dispatch('initScene', { campaignContext, referralCode }).then(() => {
-        // analytics.listenToRoute 要放在 initScene 以后确保 campaignContext 已经有了
-        analytics.listenToRoute()
-      }).catch((err) => { console.log(err) })
-      /* 在这里处理 redirect 对吗 ? */
-      if (redirect) {
-        Taro.navigateTo({ url: redirect })
+if (Taro.getEnv() === 'WEAPP') {
+  // 只对微信小程序启用这个 mixin, 其中也包括了 analytics, 也就是说网页版也不会不启用 analytics
+  Vue.mixin({
+    /*
+     * 注意, 千万不要在任何其他页面里定义 onLoad, 如果定义了就会覆盖这个 mixin,
+     * 如果覆盖了, 那这一页就不能再作为分享小程序码的落地页了
+     */
+    onLoad() {
+      const params = getCurrentInstance().router.params || {}
+      if (params.redirect) {
+        // 这个参数目前只作用于下单成功以后 "返回个人中心并跳转订单详情页", 当然落地页不一定要是 account
+        // 目前带 redirect 参数一定是 reLaunch 过来的, 只能在 onLoad 里面调用, (到达当前页面后, 触发 redirect 到目标页)
+        // 因为 account 是一个 tab, 这个参数会一直存在生命周期里, 一定不要在其他方法里处理这个它, 不然可能导致被多次处理
+        Taro.navigateTo({ url: decodeURIComponent(params.redirect) })
+      } else if (params.scene) {
+        // const queryScene = decodeURIComponent(_.get(options, 'query.scene', ''))
+        const queryScene = decodeURIComponent(params.scene)
+        const { campaignContext, referralCode, redirect } = parseScene(queryScene)
+        this.$store.dispatch('initScene', { campaignContext, referralCode }).then(() => {
+          // analytics.listenToRoute 要放在 initScene 以后确保 campaignContext 已经有了
+          analytics.listenToRoute()
+        }).catch((err) => { console.log(err) })
+        /* 在这里处理 redirect 对吗 ? */
+        if (redirect) {
+          Taro.navigateTo({ url: redirect })
+        }
       }
     }
-  }
-})
+  })
+}
+
 
 /*
  * Vue 渲染入口
