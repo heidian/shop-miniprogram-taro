@@ -21,18 +21,28 @@ Vue.use(Vuex)
 确保比如 getOpenId 等其他任何地方一定可以获得 appid */
 const state = () => {
   const config = {
-    // config/dev.js 里面定义了 API_URL, 但现在取的是 ext.json 的
-    apiroot: API_URL,
-    shopname: 'normal',
-    shopid: 4149,
+    apiroot: '',
+    shopname: '',
+    shopid: '',
     appid: '',
   }
   if (Taro.getEnv() === 'WEAPP') {
+    // config/dev.js 里面定义了 API_URL, 但小程序的 apiroot 取的是 ext.json 的
     const { extAppid, apiroot, shopname, shopid } = Taro.getExtConfigSync()
     config.appid = extAppid
     config.apiroot = apiroot
     config.shopname = shopname
     config.shopid = shopid
+  } else if (Taro.getEnv() === 'WEB') {
+    const match = location.hostname.match(/^([a-zA-Z-]+)\.heidian\.mobi$/)
+    if (match) {
+      // 其实也不需要提取 shopname
+      config.apiroot = '/api/'
+    } else {
+      /* 本地测试的时候需要指定 API_URL 为店铺域名, 这样也就不需要 shopname 了
+      shopname 和 shopid 单独使用只在 analytics 里面, 而网页版不启用 analytics, 所以空着没关系 */
+      config.apiroot = API_URL
+    }
   }
   return {
     config: config,

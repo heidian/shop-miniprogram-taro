@@ -54,3 +54,8 @@ taro doctor
 2. 逐个更新本地项目中的taro相关依赖版本。
 
 目前固定 taro 版本到最新的稳定版 3.0.9, 新的 3.0.11 版本的 initPxTransform 有问题, 应该是改过规则了
+
+
+### H5 版本启动方式
+H5 版本因为无法读取 ext.json, 可以通过环境变量的方式来指定本地测试的店铺, 只需要指定 api root 就行了
+`API_URL=https://normal.heidianer.com/api/ npm run dev:h5`
