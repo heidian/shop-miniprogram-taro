@@ -3,11 +3,11 @@
 module.exports = {
   'extends': [
     'taro/vue',
-    'prettier',
-    'prettier/vue',
-    'plugin:prettier/recommended'
+    // 'prettier',
+    // 'prettier/vue',
+    // 'plugin:prettier/recommended',
   ],
   plugins: [
-    'prettier'
+    // 'prettier'
   ]
 }
