@@ -1,8 +1,8 @@
 {
-  "name": "mini_heyshop_taro",
+  "name": "shopmini_taro",
   "version": "1.0.0",
   "private": true,
-  "description": "HeyShop国货商城小程序",
+  "description": "商家小程序 Taro 版",
   "templateInfo": {
     "name": "vuex",
     "typescript": false,
