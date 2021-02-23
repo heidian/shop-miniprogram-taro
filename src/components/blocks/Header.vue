@@ -13,18 +13,18 @@ export default {
     settingsData: {
       type: Object,
       default: () => ({
-        frontColor: '#000000',
-        backgroundColor: '#ffffff'
+        frontColor: '#000000',  // 顶部状态栏文字色
+        backgroundColor: '#ffffff',  // 顶部状态栏背景色
       })
     }
   },
   mounted() {
     Taro.setNavigationBarColor(this.settingsData)
-    if (this.settingsData.backgroundColor) {
-      Taro.setBackgroundColor({
-        backgroundColorTop: this.settingsData.backgroundColor
-      })
-    }
+    // if (this.settingsData.backgroundColor) {
+    //   Taro.setBackgroundColor({
+    //     backgroundColorTop: this.settingsData.backgroundColor
+    //   })
+    // }
   }
 }
 </script>

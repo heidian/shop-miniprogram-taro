@@ -166,6 +166,7 @@ export default {
   color: #5c411a;
 }
 .viewMore, .loadMore {
+  display: block;
   clear: both;
   text-align: center;
 }
