@@ -1,11 +1,11 @@
 {
   "extEnable": true,
   "directCommit": false,
-  "extAppid": "wx0ebd63bd0a26f767",
+  "extAppid": "wx87e4fac3e2962375",
   "ext": {
-    "extAppid": "wx0ebd63bd0a26f767",
-    "apiroot": "https://heidianapi.com/api",
+    "extAppid": "wx87e4fac3e2962375",
     "shopname": "joyberry",
-    "shopid": 577
+    "shopid": 577,
+    "apiroot": "https://heidianapi.com/api"
   }
 }
