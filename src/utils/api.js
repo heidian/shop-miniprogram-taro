@@ -9,7 +9,9 @@ const getAPIRoot = () => {
 const getDefaultHeaders = () => {
   return {
     'X-Shop': store.state.config.shopname,
-    'Accept-Language': 'zh'
+    'Accept-Language': 'zh',
+    'Content-Type': 'application/json',
+    // H5 版本的 Taro.request 如果不设置 Content-Type 默认是 text, 这样 post 请求的 json 数据就会被 stringify
   }
 }
 
