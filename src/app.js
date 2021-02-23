@@ -2,7 +2,7 @@ import _ from 'lodash'
 import qs from 'qs'
 import Vue from 'vue'
 import Taro, { getCurrentInstance } from '@tarojs/taro'
-import VirtualList from '@tarojs/components/virtual-list'
+// import VirtualList from '@tarojs/components/virtual-list'
 import store from './store/index'
 import { formatCurrency, formatDate, formatDateTime } from './utils/formatters'
 import { optimizeImage } from './utils/image'
@@ -65,7 +65,7 @@ Taro.initPxTransform({
  * 使用长列表组件
  * https://nervjs.github.io/taro/docs/virtual-list
  */
-Vue.use(VirtualList)
+// Vue.use(VirtualList)
 
 
 /*
