@@ -59,7 +59,6 @@ const actions = {
     }
     await dispatch('getCustomer')
     dispatch('cart/fetch', null, { root: true })  // 登录以后重新获取 cart
-    dispatch('partnerProfile/retrieve', null, { root: true }) // 登录以后重新获取 partnerProfile
   },
   logout({ commit, dispatch }) {
     Taro.removeStorageSync('customerToken')
@@ -70,7 +69,6 @@ const actions = {
     })
     dispatch('cart/fetch', null, { root: true })
     // 登出以后重新获取 cart, 这时 header 里的 carttoken 是错的, 但是没关系, 接口会直接忽略并返回空数据
-    commit('partnerProfile/setData', { data: {} }, { root: true })  // 登出以后清空 partnerProfile
   },
   getCustomer({ commit, dispatch }) {
     return API.get('/customers/customer/').then(({ data }) => {

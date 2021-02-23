@@ -74,7 +74,7 @@
       >立即购买</button>
     </view>
     <view
-      v-if="customer.isAuthenticated && partnerProfile.data.level > 0"
+      v-if="customer.isAuthenticated"
       :class="{[$style['productShare']]: true, [$style['isLikeIphoneX']]: isLikeIphoneX}"
       @tap="shareDrawerVisible=true"
     >
@@ -150,7 +150,7 @@ export default {
     this.checkFavorite()
   },
   computed: {
-    ...mapState(['cart', 'customer', 'partnerProfile']),
+    ...mapState(['cart', 'customer']),
     ...mapGetters('system', ['isLikeIphoneX']),
     hideSelectedVariant() {
       return _.isEmpty(_.get(this.product, 'options'))
@@ -175,7 +175,7 @@ export default {
       return {}
     }
     let shareScene = `r=pdt&id=${this.productId}`
-    if (this.customer.isAuthenticated && this.partnerProfile.data.level > 0) {
+    if (this.customer.isAuthenticated) {
       const referralCode = this.customer.data.referral_code
       shareScene += `&s=share&c=${referralCode}`
     }

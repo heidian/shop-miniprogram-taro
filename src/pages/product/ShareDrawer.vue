@@ -47,7 +47,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['customer', 'partnerProfile'])
+    ...mapState(['customer'])
   },
   methods: {
     handleClose() {
@@ -62,7 +62,7 @@ export default {
     },
     handleCopy() {
       let shareScene = `r=pdt&id=${this.productId}`
-      if (this.customer.isAuthenticated && this.partnerProfile.data.level > 0) {
+      if (this.customer.isAuthenticated) {
         const referralCode = this.customer.data.referral_code
         shareScene += `&s=share&c=${referralCode}`
       }

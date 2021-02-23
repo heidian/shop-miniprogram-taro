@@ -2,20 +2,12 @@ export default {
   pages: [
     'pages/home',
     'pages/categories/index',
-    'pages/partner/index',
-    'pages/partner/activate',
-    'pages/partner/talent',
-    'pages/partner/rebates',
-    'pages/partner/referees',
-    'pages/partner/growth-value-changes',
     'pages/cart/index',
     'pages/account/index',
     'pages/account/settings',
     'pages/account/coupon-codes',
     'pages/account/favorites',
     'pages/profile/edit',
-    'pages/profile/alipay',
-    'pages/profile/wechat',
     'pages/search/index',
     'pages/product/index',
     'pages/product/reviews/index',
@@ -48,12 +40,6 @@ export default {
         'iconPath': 'assets/images/tabbar/category.png',
         'selectedIconPath': 'assets/images/tabbar/category-active.png',
         'text': '分类'
-      },
-      {
-        'pagePath': 'pages/partner/index',
-        'iconPath': 'assets/images/tabbar/member.png',
-        'selectedIconPath': 'assets/images/tabbar/member.png',
-        'text': '国货大使'
       },
       {
         'pagePath': 'pages/cart/index',

@@ -10,9 +10,6 @@
           ></image>
           <navigator url="/pages/profile/edit" open-type="navigate" hover-class="none">
             <view :class="$style['fullName']">{{ customer.data.full_name || '未命名' }}</view>
-            <view :class="$style['levelTitle']">
-              <text class="el-icon-star-on"></text>{{ partnerProfile.data.level_title }}
-            </view>
           </navigator>
         </template>
         <template v-else>
@@ -239,9 +236,9 @@ export default {
     })
   },
   computed: {
-    ...mapState(['customer', 'partnerProfile']),
+    ...mapState(['customer']),
     partnerLevel() {
-      return +this.partnerProfile.data.level || 0
+      return 0
     }
   },
   mounted() {},
@@ -280,7 +277,6 @@ export default {
     }, 5000, { leading: true, trailing: false }),
     throttleFetchCustomer: _.throttle(function() {
       // this.$store.dispatch('customer/getCustomer')  // 目前看起来不需要
-      this.$store.dispatch('partnerProfile/retrieve')
     }, 5000, { leading: true, trailing: false }),
     throttleFetchReferees: _.throttle(function() {
       API.get('/substores/partners/referee/', {

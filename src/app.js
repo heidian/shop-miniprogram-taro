@@ -33,8 +33,6 @@ if (Taro.getEnv() === 'WEB') {
       Taro.redirectTo({ url: path + '/index?' + qs.stringify(query) })
     } else if (/^pages\/login$/.test(path)) {
       Taro.redirectTo({ url: '/pages/login/index' })
-    } else if (/^pages\/member$/.test(path)) {
-      Taro.switchTab({ url: '/pages/partner/index' })
     } else if (/^pages\/(account|categories)$/.test(path)) {
       Taro.switchTab({ url: '/pages/login/index' })
     }
@@ -134,7 +132,6 @@ const App = new Vue({
     }
     if (this.$store.state.customer.isAuthenticated) {
       this.$store.dispatch('customer/getCustomer')
-      this.$store.dispatch('partnerProfile/retrieve')
     }
     /* 如果一开始没有 fetch 一下 cart, 会出现的问题是 add 了以后, quantity 覆盖服务器上的 quantity
     这里不需要判断 customerToken 或 cartToken 是否存在, 如果是没登录也没创建过 cartToken, fetch 接口会返回空的 */
