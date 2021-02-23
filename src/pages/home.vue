@@ -56,14 +56,7 @@ export default {
       return +this.infiniteProducts.filter.category
     }
   },
-  created() {
-    // TODO, 这里的颜色需要配置, 而不是写死
-    Taro.setBackgroundColor({
-      backgroundColorTop: '#ffffff',
-      backgroundColor: '#f6f6f6',
-      backgroundColorBottom: '#ffffff',
-    })
-  },
+  created() {},
   onReachBottom() {
     this.$store.dispatch('lists/infiniteProducts/listMore')
   },
@@ -91,9 +84,6 @@ export default {
 
 <style lang="scss" module>
 @import '@/styles/variables';
-page {
-  // background-color: $color-bg-gray;
-}
 .page {
   //
 }

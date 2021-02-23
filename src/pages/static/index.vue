@@ -1,5 +1,5 @@
 <template>
-  <view class="page--static">
+  <view :class="$style['page']">
     <component
       v-for="(block, index) in blocks" :key="index"
       :is="block.componentClass"
@@ -28,14 +28,7 @@ export default {
       pageName: name
     }
   },
-  created() {
-    // TODO, 这里的颜色需要配置, 而不是写死
-    Taro.setBackgroundColor({
-      backgroundColorTop: '#f6f6f6',
-      backgroundColor: '#f6f6f6',
-      backgroundColorBottom: '#f6f6f6'
-    })
-  },
+  created() {},
   onReachBottom() {},
   async mounted() {
     const data = await this.fetchPageConfig('static', this.pageName)
@@ -49,12 +42,9 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" module>
 @import '@/styles/variables';
-page {
-  background-color: $color-bg-gray;
-}
-.page--static {
+.page {
   //
 }
 </style>
