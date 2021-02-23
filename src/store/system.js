@@ -20,6 +20,11 @@ const state = () => {
       'screenHeight', 'screenWidth', 'statusBarHeight', 'pixelRatio', 'devicePixelRatio',
       'system', 'model', 'brand', 'platform', 'version', 'SDKVersion',
     ])
+    _.forEach([
+      ['screenHeight', 667], ['screenWidth', 375], ['statusBarHeight', 0]
+    ], ([field, defaultValue]) => {
+      systemInfo[field] = +systemInfo[field] || defaultValue
+    })
   } catch (error) {
     systemInfo = {
       screenHeight: 667,
