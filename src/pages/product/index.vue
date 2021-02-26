@@ -1,5 +1,8 @@
 <template>
-  <view :class="{[$style['page']]: true, [$style['pageIphoneX']]: isLikeIphoneX}">
+  <view
+    :class="{[$style['page']]: true, [$style['pageIphoneX']]: isLikeIphoneX}"
+    :style="$globalColors"
+  >
     <view :class="$style['pageSection']">
       <swiper
         :class="$style['productImages']"

@@ -109,6 +109,14 @@ if (Taro.getEnv() === 'WEAPP') {
   })
 }
 
+Vue.mixin({
+  computed: {
+    '$globalColors': function() {
+      return this.$store.state.theme.globalColors
+    }
+  },
+})
+
 
 /*
  * Vue 渲染入口
