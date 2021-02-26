@@ -86,10 +86,10 @@
   background-color: var(--color-primary);
   &.button-hover {
     color: rgba(#fff, 0.9);
-    background-color: var(--color-primary--light);
+    background-color: var(--color-primary--light-1);
   }
   &[disabled] {
     color: rgba(#fff, 0.9);
-    background-color: var(--color-primary--lighter);
+    background-color: var(--color-primary--light-5);
   }
 }

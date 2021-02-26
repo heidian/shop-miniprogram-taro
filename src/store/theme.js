@@ -3,14 +3,21 @@ import tinycolor from 'tinycolor2'
 import Taro from '@tarojs/taro'
 import { API } from '@/utils/api'
 
+function lightenColors(colorName, value) {
+  const colors = { [colorName]: value }
+  _.forEach([1, 2, 3, 4, 5], (level) => {
+    // tinycolor(colorPrimary).lighten(5).toString()
+    colors[`${colorName}--light-${level}`] = tinycolor.mix(value, '#fff', level * 10).toString()
+  })
+  return colors
+}
+
 const state = () => {
   return {
     globalColors: {
       '--color-bg': '#f6f6f6',
       '--color-text': '#262626',
-      '--color-primary': '#ff5a00',
-      '--color-primary--light': tinycolor.mix('#ff5a00', '#fff', 25).toString(),
-      '--color-primary--lighter': tinycolor.mix('#ff5a00', '#fff', 50).toString(),
+      ...lightenColors('--color-primary', '#ff5a00'),
       // '--color-text-light': '#666666',
       // '--color-orange': '#ff5a00',
       // '--color-blue': '#284179',
@@ -20,13 +27,11 @@ const state = () => {
 
 const mutations = {
   setGlobalColors(state, { colorBg, colorText, colorPrimary }) {
+    const globalColors = {}
     if (colorPrimary) {
-      state.globalColors['--color-primary'] = colorPrimary
-      // state.globalColors['--color-primary--light'] = tinycolor(colorPrimary).lighten(5).toString()
-      // state.globalColors['--color-primary--lighter'] = tinycolor(colorPrimary).lighten(30).toString()
-      state.globalColors['--color-primary--light'] = tinycolor.mix(colorPrimary, '#fff', 25).toString()
-      state.globalColors['--color-primary--lighter'] = tinycolor.mix(colorPrimary, '#fff', 50).toString()
+      Object.assign(globalColors, lightenColors('--color-primary', colorPrimary))
     }
+    state.globalColors = { ...state.globalColors, ...globalColors }
   },
 }
 
