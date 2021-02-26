@@ -36,7 +36,7 @@ export default {
         { '--color-bg': '#ff0000', '--color-text': '#000000' },
         { '--color-bg': '#0000ff', '--color-text': '#ffffff' }
       ][index]
-      this.$store.commit('setGlobalColors', paylad)
+      this.$store.commit('theme/setGlobalColors', paylad)
       // setTimeout(() => this.switchGlobalColors(1 - index), 2000)
     }
   }

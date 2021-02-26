@@ -44,12 +44,6 @@
   "simulatorPluginLibVersion": {},
   "libVersion": "2.12.2",
   "condition": {
-    "search": {
-      "list": []
-    },
-    "conversation": {
-      "list": []
-    },
     "plugin": {
       "list": []
     },
@@ -97,10 +91,9 @@
           "scene": null
         },
         {
-          "id": -1,
           "name": "pages/product/index",
           "pathName": "pages/product/index",
-          "query": "name=p_1egnisqjut5r1ieb",
+          "query": "name=ideal-basic-pants-alloy-grey",
           "scene": null
         }
       ]

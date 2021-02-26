@@ -6,6 +6,7 @@ import Taro from '@tarojs/taro'
 
 import listStores from './lists/index'
 import customerStore from './customer'
+import themeStores from './theme'
 import qiniuStore from './qiniu'
 import cartStore from './cart'
 import checkoutStore from './checkout'
@@ -46,20 +47,10 @@ const state = () => {
     config: config,
     campaignContext: {},
     referralCode: '',
-    globalColors: {
-      '--color-bg': '#f6f6f6',
-      '--color-text': '#262626',
-      '--color-text-light': '#666666',
-      '--color-orange': '#ff5a00',
-      '--color-blue': '#284179',
-    }
   }
 }
 
 const mutations = {
-  setGlobalColors(state, payload) {
-    state.globalColors = payload
-  },
   setCampaignContext(state, payload) {
     state.campaignContext = payload
   },
@@ -124,6 +115,7 @@ export default new Vuex.Store({
   modules: {
     lists: listStores,
     customer: customerStore,
+    theme: themeStores,
     cart: cartStore,
     qiniu: qiniuStore,
     checkout: checkoutStore,
