@@ -1,5 +1,8 @@
 <template>
-  <view :class="$style['page']">
+  <view :class="$style['page']" :style="$globalColors">
+    <button class="button button--primary button--small button--round">主色按钮</button>
+    <button class="button button--primary button--small button--round button-hover">主色按钮 hover</button>
+    <button class="button button--primary button--small button--round" disabled>主色按钮 disabled</button>
     <component
       v-for="(block, index) in blocks" :key="index"
       :is="block.componentClass"

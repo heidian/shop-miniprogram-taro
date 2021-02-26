@@ -9,6 +9,8 @@ const state = () => {
       '--color-bg': '#f6f6f6',
       '--color-text': '#262626',
       '--color-primary': '#ff5a00',
+      '--color-primary--light': tinycolor.mix('#ff5a00', '#fff', 25).toString(),
+      '--color-primary--lighter': tinycolor.mix('#ff5a00', '#fff', 50).toString(),
       // '--color-text-light': '#666666',
       // '--color-orange': '#ff5a00',
       // '--color-blue': '#284179',
@@ -17,8 +19,14 @@ const state = () => {
 }
 
 const mutations = {
-  setGlobalColors(state, payload) {
-    state.globalColors = payload
+  setGlobalColors(state, { colorBg, colorText, colorPrimary }) {
+    if (colorPrimary) {
+      state.globalColors['--color-primary'] = colorPrimary
+      // state.globalColors['--color-primary--light'] = tinycolor(colorPrimary).lighten(5).toString()
+      // state.globalColors['--color-primary--lighter'] = tinycolor(colorPrimary).lighten(30).toString()
+      state.globalColors['--color-primary--light'] = tinycolor.mix(colorPrimary, '#fff', 25).toString()
+      state.globalColors['--color-primary--lighter'] = tinycolor.mix(colorPrimary, '#fff', 50).toString()
+    }
   },
 }
 
@@ -31,7 +39,7 @@ const actions = {
     }
     const res = await API.get('/shopfront/shop/', { params })
     const themeSettingsData = _.get(res.data, 'shop.theme.settings_data')
-    console.log(themeSettingsData)
+    commit('setGlobalColors', themeSettingsData)
   }
 }
 

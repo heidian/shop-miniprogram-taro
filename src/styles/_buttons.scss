@@ -79,3 +79,17 @@
     background-color: lighten(#020202, 50%);
   }
 }
+
+
+.button--primary {
+  color: #fff;
+  background-color: var(--color-primary);
+  &.button-hover {
+    color: rgba(#fff, 0.9);
+    background-color: var(--color-primary--light);
+  }
+  &[disabled] {
+    color: rgba(#fff, 0.9);
+    background-color: var(--color-primary--lighter);
+  }
+}
