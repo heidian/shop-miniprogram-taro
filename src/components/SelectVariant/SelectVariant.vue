@@ -30,11 +30,11 @@
     </view>
     <view :class="{[$style['buttonsWrapper']]: true, [$style['isLikeIphoneX']]: isLikeIphoneX}">
       <button v-if="openType !== 'buy_now'"
-        class="button button--blue button--small button--round"
+        :class="['button', 'button--primary', 'button--outline', 'button--small', 'button--round']"
         @tap="onClickAddToCart"
       >加入购物车</button>
       <button v-if="openType !== 'add_to_cart'"
-        class="button button--orange button--small button--round"
+        :class="['button', 'button--primary', 'button--small', 'button--round']"
         @tap="onClickBuyNow"
       >立即购买</button>
     </view>
