@@ -97,7 +97,8 @@ export default {
   }
   .price {
     &.highlight {
-      color: $color-orange;
+      // color: $color-orange;
+      color: var(--color-primary);
       font-weight: bold;
     }
     .price__rmb {
