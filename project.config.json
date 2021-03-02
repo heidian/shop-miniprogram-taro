@@ -95,6 +95,12 @@
           "pathName": "pages/product/index",
           "query": "name=ideal-basic-pants-alloy-grey",
           "scene": null
+        },
+        {
+          "name": "pages/index/index",
+          "pathName": "pages/index/index",
+          "query": "",
+          "scene": null
         }
       ]
     }

@@ -6,8 +6,8 @@
     <view :class="$style['pageSection']">
       <swiper
         :class="$style['productImages']"
-        indicatorColor='#999' indicatorActiveColor='#333' :indicatorDots="true"
-        :circular="true" :interval="5000" :autoplay="true"
+        indicatorColor='#999' indicatorActiveColor='#333' :indicatorDots="true" easingFunction="linear"
+        :circular="true" :interval="3000" :autoplay="true"
       >
         <swiper-item :class="$style['productImagesSwiperItem']" v-for="(image, index) in product.images" :key="image.id">
           <image :class="$style['productImagesSwiperItemImage']" mode="aspectFit" :src="optimizeImage(image, 400)" @tap="() => previewImage(image, product.images)"></image>

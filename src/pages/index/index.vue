@@ -1,5 +1,9 @@
 <template>
-  <view class="page--index" :style="globalColors">
+  <view class="page--index" :style="$globalColors">
+    <button class="button button--primary button--small button--round">主色按钮</button>
+    <button class="button button--primary button--small button--round button-hover">主色按钮 hover</button>
+    <button class="button button--primary button--small button--round" disabled>主色按钮 disabled</button>
+    <button @tap="switchGlobalColors">切换颜色</button>
     <view>{{ customer.isAuthenticated }}</view>
     <view>{{ customer.customerToken }}</view>
     <view>{{ customer.data.id }}</view>
@@ -21,22 +25,28 @@ export default {
     NumberDisplay,
     NumberSubmit
   },
+  data() {
+    return {
+      themeGroup: 0
+    }
+  },
   computed: {
-    ...mapState(['globalColors', 'customer'])
+    ...mapState(['customer'])
   },
   mounted() {
     // console.log(this.$store.state.config)
     // console.log(this.$store.state.customer)
     // this.$store.dispatch('customer/getCustomer')
-    this.switchGlobalColors(0)
   },
   methods: {
-    switchGlobalColors(index) {
+    switchGlobalColors() {
+      this.themeGroup = 1 - this.themeGroup
       const paylad = [
-        { '--color-bg': '#ff0000', '--color-text': '#000000' },
-        { '--color-bg': '#0000ff', '--color-text': '#ffffff' }
-      ][index]
-      this.$store.commit('theme/setGlobalColors', paylad)
+        { 'colorPrimary': '#ff0000', 'colorText': '#eeeeee', 'colorBg': '#000000' },
+        { 'colorPrimary': '#ff00ff', 'colorText': '#000000', 'colorBg': '#eeeeee' },
+      ][this.themeGroup]
+      // console.log(this.themeGroup, paylad)
+      this.$store.commit('theme/setSettingsData', paylad)
       // setTimeout(() => this.switchGlobalColors(1 - index), 2000)
     }
   }

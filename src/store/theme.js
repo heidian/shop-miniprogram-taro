@@ -14,6 +14,9 @@ function lightenColors(colorName, value) {
 
 const state = () => {
   return {
+    settingsData: {
+      //
+    },
     globalColors: {
       '--color-bg': '#f6f6f6',
       '--color-text': '#262626',
@@ -26,10 +29,20 @@ const state = () => {
 }
 
 const mutations = {
-  setGlobalColors(state, { colorBg, colorText, colorPrimary }) {
+  setSettingsData(state, payload) {
+    const {
+      // 目前暂时还没有什么全局的设置
+      colorBg, colorText, colorPrimary,
+    } = payload
     const globalColors = {}
     if (colorPrimary) {
       Object.assign(globalColors, lightenColors('--color-primary', colorPrimary))
+    }
+    if (colorBg) {
+      Object.assign(globalColors, { '--color-bg': colorBg })
+    }
+    if (colorText) {
+      Object.assign(globalColors, { '--color-text': colorText })
     }
     state.globalColors = { ...state.globalColors, ...globalColors }
   },
@@ -44,7 +57,7 @@ const actions = {
     }
     const res = await API.get('/shopfront/shop/', { params })
     const themeSettingsData = _.get(res.data, 'shop.theme.settings_data')
-    commit('setGlobalColors', themeSettingsData)
+    commit('setSettingsData', themeSettingsData)
   }
 }
 
