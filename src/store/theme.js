@@ -17,27 +17,26 @@ const state = () => {
     settingsData: {
       //
     },
-    globalColors: {
-      '--color-bg': '#f6f6f6',
-      '--color-text': '#262626',
-      ...lightenColors('--color-primary', '#ff5a00'),
-      // '--color-text-light': '#666666',
-      // '--color-orange': '#ff5a00',
-      // '--color-blue': '#284179',
-    },
     pages: {
       //
     }
   }
 }
 
-const mutations = {
-  setSettingsData(state, payload) {
+const getters = {
+  globalColors(state) {
+    const globalColors = {
+      '--color-bg': '#f6f6f6',
+      '--color-text': '#262626',
+      ...lightenColors('--color-primary', '#ff5a00'),
+      // '--color-text-light': '#666666',
+      // '--color-orange': '#ff5a00',
+      // '--color-blue': '#284179',
+    }
     const {
       // 目前暂时还没有什么全局的设置
       colorBg, colorText, colorPrimary,
-    } = payload
-    const globalColors = {}
+    } = state.settingsData
     if (colorPrimary) {
       Object.assign(globalColors, lightenColors('--color-primary', colorPrimary))
     }
@@ -47,7 +46,13 @@ const mutations = {
     if (colorText) {
       Object.assign(globalColors, { '--color-text': colorText })
     }
-    state.globalColors = { ...state.globalColors, ...globalColors }
+    return { ...state.globalColors, ...globalColors }
+  }
+}
+
+const mutations = {
+  resetSettingsData(state, payload) {
+    state.settingsData = payload
   },
 }
 
@@ -60,11 +65,9 @@ const actions = {
     }
     const res = await API.get('/shopfront/shop/', { params })
     const themeSettingsData = _.get(res.data, 'shop.theme.settings_data')
-    commit('setSettingsData', themeSettingsData)
+    commit('resetSettingsData', themeSettingsData)
   }
 }
-
-const getters = {}
 
 export default {
   namespaced: true,

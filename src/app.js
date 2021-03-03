@@ -112,10 +112,12 @@ if (Taro.getEnv() === 'WEAPP') {
 Vue.mixin({
   computed: {
     '$globalColors': function() {
-      return this.$store.state.theme.globalColors
+      // return this.$store.state.theme.globalColors
+      return this.$store.getters['theme/globalColors']
     }
   },
 })
+// Vue.prototype.$globalColors = store.getters['theme/globalColors']
 
 
 /*
