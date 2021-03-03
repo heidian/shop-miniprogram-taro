@@ -37,7 +37,7 @@ import InfiniteProducts from '@/components/InfiniteProducts'
 export default {
   name: 'Home',
   mixins: [
-    ThemeBlocks('blocks')
+    ThemeBlocks  // 会在页面上产生 blocks, pageType 和 pageName 三个变量
   ],
   components: {
     InfiniteProducts

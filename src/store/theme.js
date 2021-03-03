@@ -12,13 +12,18 @@ function lightenColors(colorName, value) {
   return colors
 }
 
+function calcuKey(pageType, pageName) {
+  return (pageType && pageName) ? `${pageType}/${pageName}` : (pageType ? pageType : '')
+}
+
 const state = () => {
   return {
-    settingsData: {
+    // themeSettings 和 pageBlocks 存储的都是原始数据
+    themeSettings: {
       //
     },
-    pages: {
-      //
+    pageBlocks: {
+      // [pageType/pageName]: [{ id, css, settings_data }, ...]
     }
   }
 }
@@ -36,7 +41,7 @@ const getters = {
     const {
       // 目前暂时还没有什么全局的设置
       colorBg, colorText, colorPrimary,
-    } = state.settingsData
+    } = state.themeSettings
     if (colorPrimary) {
       Object.assign(globalColors, lightenColors('--color-primary', colorPrimary))
     }
@@ -51,8 +56,18 @@ const getters = {
 }
 
 const mutations = {
-  resetSettingsData(state, payload) {
-    state.settingsData = payload
+  resetThemeSettings(state, { settingsData }) {
+    state.themeSettings = {
+      ...settingsData
+    }
+  },
+  resetPageSettings(state, { pageType, pageName, settingsData }) {
+    const key = calcuKey(pageType, pageName)
+    // 如果不这么写, 新增一个 [key] 的时候, store 的变化不会被监听到
+    state.pageBlocks = {
+      ...state.pageBlocks,
+      [key]: settingsData['components'],
+    }
   },
 }
 
@@ -64,8 +79,27 @@ const actions = {
       // 'preview_theme_id': PREVIEW_THEME_ID,  // 上线以后要删掉
     }
     const res = await API.get('/shopfront/shop/', { params })
-    const themeSettingsData = _.get(res.data, 'shop.theme.settings_data')
-    commit('resetSettingsData', themeSettingsData)
+    const settingsData = _.get(res.data, 'shop.theme.settings_data')
+    commit('resetThemeSettings', { settingsData })
+  },
+  async fetchPage({ commit }, { pageType, pageName }) {
+    // console.log(`get test pageconfig of ${pageType}`)
+    // const pageConfig = getTestPageConfig(pageType, pageName)
+    // const blocks = _.cloneDeep(pageConfig['settings_data']['components'])
+    const params = {
+      'fields[shop]': 'id',
+      'fields[page]': 'title,pageconfig',
+      'scope': 'miniprogram',
+      // 'preview_theme_id': PREVIEW_THEME_ID,  // 上线以后要删掉
+      'page_type': pageType
+    }
+    if (pageName) {
+      params['name'] = pageName
+    }
+    const res = await API.get('/shopfront/shop/', { params })
+    const settingsData = _.get(res.data, 'page.pageconfig.settings_data')
+    commit('resetPageSettings', { pageType, pageName, settingsData })
+    return res.data
   }
 }
 

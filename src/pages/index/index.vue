@@ -46,7 +46,7 @@ export default {
         { 'colorPrimary': '#ff00ff', 'colorText': '#000000', 'colorBg': '#eeeeee' },
       ][this.themeGroup]
       // console.log(this.themeGroup, paylad)
-      this.$store.commit('theme/resetSettingsData', paylad)
+      this.$store.commit('theme/resetThemeSettings', { settingsData: paylad })
       // setTimeout(() => this.switchGlobalColors(1 - index), 2000)
     }
   }

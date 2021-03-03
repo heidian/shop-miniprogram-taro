@@ -62,6 +62,28 @@ Taro.initPxTransform({
 
 
 /*
+ * 主题和编辑器相关
+ */
+Vue.mixin({
+  computed: {
+    '$globalColors': function() {
+      // return this.$store.state.theme.globalColors
+      return this.$store.getters['theme/globalColors']
+    }
+  },
+})
+// Vue.prototype.$globalColors = store.getters['theme/globalColors']
+if (Taro.getEnv() === 'WEB') {
+  function listenFromStyleEditor(event) {
+    console.log('listenFromStyleEditor', event)
+  }
+  if (typeof window !== 'undefined' && window.parent) {
+    window.addEventListener('message', listenFromStyleEditor)
+  }
+}
+
+
+/*
  * 使用长列表组件
  * https://nervjs.github.io/taro/docs/virtual-list
  */
@@ -109,16 +131,6 @@ if (Taro.getEnv() === 'WEAPP') {
   })
 }
 
-Vue.mixin({
-  computed: {
-    '$globalColors': function() {
-      // return this.$store.state.theme.globalColors
-      return this.$store.getters['theme/globalColors']
-    }
-  },
-})
-// Vue.prototype.$globalColors = store.getters['theme/globalColors']
-
 
 /*
  * Vue 渲染入口
@@ -155,14 +167,5 @@ const App = new Vue({
     return h('block', this.$slots.default)
   }
 })
-
-if (Taro.getEnv() === 'WEB') {
-  function listenFromStyleEditor(event) {
-    console.log('listenFromStyleEditor', event)
-  }
-  if (typeof window !== 'undefined' && window.parent) {
-    window.addEventListener('message', listenFromStyleEditor)
-  }
-}
 
 export default App

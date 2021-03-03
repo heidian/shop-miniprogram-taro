@@ -16,22 +16,21 @@ import ThemeBlocks from '@/mixins/ThemeBlocks'
 export default {
   name: 'Static',
   mixins: [
-    ThemeBlocks('blocks')
+    ThemeBlocks  // 会在页面上产生 blocks, pageType 和 pageName 三个变量
   ],
   components: {},
   computed: {
     //
   },
   data() {
-    const { name } = getCurrentInstance().router.params
-    return {
-      pageName: name
-    }
+    return {}
   },
   created() {},
   onReachBottom() {},
   async mounted() {
-    const data = await this.fetchPageConfig('static', this.pageName)
+    const pageType = 'static'
+    const pageName = getCurrentInstance().router.params.name
+    const data = await this.fetchPageConfig(pageType, pageName)
     Taro.setNavigationBarTitle({
       title: data.page.title
     })
