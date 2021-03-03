@@ -24,6 +24,9 @@ const state = () => {
       // '--color-text-light': '#666666',
       // '--color-orange': '#ff5a00',
       // '--color-blue': '#284179',
+    },
+    pages: {
+      //
     }
   }
 }

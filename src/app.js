@@ -154,4 +154,13 @@ const App = new Vue({
   }
 })
 
+if (Taro.getEnv() === 'WEB') {
+  function listenFromStyleEditor(event) {
+    console.log('listenFromStyleEditor', event)
+  }
+  if (typeof window !== 'undefined' && window.parent) {
+    window.addEventListener('message', listenFromStyleEditor)
+  }
+}
+
 export default App
