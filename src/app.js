@@ -76,6 +76,22 @@ Vue.mixin({
 if (Taro.getEnv() === 'WEB') {
   function listenFromStyleEditor(event) {
     console.log('listenFromStyleEditor', event)
+    const { data, message } = event.data
+    // 每一个 case 下一定要写 return, 不然就顺序执行下去了
+    switch (message) {
+      case 'REORDER_BLOCKS':
+        return store.commit('theme/reorderBlocks', data)
+      case 'ADD_BLOCK':
+        return store.commit('theme/addBlock', data)
+      case 'REMOVE_BLOCK':
+        return store.commit('theme/removeBlock', data)
+      case 'UPDATE_BLOCK_SETTINGS_DATA':
+        return store.commit('theme/updateBlockSettingsData', data)
+      case 'UPDATE_BLOCK_CSS':
+        return store.commit('theme/updateBlockCSS', data)
+      case 'UPDATE_THEME_SETTINGS_DATA':
+        return store.commit('theme/updateThemeSettingsData', data)
+    }
   }
   if (typeof window !== 'undefined' && window.parent) {
     window.addEventListener('message', listenFromStyleEditor)

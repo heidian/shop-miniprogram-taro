@@ -38,8 +38,8 @@ export default {
   computed: {
     blocks() {
       const key = (this.pageType && this.pageName) ? `${this.pageType}/${this.pageName}` : this.pageType
-      const pageBlocks = _.cloneDeep(this.$store.state.theme.pageBlocks[key] || [])
-      _.forEach(pageBlocks, (block) => {
+      const blocks = _.cloneDeep(this.$store.state.theme.blocksOfPage[key] || [])
+      _.forEach(blocks, (block) => {
         if (_.isObject(block.css.backgroundImage)) {
           block.css.backgroundImage = backgroundImageUrl(block.css.backgroundImage, 400)
         }
@@ -50,7 +50,7 @@ export default {
         })
         block.componentClass = BLOCKS_MAP[block.name]
       })
-      return pageBlocks
+      return blocks
     }
   },
   methods: {

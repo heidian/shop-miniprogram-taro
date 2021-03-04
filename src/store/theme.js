@@ -1,4 +1,5 @@
 import _ from 'lodash'
+// import Vue from 'vue'
 import tinycolor from 'tinycolor2'
 import Taro from '@tarojs/taro'
 import { API } from '@/utils/api'
@@ -18,11 +19,11 @@ function calcuKey(pageType, pageName) {
 
 const state = () => {
   return {
-    // themeSettings 和 pageBlocks 存储的都是原始数据
-    themeSettings: {
+    // themeSettingsData 和 blocksOfPage 存储的都是原始数据
+    themeSettingsData: {
       //
     },
-    pageBlocks: {
+    blocksOfPage: {
       // [pageType/pageName]: [{ id, css, settings_data }, ...]
     }
   }
@@ -41,7 +42,7 @@ const getters = {
     const {
       // 目前暂时还没有什么全局的设置
       colorBg, colorText, colorPrimary,
-    } = state.themeSettings
+    } = state.themeSettingsData
     if (colorPrimary) {
       Object.assign(globalColors, lightenColors('--color-primary', colorPrimary))
     }
@@ -56,19 +57,74 @@ const getters = {
 }
 
 const mutations = {
-  resetThemeSettings(state, { settingsData }) {
-    state.themeSettings = {
-      ...settingsData
-    }
+  resetThemeSettingsData(state, { themeSettingsData }) {
+    state.themeSettingsData = { ...themeSettingsData }
   },
-  resetPageSettings(state, { pageType, pageName, settingsData }) {
+  resetPageSettings(state, { pageType, pageName, pageSettingsData }) {
     const key = calcuKey(pageType, pageName)
     // 如果不这么写, 新增一个 [key] 的时候, store 的变化不会被监听到
-    state.pageBlocks = {
-      ...state.pageBlocks,
-      [key]: settingsData['components'],
+    state.blocksOfPage = {
+      ...state.blocksOfPage,
+      [key]: pageSettingsData['components'],
     }
   },
+  reorderBlocks(state, { pageType, pageName, ids }) {
+    const key = calcuKey(pageType, pageName)
+    const blocks = state.blocksOfPage[key]
+    if (blocks) {
+      const blocksMap = {}
+      _.forEach(blocks, (block) => blocksMap[block.id] = block)
+      state.blocksOfPage[key] = _.map(ids, (id) => blocksMap[id])
+    }
+  },
+  addBlock(state, { pageType, pageName, index, blockData }) {
+    const key = calcuKey(pageType, pageName)
+    const blocks = state.blocksOfPage[key]
+    if (blocks) {
+      state.blocksOfPage[key] = [
+        ...blocks.slice(0, index),
+        blockData,
+        ...blocks.slice(index),
+      ]
+    }
+  },
+  removeBlock(state, { pageType, pageName, id }) {
+    const key = calcuKey(pageType, pageName)
+    const blocks = state.blocksOfPage[key]
+    if (blocks) {
+      state.blocksOfPage[key] = _.filter(blocks, (block) => block.id != id)
+    }
+  },
+  updateBlockSettingsData(state, { pageType, pageName, id, blockSettingsData }) {
+    const key = calcuKey(pageType, pageName)
+    const blocks = state.blocksOfPage[key]
+    if (blocks) {
+      const blockIndex = _.findIndex(blocks, { id })
+      const settingsData = {
+        ...blocks[blockIndex]['settings_data'],
+        ...blockSettingsData,
+      }
+      blocks[blockIndex]['settings_data'] = settingsData
+    }
+  },
+  updateBlockCSS(state, { pageType, pageName, id, blockCSS }) {
+    const key = calcuKey(pageType, pageName)
+    const blocks = state.blocksOfPage[key]
+    if (blocks) {
+      const blockIndex = _.findIndex(blocks, { id })
+      const css = {
+        ...blocks[blockIndex]['css'],
+        ...blockCSS,
+      }
+      blocks[blockIndex]['css'] = css
+    }
+  },
+  updateThemeSettingsDate(state, { themeSettingsData }) {
+    state.themeSettingsData = {
+      ...state.themeSettingsData,
+      ...themeSettingsData,
+    }
+  }
 }
 
 const actions = {
@@ -79,8 +135,8 @@ const actions = {
       // 'preview_theme_id': PREVIEW_THEME_ID,  // 上线以后要删掉
     }
     const res = await API.get('/shopfront/shop/', { params })
-    const settingsData = _.get(res.data, 'shop.theme.settings_data')
-    commit('resetThemeSettings', { settingsData })
+    const themeSettingsData = _.get(res.data, 'shop.theme.settings_data')
+    commit('resetThemeSettingsData', { themeSettingsData })
   },
   async fetchPage({ commit }, { pageType, pageName }) {
     // console.log(`get test pageconfig of ${pageType}`)
@@ -97,8 +153,8 @@ const actions = {
       params['name'] = pageName
     }
     const res = await API.get('/shopfront/shop/', { params })
-    const settingsData = _.get(res.data, 'page.pageconfig.settings_data')
-    commit('resetPageSettings', { pageType, pageName, settingsData })
+    const pageSettingsData = _.get(res.data, 'page.pageconfig.settings_data')
+    commit('resetPageSettings', { pageType, pageName, pageSettingsData })
     return res.data
   }
 }
