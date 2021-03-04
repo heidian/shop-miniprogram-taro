@@ -92,6 +92,14 @@
               :price="product.price" :compareAtPrice="product.compare_at_price"
             ></price>
           </view>
+          <view :class="$style['colorOptionsWrapper']">
+            <image
+              v-for="item in getProductColorOptions(product)" :key="item.name"
+              :class="$style['colorOptionsItem']"
+              mode="aspectFill" :lazy-load="true"
+              :src="optimizeImage(item.image, 40)"
+            ></image>
+          </view>
         </view>
       </view>
     </view>
@@ -146,6 +154,7 @@ export default {
       // ProductItem,
       activeRootCategoryId: null,
       subCategoryDrawerVisible: false,
+      colorNameToImage: {},
     }
   },
   created() {
@@ -202,8 +211,10 @@ export default {
   async mounted() {
     // 初始化过滤参数
     const defaultParams = {
-      'fields': ['id', 'name', 'title', 'description', 'image', 'price', 'compare_at_price', 'variants'].join(','),
-      'fields[variants]': ['id', 'options'].join(','),
+      'fields': [
+        'id', 'name', 'title', 'description', 'image', 'price', 'compare_at_price', 'options', // 'variants',
+      ].join(','),
+      // 'fields[variants]': ['id', 'options'].join(','),
     }
     const filter = {}
     const { category } = getCurrentInstance().router.params
@@ -277,7 +288,22 @@ export default {
       // 因为有 partial: false, 这里其实不需要专门把 category 重置为空, 为了避免混淆, 现在先这么保留着
       this.updateFilter({ q, category: '' }, { partial: false, fetch: false })
       this.fetchProducts()
-    }
+    },
+    getProductColorOptions(product) {
+      const option = _.find(product.options, { title: '颜色' }) || []
+      const results = _.map(option.values, (colorName) => {
+        let image = this.colorNameToImage[colorName]
+        if (!image) {
+          const colorOptionImages = _.get(this.$store.state.theme, 'themeSettingsData.colorOptionImages') || []
+          const item = _.find(colorOptionImages, (item) => _.get(item, 'name.value') === colorName)
+          if (item) {
+            image = item.image
+          }
+        }
+        return { name: colorName, image }
+      })
+      return _.filter(results, (item) => !!item.image)
+    },
   }
 }
 </script>
@@ -449,6 +475,19 @@ page {
     top: 0;
     width: 100%;
     height: 100%;
+  }
+  .colorOptionsWrapper {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 0 7px 7px;
+  }
+  .colorOptionsItem {
+    width: 15px;
+    height: 15px;
+    + .colorOptionsItem {
+      margin-left: 5px;
+    }
   }
 }
 </style>
