@@ -119,7 +119,7 @@ const mutations = {
       blocks[blockIndex]['css'] = css
     }
   },
-  updateThemeSettingsDate(state, { themeSettingsData }) {
+  updateThemeSettingsData(state, { themeSettingsData }) {
     state.themeSettingsData = {
       ...state.themeSettingsData,
       ...themeSettingsData,
