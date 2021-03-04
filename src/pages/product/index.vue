@@ -48,6 +48,9 @@
         </view>
       </view>
     </view>
+    <view :class="$style['pageSection']">
+      <product-accessories :productId="product.id"/>
+    </view>
     <!-- 暂时隐藏评论板块
     <view :class="$style['pageSection']" v-if="product.id">
       <product-reviews :productId="product.id"/>
@@ -113,6 +116,7 @@ import SelectVariant from '@/components/SelectVariant/SelectVariant'
 import RelatedProducts from './RelatedProducts'
 import ProductReviews from './ProductReviews'
 import ShareDrawer from './ShareDrawer'
+import ProductAccessories from './ProductAccessories'
 
 export default {
   name: 'Product',
@@ -120,6 +124,7 @@ export default {
     /* 组件名称用首字母大写, template 里面标签不能用大写, 全部用小写+减号 */
     RelatedProducts,
     ProductReviews,
+    ProductAccessories,
     SelectVariant,
     ShareDrawer,
     Price
