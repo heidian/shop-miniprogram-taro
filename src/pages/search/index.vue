@@ -1,5 +1,8 @@
 <template>
-  <view :class="$style['page']" :style="{'paddingTop': pagePaddingTop}">
+  <view
+    :class="$style['page']"
+    :style="{'paddingTop': pagePaddingTop, ...$globalColors}"
+  >
     <custom-nav
       :q="products.filter.q"
       @submit="onSubmitSearch"
@@ -14,6 +17,10 @@
       :scroll-with-animation="true"
     >
       <view :class="$style['categoriesInner']">
+        <view
+          :class="[$style['categoryItem'], !activeRootCategoryId && 'is-active']"
+          @tap="() => filterRootCategory(null)"
+        ><text :class="$style['categoryText']">全部</text></view>
         <view
           v-for="category in categories.data" :key="category.id"
           :class="[$style['categoryItem'], (category.id === activeRootCategoryId) && 'is-active']"
@@ -44,6 +51,7 @@
       >筛选</view>
     </view>
     <view
+      v-if="!!activeRootCategoryId"
       :class="[$style['subCategoriesWrapper'], subCategoryDrawerVisible && 'is-visible']"
       :style="{'top': subCategoriesWrapperTop}"
     >
@@ -75,12 +83,6 @@
               :class="$style['image']" mode="aspectFill" :lazy-load="true"
               :src="optimizeImage(product.image, 200)"
             ></image>
-            <view
-              :class="$style['productGrowthValue']"
-              v-if="product.metafields.substores && product.metafields.substores.growth_value"
-            >
-              <text class="el-icon-star-on"></text>成长值 {{ product.metafields.substores.growth_value }}
-            </view>
           </view>
           <view :class="$style['textWrapper']">
             <view :class="$style['title']">{{ product.title }}</view>
@@ -200,17 +202,19 @@ export default {
   async mounted() {
     // 初始化过滤参数
     const defaultParams = {
-      fields: ['id', 'name', 'title', 'description', 'image', 'price', 'compare_at_price', 'metafields'].join(',')
+      'fields': ['id', 'name', 'title', 'description', 'image', 'price', 'compare_at_price', 'variants'].join(','),
+      'fields[variants]': ['id', 'options'].join(','),
     }
     const filter = {}
     const { category } = getCurrentInstance().router.params
     filter.category = category
     // 因为要处理 activeCategory, 这里先 await 一下, categories 全局只取一次, 这样问题不大
     await this.$store.dispatch('categories/list')
-    if (!filter.category) {
-      // 默认一定要选中一个分类, 这个版本 search 页面不能显示全部商品, 之后再支持更多过滤
-      filter.category = this.categories.data[0].id
-    }
+    // 去掉这个默认分类的处理
+    // if (!filter.category) {
+    //   // 默认一定要选中一个分类, 这个版本 search 页面不能显示全部商品, 之后再支持更多过滤
+    //   filter.category = this.categories.data[0].id
+    // }
     this.$store.commit('lists/products/setParams', { filter, defaultParams })
     this.fetchProducts()
   },

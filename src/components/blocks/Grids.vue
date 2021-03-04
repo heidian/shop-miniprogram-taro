@@ -61,7 +61,9 @@ export default {
     optimizeImage,
     backgroundImageUrl,
     textValue(textObj) {
-      if (_.isString(textObj)) {
+      if (_.isNil(textObj)) {
+        return ''
+      } else if (_.isString(textObj)) {
         return textObj
       } else if (_.isObject(textObj)) {
         return _.get(textObj, 'value')
