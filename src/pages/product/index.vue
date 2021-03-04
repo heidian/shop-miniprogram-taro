@@ -47,9 +47,11 @@
         </view>
       </view>
     </view>
+    <!-- 暂时隐藏评论板块
     <view :class="$style['pageSection']" v-if="product.id">
       <product-reviews :productId="product.id"/>
     </view>
+     -->
     <view :class="$style['pageSection']" v-if="body_html">
       <view :class="$style['pageSectionTitle']">图文详情</view>
       <!-- <view v-if="body_html" class="'taro_html'" :class="$style['productHtml']" v-html="body_html"></view> -->
@@ -142,11 +144,11 @@ export default {
     }
   },
   created() {
-    Taro.setBackgroundColor({
-      backgroundColorTop: '#ffffff',
-      backgroundColor: '#f6f6f6',
-      backgroundColorBottom: '#f6f6f6',
-    })
+    // Taro.setBackgroundColor({
+    //   backgroundColorTop: '#ffffff',
+    //   backgroundColor: '#f6f6f6',
+    //   backgroundColorBottom: '#f6f6f6',
+    // })
   },
   async mounted() {
     await this.fetchProduct()
@@ -305,10 +307,8 @@ export default {
 /* Taro vue 版本不支持 scoped, 只能用 cssModule, 这里不要写 scoped, 平时注意 class 冲突 */
 @import '@/styles/mixins';
 @import '@/styles/variables';
-page {
-  background-color: #f6f6f6;
-}
 .page {
+  background-color: #f6f6f6;
   overflow: hidden;
   padding-bottom: 50px;
   position: relative;
