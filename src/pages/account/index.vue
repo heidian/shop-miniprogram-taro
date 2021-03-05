@@ -44,7 +44,7 @@
       <view :class="$style['sectionHead']">
         <text :class="$style['sectionHeadTitle']">我的功能</text>
       </view>
-      <view :class="$style['grid']">
+      <!-- <view :class="$style['grid']">
         <navigator
           v-for="item in otherNavigators" :key="item.text"
           open-type="navigate" hover-class="none" :url="item.url"
@@ -53,6 +53,24 @@
           <image :class="$style['gridItemIcon']" :src="item.icon" mode="aspectFit"></image>
           <text :class="$style['gridItemText']">{{ item.text }}</text>
         </navigator>
+      </view> -->
+      <view :class="$style['cellMenus']">
+        <template v-for="item, index in otherNavigators">
+          <button v-if="item.openType" :class="['button', $style['cellMenuItem']]" :key="index" :open-type="item.openType">
+            <view :class="$style['cellLabel']">{{ item.text }}</view>
+            <view :class="$style['cellValue']"></view>
+            <view :class="$style['cellFt']">
+              <image v-if="item.hasCaret" :class="$style['cellftIcon']" src="https://up.img.heidiancdn.com/o_1egfmehbs19vhj4p7cn1ko4kqi0next.png" mode="aspectFill"></image>
+            </view>
+          </button>
+          <navigator v-else :class="$style['cellMenuItem']" :key="index" :url="item.url" open-type="navigate">
+            <view :class="$style['cellLabel']">{{ item.text }}</view>
+            <view :class="$style['cellValue']"></view>
+            <view :class="$style['cellFt']">
+              <image v-if="item.hasCaret" :class="$style['cellftIcon']" src="https://up.img.heidiancdn.com/o_1egfmehbs19vhj4p7cn1ko4kqi0next.png" mode="aspectFill"></image>
+            </view>
+          </navigator>
+        </template>
       </view>
     </view>
     <hs-dialog :visible.sync="qrDialogVisible">
@@ -89,19 +107,23 @@ export default {
       customerQrcodeBase64: '',
       orderNavigators: [{
         url: '/pages/orders/index?filter=unpaid',
-        icon: 'https://up.img.heidiancdn.com/o_1eh4ipmqg17erq8ufi5un71lj50opay2x.png',
+        // icon: 'https://up.img.heidiancdn.com/o_1eh4ipmqg17erq8ufi5un71lj50opay2x.png',
+        icon: 'https://up.img.heidiancdn.com/o_1cb4okik5efc1fkdqurjjgl9s0ntopay.svg?imageView2/1/w/20/h/20/ignore-error/1',
         text: '待付款'
       }, {
         url: '/pages/orders/index?filter=paid',
-        icon: 'https://up.img.heidiancdn.com/o_1eh4ipmqg1ads6g21aba1bhn1e870paid2x.png',
+        // icon: 'https://up.img.heidiancdn.com/o_1eh4ipmqg1ads6g21aba1bhn1e870paid2x.png',
+        icon: 'https://up.img.heidiancdn.com/o_1cb4okik417m019mu1cem10321qe70onpaid.svg?imageView2/1/w/20/h/20/ignore-error/1',
         text: '已付款'
       }, {
         url: '/pages/orders/index?filter=closed',
-        icon: 'https://up.img.heidiancdn.com/o_1eh4ipmqg1mnck81cve1gf6asd0shed2x.png',
+        // icon: 'https://up.img.heidiancdn.com/o_1eh4ipmqg1mnck81cve1gf6asd0shed2x.png',
+        icon: 'https://up.img.heidiancdn.com/o_1cb4okik415ga181227a1uvv5ad0nished.svg?imageView2/1/w/20/h/20/ignore-error/1',
         text: '已完成'
       }, {
         url: '/pages/orders/index?filter=cancelled',
-        icon: 'https://up.img.heidiancdn.com/o_1eh4ipmqf1112btg1f3jjdden0eled2x.png',
+        // icon: 'https://up.img.heidiancdn.com/o_1eh4ipmqf1112btg1f3jjdden0eled2x.png',
+        icon: 'https://up.img.heidiancdn.com/o_1cb4okik3vf01msd1gsf83h1q8l0nceled.svg?imageView2/1/w/20/h/20/ignore-error/1',
         text: '已取消'
       }],
       otherNavigators: [{
@@ -166,9 +188,10 @@ export default {
 
 <style lang="scss" module>
 @import '@/styles/mixins';
-$color-divider: rgba(#ffffff, 0.1);
+@import '@/styles/variables';
 .page {
   background-color: #f6f6f6;
+  min-height: 100vh;
 }
 .main {
   width: 100%;
@@ -305,4 +328,54 @@ $color-divider: rgba(#ffffff, 0.1);
   }
 }
 
+.cellMenus {
+  background-color: #fff;
+}
+.cellMenuItem {
+  background-color: transparent;
+  margin-left: auto;
+  margin-right: auto;
+  outline: none;
+  width: 100%;
+  padding: 15px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  font-size: 12px;
+  position: relative;
+  line-height: 2.2;
+  &::after {
+    display: none;
+  }
+  .cellLabel {
+    margin-right: 20px;
+    font-size: 15px;
+    color: $color-text;
+  }
+  .cellValue {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .cellFt {
+    margin-left: 20px;
+  }
+  // & + & {
+  //   border-top: 1px solid $color-divider;
+  // }
+  &:not(:last-child)::before {
+    content: '';
+    position: absolute;
+    left: 15px;
+    right: 15px;
+    bottom: 0;
+    border-bottom: 1px solid $color-divider;
+  }
+  .cellftIcon {
+    width: 10px;
+    height: 12px;
+    opacity: 0.2;
+  }
+}
 </style>
