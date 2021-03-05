@@ -4,10 +4,11 @@
     :style="$globalColors"
   >
     <view :class="$style['pageSection']">
+      <!-- indicatorColor='#999' indicatorActiveColor='#333' -->
       <swiper
         :class="$style['productImages']"
-        indicatorColor='#999' indicatorActiveColor='#333' :indicatorDots="true" easingFunction="linear"
-        :circular="true" :interval="3000" :autoplay="true"
+        :indicatorDots="false" :vertical="false"
+        :circular="true" :autoplay="true" :interval="5000" :duration="300"
       >
         <swiper-item :class="$style['productImagesSwiperItem']" v-for="(image, index) in product.images" :key="image.id">
           <image :class="$style['productImagesSwiperItemImage']" mode="aspectFit" :src="optimizeImage(image, 400)" @tap="() => previewImage(image, product.images)"></image>

@@ -1,10 +1,11 @@
 <template>
   <view class="block--carousel" :style="css">
     <view class="carousel" :style="{'paddingTop': paddingTop}">
+      <!-- indicatorColor='#999' indicatorActiveColor='#333' -->
       <swiper
         class='carousel__swiper'
-        :indicatorDots="true" indicatorColor='#999' indicatorActiveColor='#333'
-        :vertical="false" :circular="true" :autoplay="true"
+        :indicatorDots="false" :vertical="false"
+        :circular="true" :autoplay="true" :interval="5000" :duration="300"
       >
         <swiper-item v-for="(item, index) in settingsData.carousel" :key="index">
           <!-- <image class="carousel__image" :src="optimizeImage(item.image, 600)" mode="aspectFit"></image> -->
