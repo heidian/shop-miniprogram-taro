@@ -195,6 +195,18 @@ export default {
   methods: {
     optimizeImage,
     backgroundImageUrl,
+    initializeCurrentVariant() {
+      const { variant: variantIdInParams } = getCurrentInstance().router.params
+      if (this.currentVariant.id) {
+        //
+      } else if (+variantIdInParams) {
+        const variant = _.find(this.product.variants, { id: +variantIdInParams })
+        this.currentVariant = variant
+      } else {
+        const variant = _.find(this.product.variants, { is_available: true }) || this.product.variants[0]
+        this.currentVariant = variant
+      }
+    },
     /* 方法名称用驼峰 */
     async fetchProduct() {
       // TODO 要处理 404
@@ -223,8 +235,7 @@ export default {
       if (product) {
         this.product = product
         this.productId = product.id
-        const variant = _.find(product.variants || [], { is_available: true }) || product.variants[0]
-        this.currentVariant = variant
+        this.initializeCurrentVariant()
         Taro.setNavigationBarTitle({
           title: product.title
         })
