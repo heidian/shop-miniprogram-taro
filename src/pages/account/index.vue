@@ -1,129 +1,58 @@
 <template>
-  <view :class="$style['page']">
+  <view :class="$style['page']" :style="$globalColors">
     <!-- 普通的跳转页面, 只需要 url 就行了 -->
-    <view :class="$style['darkMode']">
-      <view :class="$style['main']">
-        <template v-if="customer.isAuthenticated">
-          <image
-            :class="$style['avatar']" mode="aspectFill"
-            :src="optimizeImage(customer.data.avatar || DEFAULT_AVATAR, 50)"
-          ></image>
-          <navigator url="/pages/profile/edit" open-type="navigate" hover-class="none">
-            <view :class="$style['fullName']">{{ customer.data.full_name || '未命名' }}</view>
-          </navigator>
-        </template>
-        <template v-else>
-          <image :class="$style['avatar']" mode="aspectFill" :src="DEFAULT_AVATAR"></image>
-          <navigator url="/pages/login/index" :class="$style['loginLink']" hover-class="none">去登录</navigator>
-        </template>
+    <view :class="$style['main']">
+      <template v-if="customer.isAuthenticated">
         <image
-          :class="$style['heyshop']" mode="widthFix"
-          src="https://up.img.heidiancdn.com/o_1eiojj5s632c1urj1a6u1jn01l330shop3x.png"
-        >HeyShop</image>
-        <image
-          v-if="customer.isAuthenticated && customer.data.mobile"
-          src="https://up.img.heidiancdn.com/o_1cbbcvna21ardpe01d411d7bm9a0qrcode.svg"
-          :class="$style['cardQrCode']"
-          @tap="openQrModal"/>
-      </view>
-      <view :class="$style['partner']" v-if="!partnerLevel">
-        <text :class="$style['partnerText']">成为国货大使获取收益</text>
-        <navigator
-          :class="$style['partnerBtnText']" hover-class="none"
-          url="/pages/partner/index" open-type="switchTab"
-        >立即升级</navigator>
-      </view>
-      <view :class="$style['balance']">
-        <view :class="$style['balanceMain']">
-          <navigator :class="$style['balanceValues']" url="/pages/partner/rebates" hover-class="none">
-            <text :class="$style['balanceValuesLabel']">账户余额（元）</text>
-            <price :class="$style['balanceValuesNumber']" :price="rebateSummary.balance"></price>
-            <text :class="$style['balanceValuesHint']">自购返利{{ (+rebateSummary.summary.order_paid)|currency }} + 邀请收益{{ ((+rebateSummary.summary.referee_order_paid)+(+rebateSummary.summary.referral))|currency }}</text>
-          </navigator>
-          <view :class="$style['balanceBtns']">
-            <!-- <view :class="$style['withdrawHistory']">提现记录 <text class="el-icon-arrow-right"></text></view> -->
-            <navigator :class="$style['bindAlipay']" url="/pages/profile/alipay" open-type="navigate" hover-class="none">绑定支付宝</navigator>
-          </view>
-        </view>
-        <view :class="$style['balanceDivider']"></view>
-        <view :class="$style['balanceSummary']">
-          <navigator :class="$style['balanceSummaryItem']" url="/pages/partner/rebates" hover-class="none">
-            <view :class="$style['balanceSummaryLabel']">今日预估奖励</view>
-            <price :class="$style['balanceSummaryValue']" :price="rebateSummary.total_today"></price>
-          </navigator>
-          <navigator :class="$style['balanceSummaryItem']" url="/pages/partner/rebates" hover-class="none">
-            <view :class="$style['balanceSummaryLabel']">本月预估奖励</view>
-            <price :class="$style['balanceSummaryValue']" :price="rebateSummary.total_this_month"></price>
-          </navigator>
-          <navigator :class="$style['balanceSummaryItem']" url="/pages/partner/referees" hover-class="none">
-            <view :class="$style['balanceSummaryLabel']">已邀请粉丝</view>
-            <view :class="$style['balanceSummaryValue']">{{ refereesCount }}</view>
-          </navigator>
-        </view>
-      </view>
-      <!-- <view :class="$style['section']">
-        <view :class="$style['grid']">
-          <navigator
-            v-for="item in promotionNavigators" :key="item.text"
-            :url="item.url" :open-type="item.openType" hover-class="none"
-            :class="[$style['gridItem'], $style['gridNavigator']]"
-          >
-            <image :class="[$style['gridItemIcon'], $style['gridItemIconBigger']]" :src="item.icon" mode="aspectFit"></image>
-            <text :class="$style['gridItemText']">{{ item.text }}</text>
-          </navigator>
-          <view :class="[$style['gridItem'], $style['gridNavigator']]" @tap="onTapInvite">
-            <image
-              :class="[$style['gridItemIcon'], $style['gridItemIconBigger']]"
-              src='https://up.img.heidiancdn.com/o_1eh4kgtf1lha1tl75f7phcrp30enifit.png' mode="aspectFit"></image>
-            <text :class="$style['gridItemText']">邀请返现</text>
-          </view>
-        </view>
-      </view> -->
-      <view :class="$style['section']">
-        <view :class="$style['sectionHead']">
-          <text :class="$style['sectionHeadTitle']">我的订单</text>
-          <navigator
-            :class="$style['sectionHeadNavigator']"
-            open-type="navigate" hover-class="none" url="/pages/orders/index"
-          >查看全部 <text class="el-icon-arrow-right"></text></navigator>
-        </view>
-        <view :class="$style['grid']">
-          <navigator
-            v-for="(item, index) in orderNavigators" :key="index"
-            open-type="navigate" hover-class="none" :url="item.url"
-            :class="[$style['gridItem'], $style['gridNavigator'], $style['gridNavigatorDivider']]"
-          >
-            <image :class="$style['gridItemIcon']" :src="item.icon" mode="aspectFit"></image>
-            <text :class="$style['gridItemText']">{{ item.text }}</text>
-          </navigator>
-        </view>
-      </view>
-      <view :class="$style['section']">
-        <view :class="$style['sectionHead']">
-          <text :class="$style['sectionHeadTitle']">我的功能</text>
-        </view>
-        <view :class="$style['grid']">
-          <navigator
-            v-for="item in otherNavigators" :key="item.text"
-            open-type="navigate" hover-class="none" :url="item.url"
-            :class="[$style['gridItem'], $style['gridNavigator'], $style['gridNavigatorDivider']]"
-          >
-            <image :class="$style['gridItemIcon']" :src="item.icon" mode="aspectFit"></image>
-            <text :class="$style['gridItemText']">{{ item.text }}</text>
-          </navigator>
-        </view>
-      </view>
+          :class="$style['avatar']" mode="aspectFill"
+          :src="optimizeImage(customer.data.avatar || DEFAULT_AVATAR, 50)"
+        ></image>
+        <navigator url="/pages/profile/edit" open-type="navigate" hover-class="none">
+          <view :class="$style['fullName']">{{ customer.data.full_name || '未命名' }}</view>
+        </navigator>
+      </template>
+      <template v-else>
+        <image :class="$style['avatar']" mode="aspectFill" :src="DEFAULT_AVATAR"></image>
+        <navigator url="/pages/login/index" :class="$style['loginLink']" hover-class="none">去登录</navigator>
+      </template>
+      <image
+        v-if="customer.isAuthenticated && customer.data.mobile"
+        src="https://up.img.heidiancdn.com/o_1cbbcvna21ardpe01d411d7bm9a0qrcode.svg"
+        :class="$style['cardQrCode']"
+        @tap="openQrModal"/>
     </view>
-    <view :class="$style['infiniteProducts']">
-      <view :class="$style['infiniteProductsHead']">
-        <image :class="$style['infiniteProductsLogo']" mode="aspectFill" :src="'https://up.img.heidiancdn.com/o_1eh71dvj035vlmd1251d2b14on0up412x.png'|imageUrl(400)"></image>
-        <navigator :class="$style['infiniteProductsNavigator']" url="/pages/search/index" hover-class="none">
-          <text :class="$style['infiniteProductsNavigatorText']">查看全部</text>
-          <image :class="$style['infiniteProductsNavigatorArrow']" mode="aspectFit" src="https://up.img.heidiancdn.com/o_1eh71g4odmlspfo1ubjqc196a0copy2x.png"></image>
+    <view :class="$style['section']">
+      <view :class="$style['sectionHead']">
+        <text :class="$style['sectionHeadTitle']">我的订单</text>
+        <navigator
+          :class="$style['sectionHeadNavigator']"
+          open-type="navigate" hover-class="none" url="/pages/orders/index"
+        >查看全部 <text class="el-icon-arrow-right"></text></navigator>
+      </view>
+      <view :class="$style['grid']">
+        <navigator
+          v-for="(item, index) in orderNavigators" :key="index"
+          open-type="navigate" hover-class="none" :url="item.url"
+          :class="[$style['gridItem'], $style['gridNavigator'], $style['gridNavigatorDivider']]"
+        >
+          <image :class="$style['gridItemIcon']" :src="item.icon" mode="aspectFit"></image>
+          <text :class="$style['gridItemText']">{{ item.text }}</text>
         </navigator>
       </view>
-      <view :class="$style['infiniteProductsBody']">
-        <infiniteProducts></infiniteProducts>
+    </view>
+    <view :class="$style['section']">
+      <view :class="$style['sectionHead']">
+        <text :class="$style['sectionHeadTitle']">我的功能</text>
+      </view>
+      <view :class="$style['grid']">
+        <navigator
+          v-for="item in otherNavigators" :key="item.text"
+          open-type="navigate" hover-class="none" :url="item.url"
+          :class="[$style['gridItem'], $style['gridNavigator'], $style['gridNavigatorDivider']]"
+        >
+          <image :class="$style['gridItemIcon']" :src="item.icon" mode="aspectFit"></image>
+          <text :class="$style['gridItemText']">{{ item.text }}</text>
+        </navigator>
       </view>
     </view>
     <hs-dialog :visible.sync="qrDialogVisible">
@@ -145,14 +74,12 @@ import { optimizeImage, DEFAULT_AVATAR } from '@/utils/image'
 import { drawImg } from '@/utils/weapp-qrcode'
 import { handleErr } from '@/utils/errHelper'
 import Price from '@/components/Price'
-import InfiniteProducts from '@/components/InfiniteProducts'
 import HsDialog from '@/components/HsDialog'
 
 export default {
   name: 'Account',
   components: {
     Price,
-    InfiniteProducts,
     HsDialog,
   },
   data() {
@@ -160,34 +87,6 @@ export default {
       DEFAULT_AVATAR,
       qrDialogVisible: false,
       customerQrcodeBase64: '',
-      refereesCount: 0,
-      rebateSummary: {
-        'summary': {
-          'order_paid': '0.00',
-          'referee_order_paid': '0.00',
-          'referral': '0.00',
-        },
-        'balance': '0.00',
-        'withdrawn': '0.00',
-        'total_today': '0.00',
-        'total_this_month': '0.00',
-      },
-      promotionNavigators: [{
-        url: '/pages/partner/index',
-        openType: 'switchTab',
-        icon: 'https://up.img.heidiancdn.com/o_1eh4kgtf1qm01d8a1hovm201gqe0up263x.png',
-        text: '我的任务'
-      }, {
-        url: '',
-        openType: 'navigate',
-        icon: 'https://up.img.heidiancdn.com/o_1eh4kgtf11k0p1qk31mha1qgb1rjf0awards.png',
-        text: '粉丝排行榜'
-      }, {
-        url: '/pages/partner/talent',
-        openType: 'navigate',
-        icon: 'https://up.img.heidiancdn.com/o_1eh4kgtf149j1sk5bih1rpk1rfb0.png',
-        text: '推广帮助'
-      }],
       orderNavigators: [{
         url: '/pages/orders/index?filter=unpaid',
         icon: 'https://up.img.heidiancdn.com/o_1eh4ipmqg17erq8ufi5un71lj50opay2x.png',
@@ -225,66 +124,31 @@ export default {
     }
   },
   created() {
-    Taro.setNavigationBarColor({
-      frontColor: '#ffffff',
-      backgroundColor: '#1a1a1a'
-    })
-    Taro.setBackgroundColor({
-      backgroundColorTop: '#1a1a1a',
-      backgroundColor: '#1a1a1a',
-      backgroundColorBottom: '#f6f6f6',
-    })
+    // Taro.setNavigationBarColor({
+    //   frontColor: '#ffffff',
+    //   backgroundColor: '#1a1a1a'
+    // })
+    // Taro.setBackgroundColor({
+    //   backgroundColorTop: '#1a1a1a',
+    //   backgroundColor: '#1a1a1a',
+    //   backgroundColorBottom: '#f6f6f6',
+    // })
   },
   computed: {
-    ...mapState(['customer']),
-    partnerLevel() {
-      return 0
-    }
+    ...mapState(['customer'])
   },
   mounted() {},
   onShow() {
     // 下面做了 throttle, 不会频繁获取
     if (this.customer.isAuthenticated) {
-      this.throttleFetchRebates()
       this.throttleFetchCustomer()
-      this.throttleFetchReferees()
     }
-  },
-  onReachBottom() {
-    this.$store.dispatch('lists/infiniteProducts/listMore')
   },
   methods: {
     optimizeImage,
-    onTapInvite () {
-      if (this.partnerLevel > 0) {
-        Taro.navigateTo({ url: '/pages/misc/share' })
-      } else {
-        Taro.showModal({
-          title: '邀请返现',
-          content: '快快升级为国货大使，解锁邀请返现、购物返利等更多福利吧！',
-          showCancel: false
-        }).then((res) => {
-          if (res.confirm) {
-            Taro.switchTab({ url: '/pages/partner/index' })
-          } else {}
-        })
-      }
-    },
-    throttleFetchRebates: _.throttle(function() {
-      API.get('/substores/partners/rebate/summary/').then((res) => {
-        this.rebateSummary = res.data
-      }).catch((err) => {})
-    }, 5000, { leading: true, trailing: false }),
     throttleFetchCustomer: _.throttle(function() {
       // this.$store.dispatch('customer/getCustomer')  // 目前看起来不需要
     }, 5000, { leading: true, trailing: false }),
-    throttleFetchReferees: _.throttle(function() {
-      API.get('/substores/partners/referee/', {
-        params: { page_size: 1 }
-      }).then((res) => {
-        this.refereesCount = res.data.count
-      }).catch((err) => {})
-    }, 30000, { leading: true, trailing: false }),
     openQrModal() {
       const customerQrcodeBase64 = drawImg(this.customer.data.mobile, {
         typeNumber: 4,
@@ -302,27 +166,9 @@ export default {
 
 <style lang="scss" module>
 @import '@/styles/mixins';
-$color-bg: #1a1a1a;
-$color-bg-light: #373737;
-$color-bg-lighter: #f6f6f6;
-$color-bg-dark: #000000;
-$color-text: #ffffff;
-$color-text-dark: #000000;
-$color-text-light: rgba(#ffffff, 0.6);
-$color-golden: #e7cba7;
-$color-red: #e74c3c;
-$color-bg-progress: #272727;
-$color-brown: #5c411a;
-$color-box-shadow: rgba(0, 0, 0, 0.2);
 $color-divider: rgba(#ffffff, 0.1);
-
 .page {
-  //
-}
-.darkMode {
-  background-color: $color-bg;
-  color: $color-text;
-  padding: 10px 20px 50px;
+  background-color: #f6f6f6;
 }
 .main {
   width: 100%;
@@ -345,16 +191,6 @@ $color-divider: rgba(#ffffff, 0.1);
   max-width: 100px;
   @include ellipsis();
 }
-.levelTitle {
-  font-size: 12px;
-  color: $color-text-light;
-}
-.heyshop {
-  width: 120px;
-  height: auto;
-  margin-left: auto;
-  margin-right: 5px;
-}
 .cardQrCode {
   width: 50px;
   height: 50px;
@@ -362,116 +198,6 @@ $color-divider: rgba(#ffffff, 0.1);
 .loginLink {
   flex: 1;
   padding: 10px 0;
-}
-
-/* partner */
-.partner {
-  width: 100%;
-  height: 34px;
-  margin-top: 15px;
-  border-radius: 17px;
-  background: linear-gradient(135deg, #020202 66.7%, $color-golden 33.3%);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-.partnerText {
-  font-size: 15px;
-  width: 64%;
-  text-align: center;
-  color: $color-golden;
-  font-weight: normal;
-}
-.partnerBtnText {
-  width: 32%;
-  font-size: 14px;
-  font-weight: bold;
-  text-align: center;
-  color: $color-brown;
-}
-
-/* balance */
-.balance {
-  margin-top: 15px;
-  width: 100%;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 2px 4px 10px 0 $color-box-shadow;
-  background-image: linear-gradient(126deg, $color-bg-light, $color-bg 87%);
-  color: $color-text-light;
-}
-.balanceMain {
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-.balanceValues {
-  display: flex;
-  flex-direction: column;
-  color: $color-text;
-}
-.balanceValuesLabel {
-  font-size: 13px;
-}
-.balanceValuesNumber {
-  font-size: 22px;
-}
-.balanceValuesHint {
-  font-size: 10px;
-}
-.balanceBtns {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-end;
-}
-.withdrawHistory {
-  color: $color-text;
-  font-size: 12px;
-  display: flex;
-  align-items: center;
-}
-.bindAlipay {
-  margin-top: 20px;
-  font-size: 14px;
-  border-radius: 4px;
-  background-color: $color-golden;
-  color: $color-brown;
-  width: 100px;
-  height: 30px;
-  line-height: 30px;
-  padding: 0;
-  text-align: center;
-}
-
-.balanceDivider {
-  width: 100%;
-  height: 0;
-  border-top: 1px solid $color-divider;
-  margin: 15px 0;
-}
-
-.balanceSummary {
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-.balanceSummaryItem {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-.balanceSummaryLabel {
-  font-size: 12px;
-  line-height: 1;
-  margin-bottom: 10px;
-}
-.balanceSummaryValue {
-  font-size: 18px;
-  color: $color-text;
-  line-height: 1;
 }
 .grid {
   width: 100%;
@@ -498,7 +224,6 @@ $color-divider: rgba(#ffffff, 0.1);
 .gridItemText {
   font-size: 13px;
   line-height: 1;
-  color: $color-text-light;
 }
 .section {
   margin-top: 45px;
@@ -515,14 +240,12 @@ $color-divider: rgba(#ffffff, 0.1);
 .sectionHeadTitle {
   font-size: 15px;
   font-weight: bold;
-  color: $color-text;
   padding-left: 3px;
 }
 .sectionHeadNavigator {
   display: flex;
   align-items: center;
   font-size: 12px;
-  color: $color-text-light;
 }
 .gridNavigatorDivider:not(:last-child)::after {
   content: '';
@@ -532,37 +255,6 @@ $color-divider: rgba(#ffffff, 0.1);
   right: 0;
   border-right: 1px solid $color-divider;
 }
-.infiniteProducts {
-  padding: 20px 0;
-  background-color: $color-bg-lighter;
-}
-.infiniteProductsHead {
-  width: 100%;
-  padding: 15px;
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-}
-.infiniteProductsLogo {
-  width: 216px;
-  height: 72px;
-}
-.infiniteProductsNavigator {
-  display: flex;
-  align-items: center;
-}
-.infiniteProductsNavigatorText {
-  color: $color-text-dark;
-  font-size: 12px;
-  line-height: 22px;
-  border-bottom: 1px solid;
-}
-.infiniteProductsNavigatorArrow {
-  margin-left: 4px;
-  width: 22px;
-  height: 6px;
-}
-
 // qr dialog
 .dialogHeader {
   width: 100%;
