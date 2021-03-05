@@ -102,15 +102,9 @@
           "scene": null
         },
         {
-<<<<<<< HEAD
           "name": "pages/search/index",
           "pathName": "pages/search/index",
           "query": "",
-=======
-          "name": "pages/product/accessories/index",
-          "pathName": "pages/product/accessories/index",
-          "query": "product=88148",
->>>>>>> update product/accessories page
           "scene": null
         }
       ]
