@@ -82,7 +82,7 @@ const actions = {
       quantity: quantity,
       attributes: item.attributes
     }
-    await dispatch('_postVariant', payload)
+    return await dispatch('_postVariant', payload)
   },
   async setItemQuantity({ state, commit, dispatch }, { itemId, quantity } = {}) {
     /* cartToken 不存在不需要报错, items 是空的, 本来就会报错 */
