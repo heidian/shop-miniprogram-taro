@@ -20,7 +20,6 @@
           :class="$style['productPrice']" :highlight="true" :keepZero="true"
           :price="currentVariant.price" :compareAtPrice="currentVariant.compare_at_price"
         ></price>
-        <!--
         <view :class="[$style['iconBtn'], $style['iconBtnFavorite']]" @tap="addToFavorite">
           <view
             :class="{'el-icon-star-on': !!favoriteId, 'el-icon-star-off': !favoriteId}"
@@ -28,7 +27,6 @@
           ></view>
           <view :class="$style['iconBtnText']">心愿单</view>
         </view>
-        -->
       </view>
       <!-- 商品标题和描述 -->
       <view :class="$style['productTitle']">{{ product.title }}</view>
@@ -133,7 +131,7 @@ export default {
     data() 方法返回的属性和本地变量名称用驼峰, 其他 object 的 key 不做限制 */
     return {
       productId: +id || null,
-      productName: name,
+      productName: name || null,
       product: {
         variants: []
       },
@@ -252,7 +250,6 @@ export default {
       // 这里一定要监听 close 然后把 visible 变成 false, 不然再点击打开, 组件检测不到变化
       this.variantsDrawer = { visible: false, openType: '' }
     },
-    /*
     addToFavorite: _.throttle(async function() {
       if (!this.customer.isAuthenticated) {
         Taro.navigateTo({ url: '/pages/login/index' })
@@ -275,7 +272,6 @@ export default {
         } catch(err) { console.log(err) }
       }
     }, 2000),
-    */
     async checkFavorite() {
       if (this.customer.isAuthenticated) {
         const { data } = await API.get('/customers/favorite/', {
