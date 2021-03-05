@@ -290,7 +290,11 @@ export default {
       this.fetchProducts()
     },
     getProductColorOptions(product) {
-      const option = _.find(product.options, { title: '颜色' }) || []
+      const colorOptionTitle = _.get(this.$store.state.theme, 'themeSettingsData.colorOptionTitle.value') || ''
+      const option = _.find(product.options, { title: colorOptionTitle }) || []
+      if (!option) {
+        return []
+      }
       const results = _.map(option.values, (colorName) => {
         let image = this.colorNameToImage[colorName]
         if (!image) {

@@ -73,6 +73,17 @@
   &:global(.is-disabled) {
     color: $color-text-light;
   }
+  &.optionLabelImage {
+    color: transparent;
+    height: 28px;  // 20 + (2 + 2) * 2
+    width: 28px;  // 20 + (2 + 2) * 2
+    min-width: 0;
+    overflow: hidden;
+    border-radius: 0;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
 }
 
 /* quantity */

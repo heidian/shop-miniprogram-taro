@@ -17,8 +17,17 @@
       <view v-for="option in options" :key="option.title" :class="$style['optionGroup']">
         <view :class="$style['optionTitle']">{{ option.title }}</view>
         <view :class="$style['optionValues']">
-          <view v-for="item in option.items" :key="item.value"
-            :class="{[$style['optionLabel']]: true, 'is-selected': item.selected, 'is-disabled': item.disabled}"
+          <view
+            v-for="item in option.items" :key="item.value"
+            :class="{
+              [$style['optionLabel']]: true,
+              [$style['optionLabelImage']]: !!item.image,
+              'is-selected': item.selected,
+              'is-disabled': item.disabled,
+            }"
+            :style="item.image ? {
+              'backgroundImage': backgroundImageUrl(item.image)
+            } : {}"
             @tap="() => onClickOptionValue(option.title, item.value)"
           >{{item.value}}</view>
         </view>
@@ -47,6 +56,7 @@ import _ from 'lodash'
 import { mapState, mapGetters } from 'vuex'
 import { API } from '@/utils/api'
 import { handleErr } from '@/utils/errHelper'
+import { optimizeImage, backgroundImageUrl } from '@/utils/image'
 import Price from '@/components/Price'
 import InputNumber from '@/components/InputNumber'
 import DrawerBottom from '@/components/DrawerBottom'
@@ -95,6 +105,8 @@ export default {
     ...mapGetters('system', ['isLikeIphoneX'])
   },
   methods: {
+    optimizeImage,
+    backgroundImageUrl,
     onDrawerClose() {
       this.isVisible = false
       if (this.selectedVariant.id) {
@@ -102,21 +114,34 @@ export default {
       }
       this.$emit('close')
     },
-    onDrawerOpen() {
-      this.isVisible = true
-      this.selectedVariant = { ...this.variant }
-      this.variants = _.map(this.product.variants, variant => ({ ...variant }))
-      this.options = _.map(this.product.options, (option) => {
+    formatOptions() {
+      const colorOptionTitle = _.get(this.$store.state.theme, 'themeSettingsData.colorOptionTitle.value') || ''
+      const colorOptionImages = _.get(this.$store.state.theme, 'themeSettingsData.colorOptionImages') || []
+      const results = _.map(this.product.options, (option) => {
         const title = option.title
-        const items = _.map(option.values, value => {
-          return {
+        const items = _.map(option.values, (value) => {
+          const result = {
             value: value,
             disabled: false,
             selected: value === _.get(_.find(this.selectedVariant.options, { title }), 'value')
           }
+          if (title === colorOptionTitle) {
+            const colorImageItem = _.find(colorOptionImages, (item) => _.get(item, 'name.value') === value)
+            if (colorImageItem) {
+              result['image'] = colorImageItem.image
+            }
+          }
+          return result
         })
         return { title, items }
       })
+      return results
+    },
+    onDrawerOpen() {
+      this.isVisible = true
+      this.selectedVariant = { ...this.variant }
+      this.variants = _.map(this.product.variants, variant => ({ ...variant }))
+      this.options = this.formatOptions()
     },
     onClickOptionValue(title, value) {
       const options = _.cloneDeep(this.options)
