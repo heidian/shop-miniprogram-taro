@@ -35,7 +35,8 @@
           open-type="navigate" hover-class="none" :url="item.url"
           :class="[$style['gridItem'], $style['gridNavigator'], $style['gridNavigatorDivider']]"
         >
-          <image :class="$style['gridItemIcon']" :src="item.icon" mode="aspectFit"></image>
+          <!-- <image :class="$style['gridItemIcon']" :src="item.icon" mode="aspectFit"></image> -->
+          <view :class="[$style['gridItemIcon'], item.iconClass]"></view>
           <text :class="$style['gridItemText']">{{ item.text }}</text>
         </navigator>
       </view>
@@ -44,16 +45,6 @@
       <view :class="$style['sectionHead']">
         <text :class="$style['sectionHeadTitle']">我的功能</text>
       </view>
-      <!-- <view :class="$style['grid']">
-        <navigator
-          v-for="item in otherNavigators" :key="item.text"
-          open-type="navigate" hover-class="none" :url="item.url"
-          :class="[$style['gridItem'], $style['gridNavigator'], $style['gridNavigatorDivider']]"
-        >
-          <image :class="$style['gridItemIcon']" :src="item.icon" mode="aspectFit"></image>
-          <text :class="$style['gridItemText']">{{ item.text }}</text>
-        </navigator>
-      </view> -->
       <view :class="$style['cellMenus']">
         <template v-for="item, index in otherNavigators">
           <button v-if="item.openType" :class="['button', $style['cellMenuItem']]" :key="index" :open-type="item.openType">
@@ -108,22 +99,22 @@ export default {
       orderNavigators: [{
         url: '/pages/orders/index?filter=unpaid',
         // icon: 'https://up.img.heidiancdn.com/o_1eh4ipmqg17erq8ufi5un71lj50opay2x.png',
-        icon: 'https://up.img.heidiancdn.com/o_1cb4okik5efc1fkdqurjjgl9s0ntopay.svg?imageView2/1/w/20/h/20/ignore-error/1',
+        iconClass: 'el-icon-time',
         text: '待付款'
       }, {
         url: '/pages/orders/index?filter=paid',
         // icon: 'https://up.img.heidiancdn.com/o_1eh4ipmqg1ads6g21aba1bhn1e870paid2x.png',
-        icon: 'https://up.img.heidiancdn.com/o_1cb4okik417m019mu1cem10321qe70onpaid.svg?imageView2/1/w/20/h/20/ignore-error/1',
+        iconClass: 'el-icon-wallet',
         text: '已付款'
       }, {
         url: '/pages/orders/index?filter=closed',
         // icon: 'https://up.img.heidiancdn.com/o_1eh4ipmqg1mnck81cve1gf6asd0shed2x.png',
-        icon: 'https://up.img.heidiancdn.com/o_1cb4okik415ga181227a1uvv5ad0nished.svg?imageView2/1/w/20/h/20/ignore-error/1',
+        iconClass: 'el-icon-circle-check',
         text: '已完成'
       }, {
         url: '/pages/orders/index?filter=cancelled',
         // icon: 'https://up.img.heidiancdn.com/o_1eh4ipmqf1112btg1f3jjdden0eled2x.png',
-        icon: 'https://up.img.heidiancdn.com/o_1cb4okik3vf01msd1gsf83h1q8l0nceled.svg?imageView2/1/w/20/h/20/ignore-error/1',
+        iconClass: 'el-icon-circle-close',
         text: '已取消'
       }],
       otherNavigators: [{
@@ -236,13 +227,11 @@ export default {
   align-items: center;
 }
 .gridItemIcon {
+  display: block;
+  font-size: 20px;
   width: 20px;
   height: 20px;
   margin-bottom: 15px;
-}
-.gridItemIconBigger {
-  width: 25px;
-  height: 25px;
 }
 .gridItemText {
   font-size: 13px;
