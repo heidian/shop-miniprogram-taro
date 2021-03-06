@@ -1,5 +1,5 @@
 import _ from 'lodash'
-// import Vue from 'vue'
+import Vue from 'vue'
 import tinycolor from 'tinycolor2'
 import Taro from '@tarojs/taro'
 import { API } from '@/utils/api'
@@ -65,7 +65,7 @@ const mutations = {
     // 如果不这么写, 新增一个 [key] 的时候, store 的变化不会被监听到
     state.blocksOfPage = {
       ...state.blocksOfPage,
-      [key]: pageSettingsData['components'],
+      [key]: pageSettingsData['components'] || [],
     }
   },
   reorderBlocks(state, { pageType, pageName, ids }) {
@@ -105,6 +105,8 @@ const mutations = {
         ...blockSettingsData,
       }
       blocks[blockIndex]['settings_data'] = settingsData
+      // TODO: 只是上面那么写似乎科技监听到新添加的板块的变化, 所以不需要下面这句
+      // state.blocksOfPage[key] = [ ...blocks ]
     }
   },
   updateBlockCSS(state, { pageType, pageName, id, blockCSS }) {
@@ -117,6 +119,8 @@ const mutations = {
         ...blockCSS,
       }
       blocks[blockIndex]['css'] = css
+      // TODO: 只是上面那么写似乎科技监听到新添加的板块的变化, 所以不需要下面这句
+      // state.blocksOfPage[key] = [ ...blocks ]
     }
   },
   updateThemeSettingsData(state, { themeSettingsData }) {
