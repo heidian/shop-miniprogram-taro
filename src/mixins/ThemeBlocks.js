@@ -38,19 +38,22 @@ export default {
   computed: {
     blocks() {
       const key = (this.pageType && this.pageName) ? `${this.pageType}/${this.pageName}` : this.pageType
-      const blocks = _.cloneDeep(this.$store.state.theme.blocksOfPage[key] || [])
-      _.forEach(blocks, (block) => {
-        if (_.isObject(block.css.backgroundImage)) {
-          block.css.backgroundImage = backgroundImageUrl(block.css.backgroundImage, 400)
+      const blocks = this.$store.state.theme.blocksOfPage[key] || []
+      return _.map(blocks, (block) => {
+        const css = { ...(block.css || {}) }
+        if (_.isObject(css.backgroundImage)) {
+          css.backgroundImage = backgroundImageUrl(css.backgroundImage, 400)
         }
         _.forEach(['paddingTop', 'paddingBottom', 'paddingRight', 'paddingLeft'], (prop) => {
-          if (block.css[prop] && /^\d+(\.\d+)?(px)?$/.test(block.css[prop])) {
-            block.css[prop] = Taro.pxTransform(block.css[prop])
+          if (css[prop] && /^\d+(\.\d+)?(px)?$/.test(css[prop])) {
+            css[prop] = Taro.pxTransform(css[prop])
           }
         })
-        block.componentClass = BLOCKS_MAP[block.name]
+        const componentClass = BLOCKS_MAP[block.name]
+        return {
+          ...block, css, componentClass
+        }
       })
-      return blocks
     }
   },
   methods: {
