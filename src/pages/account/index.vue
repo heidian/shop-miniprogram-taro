@@ -21,11 +21,11 @@
         :class="$style['cardQrCode']"
         @tap="openQrModal"/>
     </view>
-    <view :class="$style['section']">
-      <view :class="$style['sectionHead']">
-        <text :class="$style['sectionHeadTitle']">我的订单</text>
+    <view :class="$style['gridMenus']">
+      <view :class="$style['gridMenusHeader']">
+        <text>我的订单</text>
         <navigator
-          :class="$style['sectionHeadNavigator']"
+          style="font-size: 0.8em; opacity: 0.9;"
           open-type="navigate" hover-class="none" url="/pages/orders/index"
         >查看全部 <text class="el-icon-arrow-right"></text></navigator>
       </view>
@@ -33,36 +33,27 @@
         <navigator
           v-for="(item, index) in orderNavigators" :key="index"
           open-type="navigate" hover-class="none" :url="item.url"
-          :class="[$style['gridItem'], $style['gridNavigator'], $style['gridNavigatorDivider']]"
+          :class="$style['gridItem']"
         >
           <!-- <image :class="$style['gridItemIcon']" :src="item.icon" mode="aspectFit"></image> -->
-          <view :class="[$style['gridItemIcon'], item.iconClass]"></view>
+          <text :class="[$style['gridItemIcon'], item.iconClass]"></text>
           <text :class="$style['gridItemText']">{{ item.text }}</text>
         </navigator>
       </view>
     </view>
-    <view :class="$style['section']">
-      <view :class="$style['sectionHead']">
-        <text :class="$style['sectionHeadTitle']">我的功能</text>
-      </view>
-      <view :class="$style['cellMenus']">
-        <template v-for="item, index in otherNavigators">
-          <button v-if="item.openType" :class="['button', $style['cellMenuItem']]" :key="index" :open-type="item.openType">
-            <view :class="$style['cellLabel']">{{ item.text }}</view>
-            <view :class="$style['cellValue']"></view>
-            <view :class="$style['cellFt']">
-              <image v-if="item.hasCaret" :class="$style['cellftIcon']" src="https://up.img.heidiancdn.com/o_1egfmehbs19vhj4p7cn1ko4kqi0next.png" mode="aspectFill"></image>
-            </view>
-          </button>
-          <navigator v-else :class="$style['cellMenuItem']" :key="index" :url="item.url" open-type="navigate">
-            <view :class="$style['cellLabel']">{{ item.text }}</view>
-            <view :class="$style['cellValue']"></view>
-            <view :class="$style['cellFt']">
-              <image v-if="item.hasCaret" :class="$style['cellftIcon']" src="https://up.img.heidiancdn.com/o_1egfmehbs19vhj4p7cn1ko4kqi0next.png" mode="aspectFill"></image>
-            </view>
-          </navigator>
-        </template>
-      </view>
+    <view :class="$style['cellMenus']">
+      <template v-for="item, index in cellNavigators">
+        <button v-if="item.openType" :class="['button', $style['cellMenuItem']]" :key="index" :open-type="item.openType">
+          <view :class="[$style['cellIcon'], item.iconClass]"></view>
+          <view :class="$style['cellLabel']">{{ item.text }}</view>
+          <view :class="[$style['cellArrow'], 'el-icon-arrow-right']"></view>
+        </button>
+        <navigator v-else :class="$style['cellMenuItem']" :key="index" :url="item.url" open-type="navigate">
+          <view :class="[$style['cellIcon'], item.iconClass]"></view>
+          <view :class="$style['cellLabel']">{{ item.text }}</view>
+          <view :class="[$style['cellArrow'], 'el-icon-arrow-right']"></view>
+        </navigator>
+      </template>
     </view>
     <hs-dialog :visible.sync="qrDialogVisible">
       <view :class="$style['dialogHeader']" slot="header">会员扫码</view>
@@ -97,42 +88,22 @@ export default {
       qrDialogVisible: false,
       customerQrcodeBase64: '',
       orderNavigators: [{
-        url: '/pages/orders/index?filter=unpaid',
-        // icon: 'https://up.img.heidiancdn.com/o_1eh4ipmqg17erq8ufi5un71lj50opay2x.png',
-        iconClass: 'el-icon-time',
-        text: '待付款'
+        url: '/pages/orders/index?filter=unpaid', iconClass: 'el-icon-time', text: '待付款'
       }, {
-        url: '/pages/orders/index?filter=paid',
-        // icon: 'https://up.img.heidiancdn.com/o_1eh4ipmqg1ads6g21aba1bhn1e870paid2x.png',
-        iconClass: 'el-icon-wallet',
-        text: '已付款'
+        url: '/pages/orders/index?filter=paid', iconClass: 'el-icon-wallet', text: '已付款'
       }, {
-        url: '/pages/orders/index?filter=closed',
-        // icon: 'https://up.img.heidiancdn.com/o_1eh4ipmqg1mnck81cve1gf6asd0shed2x.png',
-        iconClass: 'el-icon-circle-check',
-        text: '已完成'
+        url: '/pages/orders/index?filter=closed', iconClass: 'el-icon-circle-check', text: '已完成'
       }, {
-        url: '/pages/orders/index?filter=cancelled',
-        // icon: 'https://up.img.heidiancdn.com/o_1eh4ipmqf1112btg1f3jjdden0eled2x.png',
-        iconClass: 'el-icon-circle-close',
-        text: '已取消'
+        url: '/pages/orders/index?filter=cancelled', iconClass: 'el-icon-circle-close', text: '已取消'
       }],
-      otherNavigators: [{
-        url: '/pages/account/coupon-codes',
-        icon: 'https://up.img.heidiancdn.com/o_1eh4ipmqf1f1k1foe13541saq1o9e0hape2x.png',
-        text: '优惠券'
+      cellNavigators: [{
+        url: '/pages/account/coupon-codes', iconClass: 'el-icon-collection-tag', text: '优惠券'
       }, {
-        url: '/pages/addresses/index',
-        icon: 'https://up.img.heidiancdn.com/o_1eh4ipmqg1sv31rko9toam31q1m0hape2x.png',
-        text: '收货地址'
+        url: '/pages/addresses/index', iconClass: 'el-icon-location-outline', text: '收货地址'
       }, {
-        url: '/pages/account/favorites',
-        icon: 'https://up.img.heidiancdn.com/o_1eh4ipmqgbe6ker5eg12j31g560path2x.png',
-        text: '我的收藏'
+        url: '/pages/account/favorites', iconClass: 'el-icon-star-off', text: '我的收藏'
       }, {
-        url: '/pages/account/settings',
-        icon: 'https://up.img.heidiancdn.com/o_1ekhnbg86slc5db7a82t13q10ttings.png',
-        text: '设置'
+        url: '/pages/account/settings', iconClass: 'el-icon-setting', text: '设置'
       }]
     }
   },
@@ -213,60 +184,93 @@ export default {
   flex: 1;
   padding: 10px 0;
 }
-.grid {
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+
+.gridMenus {
+  background-color: #ffffff;
+  margin: 10px auto;
+  .gridMenusHeader {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 7px 15px;
+    // border-bottom: 1px solid $color-divider;
+  }
+  .grid {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 30px 20px;
+  }
+  .gridItem {
+    text-align: center;
+    + .gridItem::after {
+      content: '';
+      position: absolute;
+      top: 10px;
+      bottom: 10px;
+      left: 0;
+      border-left: 1px solid $color-divider;
+    }
+  }
+  .gridItemIcon {
+    display: block;
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+    margin: 0 auto 15px;
+  }
+  .gridItemText {
+    display: block;
+    font-size: 13px;
+    line-height: 1;
+  }
 }
-.gridItem {
-  flex: 1;
+
+.cellMenus {
+  background-color: #fff;
+  margin: 10px auto;
+}
+.cellMenuItem {
+  background-color: transparent;
+  margin-left: auto;
+  margin-right: auto;
+  outline: none;
+  width: 100%;
+  padding: 20px 15px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
   position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  line-height: 20px;
+  + .cellMenuItem::after {
+    content: '';
+    position: absolute;
+    left: 15px;
+    right: 15px;
+    top: 0;
+    border-top: 1px solid $color-divider;
+  }
+  .cellIcon {
+    // margin-left: 5px;
+    margin-right: 5px;
+    font-size: 18px;
+    opacity: 0.3;
+  }
+  .cellLabel {
+    margin-left: 5px;
+    // font-size: 15px;
+    color: $color-text;
+  }
+  .cellArrow {
+    width: 10px;
+    height: 12px;
+    opacity: 0.2;
+    margin-left: auto;
+  }
 }
-.gridItemIcon {
-  display: block;
-  font-size: 20px;
-  width: 20px;
-  height: 20px;
-  margin-bottom: 15px;
-}
-.gridItemText {
-  font-size: 13px;
-  line-height: 1;
-}
-.section {
-  margin-top: 45px;
-}
-.sectionHead {
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding-bottom: 7px;
-  border-bottom: 1px solid $color-divider;
-  margin-bottom: 10px;
-}
-.sectionHeadTitle {
-  font-size: 15px;
-  font-weight: bold;
-  padding-left: 3px;
-}
-.sectionHeadNavigator {
-  display: flex;
-  align-items: center;
-  font-size: 12px;
-}
-.gridNavigatorDivider:not(:last-child)::after {
-  content: '';
-  position: absolute;
-  top: 10px;
-  bottom: 10px;
-  right: 0;
-  border-right: 1px solid $color-divider;
-}
+
 // qr dialog
 .dialogHeader {
   width: 100%;
@@ -314,57 +318,6 @@ export default {
     margin-top: -1px;
     // background-color: aqua;
     border-top: 1px solid #aaaaaa;
-  }
-}
-
-.cellMenus {
-  background-color: #fff;
-}
-.cellMenuItem {
-  background-color: transparent;
-  margin-left: auto;
-  margin-right: auto;
-  outline: none;
-  width: 100%;
-  padding: 15px;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  font-size: 12px;
-  position: relative;
-  line-height: 2.2;
-  &::after {
-    display: none;
-  }
-  .cellLabel {
-    margin-right: 20px;
-    font-size: 15px;
-    color: $color-text;
-  }
-  .cellValue {
-    flex: 1;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-  .cellFt {
-    margin-left: 20px;
-  }
-  // & + & {
-  //   border-top: 1px solid $color-divider;
-  // }
-  &:not(:last-child)::before {
-    content: '';
-    position: absolute;
-    left: 15px;
-    right: 15px;
-    bottom: 0;
-    border-bottom: 1px solid $color-divider;
-  }
-  .cellftIcon {
-    width: 10px;
-    height: 12px;
-    opacity: 0.2;
   }
 }
 </style>
