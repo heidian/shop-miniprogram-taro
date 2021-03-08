@@ -1,9 +1,6 @@
 <template>
-  <view class="block--featured-products" :style="css">
-    <view
-      v-for="product in products.data" :key="product.id"
-      class="grid" :style="gridStyle"
-    >
+  <view :class="{'block--featured-products': true, 'scroll': layout === 'scroll'}" :style="css">
+    <view v-for="product in products.data" :key="product.id" :style="gridStyle" class="grid-wrapper">
       <view
         :class="{
           'product-item': true,
@@ -64,6 +61,7 @@ export default {
     settingsData: {
       type: Object,
       default: () => ({
+        layout: 'grids',  // scroll|grids
         backgroundColor: null,  // 商品格子的底色
         productsQuery: {},  // 商品过滤参数
         gridGap: 0,  // px 整数
@@ -84,6 +82,10 @@ export default {
     }
   },
   computed: {
+    layout() {
+      // scroll 或者是 grids
+      return this.settingsData.layout || 'grids'
+    },
     columns() {
       return Math.max(1, +this.settingsData.columns || 0)
     },
@@ -153,6 +155,13 @@ export default {
   flex-wrap: wrap;
   justify-content: flex-start;
   align-items: flex-start;
+  &.scroll {
+    flex-wrap: nowrap;
+    overflow-x: scroll;
+    > .grid-wrapper {
+      flex: none;
+    }
+  }
   .product-item {
     overflow: hidden;
   }
