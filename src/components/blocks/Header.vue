@@ -3,7 +3,10 @@
 </template>
 
 <script>
+import _ from 'lodash'
 import Taro from '@tarojs/taro'
+import tinycolor from 'tinycolor2'
+
 export default {
   props: {
     css: {
@@ -19,7 +22,14 @@ export default {
     }
   },
   mounted() {
-    Taro.setNavigationBarColor(this.settingsData)
+    const colors = {}
+    _.forEach(['frontColor', 'backgroundColor'], (colorName) => {
+      if (this.settingsData[colorName]) {
+        colors[colorName] = tinycolor(this.settingsData[colorName]).toHexString()
+      }
+    })
+    // setNavigationBarColor 只接受 hex 格式的颜色
+    Taro.setNavigationBarColor(colors)
     // if (this.settingsData.backgroundColor) {
     //   Taro.setBackgroundColor({
     //     backgroundColorTop: this.settingsData.backgroundColor
