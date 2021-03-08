@@ -14,11 +14,11 @@
       </view>
     </view>
     <view :class="$style['optionsWrapper']">
-      <view v-for="option in options" :key="option.title" :class="$style['optionGroup']">
+      <view v-for="option in options" :key="`${product.id}-${option.title}`" :class="$style['optionGroup']">
         <view :class="$style['optionTitle']">{{ option.title }}</view>
         <view :class="$style['optionValues']">
           <view
-            v-for="item in option.items" :key="item.value"
+            v-for="item in option.items" :key="`${product.id}-${item.value}`"
             :class="{
               [$style['optionLabel']]: true,
               [$style['optionLabelImage']]: !!item.image,
@@ -111,12 +111,21 @@ export default {
   methods: {
     optimizeImage,
     backgroundImageUrl,
+    resetData() {
+      this.variants = []
+      this.options = []
+      this.selectedVariant = {}
+      this.quantity = 1
+      this.pending = true
+    },
     onDrawerClose() {
       this.$emit('update:visible', false)
       if (this.selectedVariant.id) {
         this.$emit('selectVariant', this.selectedVariant.id, this.quantity)
       }
       this.$emit('close')
+      // 这里暂时先注释，不采用reset的方式，而是采用更新模版里列表渲染的key，来保证传入不同product 和 variant的时候，option渲染也会强制更新
+      // this.resetData()
     },
     onDrawerOpen() {
       this.$emit('update:visible', true)
