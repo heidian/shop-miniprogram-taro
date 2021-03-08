@@ -26,7 +26,9 @@ export const optimizeImage = (url, options) => {
     // if (/\.png$/.test(url) ||
     // 小程序现在支持 webp 了, 强制转换, 任何格式都可以转换成 webp
     // 这个还不大确定兼容性, 目前暂时还是转成 jpg, 并且只对大的 png 图片进行处理
-    format = 'jpg'  // webp
+    // format = 'jpg'  // webp
+    // 使用这份代码的小程序版本都比较新, 可以直接用 webp, 但只处理大图
+    format = 'webp'
   }
   // const ratio = Math.ceil(global.devicePixelRatio || 1)
   // 小程序的 devicePixelRatio 不是这么取的, 先固定成 2
