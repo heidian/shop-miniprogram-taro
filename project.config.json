@@ -106,6 +106,12 @@
           "pathName": "pages/search/index",
           "query": "",
           "scene": null
+        },
+        {
+          "name": "pages/product/accessories/index",
+          "pathName": "pages/product/accessories/index",
+          "query": "product=88133",
+          "scene": null
         }
       ]
     }

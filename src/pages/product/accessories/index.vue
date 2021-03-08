@@ -66,10 +66,10 @@
     </view>
 
     <select-variant
-      :visible="variantsDrawer.visible"
+      :visible.sync="variantsDrawer.visible"
       :product="variantsDrawer.product"
       :variant="variantsDrawer.currentVariant"
-      @confirm="onSelectVariant"
+      @selectVariant="onSelectVariant"
       @close="onCloseVariantsDrawer"
     ></select-variant>
   </view>
@@ -82,7 +82,8 @@ import _ from 'lodash'
 import { API } from '@/utils/api'
 import { optimizeImage, backgroundImageUrl } from '@/utils/image'
 import { handleErr } from '@/utils/errHelper'
-import SelectVariant from './SelectVariant/SelectVariant'
+// import SelectVariant from './SelectVariant/SelectVariant'
+import SelectVariant from '@/components/SelectVariant/SelectVariant'
 import Price from '@/components/Price'
 import InputNumber from '@/components/InputNumber'
 
@@ -228,7 +229,7 @@ export default {
     },
     onCloseVariantsDrawer() {
       // 这里一定要监听 close 然后把 visible 变成 false, 不然再点击打开, 组件检测不到变化
-      this.variantsDrawer = { visible: false, product: {}, currentVariant: {} }
+      // this.variantsDrawer = { visible: false, product: {}, currentVariant: {} }
     },
     getQuantityMaxValue (item = {}) {
       if (!item.variant || !item.variant.is_available) {
@@ -238,22 +239,23 @@ export default {
       if (inventory_policy === 'continue') return 999999
       else return inventory_quantity
     },
-    onSelectVariant ({productId, variant, quantity = 1}) {
-      if (!productId || !variant || !quantity) return
-      if (productId === this.productId) {
+    onSelectVariant(variantId) {
+      // 用回同一个 SelectVariant 组件，所以接收的参数也是一样的，在此场景下 quantity 在页面里选择，而不是在组件里选择，所以这里🈯️需要接收 variantId
+      const { product, currentVariant } = this.variantsDrawer
+      if (!variantId || currentVariant.id === variantId) return
+      const variant = _.find(product.variants, { id: variantId })
+
+      if (product.id === this.productId) {
+        // 主商品
         this.mainCartItem.variant = { ...variant }
-        this.mainCartItem.quantity = quantity
         this.mainCartItem.checked = variant && variant.is_available
-        console.log('@@@@@ onSelectVariant', this.mainCartItem)
       } else {
         const matchedItem = _.find(this.otherCartItems, item => {
-          return _.get(item.product, 'id') === productId
+          return _.get(item.product, 'id') === product.id
         })
         if (!matchedItem) return
         matchedItem.variant = { ...variant }
-        matchedItem.quantity = quantity
         matchedItem.checked = variant && variant.is_available
-        console.log('@@@@@ onSelectVariant', this.otherCartItems)
       }
       this.onCloseVariantsDrawer()
     },
