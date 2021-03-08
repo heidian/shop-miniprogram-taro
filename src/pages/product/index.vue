@@ -93,12 +93,12 @@
       <text :class="$style['productShareText']">立赚</text>
     </view>
     <select-variant
-      :visible="variantsDrawer.visible"
+      :visible.sync="variantsDrawer.visible"
       :openType="variantsDrawer.openType"
       :product="product"
       :variant="currentVariant"
       @selectVariant="onSelectVariant"
-      @close="onCloseVariantsDrawer"
+      @close="onVariantsDrawerClosed"
     ></select-variant>
     <share-drawer v-if="productId" :visible.sync="shareDrawerVisible" :productId="productId"></share-drawer>
   </view>
@@ -258,13 +258,15 @@ export default {
         openType
       }
     },
-    onSelectVariant(variantId) {
+    onSelectVariant(variantId, quantity) {
+      // console.log(variantId, quantity)
       if (!variantId || variantId === this.currentVariant.id) return
       this.currentVariant = _.find(this.product.variants || [], { id: variantId })
     },
-    onCloseVariantsDrawer() {
-      // 这里一定要监听 close 然后把 visible 变成 false, 不然再点击打开, 组件检测不到变化
-      this.variantsDrawer = { visible: false, openType: '' }
+    onVariantsDrawerClosed() {
+      // 这里什么都不用做, visible 是通过 sync 修饰符直接修改的, 如果没有加 sync 才需要下面这一句
+      // // 这里一定要监听 close 然后把 visible 变成 false, 不然再点击打开, 组件检测不到变化
+      // this.variantsDrawer = { visible: false, openType: '' }
     },
     addToFavorite: _.throttle(async function() {
       if (!this.customer.isAuthenticated) {

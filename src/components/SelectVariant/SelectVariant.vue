@@ -1,6 +1,6 @@
 <template>
   <drawer-bottom
-    :visible="isVisible" @close="onDrawerClose" @open="onDrawerOpen"
+    :visible.sync="isVisible" @close="onDrawerClose" @open="onDrawerOpen"
     header="选择" :class="$style['drawerBody']"
   >
     <view :class="$style['header']">
@@ -38,14 +38,18 @@
       <input-number :class="$style['quantityInput']" :min="1" v-model="quantity"></input-number>
     </view>
     <view :class="{[$style['buttonsWrapper']]: true, [$style['isLikeIphoneX']]: isLikeIphoneX}">
-      <button v-if="openType !== 'buy_now'"
+      <button v-if="openType === 'add_to_cart'"
         :class="['button', 'button--primary', 'button--outline', 'button--small', 'button--round']"
         @tap="onClickAddToCart"
       >加入购物车</button>
-      <button v-if="openType !== 'add_to_cart'"
+      <button v-else-if="openType === 'buy_now'"
         :class="['button', 'button--primary', 'button--small', 'button--round']"
         @tap="onClickBuyNow"
       >立即购买</button>
+      <button v-else
+        :class="['button', 'button--primary', 'button--outline', 'button--small', 'button--round']"
+        @tap="isVisible = false"
+      >确定</button>
     </view>
   </drawer-bottom>
 </template>
@@ -108,11 +112,19 @@ export default {
     optimizeImage,
     backgroundImageUrl,
     onDrawerClose() {
-      this.isVisible = false
+      this.$emit('update:visible', false)
       if (this.selectedVariant.id) {
-        this.$emit('selectVariant', this.selectedVariant.id)
+        this.$emit('selectVariant', this.selectedVariant.id, this.quantity)
       }
       this.$emit('close')
+    },
+    onDrawerOpen() {
+      this.$emit('update:visible', true)
+      // 打开 drawer 的时候处理初始值, 就不需要 watch 除了 visible 以外其他 props 的变化了
+      this.quantity = 1
+      this.selectedVariant = { ...this.variant }
+      this.variants = _.map(this.product.variants, variant => ({ ...variant }))
+      this.options = this.formatOptions()
     },
     formatOptions() {
       const colorOptionTitle = _.get(this.$store.state.theme, 'themeSettingsData.colorOptionTitle.value') || ''
@@ -136,12 +148,6 @@ export default {
         return { title, items }
       })
       return results
-    },
-    onDrawerOpen() {
-      this.isVisible = true
-      this.selectedVariant = { ...this.variant }
-      this.variants = _.map(this.product.variants, variant => ({ ...variant }))
-      this.options = this.formatOptions()
     },
     onClickOptionValue(title, value) {
       const options = _.cloneDeep(this.options)
