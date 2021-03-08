@@ -5,7 +5,10 @@
       class="grid" :style="gridStyle"
     >
       <view
-        :class="{'product-item': true, 'product-item__fullwidth': +settingsData.columns === 1}"
+        :class="{
+          'product-item': true,
+          'product-item__fullwidth': columns === 1
+        }"
         :style="settingsData.backgroundColor ? {
           'borderRadius': '4px',  // 如果有底色, 就加一个圆角
           'backgroundColor': settingsData.backgroundColor
@@ -65,7 +68,7 @@ export default {
         productsQuery: {},  // 商品过滤参数
         gridGap: 0,  // px 整数
         imageRatio: 1,  // 宽高比
-        columns: 3,
+        columns: 1,
         buyButton: false,
         buyButtonBackground: null
       })
@@ -81,9 +84,12 @@ export default {
     }
   },
   computed: {
+    columns() {
+      return Math.max(1, +this.settingsData.columns || 0)
+    },
     gridStyle() {
       const style = {}
-      const columns = Math.max(1, +this.settingsData.columns || 0)
+      const columns = this.columns
       const gridGap = +this.settingsData.gridGap || 0
       const widthPercent = (100 / columns).toFixed(6)
       style['width'] = `${widthPercent}%`
