@@ -2,7 +2,7 @@
   "miniprogramRoot": "dist/",
   "projectname": "shopmini_taro",
   "description": "商家小程序 Taro 版",
-  "appid": "wx0ebd63bd0a26f767",
+  "appid": "wx87e4fac3e2962375",
   "setting": {
     "urlCheck": true,
     "es6": false,
@@ -21,8 +21,9 @@
     "checkSiteMap": false,
     "uploadWithSourceMap": true,
     "compileHotReLoad": false,
-    "useMultiFrameRuntime": false,
+    "useMultiFrameRuntime": true,
     "useApiHook": true,
+    "useApiHostProcess": false,
     "babelSetting": {
       "ignore": [],
       "disablePlugins": [],
