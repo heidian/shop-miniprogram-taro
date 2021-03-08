@@ -94,6 +94,7 @@ if (Taro.getEnv() === 'WEB') {
     }
   }
   if (typeof window !== 'undefined' && window.parent) {
+    // event.data['sender'] !== 'xxx'  优化一下, 限定一下 sender
     window.addEventListener('message', listenFromStyleEditor)
   }
 }

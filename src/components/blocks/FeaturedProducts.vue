@@ -74,8 +74,9 @@ export default {
   data() {
     return {
       products: {
+        query: {},
         data: [],
-        pending: false
+        pending: false,
       }
     }
   },
@@ -109,20 +110,32 @@ export default {
     optimizeImage,
     backgroundImageUrl,
     async fetchProducts() {
+      const productsQuery = _.cloneDeep(this.settingsData.productsQuery)
       this.products.pending = true
       const res = await API.get('/shopfront/product/', {
         params: {
-          ...this.settingsData.productsQuery,
+          ...productsQuery,
           fields: ['id', 'name', 'title', 'description', 'image', 'price', 'compare_at_price', 'metafields'].join(',')
         }
       })
       this.products = {
+        query: productsQuery,
         data: res.data.results,
         pending: false
       }
     },
     goToProduct(productName) {
       Taro.navigateTo({ url: `/pages/product/index?name=${productName}` })
+    }
+  },
+  watch: {
+    'settingsData.productsQuery': {
+      handler(newVal, oldVal) {
+        if (!_.isEqual(newVal, this.products.query)) {
+          this.fetchProducts()
+        }
+      },
+      deep: true,
     }
   }
 }
