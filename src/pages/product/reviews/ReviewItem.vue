@@ -172,7 +172,7 @@ export default {
 </script>
 
 <style lang="scss" module>
-@import '../variables.scss';
+@import '@/styles/variables';
 .reviewItem {
   width: 100%;
   display: flex;
@@ -182,7 +182,7 @@ export default {
   color: $color-text;
 }
 .reviewItem:not(:last-child) {
-  border-bottom: solid 1px $color-border;
+  border-bottom: solid 1px $color-divider;
 }
 .avatar {
   width: 40px;
@@ -226,13 +226,13 @@ export default {
 .actionText {
   margin-left: 3px;
   font-size: 10px;
-  color: $color-light;
+  color: $color-text-lighter;
 }
 .itemCreatedAt {
   margin-top: 5px;
   width: 100%;
   font-size: 11px;
-  color: $color-light;
+  color: $color-text-lighter;
 }
 .contentText {
   margin-top: 5px;
@@ -304,7 +304,7 @@ export default {
   display: flex;
   align-items: center;
   font-size: 12px;
-  color: $color-light;
+  color: $color-text-lighter;
 }
 .reviewItemMore::after {
   content: "";
@@ -317,6 +317,6 @@ export default {
   margin-top: -3px;
   border: 3px solid transparent;
   border-width: 3px 6px;
-  border-left-color: $color-border;
+  border-left-color: $color-divider;
 }
 </style>

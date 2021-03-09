@@ -175,7 +175,7 @@ $color-text-light: #303030;
 $color-text-hint: rgba(#333333, 0.8);
 $color-text-toast: #ffffff;
 $color-bg: #f6f6f6;
-$color-bg-grey: #aaaaaa;
+$color-bg-gray: #aaaaaa;
 $color-bg-toast: rgba(#000000, 0.6);
 $color-border: #bbbbbb;
 $color-box-shadow: rgba(#000000, 0.08);
@@ -275,7 +275,7 @@ page {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: $color-bg-grey;
+  background-color: $color-bg-gray;
 }
 .productTitle {
   width: 100%;

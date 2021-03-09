@@ -125,7 +125,7 @@ export default {
 }
 </script>
 <style lang="scss" module>
-@import '../variables.scss';
+@import '@/styles/variables';
 page {
   background-color: #f6f6f6;
 }
@@ -145,7 +145,6 @@ page {
 .cardHead {
   font-size: 17px;
   font-weight: 600;
-  color: $color-dark;
   font-size: 15px;
   margin-bottom: 15px;
 }

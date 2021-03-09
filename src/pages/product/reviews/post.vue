@@ -159,7 +159,7 @@ export default {
 }
 </script>
 <style lang="scss" module>
-@import '../variables.scss';
+@import '@/styles/variables';
 page {
   background-color: #f6f6f6;
 }
@@ -169,7 +169,7 @@ page {
   padding-bottom: 80px;
 }
 .card {
-  background-color: $color-white;
+  background-color: #ffffff;
   position: relative;
   padding: 20px;
 }
@@ -218,7 +218,7 @@ page {
   width: 100%;
   padding-top: 100%;
   border-radius: 3px;
-  background-color: $color-bg-grey;
+  background-color: $color-bg-gray;
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center center;
@@ -235,24 +235,5 @@ page {
   left: 50%;
   margin-left: -75px;
   width: 150px;
-  // height: 40px;
-  // border-radius: 20px;
-  // box-shadow: 0 5px 15px 0 rgba(0, 0, 0, 0.15);
-  // background-color: $color-dark;
-  // text-align: center;
-  // padding: 0;
-  // font-size: 14px;
-  // font-weight: 600;
-  // color: #ffffff;
-  // line-height: 40px;
 }
-// .submitBtn[disabled] {
-//   background-color: rgba($color-dark, 0.3) !important;
-//   color: #ffffff !important;
-// }
-// .submitBtnHover {
-//   background-color: rgba($color-dark, 0.8);
-// }
 </style>
-
-

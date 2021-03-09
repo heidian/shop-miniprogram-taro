@@ -87,7 +87,7 @@ export default {
 </script>
 
 <style lang="scss" module>
-@import './variables.scss';
+@import '@/styles/variables';
 .sectionInner {
   padding-left: 15px;
   padding-right: 15px;
@@ -112,7 +112,7 @@ export default {
   display: flex;
   align-items: center;
   font-size: 13px;
-  color: $color-bg-light;
+  color: rgba(0, 0, 0, 0.8);
   &::after {
     content: "";
     position: relative;
@@ -124,7 +124,7 @@ export default {
     margin-top: -3px;
     border: 3px solid transparent;
     border-width: 3px 6px;
-    border-left-color: $color-bg-light;
+    border-left-color: rgba(0, 0, 0, 0.8);
   }
 }
 .navigatorNew {
@@ -132,7 +132,7 @@ export default {
   width: 100%;
   height: 34px;
   border-radius: 17px;
-  background-color: $color-bg-grey;
+  background-color: $color-bg-gray;
   display: flex;
   justify-content: flex-start;
   align-items: center;
@@ -145,6 +145,6 @@ export default {
 }
 .navigatorNewText {
   font-size: 14px;
-  color: $color-light;
+  color: $color-text-lighter;
 }
 </style>

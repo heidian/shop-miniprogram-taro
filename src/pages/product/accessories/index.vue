@@ -307,14 +307,12 @@ export default {
 
 <style lang="scss" module>
 @import '@/styles/mixins';
-@import '../variables.scss';
-@import '@/styles/variables.scss';
-
+@import '@/styles/variables';
 .page {
   overflow: hidden;
   padding-bottom: 50px;
   position: relative;
-  background-color: $color-bg-grey;
+  background-color: $color-bg-gray;
 }
 .page.pageIphoneX {
   padding-bottom: 65px;

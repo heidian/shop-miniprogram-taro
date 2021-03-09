@@ -94,9 +94,9 @@ export default {
 </script>
 
 <style lang="scss" module>
-@import '../variables.scss';
+@import '@/styles/variables';
 page {
-  background-color: $color-bg-grey;
+  background-color: $color-bg-gray;
 }
 .reviews {
   min-height: 100vh;
@@ -104,7 +104,7 @@ page {
   padding-bottom: 64px;
 }
 .container {
-  background-color: $color-bg;
+  background-color: #ffffff;
   padding: 0 20px;
 }
 .footer {
@@ -113,13 +113,13 @@ page {
   right: 0;
   bottom: 0;
   padding: 10px 20px;
-  background-color: $color-bg;
+  background-color: #ffffff;
 }
 .footerNavigator {
   width: 100%;
   height: 34px;
   border-radius: 17px;
-  background-color: $color-bg-grey;
+  background-color: $color-bg-gray;
   display: flex;
   justify-content: flex-start;
   align-items: center;
@@ -132,7 +132,7 @@ page {
 }
 .footerNavigatorText {
   font-size: 14px;
-  color: $color-light;
+  color: $color-text-lighter;
 }
 </style>
 
