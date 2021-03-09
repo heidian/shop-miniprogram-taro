@@ -95,31 +95,31 @@ const mutations = {
       state.blocksOfPage[key] = _.filter(blocks, (block) => block.id != id)
     }
   },
-  updateBlockSettingsData(state, { pageType, pageName, id, blockSettingsData }) {
+  updateBlockSettingsData(state, { pageType, pageName, id, blockSettingsData, partial }) {
     const key = calcuKey(pageType, pageName)
     const blocks = state.blocksOfPage[key]
     if (blocks) {
       const blockIndex = _.findIndex(blocks, { id })
-      const settingsData = {
+      const settingsData = partial ? {
         ...blocks[blockIndex]['settings_data'],
         ...blockSettingsData,
-      }
+      } : { ...blockSettingsData }
       blocks[blockIndex]['settings_data'] = settingsData
-      // TODO: 只是上面那么写似乎科技监听到新添加的板块的变化, 所以不需要下面这句
+      // TODO: 只是上面那么写似乎可以监听到新添加的板块的变化, 所以不需要下面这句
       // state.blocksOfPage[key] = [ ...blocks ]
     }
   },
-  updateBlockCSS(state, { pageType, pageName, id, blockCSS }) {
+  updateBlockCSS(state, { pageType, pageName, id, blockCSS, partial }) {
     const key = calcuKey(pageType, pageName)
     const blocks = state.blocksOfPage[key]
     if (blocks) {
       const blockIndex = _.findIndex(blocks, { id })
-      const css = {
+      const css = partial ? {
         ...blocks[blockIndex]['css'],
         ...blockCSS,
-      }
+      } : { ...blockCSS }
       blocks[blockIndex]['css'] = css
-      // TODO: 只是上面那么写似乎科技监听到新添加的板块的变化, 所以不需要下面这句
+      // TODO: 只是上面那么写似乎可以监听到新添加的板块的变化, 所以不需要下面这句
       // state.blocksOfPage[key] = [ ...blocks ]
     }
   },
