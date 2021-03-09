@@ -91,6 +91,8 @@ if (Taro.getEnv() === Taro.ENV_TYPE.WEB) {
         return store.commit('theme/updateBlockCss', data)
       case 'UPDATE_THEME_SETTINGS_DATA':
         return store.commit('theme/updateThemeSettingsData', data)
+      case 'UPDATE_BLOCK_VISIBILITY':
+        return store.commit('theme/updateBlockVisibility', data)
     }
   }
   if (typeof window !== 'undefined' && window.parent) {

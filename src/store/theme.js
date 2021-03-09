@@ -123,6 +123,14 @@ const mutations = {
       // state.blocksOfPage[key] = [ ...blocks ]
     }
   },
+  updateBlockVisibility(state, { pageType, pageName, id, hidden }) {
+    const key = calcuKey(pageType, pageName)
+    const blocks = state.blocksOfPage[key]
+    if (blocks) {
+      const blockIndex = _.findIndex(blocks, { id })
+      blocks[blockIndex]['hidden'] = hidden
+    }
+  },
   updateThemeSettingsData(state, { themeSettingsData }) {
     state.themeSettingsData = {
       ...state.themeSettingsData,

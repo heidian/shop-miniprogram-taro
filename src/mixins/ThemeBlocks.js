@@ -38,7 +38,7 @@ export default {
   computed: {
     blocks() {
       const key = (this.pageType && this.pageName) ? `${this.pageType}/${this.pageName}` : this.pageType
-      const blocks = this.$store.state.theme.blocksOfPage[key] || []
+      const blocks = _.filter(this.$store.state.theme.blocksOfPage[key] || [], (block) => !block.hidden)
       return _.map(blocks, (block) => {
         const css = { ...(block.css || {}) }
         if (_.isObject(css.backgroundImage)) {
