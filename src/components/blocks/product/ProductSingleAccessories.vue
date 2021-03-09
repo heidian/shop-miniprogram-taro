@@ -111,7 +111,6 @@ export default {
 .section {
   overflow: hidden;
   background-color: #ffffff;
-  margin-bottom: 10px;
 }
 .sectionTitle {
   font-weight: bold;

@@ -1,6 +1,6 @@
 <template>
-  <view>
-    <view :class="$style['section']" :style="css">
+  <view :style="css">
+    <view :class="$style['section']">
       <!-- indicatorColor='#999' indicatorActiveColor='#333' -->
       <swiper
         :class="$style['productImages']"
@@ -176,7 +176,9 @@ export default {
 .section {
   overflow: hidden;
   background-color: #ffffff;
-  margin-bottom: 10px;
+  + .section {
+    margin-top: 10px;
+  }
 }
 
 /* Images Swiper */
