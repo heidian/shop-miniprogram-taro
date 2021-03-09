@@ -26,14 +26,14 @@ const state = () => {
     shopid: '',
     appid: '',
   }
-  if (Taro.getEnv() === 'WEAPP') {
+  if (Taro.getEnv() === Taro.ENV_TYPE.WEAPP) {
     // config/dev.js 里面定义了 API_URL, 但小程序的 apiroot 取的是 ext.json 的
     const { extAppid, apiroot, shopname, shopid } = Taro.getExtConfigSync()
     config.appid = extAppid
     config.apiroot = apiroot
     config.shopname = shopname
     config.shopid = shopid
-  } else if (Taro.getEnv() === 'WEB') {
+  } else if (Taro.getEnv() === Taro.ENV_TYPE.WEB) {
     /* 本地测试的时候需要指定 API_URL 为店铺域名, 这样也就不需要 shopname 了
     shopname 和 shopid 单独使用只在 analytics 里面, 而网页版不启用 analytics, 所以空着没关系 */
     /* 线上部署的时候, API_URL 是 heidianapi.com, 然后从域名里面提取一下 shopname

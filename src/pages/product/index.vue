@@ -59,7 +59,7 @@
     <view :class="$style['pageSection']" v-if="body_html">
       <view :class="$style['pageSectionTitle']">图文详情</view>
       <!-- <view v-if="body_html" class="'taro_html'" :class="$style['productHtml']" v-html="body_html"></view> -->
-      <wxparse v-if="'process.env.TARO_ENV' === 'weapp'" :html="body_html" />
+      <wxparse v-if="shouldParseHtml" :html="body_html" />
       <view v-else v-html="body_html"></view>
     </view>
     <!-- 猜你喜欢这个板块不要 pageSection -->
@@ -164,6 +164,9 @@ export default {
   computed: {
     ...mapState(['cart', 'customer']),
     ...mapGetters('system', ['isLikeIphoneX']),
+    shouldParseHtml() {
+      return Taro.getEnv() === Taro.ENV_TYPE.WEAPP
+    },
     hideSelectedVariant() {
       return _.isEmpty(_.get(this.product, 'options'))
     },

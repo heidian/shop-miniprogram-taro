@@ -15,7 +15,7 @@ import analytics from './utils/analytics'
  * 处理一些 H5 和 小程序 的兼容性问题
  */
 
-if (Taro.getEnv() === 'WEB') {
+if (Taro.getEnv() === Taro.ENV_TYPE.WEB) {
   const original = Taro.pxTransform
   Taro.pxTransform = function(size, designWidth) {
     return original.call(Taro, size, designWidth || 375)
@@ -26,7 +26,7 @@ if (Taro.getEnv() === 'WEB') {
 /*
  * 处理旧的路由, 重定向到新的路由
  */
- if (Taro.getEnv() === 'WEAPP') {
+ if (Taro.getEnv() === Taro.ENV_TYPE.WEAPP) {
   Taro.onPageNotFound(function({ isEntryPage, path, query }) {
     console.log('PageNotFound', isEntryPage, path, query)
     if (/^pages\/(product|static|search)$/.test(path)) {
@@ -73,7 +73,7 @@ Vue.mixin({
   },
 })
 // Vue.prototype.$globalColors = store.getters['theme/globalColors']
-if (Taro.getEnv() === 'WEB') {
+if (Taro.getEnv() === Taro.ENV_TYPE.WEB) {
   function listenFromStyleEditor(event) {
     console.log('listenFromStyleEditor', event)
     const { data, message } = event.data
@@ -117,7 +117,7 @@ Vue.filter('currency', (value, options) => formatCurrency(value, options))
 Vue.filter('imageUrl', (value, width, height) => optimizeImage(value, width, height))
 
 
-if (Taro.getEnv() === 'WEAPP') {
+if (Taro.getEnv() === Taro.ENV_TYPE.WEAPP) {
   // 只对微信小程序启用这个 mixin, 其中也包括了 analytics, 也就是说网页版也不会不启用 analytics
   Vue.mixin({
     /*
