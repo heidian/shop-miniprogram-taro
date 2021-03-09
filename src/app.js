@@ -75,24 +75,30 @@ Vue.mixin({
 // Vue.prototype.$globalColors = store.getters['theme/globalColors']
 if (Taro.getEnv() === Taro.ENV_TYPE.WEB) {
   function listenFromStyleEditor(event) {
+    // 通信的格式是 data: { sender, type, method, payload }
+    if (!event.data || event.data['sender'] !== 'editor') {
+      return
+    }
     console.log('listenFromStyleEditor', event)
-    const { data, message } = event.data
+    const { type, method, payload } = event.data
     // 每一个 case 下一定要写 return, 不然就顺序执行下去了
-    switch (message) {
-      case 'REORDER_BLOCKS':
-        return store.commit('theme/reorderBlocks', data)
-      case 'ADD_BLOCK':
-        return store.commit('theme/addBlock', data)
-      case 'REMOVE_BLOCK':
-        return store.commit('theme/removeBlock', data)
-      case 'UPDATE_BLOCK_SETTINGS_DATA':
-        return store.commit('theme/updateBlockSettingsData', data)
-      case 'UPDATE_BLOCK_CSS':
-        return store.commit('theme/updateBlockCss', data)
-      case 'UPDATE_THEME_SETTINGS_DATA':
-        return store.commit('theme/updateThemeSettingsData', data)
-      case 'UPDATE_BLOCK_VISIBILITY':
-        return store.commit('theme/updateBlockVisibility', data)
+    if (type === 'update') {
+      switch (method) {
+        case 'REORDER_BLOCKS':
+          return store.commit('theme/reorderBlocks', payload)
+        case 'ADD_BLOCK':
+          return store.commit('theme/addBlock', payload)
+        case 'REMOVE_BLOCK':
+          return store.commit('theme/removeBlock', payload)
+        case 'UPDATE_BLOCK_SETTINGS_DATA':
+          return store.commit('theme/updateBlockSettingsData', payload)
+        case 'UPDATE_BLOCK_CSS':
+          return store.commit('theme/updateBlockCss', payload)
+        case 'UPDATE_THEME_SETTINGS_DATA':
+          return store.commit('theme/updateThemeSettingsData', payload)
+        case 'UPDATE_BLOCK_VISIBILITY':
+          return store.commit('theme/updateBlockVisibility', payload)
+      }
     }
   }
   if (typeof window !== 'undefined' && window.parent) {
