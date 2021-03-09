@@ -15,6 +15,10 @@ import Carousel from '@/components/blocks/Carousel'
 import Image from '@/components/blocks/Image'
 import Grids from '@/components/blocks/Grids'
 import Text from '@/components/blocks/Text'
+import ProductSingleAccessories from '@/components/blocks/product/ProductSingleAccessories'
+import ProductSingleBodyHtml from '@/components/blocks/product/ProductSingleBodyHtml'
+import ProductSingleBuy from '@/components/blocks/product/ProductSingleBuy'
+import ProductSingleRelated from '@/components/blocks/product/ProductSingleRelated'
 
 // import getTestPageConfig from './_getTestPageConfig'
 // const PREVIEW_THEME_ID = 13390
@@ -25,7 +29,11 @@ const BLOCKS_MAP = {
   'blocks/carousel': Carousel,
   'blocks/image': Image,
   'blocks/grids': Grids,
-  'blocks/text': Text
+  'blocks/text': Text,
+  'blocks/product_single_accessories': ProductSingleAccessories,
+  'blocks/product_single_body_html': ProductSingleBodyHtml,
+  'blocks/product_single_buy': ProductSingleBuy,
+  'blocks/product_single_related': ProductSingleRelated,
 }
 
 export default {

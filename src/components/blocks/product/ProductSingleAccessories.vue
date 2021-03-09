@@ -1,5 +1,5 @@
 <template>
-  <view :class="$style['section']">
+  <view :class="$style['section']" :style="css">
     <view :class="$style['sectionTitle']">{{ accessoriesCaption.sectionTitle || '搭配购买' }}</view>
     <navigator
       :url="`/pages/product/accessories/index?product=${product.id}`"
@@ -34,6 +34,14 @@ import { optimizeImage, backgroundImageUrl } from '@/utils/image'
 export default {
   name: 'ProductSingleAccessories',
   props: {
+    css: {
+      type: Object,
+      default: () => ({})
+    },
+    settingsData: {
+      type: Object,
+      default: () => ({})
+    },
     product: {
       type: Object,
       required: true

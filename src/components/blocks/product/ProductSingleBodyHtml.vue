@@ -1,5 +1,5 @@
 <template>
-  <view :class="$style['section']">
+  <view :class="$style['section']" :style="css">
     <view :class="$style['sectionTitle']">图文详情</view>
     <!-- <view v-if="bodyHtml" class="'taro_html'" :class="$style['productHtml']" v-html="bodyHtml"></view> -->
     <wxparse v-if="shouldParseHtml" :html="bodyHtml" />
@@ -8,12 +8,21 @@
 </template>
 
 <script>
+// import '@tarojs/taro/html.css'
 import _ from 'lodash'
 import Taro from '@tarojs/taro'
 
 export default {
   name: 'ProductSingleBodyHtml',
   props: {
+    css: {
+      type: Object,
+      default: () => ({})
+    },
+    settingsData: {
+      type: Object,
+      default: () => ({})
+    },
     product: {
       tyoe: Object,
       required: true,

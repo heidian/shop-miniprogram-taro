@@ -1,6 +1,6 @@
 <template>
   <view>
-    <view :class="$style['section']">
+    <view :class="$style['section']" :style="css">
       <!-- indicatorColor='#999' indicatorActiveColor='#333' -->
       <swiper
         :class="$style['productImages']"
@@ -71,6 +71,14 @@ export default {
     Price,
   },
   props: {
+    css: {
+      type: Object,
+      default: () => ({})
+    },
+    settingsData: {
+      type: Object,
+      default: () => ({})
+    },
     product: {
       type: Object,
       required: true,

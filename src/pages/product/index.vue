@@ -5,7 +5,7 @@
   >
 
     <template v-if="product.id">
-      <product-single-buy
+      <!-- <product-single-buy
         :product="product" :variant.sync="currentVariant"
       ></product-single-buy>
       <product-single-accessories
@@ -16,7 +16,14 @@
       ></product-single-body-html>
       <product-single-related
         :product="product" :variant.sync="currentVariant"
-      ></product-single-related>
+      ></product-single-related> -->
+      <component
+        v-for="(block, index) in blocks" :key="index"
+        :is="block.componentClass"
+        :css="block.css" :settingsData="block.settings_data"
+        :product="product" :variant.sync="currentVariant"
+      ></component>
+      <!-- product 和 variant 是这个页面特有的属性, 组件不需要就不接收就行了 -->
     </template>
 
     <!-- 以上为可配置板块 -->
@@ -69,33 +76,28 @@
 
 <script>
 import Taro, { getCurrentInstance } from '@tarojs/taro'
-// import '@tarojs/taro/html.css'
 import { mapState, mapGetters } from 'vuex'
 import _ from 'lodash'
 import { API } from '@/utils/api'
 import { optimizeImage, backgroundImageUrl } from '@/utils/image'
+import ThemeBlocks from '@/mixins/ThemeBlocks'
 import Price from '@/components/Price'
 import SelectVariant from '@/components/SelectVariant/SelectVariant'
 import ProductReviews from './ProductReviews'
 import ShareDrawer from './ShareDrawer'
-import ProductSingleBuy from './ProductSingleBuy'
-import ProductSingleAccessories from './ProductSingleAccessories'
-import ProductSingleBodyHtml from './ProductSingleBodyHtml'
-import ProductSingleRelated from './ProductSingleRelated'
 
 export default {
   name: 'Product',
   components: {
     /* 组件名称用首字母大写, template 里面标签不能用大写, 全部用小写+减号 */
     ProductReviews,
-    ProductSingleBuy,
-    ProductSingleAccessories,
-    ProductSingleBodyHtml,
-    ProductSingleRelated,
     SelectVariant,
     ShareDrawer,
     Price
   },
+  mixins: [
+    ThemeBlocks  // 会在页面上产生 blocks, pageType 和 pageName 三个变量
+  ],
   data() {
     /* 服务器端取下来的数据放入 this.[propertyName] 以后, 其他处理过的数据不要放进 this.[propertyName], 直接放在 this 下面,
     data() 方法返回的属性和本地变量名称用驼峰, 其他 object 的 key 不做限制 */
@@ -120,10 +122,11 @@ export default {
     //   backgroundColorBottom: '#f6f6f6',
     // })
   },
-  async mounted() {
+  mounted() {
     /* getCurrentInstance 只在生命周期方法里用, 一般在 created() 或者 data() 方法里面用 */
     const { id, name } = getCurrentInstance().router.params
-    await this.fetchProduct({ productId: id, productName: name })
+    this.fetchProduct({ productId: id, productName: name })
+    this.fetchPageConfig('product')
   },
   computed: {
     ...mapState(['cart', 'customer']),

@@ -1,5 +1,5 @@
 <template>
-  <view :class="$style['container']">
+  <view :class="$style['container']" :style="css">
     <view :class="$style['sectionTitle']">猜你喜欢</view>
     <view v-for="(product, index) in relatedProducts" :key="product.id" :class="$style['grid']">
       <view :class="$style['productItem']" @tap="goToProduct(product.name)">
@@ -34,6 +34,14 @@ import Price from '@/components/Price'
 export default {
   name: 'ProductSingleRelated',
   props: {
+    css: {
+      type: Object,
+      default: () => ({})
+    },
+    settingsData: {
+      type: Object,
+      default: () => ({})
+    },
     product: {
       type: Object,
       required: true
