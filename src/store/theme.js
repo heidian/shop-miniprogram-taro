@@ -109,15 +109,15 @@ const mutations = {
       // state.blocksOfPage[key] = [ ...blocks ]
     }
   },
-  updateBlockCSS(state, { pageType, pageName, id, blockCSS, partial }) {
+  updateBlockCss(state, { pageType, pageName, id, blockCss, partial }) {
     const key = calcuKey(pageType, pageName)
     const blocks = state.blocksOfPage[key]
     if (blocks) {
       const blockIndex = _.findIndex(blocks, { id })
       const css = partial ? {
         ...blocks[blockIndex]['css'],
-        ...blockCSS,
-      } : { ...blockCSS }
+        ...blockCss,
+      } : { ...blockCss }
       blocks[blockIndex]['css'] = css
       // TODO: 只是上面那么写似乎可以监听到新添加的板块的变化, 所以不需要下面这句
       // state.blocksOfPage[key] = [ ...blocks ]

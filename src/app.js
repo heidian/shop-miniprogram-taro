@@ -88,7 +88,7 @@ if (Taro.getEnv() === Taro.ENV_TYPE.WEB) {
       case 'UPDATE_BLOCK_SETTINGS_DATA':
         return store.commit('theme/updateBlockSettingsData', data)
       case 'UPDATE_BLOCK_CSS':
-        return store.commit('theme/updateBlockCSS', data)
+        return store.commit('theme/updateBlockCss', data)
       case 'UPDATE_THEME_SETTINGS_DATA':
         return store.commit('theme/updateThemeSettingsData', data)
     }
