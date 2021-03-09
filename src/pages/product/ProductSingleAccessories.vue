@@ -1,9 +1,10 @@
 <template>
-  <view :class="$style['accessories']">
-    <view :class="$style['sectionHead']">
-      <text :class="$style['sectionTitle']">{{ accessoriesCaption.sectionTitle || '搭配购买' }}</text>
-    </view>
-    <navigator :url="`/pages/product/accessories/index?product=${productId}`" :class="$style['sectionContainer']">
+  <view :class="$style['section']">
+    <view :class="$style['sectionTitle']">{{ accessoriesCaption.sectionTitle || '搭配购买' }}</view>
+    <navigator
+      :url="`/pages/product/accessories/index?product=${product.id}`"
+      :class="$style['sectionContainer']"
+    >
       <view :class="$style['accessoriesImages']">
         <view :class="$style['itemRow']">
           <view :class="$style['accessoriesProductItem']" :style="{'background-image': backgroundImageUrl(firstAccessoriesImage, 100)}"></view>
@@ -31,11 +32,11 @@ import { API } from '@/utils/api'
 import { optimizeImage, backgroundImageUrl } from '@/utils/image'
 
 export default {
-  name: 'ProductAccessories',
+  name: 'ProductSingleAccessories',
   props: {
-    productId: {
-      type: [String, Number, null],
-      default: null
+    product: {
+      type: Object,
+      required: true
     },
   },
   data() {
@@ -48,20 +49,20 @@ export default {
     this.fetchAccessories()
   },
   computed: {
-    firstAccessoriesImage () {
+    firstAccessoriesImage() {
       return _.get(this.products, '[0].image', '')
     },
-    accessoriesSlicedProduct () {
+    accessoriesSlicedProduct() {
       return (this.products || []).slice(1, 3)
     },
-    accessoriesCaption () {
+    accessoriesCaption() {
       const { accessories_section_title, accessories_title } = this.settings_data || {}
       return {
         sectionTitle: _.get(accessories_section_title, 'value') || accessories_section_title,
         title: _.get(accessories_title, 'value') || accessories_title
       }
     },
-    accessoriesMinPrice () {
+    accessoriesMinPrice() {
       const price_list = _.map(this.products || [], (r_p) => {
         return +(r_p.price || 0)
       })
@@ -70,17 +71,12 @@ export default {
   },
   methods: {
     backgroundImageUrl,
-    fetchAccessories () {
-      // if (!this.settings_data.show_accessories) {
-      //   // 如果没有配置则数据也不取
-      //   return
-      // }
-      if (!this.productId) return
+    fetchAccessories() {
       const params = {
         fields: 'id,image,price',
         page_size: 3
       }
-      const url = `/shopfront/product/${this.productId}/accessories/`
+      const url = `/shopfront/product/${this.product.id}/accessories/`
       this.pending = true
       API.get(url, { params }).then((res) => {
         const results = _.isArray(res.data) ? res.data : _.get(res.data, 'results', [])
@@ -104,28 +100,20 @@ export default {
 <style lang="scss" module>
 @import '@/styles/mixins';
 @import '@/styles/variables';
-
-.accessories {
-  padding-left: 15px;
-  padding-right: 15px;
+.section {
   overflow: hidden;
-}
-.sectionHead {
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin: 20px auto 10px;
+  background-color: #ffffff;
+  margin-bottom: 10px;
 }
 .sectionTitle {
   font-weight: bold;
-  color: $color-text;
-  font-size: 16px;
+  font-size: 15px;
+  padding: 15px 15px 10px;
 }
 .sectionContainer {
   background-color: #fafafa;
   padding: 10px;
-  margin: 15px auto;
+  margin: 0 10px 10px;
   display: flex;
 }
 .accessoriesImages {

@@ -32,13 +32,11 @@ import Price from '@/components/Price'
 /* 页面私有组件放在页面同一个目录下,
 因为 taro 无法实现 vue 的 scoped css, 样式写在页面和组件里都可以, 注意 class 冲突就行 */
 export default {
-  name: 'relatedProducts',
+  name: 'ProductSingleRelated',
   props: {
-    productId: {
-      type: [Number, String],
-      default: () => {
-        return ''
-      }
+    product: {
+      type: Object,
+      required: true
     },
   },
   components: {
@@ -65,7 +63,7 @@ export default {
         random_fill: 1,
         page_size: 6
       }
-      const url = `/shopfront/product/${this.productId}/related/`
+      const url = `/shopfront/product/${this.product.id}/related/`
       API.get(url, { params }).then((res) => {
         const relations = _.isArray(res.data) ? res.data : _.get(res.data, 'results', [])
         this.relatedProducts = relations || []
