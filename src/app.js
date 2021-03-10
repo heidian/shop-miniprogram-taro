@@ -2,46 +2,18 @@ import _ from 'lodash'
 import qs from 'qs'
 import Vue from 'vue'
 import Taro, { getCurrentInstance } from '@tarojs/taro'
-// import VirtualList from '@tarojs/components/virtual-list'
 import store from './store/index'
-import { formatCurrency, formatDate, formatDateTime } from './utils/formatters'
-import { optimizeImage } from './utils/image'
 import parseScene from './utils/parseScene'
 import analytics from './utils/analytics'
-
 // Vue.config.productionTip = false
 
 /*
- * 处理一些 H5 和 小程序 的兼容性问题
+ * Plugins 一些全局的配置
  */
-
-if (Taro.getEnv() === Taro.ENV_TYPE.WEB) {
-  const original = Taro.pxTransform
-  Taro.pxTransform = function(size, designWidth) {
-    return original.call(Taro, size, designWidth || 375)
-  }
-}
-
-
-/*
- * 处理旧的路由, 重定向到新的路由
- */
- if (Taro.getEnv() === Taro.ENV_TYPE.WEAPP) {
-  Taro.onPageNotFound(function({ isEntryPage, path, query }) {
-    console.log('PageNotFound', isEntryPage, path, query)
-    if (/^pages\/(product|static|search)$/.test(path)) {
-      Taro.redirectTo({ url: path + '/index?' + qs.stringify(query) })
-    } else if (/^pages\/login$/.test(path)) {
-      Taro.redirectTo({ url: '/pages/login/index' })
-    } else if (/^pages\/(account|categories)$/.test(path)) {
-      Taro.switchTab({ url: '/pages/login/index' })
-    }
-    // else if (/^pages\/home$/.test(path)) {
-    //   Taro.switchTab({ url: '/pages/home/index' })
-    // }
-  })
-}
-
+import './plugins/styles'
+import './plugins/filters'
+import './plugins/redirects'
+import './plugins/editor'
 
 /*
  * Global styles
@@ -51,82 +23,8 @@ import './app.scss'
 
 
 /*
- * 初始化 Taro 的 pxTransform
+ * 来源追踪和数据分析
  */
-Taro.initPxTransform({
-  designWidth: 375,
-  deviceRatio: {
-    375: 1 / 2
-  }
-})
-
-
-/*
- * 主题和编辑器相关
- */
-Vue.mixin({
-  computed: {
-    '$globalColors': function() {
-      // return this.$store.state.theme.globalColors
-      return this.$store.getters['theme/globalColors']
-    }
-  },
-})
-// Vue.prototype.$globalColors = store.getters['theme/globalColors']
-if (Taro.getEnv() === Taro.ENV_TYPE.WEB) {
-  function listenFromStyleEditor(event) {
-    // 通信的格式是 data: { sender, type, method, payload }
-    if (!event.data || event.data['sender'] !== 'editor') {
-      return
-    }
-    console.log('listenFromStyleEditor', event)
-    const { type, method, payload } = event.data
-    // 每一个 case 下一定要写 return, 不然就顺序执行下去了
-    if (type === 'update') {
-      switch (method) {
-        case 'RESET_BLOCKS':
-          return store.commit('theme/resetBlocks', payload)
-        case 'REORDER_BLOCKS':
-          return store.commit('theme/reorderBlocks', payload)
-        case 'ADD_BLOCK':
-          return store.commit('theme/addBlock', payload)
-        case 'REMOVE_BLOCK':
-          return store.commit('theme/removeBlock', payload)
-        case 'UPDATE_BLOCK_SETTINGS_DATA':
-          return store.commit('theme/updateBlockSettingsData', payload)
-        case 'UPDATE_BLOCK_CSS':
-          return store.commit('theme/updateBlockCss', payload)
-        case 'UPDATE_THEME_SETTINGS_DATA':
-          return store.commit('theme/updateThemeSettingsData', payload)
-        case 'UPDATE_BLOCK_VISIBILITY':
-          return store.commit('theme/updateBlockVisibility', payload)
-      }
-    }
-  }
-  if (typeof window !== 'undefined' && window.parent) {
-    // event.data['sender'] !== 'xxx'  优化一下, 限定一下 sender
-    window.addEventListener('message', listenFromStyleEditor)
-  }
-}
-
-
-/*
- * 使用长列表组件
- * https://nervjs.github.io/taro/docs/virtual-list
- */
-// Vue.use(VirtualList)
-
-
-/*
- * 定义全局 filters
- * TODO, 之后把这一段放进单独的文件里
- */
-Vue.filter('date', (value) => formatDate(value))
-Vue.filter('datetime', (value) => formatDateTime(value))
-Vue.filter('currency', (value, options) => formatCurrency(value, options))
-Vue.filter('imageUrl', (value, width, height) => optimizeImage(value, width, height))
-
-
 if (Taro.getEnv() === Taro.ENV_TYPE.WEAPP) {
   // 只对微信小程序启用这个 mixin, 其中也包括了 analytics, 也就是说网页版也不会不启用 analytics
   Vue.mixin({
@@ -196,3 +94,11 @@ const App = new Vue({
 })
 
 export default App
+
+
+/*
+ * 使用长列表组件
+ * https://nervjs.github.io/taro/docs/virtual-list
+ */
+// import VirtualList from '@tarojs/components/virtual-list'
+// Vue.use(VirtualList)
