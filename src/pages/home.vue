@@ -27,7 +27,10 @@ export default {
   created() {},
   onReachBottom() {},
   async mounted() {
-    this.fetchPageConfig('home')
+    const data = await this.fetchPageConfig('home')
+    Taro.setNavigationBarTitle({
+      title: data.shop.title
+    })
   },
   methods: {}
 }

@@ -159,7 +159,7 @@ const actions = {
     // const pageConfig = getTestPageConfig(pageType, pageName)
     // const blocks = _.cloneDeep(pageConfig['settings_data']['components'])
     const params = {
-      'fields[shop]': 'id',
+      'fields[shop]': 'id,title',
       'fields[page]': 'title,pageconfig',
       'scope': 'miniprogram',
       // 'preview_theme_id': PREVIEW_THEME_ID,  // 上线以后要删掉

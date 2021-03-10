@@ -68,9 +68,9 @@ export default {
     async fetchPageConfig(pageType, pageName) {
       this.pageType = pageType
       this.pageName = pageName
-      const pageData = await this.$store.dispatch('theme/fetchPage', { pageType, pageName })
-      // TODO: 这里返回 pageData 可以取一下 page 的 title 之类的, 这些不存在 store 里
-      return pageData
+      const data = await this.$store.dispatch('theme/fetchPage', { pageType, pageName })
+      // TODO: 这里返回 data 可以取一下 page 和 shop 的 title 之类的, 这些不存在 store 里
+      return data
     }
   }
 }
