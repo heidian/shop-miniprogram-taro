@@ -1,5 +1,4 @@
 import _ from 'lodash'
-import qs from 'qs'
 import Vue from 'vue'
 import Taro, { getCurrentInstance } from '@tarojs/taro'
 import store from './store/index'
