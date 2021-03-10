@@ -84,6 +84,8 @@ if (Taro.getEnv() === Taro.ENV_TYPE.WEB) {
     // 每一个 case 下一定要写 return, 不然就顺序执行下去了
     if (type === 'update') {
       switch (method) {
+        case 'RESET_BLOCKS':
+          return store.commit('theme/resetBlocks', payload)
         case 'REORDER_BLOCKS':
           return store.commit('theme/reorderBlocks', payload)
         case 'ADD_BLOCK':

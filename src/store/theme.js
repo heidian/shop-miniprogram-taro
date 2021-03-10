@@ -68,6 +68,10 @@ const mutations = {
       [key]: pageSettingsData['components'] || [],
     }
   },
+  resetBlocks(state, { pageType, pageName, blocks }) {
+    const key = calcuKey(pageType, pageName)
+    state.blocksOfPage[key] = blocks
+  },
   reorderBlocks(state, { pageType, pageName, ids }) {
     const key = calcuKey(pageType, pageName)
     const blocks = state.blocksOfPage[key]
