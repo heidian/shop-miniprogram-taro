@@ -83,7 +83,7 @@ export default {
         })
         return
       }
-      Taro.showLoading({})
+      Taro.showLoading({ title: '登录中' })
       try {
         const res = await this.$store.dispatch('customer/login', {
           appid: this.appid,

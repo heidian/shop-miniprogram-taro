@@ -174,7 +174,7 @@ export default {
       let product = null
       if (productId) {
         try {
-          const res = await API.get(`/shopfront/product/${this.productId}/`, {
+          const res = await API.get(`/shopfront/product/${productId}/`, {
             params: { fields }
           })
           product = res.data
