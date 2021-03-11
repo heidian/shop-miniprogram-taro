@@ -25,6 +25,9 @@
       ></component>
       <!-- product 和 variant 是这个页面特有的属性, 组件不需要就不接收就行了 -->
     </template>
+    <view v-else :class="$style['productLoadingPlaceholder']">
+      <text class="el-icon-loading"></text>
+    </view>
 
     <!-- 以上为可配置板块 -->
 
@@ -34,7 +37,8 @@
     </view>
     -->
 
-    <view :class="{[$style['footer']]: true, [$style['isLikeIphoneX']]: isLikeIphoneX}">
+    <!-- 底部菜单 -->
+    <view :class="$style['footer']" v-if="product.id">
       <button :class="['button', $style['iconBtn'], $style['footerIconBtn']]" open-type="contact">
         <view class="el-icon-headset"></view>
         <view :class="$style['iconBtnText']">客服</view>
@@ -53,9 +57,11 @@
         @tap="() => showVariantsDrawer('buy_now')"
       >立即购买</button>
     </view>
+
+    <!-- 以下为悬浮组件 -->
     <view
       v-if="customer.isAuthenticated"
-      :class="{[$style['productShare']]: true, [$style['isLikeIphoneX']]: isLikeIphoneX}"
+      :class="$style['productShare']"
       @tap="shareDrawerVisible=true"
     >
       <!-- <text class="el-icon-share"></text> -->
@@ -240,13 +246,17 @@ export default {
 @import '@/styles/mixins';
 @import '@/styles/variables';
 .page {
-  background-color: #f6f6f6;
   overflow: hidden;
   padding-bottom: 50px;
   position: relative;
 }
 .page.pageIphoneX {
   padding-bottom: 65px;
+}
+.productLoadingPlaceholder {
+  font-size: 20px;
+  text-align: center;
+  padding: 30px 15px;
 }
 .iconBtn {
   width: 30px;
@@ -288,7 +298,7 @@ export default {
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  &.isLikeIphoneX {
+  .page.pageIphoneX & {
     height: 65px;
     padding-bottom: 22px;
   }
@@ -330,7 +340,7 @@ export default {
   overflow: hidden;
   box-shadow: 0 1px 5px 0px #aaaaaa;
   color: #ffffff;
-  &.isLikeIphoneX {
+  .page.pageIphoneX & {
     bottom: 80px;
   }
 }
