@@ -54,7 +54,11 @@ export default {
         if (_.isObject(css.backgroundImage)) {
           css.backgroundImage = backgroundImageUrl(css.backgroundImage, 400)
         }
-        _.forEach(['paddingTop', 'paddingBottom', 'paddingRight', 'paddingLeft'], (prop) => {
+        _.forEach([
+          'paddingTop', 'paddingBottom', 'paddingRight', 'paddingLeft',
+          'marginTop', 'marginBottom', 'marginRight', 'marginLeft',
+          'borderTopWidth', 'borderBottomWidth', 'borderRightWidth', 'borderLeftWidth',
+        ], (prop) => {
           if (css[prop] && /^\d+(\.\d+)?(px)?$/.test(css[prop])) {
             css[prop] = Taro.pxTransform(css[prop])
           }
