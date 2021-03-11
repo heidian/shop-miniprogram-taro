@@ -8,17 +8,6 @@
       :class="$style['decoImage']" mode="aspectFit"
       src="https://up.img.heidiancdn.com/o_1ehtu4aarjjg1t5dfa5nrjsg30shop2x.png"></image>
     <view :class="$style['footer']">
-      <view :class="$style['referral']">
-        <input
-          type="text" :class="$style['referralCode']" placeholder="请输入邀请码（可选填）"
-          v-model="tmpCode" :disabled="!!referrerData"
-        >
-        <button
-          v-if="!referralCode"
-          class="button button--dark" style="margin-left: 10px;"
-          :disabled="!!pending || !tmpCode || !!referrerData" @tap="getReferrerInfo"
-        >确定</button>
-      </view>
       <button
         :class="['button', $style['loginButton']]" type="primary"
         open-type="getPhoneNumber" @getPhoneNumber="getPhoneNumber"
@@ -29,18 +18,6 @@
         ></image>微信登录
       </button>
     </view>
-    <hs-dialog :visible.sync="dialogVisible">
-      <view :class="$style['referralHeader']" slot="header">确认邀请人</view>
-      <view :class="$style['referralBody']">
-        <image :class="$style['referralAvatar']" :src="optimizeImage(referrerData ? referrerData.avatar : '', 100)"></image>
-        <view :class="$style['referralName']">{{ referrerData && referrerData.full_name }}</view>
-        <view :class="$style['referralCodeText']">{{ tmpCode }}</view>
-      </view>
-      <view :class="$style['referralFooter']" slot="footer">
-        <button class="button" @tap="dialogVisible = false">取消</button>
-        <button class="button" @tap="onEnsure">确定</button>
-      </view>
-    </hs-dialog>
   </view>
 </template>
 
@@ -50,21 +27,13 @@ import Taro, { getCurrentPages } from '@tarojs/taro'
 import { API } from '@/utils/api'
 import { optimizeImage } from '@/utils/image'
 
-import HsDialog from '@/components/HsDialog'
-
 export default {
   name: 'Login',
-  components: {
-    'hs-dialog': HsDialog
-  },
+  components: {},
   data() {
     return {
       code: '',
       pending: false,
-      referralCode: '',
-      tmpCode: '',
-      referrerData: null,
-      dialogVisible: false
     }
   },
   computed: {
@@ -120,34 +89,12 @@ export default {
       })
       return code
     },
-    async getReferrerInfo () {
-      try {
-        const res = await API.get(`customers/referrer/${this.tmpCode}/`)
-        const referrerData = res.data || {}
-        this.referrerData = referrerData
-        this.dialogVisible = true
-      } catch (err) {
-        console.log(err)
-        Taro.showModal({
-          title: '出错了',
-          content: '验证码已失效，请联系好友重新获取。或跳过输入验证码，直接微信登录！',
-          showCancel: false,
-          success: function(res) {}
-        })
-      }
-    },
-    onEnsure() {
-      this.referralCode = this.tmpCode
-      this.$store.commit('setReferralCode', this.tmpCode)
-      this.dialogVisible = false
-    }
   }
 }
 </script>
 
 <style lang="scss" module>
 @import '@/styles/variables';
-
 .page {
   display: flex;
   flex-direction: column;
@@ -187,74 +134,10 @@ export default {
 .loginButton {
   width: 100%;
 }
-.referral {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-}
-.referralCode {
-  flex: 1;
-  padding: 11px 15px;
-  line-height: 22px;
-  font-size: 14px;
-  height: 44px;
-  border: 2px solid $color-divider;
-}
 .buttonIcon {
   width: 16px;
   height: 16px;
   margin-right: 3px;
   vertical-align: middle;
-}
-
-.referralHeader {
-  width: 100%;
-  padding: 30px 20px 10px;
-  font-size: 18px;
-  font-weight: 600;
-  color: $color-text;
-  text-align: center;
-}
-.referralBody {
-  width: 100%;
-  padding: 10px 20px 30px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-.referralAvatar {
-  width: 60px;
-  height: 60px;
-  margin-bottom: 10px;
-  border-radius: 30px;
-}
-.referralName {
-  font-size: 15px;
-  color: $color-text;
-  font-weight: 600;
-  margin-bottom: 10px;
-}
-.referralCodeText {
-  font-size: 12px;
-  color: $color-text-light;
-}
-.referralFooter {
-  width: 100%;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  border-top: 1px solid $color-divider;
-  :global(.button) {
-    flex: 1;
-    border-radius: 0;
-    background-color: transparent;
-    & + :global(.button) {
-      border-left: 1px solid $color-divider;
-      color: $color-orange;
-    }
-  }
 }
 </style>
