@@ -5,18 +5,12 @@
   >
 
     <template v-if="product.id">
-      <!-- <product-single-buy
-        :product="product" :variant.sync="currentVariant"
-      ></product-single-buy>
-      <product-single-accessories
-        :product="product" :variant.sync="currentVariant"
-      ></product-single-accessories>
-      <product-single-body-html
-        :product="product" :variant.sync="currentVariant"
-      ></product-single-body-html>
-      <product-single-related
-        :product="product" :variant.sync="currentVariant"
-      ></product-single-related> -->
+      <!--
+      <product-single-buy :product="product" :variant.sync="currentVariant"></product-single-buy>
+      <product-single-accessories :product="product" :variant.sync="currentVariant"></product-single-accessories>
+      <product-single-body-html :product="product" :variant.sync="currentVariant"></product-single-body-html>
+      <product-single-related :product="product" :variant.sync="currentVariant"></product-single-related>
+      -->
       <component
         v-for="(block, index) in blocks" :key="index"
         :is="block.componentClass"
@@ -46,7 +40,9 @@
       <navigator :class="[$style['iconBtn'], $style['footerIconBtn']]" url="/pages/cart/index" open-type="switchTab">
         <view class="el-icon-shopping-cart-2"></view>
         <view :class="$style['iconBtnText']">购物车</view>
-        <text v-if="cart.totalCount" :class="$style['footerIconBtnCartCount']">{{ cart.totalCount > 10 ? '10+' : cart.totalCount }}</text>
+        <text
+          v-if="cart.totalCount" :class="$style['footerIconBtnCartCount']"
+        >{{ cart.totalCount > 10 ? '10+' : cart.totalCount }}</text>
       </navigator>
       <button
         :class="[$style['footerBtn'], 'button', 'button--primary', 'button--outline', 'button--small', 'button--round']"
@@ -59,15 +55,6 @@
     </view>
 
     <!-- 以下为悬浮组件 -->
-    <view
-      v-if="customer.isAuthenticated"
-      :class="$style['productShare']"
-      @tap="shareDrawerVisible=true"
-    >
-      <!-- <text class="el-icon-share"></text> -->
-      <image :class="$style['productShareIcon']" src="https://up.img.heidiancdn.com/o_1eivho00dova1ua417h2f8hl5q0hape2x.png" mode="aspectFit"></image>
-      <text :class="$style['productShareText']">立赚</text>
-    </view>
     <select-variant
       :visible.sync="variantsDrawer.visible"
       :openType="variantsDrawer.openType"
@@ -76,7 +63,7 @@
       @selectVariant="onSelectVariant"
       @close="onVariantsDrawerClosed"
     ></select-variant>
-    <share-drawer v-if="product.id" :visible.sync="shareDrawerVisible" :productId="product.id"></share-drawer>
+
   </view>
 </template>
 
@@ -90,7 +77,6 @@ import ThemeBlocks from '@/mixins/ThemeBlocks'
 import Price from '@/components/Price'
 import SelectVariant from '@/components/SelectVariant/SelectVariant'
 import ProductReviews from './ProductReviews'
-import ShareDrawer from './ShareDrawer'
 
 export default {
   name: 'Product',
@@ -98,8 +84,7 @@ export default {
     /* 组件名称用首字母大写, template 里面标签不能用大写, 全部用小写+减号 */
     ProductReviews,
     SelectVariant,
-    ShareDrawer,
-    Price
+    Price,
   },
   mixins: [
     ThemeBlocks  // 会在页面上产生 blocks, pageType 和 pageName 三个变量
@@ -115,7 +100,6 @@ export default {
         visible: false,
         openType: ''
       },
-      shareDrawerVisible: false,
       currentVariant: {},
       // TODO, 现在这个 pending 没用上
       pending: true,
@@ -323,33 +307,5 @@ export default {
   position: absolute;
   top: -5px;
   left: 55%;
-}
-.productShare {
-  position: fixed;
-  bottom: 65px;
-  right: 15px;
-  width: 44px;
-  height: 44px;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  background-color: $color-text;
-  border-radius: 50%;
-  overflow: hidden;
-  box-shadow: 0 1px 5px 0px #aaaaaa;
-  color: #ffffff;
-  .page.pageIphoneX & {
-    bottom: 80px;
-  }
-}
-.productShareIcon {
-  width: 14px;
-  height: 14px;
-}
-.productShareText {
-  font-size: 10px;
-  line-height: 15px;
 }
 </style>
