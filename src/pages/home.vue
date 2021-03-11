@@ -25,6 +25,11 @@ export default {
   },
   computed: {},
   created() {},
+  onLoad() {
+    if (this.$store.state.config.shopname === 'tezignlove') {
+      Taro.hideTabBar()
+    }
+  },
   onReachBottom() {},
   async mounted() {
     const data = await this.fetchPageConfig('home')
