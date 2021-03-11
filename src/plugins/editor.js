@@ -1,6 +1,7 @@
 import Taro, { getCurrentInstance } from '@tarojs/taro'
 import store from '../store/index'
-
+import _ from 'lodash'
+import qs from 'qs'
 
 function listenFromStyleEditor(event) {
   // 通信的格式是 data: { sender, type, method, payload }
@@ -32,6 +33,76 @@ function listenFromStyleEditor(event) {
   }
 }
 
+function postMessage(type, payload)  {
+  window.parent.postMessage({
+    sender: 'shopmini_taro',
+    type,
+    payload
+  }, "*")
+}
+
+function getCurrentPage() {
+  const res = {}
+  const { pathname, search } = window.location
+  const query = qs.parse(search.replace('?', '')) || {}
+
+  const pageName = search ? query.name : ''
+  if (pathname === '/pages/static/index') {
+    res.pageType = 'static'
+    res.pageName = pageName
+  } else if (pathname === '/pages/home') {
+    res.pageType = 'home'
+  } else if (pathname === '/pages/product/index') {
+    res.pageType = 'product'
+  } else if (pathname === '/pages/login/index') {
+    res.pageType = 'login'
+  }
+  return res
+}
+
+function updateBlocksSize(e) {
+  const { pageType, pageName } = getCurrentPage()
+  const { blocksOfPage = {} } = store.state.theme
+  const key = (pageType && pageName) ? `${pageType}/${pageName}` : pageType
+
+  if (_.isEmpty(blocksOfPage[key])) return;
+
+  const payload = {
+    scrollTop: _.get(e, 'target.scrollTop', 0),
+    blocksPositionData: {}
+  }
+  _.forEach(blocksOfPage[key], blockData => {
+    const blockId = blockData.id
+    if (blockId) {
+      const targetElement = document.getElementById(`block--${blockId}`)
+      if (targetElement) {
+        payload.blocksPositionData[blockId] = {
+          height: targetElement.clientHeight,
+          offsetTop: targetElement.offsetTop
+        }
+      }
+    }
+  })
+  postMessage('scroll', payload)
+}
+
+let timer = null
+function initScrollListener() {
+  const $scrollEl = document.getElementsByClassName('taro-tabbar__panel')[0]
+  if (!$scrollEl) {
+    timer = setTimeout(initScrollListener, 200)
+    return
+  } else {
+    clearTimeout(timer)
+  }
+  updateBlocksSize()
+  $scrollEl.addEventListener('scroll', _.throttle(updateBlocksSize, 50))
+}
+
 if (Taro.getEnv() === Taro.ENV_TYPE.WEB && typeof window !== 'undefined' && window.parent) {
   window.addEventListener('message', listenFromStyleEditor)
+
+  if (document) {
+    initScrollListener()
+  }
 }

@@ -5,6 +5,7 @@
       v-for="(block, index) in blocks" :key="index"
       :is="block.componentClass"
       :css="block.css" :settingsData="block.settings_data"
+      :id="'block--' + block.id"
     ></component>
     <view id="home-categories-affix">
       <scroll-view
