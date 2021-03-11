@@ -2,12 +2,14 @@
   <view :class="$style['formWrapper']" :style="css">
     <button
       :class="['button', $style['loginButton']]" type="primary"
+      :style="buttonStyle"
       open-type="getPhoneNumber" @getPhoneNumber="getPhoneNumber"
     >
-      <image
+      <!-- <image
         src="https://up.img.heidiancdn.com/o_1cgtnj1nadol7n31b8n1lfidgb0wechat.png"
         :class="$style['buttonIcon']"
-      ></image>微信登录
+      ></image> -->
+      微信快捷登录
     </button>
   </view>
 </template>
@@ -25,13 +27,31 @@ export default {
     },
     settingsData: {
       type: Object,
-      default: () => ({})
+      default: () => ({
+        buttonTextColor: null,
+        buttonBackgroundColor: null,
+        buttonBorderRadius: null,
+      })
     }
   },
   data() {
     return {}
   },
-  computed: {},
+  computed: {
+    buttonStyle() {
+      const style = {}
+      if (+this.settingsData.buttonBorderRadius || this.settingsData.buttonBorderRadius + '' === '0') {
+        style['borderRadius'] = Taro.pxTransform(`${+this.settingsData.buttonBorderRadius}px`)
+      }
+      if (this.settingsData.buttonTextColor) {
+        style['color'] = this.settingsData.buttonTextColor
+      }
+      if (this.settingsData.buttonBackgroundColor) {
+        style['backgroundColor'] = this.settingsData.buttonBackgroundColor
+      }
+      return style
+    }
+  },
   methods: {
     async getPhoneNumber(e) {
       const { errMsg, encryptedData, iv } = e.detail || {}
@@ -73,15 +93,19 @@ export default {
 
 <style lang="scss" module>
 .formWrapper {
-  //
+  padding: 20px;
 }
 .loginButton {
   width: 100%;
+  display: block;
+  &:global(.button-hover) {
+    opacity: 0.8;
+  }
 }
-.buttonIcon {
-  width: 16px;
-  height: 16px;
-  margin-right: 3px;
-  vertical-align: middle;
-}
+// .buttonIcon {
+//   width: 16px;
+//   height: 16px;
+//   margin-right: 1em;
+//   vertical-align: middle;
+// }
 </style>
