@@ -19,6 +19,7 @@ import ProductSingleAccessories from '@/components/blocks/product/ProductSingleA
 import ProductSingleBodyHtml from '@/components/blocks/product/ProductSingleBodyHtml'
 import ProductSingleBuy from '@/components/blocks/product/ProductSingleBuy'
 import ProductSingleRelated from '@/components/blocks/product/ProductSingleRelated'
+import LoginForm from '@/components/blocks/api/LoginForm'
 
 // import getTestPageConfig from './_getTestPageConfig'
 // const PREVIEW_THEME_ID = 13390
@@ -34,6 +35,7 @@ const BLOCKS_MAP = {
   'blocks/product_single_body_html': ProductSingleBodyHtml,
   'blocks/product_single_buy': ProductSingleBuy,
   'blocks/product_single_related': ProductSingleRelated,
+  'blocks/login_form': LoginForm,
 }
 
 export default {
