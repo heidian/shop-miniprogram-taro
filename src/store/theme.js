@@ -99,30 +99,28 @@ const mutations = {
       state.blocksOfPage[key] = _.filter(blocks, (block) => block.id != id)
     }
   },
-  updateBlockSettingsData(state, { pageType, pageName, id, blockSettingsData, partial }) {
+  updateBlockSettingsData(state, { pageType, pageName, id, settingsData, partial }) {
     const key = calcuKey(pageType, pageName)
     const blocks = state.blocksOfPage[key]
     if (blocks) {
       const blockIndex = _.findIndex(blocks, { id })
-      const settingsData = partial ? {
+      blocks[blockIndex]['settings_data'] = partial ? {
         ...blocks[blockIndex]['settings_data'],
-        ...blockSettingsData,
-      } : { ...blockSettingsData }
-      blocks[blockIndex]['settings_data'] = settingsData
+        ...settingsData,
+      } : { ...settingsData }
       // TODO: 只是上面那么写似乎可以监听到新添加的板块的变化, 所以不需要下面这句
       // state.blocksOfPage[key] = [ ...blocks ]
     }
   },
-  updateBlockCss(state, { pageType, pageName, id, blockCss, partial }) {
+  updateBlockCss(state, { pageType, pageName, id, css, partial }) {
     const key = calcuKey(pageType, pageName)
     const blocks = state.blocksOfPage[key]
     if (blocks) {
       const blockIndex = _.findIndex(blocks, { id })
-      const css = partial ? {
+      blocks[blockIndex]['css'] = partial ? {
         ...blocks[blockIndex]['css'],
-        ...blockCss,
-      } : { ...blockCss }
-      blocks[blockIndex]['css'] = css
+        ...css,
+      } : { ...css }
       // TODO: 只是上面那么写似乎可以监听到新添加的板块的变化, 所以不需要下面这句
       // state.blocksOfPage[key] = [ ...blocks ]
     }
@@ -135,10 +133,10 @@ const mutations = {
       blocks[blockIndex]['hidden'] = hidden
     }
   },
-  updateThemeSettingsData(state, { themeSettingsData }) {
+  updateThemeSettingsData(state, { settingsData }) {
     state.themeSettingsData = {
       ...state.themeSettingsData,
-      ...themeSettingsData,
+      ...settingsData,
     }
   }
 }
