@@ -35,9 +35,14 @@ export default {
     }
   },
   data() {
-    return {}
+    return {
+      code: ''
+    }
   },
   computed: {
+    appid() {
+      return this.$store.state.config.appid
+    },
     buttonStyle() {
       const style = {}
       if (+this.settingsData.buttonBorderRadius || this.settingsData.buttonBorderRadius + '' === '0') {
@@ -52,7 +57,19 @@ export default {
       return style
     }
   },
+  async mounted() {
+    // 获取 Taro.login 的 js_code 一定要在 getPhoneNumber 回调的外面
+    this.getJsCode()
+  },
   methods: {
+    getJsCode() {
+      const code = this.code
+      // 取完以后得换一个
+      Taro.login({
+        success: ({ code }) => { this.code = code }
+      })
+      return code
+    },
     async getPhoneNumber(e) {
       const { errMsg, encryptedData, iv } = e.detail || {}
       if (!encryptedData || !iv) {
@@ -84,7 +101,12 @@ export default {
         }
       } catch(err) {
         Taro.hideLoading()
-        console.log('登录失败', _.get(err, 'response.data', ('' + err)))
+        Taro.showModal({
+          title: '登录失败',
+          content: JSON.stringify(_.get(err, 'response.data', ('' + err))),
+          showCancel: false,
+          success: function(res) {}
+        })
       }
     },
   }
