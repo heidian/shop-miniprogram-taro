@@ -34,7 +34,7 @@
     <!-- 底部菜单 -->
 
     <template v-if="product.id">
-      <view :class="$style['footer']" v-if="$store.state.config.shopname === 'tezignlove'">
+      <view :class="$style['footer']" v-if="tezignShareEnabled">
         <button
           :class="['button', 'button--primary', 'button--small']"
           :style="{'display':'block', 'width':'100%'}"
@@ -115,6 +115,7 @@ export default {
         openType: ''
       },
       currentVariant: {},
+      tezignShareEnabled: getCurrentInstance().router.params['tezign-share'] == '1',
       tezignShareDialogVisible: false,
       // TODO, 现在这个 pending 没用上
       pending: true,
