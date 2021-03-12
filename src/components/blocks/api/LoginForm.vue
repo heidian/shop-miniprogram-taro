@@ -2,14 +2,15 @@
   <view :class="$style['formWrapper']" :style="css">
     <button
       :class="['button', $style['loginButton']]" type="primary"
-      :style="buttonStyle"
-      open-type="getPhoneNumber" @getPhoneNumber="getPhoneNumber"
+      :style="buttonStyle" :disabled="pending"
+      open-type="getPhoneNumber" @getPhoneNumber="getPhoneNumber" @tap="pending=true"
     >
       <!-- <image
         src="https://up.img.heidiancdn.com/o_1cgtnj1nadol7n31b8n1lfidgb0wechat.png"
         :class="$style['buttonIcon']"
       ></image> -->
-      微信快捷登录
+      <template v-if="pending"><text class="el-icon-loading"></text> 正在获取微信信息</template>
+      <template v-else>微信快捷登录</template>
     </button>
   </view>
 </template>
@@ -36,7 +37,8 @@ export default {
   },
   data() {
     return {
-      code: ''
+      code: '',
+      pending: false,
     }
   },
   computed: {
@@ -74,6 +76,7 @@ export default {
       const { errMsg, encryptedData, iv } = e.detail || {}
       if (!encryptedData || !iv) {
         // TODO 处理错误
+        this.pending = false
         console.log('无法获取手机号', errMsg)
         Taro.showModal({
           title: '出错了',
@@ -92,6 +95,7 @@ export default {
           iv: iv,
           grant_type: 'wechat_mini_phone'
         })
+        this.pending = false
         Taro.hideLoading()
         const pages = getCurrentPages()
         if (pages.length > 1) {
@@ -100,6 +104,7 @@ export default {
           Taro.switchTab({ url: '/pages/home' })
         }
       } catch(err) {
+        this.pending = false
         Taro.hideLoading()
         Taro.showModal({
           title: '登录失败',
@@ -108,7 +113,7 @@ export default {
           success: function(res) {}
         })
       }
-    },
+    }
   }
 }
 </script>
