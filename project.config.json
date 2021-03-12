@@ -113,6 +113,12 @@
           "pathName": "pages/product/accessories/index",
           "query": "product=88133",
           "scene": null
+        },
+        {
+          "name": "pages/product/reviews-closing/post",
+          "pathName": "pages/product/reviews-closing/post",
+          "query": "product=88148&variant=1050901",
+          "scene": null
         }
       ]
     }

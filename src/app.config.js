@@ -12,6 +12,7 @@ export default {
     'pages/product/index',
     'pages/product/reviews/index',
     'pages/product/reviews/post',
+    'pages/product/reviews-closing/post',
     'pages/product/reviews/reply',
     'pages/product/accessories/index',
     'pages/login/index',
