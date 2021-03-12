@@ -1,9 +1,9 @@
 export default function(url) {
-  const match = (url || '').match(/(wxpage|wxtab):\/\/(.+)/)
+  const match = (url || '').match(/^(wxpage|wxtab|page|tab):\/\/(.+)$/)
   if (match) {
     const [, openType, url] = match
     return {
-      openType: openType === 'wxtab' ? 'switchTab' : 'navigate',
+      openType: (openType === 'wxtab' || openType === 'tab') ? 'switchTab' : 'navigate',
       url: '/' + url
     }
   } else if (/^(http|https):\/\/.+/.test(url)) {
