@@ -40,6 +40,10 @@ const BLOCKS_MAP = {
   'blocks/login_form': LoginForm,
 }
 
+if (Taro.getEnv() === Taro.ENV_TYPE.WEB) {
+  BLOCKS_MAP['blocks/tezign_banner'] = Image
+}
+
 export default {
   data() {
     return {

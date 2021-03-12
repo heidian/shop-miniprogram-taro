@@ -8,6 +8,7 @@
 
 <script>
 import _ from 'lodash'
+import Taro from '@tarojs/taro'
 import { API } from '@/utils/api'
 import { optimizeImage } from '@/utils/image'
 import parseUrl from '@/utils/parseUrl'
@@ -36,11 +37,16 @@ export default {
   },
   computed: {
     ...mapState('customer', {
+      isAuthenticated: (state) => state.isAuthenticated,
       mobile: (state) => state.data.mobile
     }),
   },
   mounted() {
-    this.getBanner()
+    if (this.mobile) {
+      this.getBanner(this.mobile)
+    } else if (!this.isAuthenticated) {
+      Taro.reLaunch({ url: '/pages/login/index' })
+    }
   },
   methods: {
     optimizeImage,
@@ -50,8 +56,7 @@ export default {
       this.openType = parse.openType
       this.image = image
     },
-    getBanner() {
-      const mobile = this.mobile
+    getBanner(mobile) {
       if (mobile) {
         API.get('/clients/tezign/banner/', {
           params: { mobile }
@@ -66,7 +71,7 @@ export default {
   },
   watch: {
     mobile(newVal) {
-      this.getBanner()
+      this.getBanner(newVal)
     }
   }
 }
