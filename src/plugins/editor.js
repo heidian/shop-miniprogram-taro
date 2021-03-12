@@ -60,21 +60,23 @@ function getCurrentPage() {
   return res
 }
 
-function updateBlocksSize(e) {
+function updateBlocksSize() {
   const { pageType, pageName } = getCurrentPage()
   const { blocksOfPage = {} } = store.state.theme
   const key = (pageType && pageName) ? `${pageType}/${pageName}` : pageType
 
   if (_.isEmpty(blocksOfPage[key])) return;
 
+  const $scrollEl = document.getElementsByClassName('taro-tabbar__panel')[0]
+  if (!$scrollEl) return;
   const payload = {
-    scrollTop: _.get(e, 'target.scrollTop', 0),
+    scrollTop: $scrollEl.scrollTop || 0,
     blocksPositionData: {}
   }
   _.forEach(blocksOfPage[key], blockData => {
     const blockId = blockData.id
     if (blockId) {
-      const targetElement = document.getElementById(`block--${blockId}`)
+      const targetElement = window.document.getElementById(`block--${blockId}`)
       if (targetElement) {
         payload.blocksPositionData[blockId] = {
           height: targetElement.clientHeight,
@@ -87,22 +89,13 @@ function updateBlocksSize(e) {
 }
 
 let timer = null
+
 function initScrollListener() {
-  const $scrollEl = document.getElementsByClassName('taro-tabbar__panel')[0]
-  if (!$scrollEl) {
-    timer = setTimeout(initScrollListener, 200)
-    return
-  } else {
-    clearTimeout(timer)
-  }
-  updateBlocksSize()
-  $scrollEl.addEventListener('scroll', _.throttle(updateBlocksSize, 50))
+  timer = setInterval(updateBlocksSize, 10)
 }
 
 if (Taro.getEnv() === Taro.ENV_TYPE.WEB && typeof window !== 'undefined' && window.parent) {
   window.addEventListener('message', listenFromStyleEditor)
 
-  if (document) {
-    initScrollListener()
-  }
+  initScrollListener()
 }
