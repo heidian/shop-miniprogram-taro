@@ -6,7 +6,7 @@
     </view>
     <view :class="$style['section']">
       <!-- <view class="section__header">商品</view> -->
-      <view :class="$style['orderLine']" v-for="(line, index) in orderData.lines" :key="line.id">
+      <view :class="$style['orderLine']" v-for="line in orderData.lines" :key="line.id">
         <image
           :class="$style['lineImage']" mode="aspectFill"
           :src="optimizeImage(line.image, 100)"
@@ -18,6 +18,7 @@
             <price :price="line.price"></price>
             <text :class="$style['lineQuantity']">x{{ line.quantity }}</text>
           </view>
+          <button v-if="showReviewBtn" class="button button--mini" :class="$style['reviewBtn']" @tap="() => clickReviewBtn(line)">添加评价</button>
         </view>
       </view>
       <view :class="$style['dividerHorizontal']"></view>
@@ -94,6 +95,12 @@ export default {
   },
   computed: {
     ...mapState(['customer']),
+    shopName() {
+      return this.$store.state.config.shopname
+    },
+    showReviewBtn() {
+      return this.shopName === 'joyberry'
+    },
     nameAndMobile() {
       const { full_name, mobile } = this.orderData.shipping_address || this.orderData
       return [full_name, mobile].join(' ')
@@ -172,6 +179,12 @@ export default {
           this.fetchOrder()
         }
       })
+    },
+    clickReviewBtn (orderline = {}) {
+      const { product, variant } = orderline
+      if (product && product.id && variant && variant.id) {
+        Taro.navigateTo({ url: `/pages/product/reviews-closing/post?product=${product.id}&variant=${variant.id}` })
+      }
     }
   }
 }
@@ -218,6 +231,7 @@ page {
   flex-direction: column;
   align-items: flex-start;
   justify-content: space-between;
+  position: relative;
   .productTitle {
     font-size: 0.9em;
   }
@@ -234,6 +248,11 @@ page {
     width: 100%;
     display: flex;
     justify-content: space-between;
+  }
+  .reviewBtn {
+    position: absolute;
+    top: 0;
+    right: 0;
   }
 }
 .dividerHorizontal {
