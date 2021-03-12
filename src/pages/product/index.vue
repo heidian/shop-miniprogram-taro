@@ -32,27 +32,30 @@
     -->
 
     <!-- 底部菜单 -->
-    <view :class="$style['footer']" v-if="product.id">
-      <button :class="['button', $style['iconBtn'], $style['footerIconBtn']]" open-type="contact">
-        <view class="el-icon-headset"></view>
-        <view :class="$style['iconBtnText']">客服</view>
-      </button>
-      <navigator :class="[$style['iconBtn'], $style['footerIconBtn']]" url="/pages/cart/index" open-type="switchTab">
-        <view class="el-icon-shopping-cart-2"></view>
-        <view :class="$style['iconBtnText']">购物车</view>
-        <text
-          v-if="cart.totalCount" :class="$style['footerIconBtnCartCount']"
-        >{{ cart.totalCount > 10 ? '10+' : cart.totalCount }}</text>
-      </navigator>
-      <button
-        :class="[$style['footerBtn'], 'button', 'button--primary', 'button--outline', 'button--small', 'button--round']"
-        @tap="() => showVariantsDrawer('add_to_cart')"
-      >加入购物车</button>
-      <button
-        :class="[$style['footerBtn'], 'button', 'button--primary', 'button--small', 'button--round']"
-        @tap="() => showVariantsDrawer('buy_now')"
-      >立即购买</button>
-    </view>
+
+    <template v-if="product.id">
+      <view :class="$style['footer']">
+        <button :class="['button', $style['iconBtn'], $style['footerIconBtn']]" open-type="contact">
+          <view class="el-icon-headset"></view>
+          <view :class="$style['iconBtnText']">客服</view>
+        </button>
+        <navigator :class="[$style['iconBtn'], $style['footerIconBtn']]" url="/pages/cart/index" open-type="switchTab">
+          <view class="el-icon-shopping-cart-2"></view>
+          <view :class="$style['iconBtnText']">购物车</view>
+          <text
+            v-if="cart.totalCount" :class="$style['footerIconBtnCartCount']"
+          >{{ cart.totalCount > 10 ? '10+' : cart.totalCount }}</text>
+        </navigator>
+        <button
+          :class="[$style['footerBtn'], 'button', 'button--primary', 'button--outline', 'button--small', 'button--round']"
+          @tap="() => showVariantsDrawer('add_to_cart')"
+        >加入购物车</button>
+        <button
+          :class="[$style['footerBtn'], 'button', 'button--primary', 'button--small', 'button--round']"
+          @tap="() => showVariantsDrawer('buy_now')"
+        >立即购买</button>
+      </view>
+    </template>
 
     <!-- 以下为悬浮组件 -->
     <select-variant
