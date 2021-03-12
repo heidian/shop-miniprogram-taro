@@ -211,6 +211,7 @@ export default {
         bellyButton: false,
         hips: false,
         score: true,
+        fitValue: true,
         title: true,
         content: true,
       }
@@ -257,10 +258,16 @@ export default {
       let content = ''
       _.forEach(this.form, (item, key) => {
         if (item.value) {
-          content += item.label + '：' + item.value + '\n'
+          if (item.label === '合身度') {
+            // 如果是合身度，需要将数字再转化成字符串
+            content += item.label + '：' + ['宽松', '合身', '紧致'][item.value] + '\n'
+          } else {
+            content += item.label + '：' + item.value + '\n'
+          }
         }
       })
-      console.log(content)
+      content += `购买尺寸：${this.variantSize ? this.variantSize.value : '-'}`
+
       const payload = {
         'owner_resource': 'product',
         'owner_id': this.productId,
