@@ -310,7 +310,7 @@ page {
 .postReview {
   min-height: 100vh;
   position: relative;
-  padding: 30px 15px 80px;
+  padding: 30px 15px;
 }
 .title {
   font-size: 18px;
