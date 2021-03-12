@@ -29,6 +29,9 @@ export default {
   onLoad() {
     if (this.$store.state.config.shopname === 'tezignlove') {
       Taro.hideTabBar()
+      if (!this.$store.state.customer.isAuthenticated) {
+        Taro.reLaunch({ url: '/pages/login/index' })
+      }
     }
   },
   onReachBottom() {},
