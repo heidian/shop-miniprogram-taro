@@ -2,7 +2,7 @@
   <hs-dialog :visible.sync="dialogVisible" :class="$style['tezignShareDialog']">
     <image
       :class="$style['tezignShareImage']"
-      mode="aspectFit"
+      mode="widthFix"
       :src="optimizeImage(imageSrc, { format: 'jpg' })"
     ></image>
     <button
@@ -86,7 +86,6 @@ export default {
     background-color: transparent;
   }
   .tezignShareImage {
-    height: 70vh;
     width: 60vw;
     margin-bottom: 20px;
   }
