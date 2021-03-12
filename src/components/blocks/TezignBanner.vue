@@ -41,7 +41,7 @@ export default {
       mobile: (state) => state.data.mobile
     }),
   },
-  mounted() {
+  created() {
     if (this.mobile) {
       this.getBanner(this.mobile)
     } else if (!this.isAuthenticated) {

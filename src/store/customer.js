@@ -48,9 +48,11 @@ const actions = {
         headers: { 'Authorization': '' }
       })
       const customerToken = data.token
+      const customerData = _.pick(data, ['id', 'mobile', 'full_name'])
       Taro.setStorageSync('customerToken', customerToken)
       commit('setData', {
         customerToken: customerToken,
+        data: customerData,
         isAuthenticated: true
       })
     } catch(err) {
