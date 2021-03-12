@@ -166,6 +166,15 @@ export default {
       }
       this.paymentPending = true
       const openid = await this.$store.dispatch('customer/getOpenID')
+      let orderId
+      try {
+        const orderData = await this.$store.dispatch('checkout/placeOrder')
+        orderId = orderData.id
+      } catch(err) {
+        Taro.showModal({ title: '发起支付失败', content: '' + err, showCancel: false })
+        this.paymentPending = false
+        return
+      }
       let res
       try {
         res = await API.post('/pingxx/charge_for_order/', {
@@ -176,12 +185,11 @@ export default {
         })
         this.paymentPending = false
       } catch(err) {
-        Taro.showModal({ title: '发起支付失败', showCancel: false })
+        Taro.showModal({ title: '发起支付失败', content: '' + err, showCancel: false })
         this.paymentPending = false
         return
       }
       const credential = _.get(res.data, 'charge.charge_essentials.credential.wx_lite')
-      const orderId = _.get(res.data, 'order.id')
       // console.log(credential)
       Taro.requestPayment({
         ...credential,

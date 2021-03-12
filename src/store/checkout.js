@@ -136,6 +136,15 @@ const actions = {
       throw err
     }
     dispatch('fetch')
+  },
+  async placeOrder({ commit, state, dispatch }) {
+    const url = `/checkout/${state.checkoutToken}/place_order/`
+    try {
+      const res = await API.post(url)
+      return res.data
+    } catch(err) {
+      throw err
+    }
   }
 }
 
