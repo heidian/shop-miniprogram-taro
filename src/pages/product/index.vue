@@ -34,7 +34,14 @@
     <!-- 底部菜单 -->
 
     <template v-if="product.id">
-      <view :class="$style['footer']">
+      <view :class="$style['footer']" v-if="$store.state.config.shopname === 'tezignlove'">
+        <button
+          :class="['button', 'button--primary', 'button--small']"
+          :style="{'display':'block', 'width':'100%'}"
+          @tap="tezignShareDialogVisible = true"
+        >分享到朋友圈领取</button>
+      </view>
+      <view :class="$style['footer']" v-else>
         <button :class="['button', $style['iconBtn'], $style['footerIconBtn']]" open-type="contact">
           <view class="el-icon-headset"></view>
           <view :class="$style['iconBtnText']">客服</view>
@@ -67,6 +74,8 @@
       @close="onVariantsDrawerClosed"
     ></select-variant>
 
+    <tezign-share-dialog :visible.sync="tezignShareDialogVisible"></tezign-share-dialog>
+
   </view>
 </template>
 
@@ -79,6 +88,7 @@ import { optimizeImage, backgroundImageUrl } from '@/utils/image'
 import ThemeBlocks from '@/mixins/ThemeBlocks'
 import Price from '@/components/Price'
 import SelectVariant from '@/components/SelectVariant/SelectVariant'
+import TezignShareDialog from './TezignShareDialog'
 import ProductReviews from './ProductReviews'
 
 export default {
@@ -88,6 +98,7 @@ export default {
     ProductReviews,
     SelectVariant,
     Price,
+    TezignShareDialog,
   },
   mixins: [
     ThemeBlocks  // 会在页面上产生 blocks, pageType 和 pageName 三个变量
@@ -104,6 +115,7 @@ export default {
         openType: ''
       },
       currentVariant: {},
+      tezignShareDialogVisible: false,
       // TODO, 现在这个 pending 没用上
       pending: true,
     }
