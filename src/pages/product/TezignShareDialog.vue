@@ -1,5 +1,8 @@
 <template>
-  <hs-dialog :visible.sync="dialogVisible" :class="$style['tezignShareDialog']">
+  <hs-dialog
+    :class="$style['tezignShareDialog']"
+    :visible.sync="dialogVisible" @close="onDialogClose" @open="onDialogOpen"
+  >
     <image
       :class="$style['tezignShareImage']"
       mode="widthFix"
@@ -41,11 +44,11 @@ export default {
   },
   methods: {
     optimizeImage,
-    onDialogClosed() {
+    onDialogClose() {
       this.$emit('update:visible', false)
       // this.$emit('close')  // 不需要传递事件
     },
-    onDialogOpened() {
+    onDialogOpen() {
       this.$emit('update:visible', true)
       // this.$emit('open')  // 不需要传递事件
     },
