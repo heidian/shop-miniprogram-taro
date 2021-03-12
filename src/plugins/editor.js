@@ -33,7 +33,7 @@ function listenFromStyleEditor(event) {
   }
 }
 
-function postMessage(type, payload)  {
+function postMessage({type, payload})  {
   window.parent.postMessage({
     sender: 'shopmini_taro',
     type,
@@ -85,13 +85,13 @@ function updateBlocksSize() {
       }
     }
   })
-  postMessage('scroll', payload)
+  postMessage({ type: 'scroll', payload })
 }
 
-let timer = null
 
 function initScrollListener() {
-  timer = setInterval(updateBlocksSize, 10)
+  updateBlocksSize()
+  setTimeout(initScrollListener, 10)
 }
 
 if (Taro.getEnv() === Taro.ENV_TYPE.WEB && typeof window !== 'undefined' && window.parent) {
