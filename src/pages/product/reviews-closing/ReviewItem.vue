@@ -1,56 +1,36 @@
 
 <template>
   <view :class="$style['reviewItem']">
-    <view :class="$style['avatar']" :style="{
-      'backgroundImage': backgroundImageUrl(reviewCustomerAvatar, 100)
-    }"></view>
-    <view :class="$style['caption']">
-      <view :class="$style['captionHead']">
-        <view :class="$style['fullName']">{{ review.customer && review.customer.full_name || '未命名用户' }}</view>
-        <view :class="$style['itemActions']">
-          <navigator
-            v-if="!disableReply"
-            :url="`/pages/product/reviews/reply?review=${review.id}&product=${productId}`"
-            :class="$style['action']"
-            hover-class=“none”
-          >
-            <image
-              :class="$style['actionIcon']"
-              src="https://up.img.heidiancdn.com/o_1eea50d0f1f9obddflu1la3qbp0reply.png" mode="scaleToFill"
-              :lazy-load="false">
-            </image>
-            <text :class="$style['actionText']">回复</text>
-          </navigator>
-        </view>
-        <view :class="$style['itemCreatedAt']">{{ review.created_at|datetime }}</view>
+    <view :class="$style['score']">
+      <view v-for="i in [1,2,3,4,5]" :key="i"
+            :class="[$style['ratingStar'], i <= scoreValue && $style['ratingStarActive']]"></view>
+    </view>
+    <view :class="$style['title']">{{ reviewContent['评价标题'] }}</view>
+    <view :class="$style['fullName']">{{ reviewContent['姓名'] }}</view>
+    <view :class="$style['createdAt']">{{ review.created_at|datetime('MM/DD/YYYY') }}</view>
+    <view :class="$style['content']">{{ reviewContent['评价内容'] }}</view>
+    <view style="font-weight: 600;">合身度</view>
+    <view :class="$style['fitValue']">
+      <slider
+        :class="$style['slider']"
+        :value="fitValue"
+        :disabled="true"
+        :min="0" :max="2" :step="1"
+        backgroundColor="#272727"
+        activeColor="#847CB4"
+        :blockSize="14"
+        blockColor="#847CB4"
+        />
+      <view :class="$style['sliderHints']">
+        <text :class="$style['sliderHint']">宽松</text>
+        <text :class="$style['sliderHint']">合身</text>
+        <text :class="$style['sliderHint']">紧致</text>
       </view>
-      <view :class="$style['content']">
-        <text :class="$style['contentText']">{{ review.content }}</text>
-        <template v-if="review.images && review.images.length">
-          <scroll-view
-            :scroll-x="true"
-            :scroll-y="false"
-            :class="$style['reviewItemImages']">
-            <view v-for="(image, imgIndex) in review.images" :key="image.id" :class="$style['imageItem']">
-              <image :src="optimizeImage(image, 100)" :class="$style['contentImage']" mode="aspectFill" @tap="() => onPreviewImage(imgIndex)"></image>
-            </view>
-          </scroll-view>
-          <view v-if="!disableDownload" :class="$style['downloadAllImages']" @tap.stop="() => downloadAll(review.images)">下载全部图片</view>
-        </template>
-      </view>
-      <view :class="$style['reviewItemreplies']" v-if="!hideReplies && review.replies && review.replies.count">
-        <view :class="$style['reviewItemReply']" v-for="reply in review.replies.results" :key="reply.id">
-          <text :class="$style['replyFullname']">{{ reply.customer && reply.customer.full_name || '未命名用户' }}：</text>
-          <text :class="$style['replyContent']">{{ reply.content }}</text>
-        </view>
-        <navigator
-          v-if="review.replies.count > 1"
-          :class="$style['reviewItemMore']"
-          hover-class=“none”
-          :url="`/pages/product/reviews/reply?review=${review.id}&product=${productId}`"
-        >
-          <text>共{{ review.replies.count }}条回复</text>
-        </navigator>
+    </view>
+    <view :class="$style['otherContent']">
+      <view v-for="(value, label) in otherContent" :key="label" :class="$style['contentCol']">
+        <view :class="$style['contentColLabel']">{{ label }}</view>
+        <view :class="$style['contentColValue']">{{ value }}</view>
       </view>
     </view>
   </view>
@@ -60,40 +40,6 @@ import Taro,{ showToast } from '@tarojs/taro'
 import _ from 'lodash'
 import { API } from '@/utils/api'
 import { optimizeImage, backgroundImageUrl } from '@/utils/image'
-
-const downloadImageTask = (url, index) => {
-  return new Promise((resolve, reject) => {
-    // Taro.showLoading({ title: `正在下载第${index + 1}张` })
-    const _downloadTask = Taro.downloadFile({ url }).then(res => {
-      console.log(index, res.tempFilePath)
-      Taro.saveImageToPhotosAlbum({
-        filePath: res.tempFilePath,
-        success: () => {  // 这里用回调的形式而不是用promise的形式，是因为在开发者工具里promise的写法可能会出现问题，6张图只能保存5张，而且没有报错
-          // Taro.showLoading({ title: `第${index + 1}张下载完成` })
-          resolve()
-        },
-        fail: () => {
-          // Taro.showLoading({ title: `第${index + 1}张保存失败` })
-          // reject(err)
-          resolve()
-        }
-      })
-    }).catch(err => {
-      // Taro.showLoading({ title: `第${index + 1}张下载失败` })
-      resolve()
-    })
-  })
-}
-
-const downloadTasks = (images) => {
-  return _.map(images, (image, index) => {
-    if (typeof image == 'object' && image.src) {
-      return downloadImageTask(image.src, index)
-    } else {
-      return downloadImageTask(image, index)
-    }
-  })
-}
 
 export default {
   props: {
@@ -122,51 +68,33 @@ export default {
   },
   data () {
     return {
-
+      fitValueOptions: ['宽松', '合身', '紧致']
     }
   },
   computed: {
-    reviewImages () {
-      return _.get(this.review, 'images', [])
+    reviewContent() {
+      const contentList = _.split(_.get(this.review, 'content', ''), '\n')
+      console.log(12345, contentList)
+      return _.fromPairs(_.map(contentList, item => {
+        return _.split(item, '：')
+      }))
     },
-    reviewCustomerAvatar () {
-      return _.get(this.review, 'customer.avatar', 'https://up.img.heidiancdn.com/o_1dhf2esd81lde76c1rttgf31dm0oup23x.png')
+    scoreValue() {
+      const score = _.get(this.reviewContent, '您的评分')
+      console.log('@@@@ scoreValue', score)
+      return +score || 0
+    },
+    fitValue() {
+      return _.findIndex(this.fitValueOptions, option => option === this.reviewContent['合身度'])
+    },
+    otherContent() {
+      return _.pick(this.reviewContent, ['购买尺寸', '身高', '体重', '腰围', '臀围'])
     }
+
   },
   methods: {
     optimizeImage,
     backgroundImageUrl,
-    onPreviewImage (index=0) {
-      const imageUrls = _.map(this.reviewImages || [], 'src')
-      Taro.previewImage({
-        current: imageUrls[index],
-        urls: imageUrls
-      })
-    },
-    onClickReply (id) {
-      if (!id) {
-        return
-      }
-      this.$emit('onClickReply', +id)
-    },
-    downloadAll (images) {
-      Taro.showLoading({ title: '正在下载' })
-      Promise.all(downloadTasks(images)).then(() => {
-        Taro.hideLoading()
-        Taro.showModal({
-          title: '下载完成',
-          content: '图片已保存至相册',
-          showCancel: false
-        })
-      }).catch(err => {
-        Taro.hideLoading()
-        Taro.showModal({
-          title: '下载出错',
-          content: '请重试',
-          showCancel: false
-        })
-      })
-    }
   }
 }
 </script>
@@ -176,147 +104,116 @@ export default {
 .reviewItem {
   width: 100%;
   display: flex;
-  align-items: flex-start;
-  padding: 20px 0;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px 20px;
   position: relative;
   color: $color-text;
 }
-.reviewItem:not(:last-child) {
+.reviewItem:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
   border-bottom: solid 1px $color-divider;
 }
-.avatar {
-  width: 40px;
-  height: 40px;
-  border-radius: 20px;
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-position: center;
-}
-.caption {
-  width: calc(100% - 40px);
-  flex: 1;
-  padding-left: 5px;
-}
-.captionHead {
+
+.score,
+.title
+.fullName
+.createdAt
+.content
+.fitValue
+.otherContent {
   width: 100%;
+}
+.score {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-start;
-  align-items: flex-start;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 15px;
+}
+.ratingStar {
+  width: 20px;
+  height: 20px;
+  background: url('https://up.img.heidiancdn.com/o_1f0ioeg2h1i5a1p241kqslkd1bi20star.png') no-repeat center;
+  background-size: 18px 18px;
+  & + & {
+    margin-left: 5px;
+  }
+  &.ratingStarActive {
+    background-image: url('https://up.img.heidiancdn.com/o_1f0ioeg2fdmh1ba81nvhoon18ip0star1.png');
+  }
+}
+.title {
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 5px;
 }
 .fullName {
-  font-size: 13px;
-  font-weight: 600;
-  line-height: 1.7;
-}
-.itemActions {
-  display: flex;
-  flex: 1;
-  justify-content: flex-end;
-}
-.action {
-  padding: 0;
-  display: flex;
-  align-items: center;
-}
-.actionIcon {
-  width: 12px;
-  height: 12px;
-}
-.actionText {
-  margin-left: 3px;
-  font-size: 10px;
-  color: $color-text-lighter;
-}
-.itemCreatedAt {
-  margin-top: 5px;
-  width: 100%;
-  font-size: 11px;
-  color: $color-text-lighter;
-}
-.contentText {
-  margin-top: 5px;
   font-size: 14px;
-  line-height: 1.5;
-  font-weight: normal;
-  display: block;
+  font-weight: bold;
+  margin-bottom: 25px;
+}
+.createdAt {
+  margin-bottom: 10px;
+}
+.content {
+  margin-bottom: 10px;
   text-align: justify;
 }
-.reviewItemImages {
-  margin-top: 5px;
-  white-space: nowrap;
-  overflow: auto;
+.fitValue {
+  height: auto;
   width: 100%;
-  // display: flex;
-  // flex-direction: row;
-  // flex-wrap: nowrap;
-  // justify-content: flex-start;
-  // align-items: center;
-}
-.downloadAllImages {
-  width: 80px;
-  font-size: 10px;
-  line-height: 16px;
-  padding: 0 6px;
-  color: $color-text;
-  border: 1px solid;
-  display: inline-block;
-  margin-top: 8px;
-}
-.imageItem {
-  display: inline-block;
-  margin-left: 0;
-  margin-right: 0;
-  width: 80px;
-  height: 80px;
-  overflow: hidden;
-}
-.imageItem + .imageItem {
-  margin-left: 8px;
-}
-.contentImage {
-  width: 80px;
-  height: 80px;
-}
-.reviewItemreplies {
-  margin-top: 10px;
   position: relative;
-  padding: 10px;
-  background-color: #f5f5f5;
-  border-radius: 2px;
+  margin-bottom: 25px;
+  .slider {
+    border-left: 2px solid #272727;
+    border-right: 2px solid #272727;
+    position: relative;
+    &::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 1px;
+      height: 18px;
+      margin-top: -9px;
+      border-left: 2px solid #272727;
+    }
+    margin-bottom: 15px;
+  }
+
+  .sliderHints {
+    padding: 0 10px;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .sliderHint {
+    font-size: 13px;
+  }
 }
-.reviewItemReply {
+
+.otherContent {
   width: 100%;
-  margin-bottom: 5px;
   display: flex;
-  align-items: baseline;
-}
-.replyFullname {
-  font-weight: bold;
-  font-size: 13px;
-}
-.replyContent {
-  font-size: 13px;
-}
-.reviewItemMore {
-  width: 100%;
-  margin-bottom: 5px;
-  display: flex;
-  align-items: center;
+  flex-direction: row;
+  justify-content: space-between;
+  flex-wrap: nowrap;
   font-size: 12px;
-  color: $color-text-lighter;
 }
-.reviewItemMore::after {
-  content: "";
-  position: relative;
-  display: inline-block;
-  width: 0;
-  height: 0;
-  top: 50%;
-  margin-left: 2px;
-  margin-top: -3px;
-  border: 3px solid transparent;
-  border-width: 3px 6px;
-  border-left-color: $color-divider;
+.contentCol {
+  // flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+.contentColLabel {
+
+}
+.contentColValue {
+  font-weight: bolder;
 }
 </style>

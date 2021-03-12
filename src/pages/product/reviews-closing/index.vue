@@ -8,12 +8,6 @@
         :productId="productId"
       />
     </view>
-    <view :class="$style['footer']">
-      <navigator :url="`/pages/product/reviews/post?product=${ productId }`" :class="$style['footerNavigator']">
-        <image :class="$style['footerNavigatorIcon']" src="https://up.img.heidiancdn.com/o_1eeaarogl57i13djipg1r8c13k0hape3x.png" mode="aspectFill"></image>
-        <text :class="$style['footerNavigatorText']">我要评论</text>
-      </navigator>
-    </view>
   </view>
 </template>
 
@@ -101,38 +95,10 @@ page {
 .reviews {
   min-height: 100vh;
   position: relative;
-  padding-bottom: 64px;
+  padding-bottom: 30px;
 }
 .container {
   background-color: #ffffff;
-  padding: 0 20px;
-}
-.footer {
-  position: fixed;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  padding: 10px 20px;
-  background-color: #ffffff;
-}
-.footerNavigator {
-  width: 100%;
-  height: 34px;
-  border-radius: 17px;
-  background-color: $color-bg-gray;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  padding: 0 15px;
-}
-.footerNavigatorIcon {
-  width: 16px;
-  height: 16px;
-  margin-right: 4px;
-}
-.footerNavigatorText {
-  font-size: 14px;
-  color: $color-text-lighter;
 }
 </style>
 

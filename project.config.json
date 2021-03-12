@@ -93,7 +93,7 @@
         {
           "name": "pages/product/index",
           "pathName": "pages/product/index",
-          "query": "name=copy-of-yogi-pants-black",
+          "query": "id=88148",
           "scene": null
         },
         {
@@ -118,6 +118,12 @@
           "name": "pages/product/reviews-closing/post",
           "pathName": "pages/product/reviews-closing/post",
           "query": "product=88148&variant=1050901",
+          "scene": null
+        },
+        {
+          "name": "pages/product/reviews-closing/index",
+          "pathName": "pages/product/reviews-closing/index",
+          "query": "product=88148",
           "scene": null
         }
       ]
