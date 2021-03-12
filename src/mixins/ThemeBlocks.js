@@ -15,6 +15,7 @@ import Carousel from '@/components/blocks/Carousel'
 import Image from '@/components/blocks/Image'
 import Grids from '@/components/blocks/Grids'
 import Text from '@/components/blocks/Text'
+import TezignBanner from '@/components/blocks/TezignBanner'
 import ProductSingleAccessories from '@/components/blocks/product/ProductSingleAccessories'
 import ProductSingleBodyHtml from '@/components/blocks/product/ProductSingleBodyHtml'
 import ProductSingleBuy from '@/components/blocks/product/ProductSingleBuy'
@@ -31,6 +32,7 @@ const BLOCKS_MAP = {
   'blocks/image': Image,
   'blocks/grids': Grids,
   'blocks/text': Text,
+  'blocks/tezign_banner': TezignBanner,
   'blocks/product_single_accessories': ProductSingleAccessories,
   'blocks/product_single_body_html': ProductSingleBodyHtml,
   'blocks/product_single_buy': ProductSingleBuy,
