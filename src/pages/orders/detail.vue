@@ -183,7 +183,7 @@ export default {
     clickReviewBtn (orderline = {}) {
       const { product, variant } = orderline
       if (product && product.id && variant && variant.id) {
-        Taro.navigateTo({ url: `/pages/product/reviews-closing/post?product=${product.id}&variant=${variant.id}` })
+        Taro.navigateTo({ url: `/pages/product/reviews-fitting/post?product=${product.id}&variant=${variant.id}` })
       }
     }
   }

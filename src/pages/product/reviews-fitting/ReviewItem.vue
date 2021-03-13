@@ -74,14 +74,12 @@ export default {
   computed: {
     reviewContent() {
       const contentList = _.split(_.get(this.review, 'content', ''), '\n')
-      console.log(12345, contentList)
       return _.fromPairs(_.map(contentList, item => {
         return _.split(item, '：')
       }))
     },
     scoreValue() {
       const score = _.get(this.reviewContent, '您的评分')
-      console.log('@@@@ scoreValue', score)
       return +score || 0
     },
     fitValue() {

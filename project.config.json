@@ -115,14 +115,14 @@
           "scene": null
         },
         {
-          "name": "pages/product/reviews-closing/post",
-          "pathName": "pages/product/reviews-closing/post",
+          "name": "pages/product/reviews-fitting/post",
+          "pathName": "pages/product/reviews-fitting/post",
           "query": "product=88148&variant=1050901",
           "scene": null
         },
         {
-          "name": "pages/product/reviews-closing/index",
-          "pathName": "pages/product/reviews-closing/index",
+          "name": "pages/product/reviews-fitting/index",
+          "pathName": "pages/product/reviews-fitting/index",
           "query": "product=88148",
           "scene": null
         }
