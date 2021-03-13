@@ -29,7 +29,7 @@ export default {
     settingsData: {
       type: Object,
       default: () => ({
-        grids: [],  // { image, text, url }
+        grids: [],  // { image: { src, metafield }, text: { value } , url }
         gridGap: 0,  // px 整数
         imageRatio: 1,  // 宽高比
         textAlign: 'left',

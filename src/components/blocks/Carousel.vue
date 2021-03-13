@@ -35,7 +35,7 @@ export default {
     settingsData: {
       type: Object,
       default: () => ({
-        carousel: [],  // { image, url }
+        carousel: [],  // { image: { src, metafield }, url }
         imageRatio: 1  // 宽高比
       })
     }

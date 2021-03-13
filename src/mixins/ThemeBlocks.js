@@ -12,6 +12,7 @@ import { backgroundImageUrl } from '@/utils/image'
 import Header from '@/components/blocks/Header'
 import FeaturedProducts from '@/components/blocks/FeaturedProducts'
 import Carousel from '@/components/blocks/Carousel'
+import Accordion from '@/components/blocks/Accordion'
 import Image from '@/components/blocks/Image'
 import Grids from '@/components/blocks/Grids'
 import Text from '@/components/blocks/Text'
@@ -29,6 +30,7 @@ const BLOCKS_MAP = {
   'blocks/header': Header,
   'blocks/featured_products': FeaturedProducts,
   'blocks/carousel': Carousel,
+  'blocks/accordion': Accordion,
   'blocks/image': Image,
   'blocks/grids': Grids,
   'blocks/text': Text,
