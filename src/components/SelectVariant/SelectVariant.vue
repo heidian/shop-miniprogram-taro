@@ -33,7 +33,8 @@
         </view>
       </view>
     </view>
-    <view :class="$style['quantityWrapper']">
+    <!-- 不然会在页面上出现一个很诡异的浮动的内容为 "1" 的输入框 -->
+    <view :class="$style['quantityWrapper']" v-if="isVisible">
       <view>数量</view>
       <input-number :class="$style['quantityInput']" :min="1" v-model="quantity"></input-number>
     </view>
