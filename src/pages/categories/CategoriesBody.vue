@@ -22,8 +22,8 @@
       >
         <view
           :class="$style['categoryImage']"
-          :style="{'backgroundImage': backgroundImageUrl((item.image && item.image.src) ? item.image : 'https://up.img.heidiancdn.com/o_1edbf7v8a12v35o415qak731pij0pic_hd.jpg?imageView2/2/w/800/ignore-error/1', 400)}"
-          @tap="onTapItem"
+          :style="{'backgroundImage': backgroundImageUrl(item.image, 400)}"
+          @tap="onTapItem(item.id)"
         ></view>
         <view :class="$style['subCategoryWrapper']">
           <view v-for="subItem in item.children" :key="subItem.id" :class="$style['subItem']"
@@ -63,13 +63,13 @@ export default {
   methods: {
     optimizeImage,
     backgroundImageUrl,
-    onTapSubItem (id) {
+    onTapSubItem(id) {
       Taro.navigateTo({ url: `/pages/search/index?category=${id}` })
     },
-    onTapItem () {
-      Taro.navigateTo({ url: '/pages/search/index' })
+    onTapItem(id) {
+      Taro.navigateTo({ url: `/pages/search/index?category=${id}` })
     },
-    onAnimationfinish (e) {
+    onAnimationfinish(e) {
       const index = e.detail.current
       Taro.vibrateShort()
       this.$emit('change:current', index)
@@ -101,7 +101,8 @@ export default {
   display: block;
   margin-left: 8px;
   margin-right: 8px;
-  padding-top: 26.4%;
+  margin-bottom: 8px;
+  padding-top: 33.333333%;
   // background-color: orange;
   background-repeat: no-repeat;
   background-position: center;
@@ -113,13 +114,12 @@ export default {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  align-items: center;
+  align-items: flex-start;
   justify-content: flex-start;
 }
 .subItem {
   width: percentage(1/3);
   padding: 8px;
-  margin-bottom: 15px;
 }
 .childImage {
   width: 100%;
