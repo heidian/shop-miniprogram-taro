@@ -18,9 +18,10 @@
           }"
         ></view>
         <text
-          v-if="item.text && item.text.value"
-          class="grid__text" :style="textStyle(item.text)"
-        >{{ textValue(item.text) }}</text>
+          v-if="item.text && item.text.html"
+          class="grid__text"
+          v-html="item.text.html"
+        ></text>
       </view>
     </view>
   </view>
@@ -43,11 +44,10 @@ export default {
       default: () => ({
         layout: 'grids',  // scroll|grids
         backgroundColor: null,  // 卡片格子的底色
-        grids: [],  // { image: { src, metafield }, text: { value } , url }
+        grids: [],  // { image: { src, metafield }, text: { html } , url }
         gridGap: 0,  // px 整数
         imageRatio: 1,  // 宽高比
-        textAlign: '',  // left|right|center
-        columns: 2
+        columns: 1
       })
     }
   },
@@ -63,13 +63,9 @@ export default {
       const style = {}
       const columns = Math.max(1, +this.settingsData.columns || 0)
       const gridGap = +this.settingsData.gridGap || 0
-      const textAlign = this.settingsData.textAlign || ''
       const widthPercent = (100 / columns).toFixed(6)
       style['width'] = `${widthPercent}%`
       style['padding'] = Taro.pxTransform(`${parseInt(gridGap/2)}px`)
-      if (textAlign) {
-        style['textAlign'] = textAlign
-      }
       return style
     },
     paddingTop() {
@@ -80,27 +76,6 @@ export default {
   methods: {
     optimizeImage,
     backgroundImageUrl,
-    textValue(textObj) {
-      // if (_.isNil(textObj)) {
-      //   return ''
-      // } else if (_.isString(textObj)) {
-      //   return textObj
-      // } else if (_.isObject(textObj)) {
-      //   return _.get(textObj, 'value')
-      // } else {
-      //   return '' + textObj
-      // }
-      return _.get(textObj, 'value', '')
-    },
-    textStyle(textObj) {
-      const style = _.get(textObj, 'style', {})
-      // 如果有底色, 就加一个左右边距
-      if (this.settingsData.backgroundColor) {
-        style['paddingLeft'] = '0.5em'
-        style['paddingRight'] = '0.5em'
-      }
-      return style
-    },
     goToUrl(url) {
       const parse = parseUrl(url)
       if (parse.openType === 'switchTab') {
