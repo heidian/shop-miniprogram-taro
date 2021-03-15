@@ -64,17 +64,6 @@
         :class="[$style['subCategoryItem'], (item.id === +products.filter.category) && 'is-active']"
       >{{ item.title }}</view>
     </view>
-    <!-- virtual-list 渲染在 H5 里有问题, 似乎 virtual-list 里面使用了 scroll-view, 但是在 H5 里会报 scroll-view 没注册的错误 -->
-    <!-- <virtual-list
-      wclass="virtual-list"
-      :height="listHeight"
-      :item-data="listData"
-      :item-count="listLength"
-      :item-size="itemHeight"
-      :item="ProductItem"
-      width="100%"
-      @scroll="onScroll"
-    ></virtual-list> -->
     <view :class="$style['container']">
       <view v-for="(product, index) in products.data" :key="product.id" :class="$style['grid']">
         <view :class="$style['productItem']" @tap="goToProduct(product.name)">
@@ -111,59 +100,30 @@ import _ from 'lodash'
 import Taro, { getCurrentInstance } from '@tarojs/taro'
 import { mapState, mapGetters } from 'vuex'
 import { optimizeImage } from '@/utils/image'
-// import ProductItem from './ProductItem'
 import Price from '@/components/Price'
 import CustomNav from './CustomNav'
 
 import ListTable from '@/mixins/ListTable'
-
-const listTableMixin = ListTable('products', { storeName: 'lists/products' })
 // const listTableMixin = ListTable('products', { urlRoot: '/shopfront/product/' })
 
 export default {
   name: 'Search',
   mixins: [
-    listTableMixin  // 这个 mixin 会定义一个叫 products 的 computed 对象
+    // 这个 mixin 会定义一个叫 products 的 computed 对象
+    ListTable('products', { storeName: 'lists/products' })
   ],
   components: {
     CustomNav,
     Price,
   },
   data() {
-    // // const { windowHeight, windowWidth, statusBarHeight } = this.$store.state.system
-    // // 这里用 screenHeight, 因为 search 页面用了自定义顶部, windowHeight 包含了顶部菜单的高度, 和 screenHeight 是一样的,
-    // // 而且 windowHeight 并没有存入 $store.state.system
-    // const { screenHeight, screenWidth, statusBarHeight } = this.$store.state.system
-    // const customNavHeight = statusBarHeight + 44
-    // const ratio = 375 / screenWidth  // 这个项目的设计尺寸是 375, Taro 那里也是配置了 375 为设计尺寸, 而不是默认的 750
-    // const topBarHeight = (customNavHeight + 35 + 40) / ratio  // 置顶分类和排序条
-    // const listHeight = screenHeight - topBarHeight
-    // const containerWidth = screenWidth - 2 * (5 / ratio)
-    // const topBottomPadding = (10 + 0) / ratio
-    // const leftRightPadding = (2 * 5) / ratio
-    // const textPadding = (5 + 5) / ratio
-    // const imageHeight = containerWidth / 2 - leftRightPadding
-    // const titleHeight = 20 / ratio
-    // const descHeight = 20 / ratio
-    // const priceHeight = 24 / ratio
-    // const itemHeight = topBottomPadding + imageHeight + titleHeight + descHeight + priceHeight + textPadding
-    // /* virtual-list 会根据 listHeight/itemHeight 判断首屏幕渲染几个 item */
     return {
-      // listHeight: listHeight,
-      // itemHeight: parseInt(itemHeight + 1),  // 最后加个1
-      // ProductItem,
       activeRootCategoryId: null,
       subCategoryDrawerVisible: false,
       colorNameToImage: {},
     }
   },
-  created() {
-    // Taro.setBackgroundColor({
-    //   backgroundColorTop: '#ffffff',
-    //   backgroundColor: '#f6f6f6',
-    //   backgroundColorBottom: '#f6f6f6',
-    // })
-  },
+  created() {},
   computed: {
     ...mapState(['categories', 'system']),
     ...mapGetters('categories', [
@@ -195,13 +155,6 @@ export default {
     subCategoriesWrapperTop() {
       return Taro.pxTransform(this.customNavHeight + 35 + 40)
     },
-    // listData() {
-    //   return _.chunk(this.products.data, 2)
-    // },
-    listLength() {
-      // 向上取整
-      return parseInt((this.products.data.length + 1) / 2)
-    },
     activeSubCategories() {
       const category = _.find(this.categories.data, { id: this.activeRootCategoryId })
       return category ? category.children : []
@@ -231,21 +184,6 @@ export default {
   },
   methods: {
     optimizeImage,
-    // listReachBottom() {},
-    // onScroll({ scrollDirection, scrollOffset }) {
-    //   // console.log(scrollDirection, this.listHeight, scrollOffset, this.listLength * this.itemHeight)
-    //   if (
-    //     // 避免重复加载数据
-    //     !this.products.pending &&
-    //     // 只有往前滚动才触发
-    //     scrollDirection === 'forward' &&
-    //     // 100 = 滚动提前加载量
-    //     this.listHeight + scrollOffset > (this.listLength * this.itemHeight - 100)
-    //   ) {
-    //     // this.listReachBottom()
-    //     this.fetchProducts({ more: true })
-    //   }
-    // },
     goToProduct(productName) {
       /* 没有特别原因不要用 wx 的方法, 全部用 Taro 上的方法 */
       Taro.navigateTo({ url: `/pages/product/index?name=${productName}` })
@@ -315,16 +253,10 @@ export default {
 <style lang="scss" module>
 @import '@/styles/mixins';
 @import '@/styles/variables';
-page {
-  background-color: $color-bg-gray;
-}
 .page {
   // padding-top: 35px + 40px;  // inline 动态定义
   overflow: hidden;
-  // height: 100vh;
-  // :global(.virtual-list) {
-  //   // padding-top: 5px;
-  // }
+  background-color: $color-bg-gray;
 }
 .categoriesBar {
   position: fixed;
@@ -428,12 +360,6 @@ page {
   @include clearfix();
   padding: 5px;
 }
-// .column {
-//   float: left;
-//   width: 50%;
-//   padding-left: 5px;
-//   padding-right: 5px;
-// }
 .grid {
   float: left;
   width: 50%;
