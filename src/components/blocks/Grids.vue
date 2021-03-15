@@ -46,7 +46,7 @@ export default {
         grids: [],  // { image: { src, metafield }, text: { value } , url }
         gridGap: 0,  // px 整数
         imageRatio: 1,  // 宽高比
-        textAlign: 'left',
+        textAlign: '',  // left|right|center
         columns: 2
       })
     }
@@ -63,11 +63,13 @@ export default {
       const style = {}
       const columns = Math.max(1, +this.settingsData.columns || 0)
       const gridGap = +this.settingsData.gridGap || 0
-      const textAlign = this.settingsData.textAlign || 'left'
+      const textAlign = this.settingsData.textAlign || ''
       const widthPercent = (100 / columns).toFixed(6)
       style['width'] = `${widthPercent}%`
       style['padding'] = Taro.pxTransform(`${parseInt(gridGap/2)}px`)
-      style['textAlign'] = textAlign
+      if (textAlign) {
+        style['textAlign'] = textAlign
+      }
       return style
     },
     paddingTop() {

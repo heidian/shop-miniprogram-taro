@@ -38,15 +38,17 @@ export default {
     },
     textStyle() {
       const style = _.get(this.settingsData, 'text.style', {})
-      style['textAlign'] = _.get(this.settingsData, 'textAlign', 'center')
+      // 如果不设置, 这里也保留默认
+      const textAlign = _.get(this.settingsData, 'textAlign', '')
+      if (textAlign) {
+        style['textAlign'] = textAlign
+      }
       return style
     }
   },
   mounted() {
   },
-  methods: {
-
-  },
+  methods: {},
   filters: {}
 }
 </script>
