@@ -1,5 +1,5 @@
 <template>
-  <view class="block--image" :style="css">
+  <view class="block--tezign-banner" :style="css">
     <navigator hover-class="none" :url="url" :open-type="openType">
       <image class="image" :src="optimizeImage(image)" mode="widthFix"></image>
     </navigator>
@@ -78,7 +78,7 @@ export default {
 </script>
 
 <style lang="scss">
-.block--image {
+.block--tezign-banner {
   .image {
     display: block;
     width: 100%;

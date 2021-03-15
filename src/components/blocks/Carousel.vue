@@ -84,7 +84,7 @@ export default {
     width: 100%;
     padding-top: 100%;
     background-color: #fff;
-    border-radius: 4px;
+    // border-radius: 4px;
     overflow: hidden;
     position: relative;
   }

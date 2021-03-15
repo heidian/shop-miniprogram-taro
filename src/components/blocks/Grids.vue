@@ -1,5 +1,5 @@
 <template>
-  <view class="block--grids" :style="css">
+  <view :class="{'block--grids': true, 'scroll': layout === 'scroll'}" :style="css">
     <navigator
       v-for="(item, index) in settingsData.grids" :key="index"
       class="grid" :style="gridStyle" hover-class="none"
@@ -29,6 +29,7 @@ export default {
     settingsData: {
       type: Object,
       default: () => ({
+        layout: 'grids',  // scroll|grids
         grids: [],  // { image: { src, metafield }, text: { value } , url }
         gridGap: 0,  // px 整数
         imageRatio: 1,  // 宽高比
@@ -41,6 +42,10 @@ export default {
     return {}
   },
   computed: {
+    layout() {
+      // scroll 或者是 grids
+      return this.settingsData.layout || 'grids'
+    },
     gridStyle() {
       const style = {}
       const columns = Math.max(1, +this.settingsData.columns || 0)
@@ -100,6 +105,13 @@ export default {
   flex-wrap: wrap;
   justify-content: flex-start;
   align-items: flex-start;
+  &.scroll {
+    flex-wrap: nowrap;
+    overflow-x: scroll;
+    > .grid {
+      flex: none;
+    }
+  }
   .grid {
     display: block;
   }
