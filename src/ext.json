@@ -1,9 +1,9 @@
 {
-  "extEnable": true,
+  "extEnable": false,
   "directCommit": false,
-  "extAppid": "wx87e4fac3e2962375",
+  "extAppid": "wxa2ee14c5a3ab7d2d",
   "ext": {
-    "extAppid": "wx87e4fac3e2962375",
+    "extAppid": "wxa2ee14c5a3ab7d2d",
     "shopname": "joyberry",
     "shopid": 577,
     "apiroot": "https://heidianapi.com/api"
