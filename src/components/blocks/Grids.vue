@@ -1,16 +1,28 @@
 <template>
   <view :class="{'block--grids': true, 'scroll': layout === 'scroll'}" :style="css">
-    <navigator
+    <view
       v-for="(item, index) in settingsData.grids" :key="index"
-      class="grid" :style="gridStyle" hover-class="none"
-      :url="getUrl(item.url)" :open-type="getOpenType(item.url)"
+      class="grid-wrapper" :style="gridStyle"
+      @tap="goToUrl(item.url)"
     >
-      <view class="grid__image" :style="{
-        'paddingTop': paddingTop,
-        'backgroundImage': backgroundImageUrl(item.image, 200)
-      }"></view>
-      <text class="grid__text" v-if="textValue(item.text)">{{ textValue(item.text) }}</text>
-    </navigator>
+      <view
+        class="grid-item"
+        :style="settingsData.backgroundColor ? { 'backgroundColor': settingsData.backgroundColor } : {}"
+      >
+        <view
+          v-if="item.image && item.image.src"
+          class="grid__image"
+          :style="{
+            'paddingTop': paddingTop,
+            'backgroundImage': backgroundImageUrl(item.image, 200)
+          }"
+        ></view>
+        <text
+          v-if="item.text && item.text.value"
+          class="grid__text" :style="textStyle(item.text)"
+        >{{ textValue(item.text) }}</text>
+      </view>
+    </view>
   </view>
 </template>
 
@@ -30,6 +42,7 @@ export default {
       type: Object,
       default: () => ({
         layout: 'grids',  // scroll|grids
+        backgroundColor: null,  // 卡片格子的底色
         grids: [],  // { image: { src, metafield }, text: { value } , url }
         gridGap: 0,  // px 整数
         imageRatio: 1,  // 宽高比
@@ -66,36 +79,31 @@ export default {
     optimizeImage,
     backgroundImageUrl,
     textValue(textObj) {
-      if (_.isNil(textObj)) {
-        return ''
-      } else if (_.isString(textObj)) {
-        return textObj
-      } else if (_.isObject(textObj)) {
-        return _.get(textObj, 'value')
-      } else {
-        return '' + textObj
+      // if (_.isNil(textObj)) {
+      //   return ''
+      // } else if (_.isString(textObj)) {
+      //   return textObj
+      // } else if (_.isObject(textObj)) {
+      //   return _.get(textObj, 'value')
+      // } else {
+      //   return '' + textObj
+      // }
+      return _.get(textObj, 'value', '')
+    },
+    textStyle(textObj) {
+      const style = _.get(textObj, 'style', {})
+      return style
+    },
+    goToUrl(url) {
+      const parse = parseUrl(url)
+      if (parse.openType === 'switchTab') {
+        Taro.switchTab({ url: parse.url })
+      } else if (parse.openType === 'navigate') {
+        Taro.navigateTo({ url: parse.url })
       }
-    },
-    getUrl(url) {
-      const parse = parseUrl(url)
-      return parse.url
-    },
-    getOpenType(url) {
-      const parse = parseUrl(url)
-      return parse.openType
     }
   },
-  filters: {
-    // text(textObj) {
-    //   if (_.isString(textObj)) {
-    //     return textObj
-    //   } else if (_.isObject(textObj)) {
-    //     return _.get(textObj, 'value')
-    //   } else {
-    //     return '' + textObj
-    //   }
-    // }
-  }
+  filters: {}
 }
 </script>
 
@@ -108,11 +116,14 @@ export default {
   &.scroll {
     flex-wrap: nowrap;
     overflow-x: scroll;
-    > .grid {
+    > .grid-wrapper {
       flex: none;
     }
   }
-  .grid {
+  .grid-wrapper {
+    display: block;
+  }
+  .grid-item {
     display: block;
   }
   .grid__image {
