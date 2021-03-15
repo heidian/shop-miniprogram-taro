@@ -94,6 +94,11 @@ export default {
     },
     textStyle(textObj) {
       const style = _.get(textObj, 'style', {})
+      // 如果有底色, 就加一个左右边距
+      if (this.settingsData.backgroundColor) {
+        style['paddingLeft'] = '0.5em'
+        style['paddingRight'] = '0.5em'
+      }
       return style
     },
     goToUrl(url) {
@@ -135,6 +140,8 @@ export default {
   }
   .grid__text {
     display: block;
+  }
+  .grid__image + .grid__text {
     margin-top: 0.5em;
   }
 }
