@@ -35,12 +35,17 @@ export default {
   data() {
     return {
       dialogVisible: false,
-      imageSrc: 'https://up.img.heidiancdn.com/o_1f0id50ml13s71ref1jgh1hndhij0BDC5DD.png',
+      // imageSrc: 'https://up.img.heidiancdn.com/o_1f0rc9lsa2j11m5s25d1tceeog0.png',
       pending: false,
     }
   },
   components: {
     HsDialog,
+  },
+  computed: {
+    imageSrc() {
+      return _.get(this.$store.state.theme, 'themeSettingsData.shareImageSrc') || 'https://up.img.heidiancdn.com/o_1f0rc9lsa2j11m5s25d1tceeog0.png'
+    }
   },
   methods: {
     optimizeImage,
