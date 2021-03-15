@@ -15,7 +15,7 @@ import Carousel from '@/components/blocks/Carousel'
 import Accordion from '@/components/blocks/Accordion'
 import Image from '@/components/blocks/Image'
 import Grids from '@/components/blocks/Grids'
-import Text from '@/components/blocks/Text'
+// import Text from '@/components/blocks/Text'
 import RichText from '@/components/blocks/RichText'
 import TezignBanner from '@/components/blocks/TezignBanner'
 import ProductSingleAccessories from '@/components/blocks/product/ProductSingleAccessories'
@@ -34,7 +34,7 @@ const BLOCKS_MAP = {
   'blocks/accordion': Accordion,
   'blocks/image': Image,
   'blocks/grids': Grids,
-  'blocks/text': Text,
+  // 'blocks/text': Text,
   'blocks/rich_text': RichText,
   'blocks/tezign_banner': TezignBanner,
   'blocks/product_single_accessories': ProductSingleAccessories,

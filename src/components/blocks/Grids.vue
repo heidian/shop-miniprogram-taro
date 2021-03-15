@@ -17,11 +17,11 @@
             'backgroundImage': backgroundImageUrl(item.image, 200)
           }"
         ></view>
-        <text
+        <view
           v-if="item.text && item.text.html"
           class="grid__text"
           v-html="item.text.html"
-        ></text>
+        ></view>
       </view>
     </view>
   </view>
@@ -114,7 +114,7 @@ export default {
     background-repeat: no-repeat;
   }
   .grid__text {
-    display: block;
+    //
   }
   .grid__image + .grid__text {
     margin-top: 0.5em;
