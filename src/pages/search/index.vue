@@ -64,6 +64,11 @@
         :class="[$style['subCategoryItem'], (item.id === +products.filter.category) && 'is-active']"
       >{{ item.title }}</view>
     </view>
+    <view
+      v-if="activeRootCategoryImage"
+      :class="$style['categoryImage']"
+      :style="{'backgroundImage': backgroundImageUrl(activeRootCategoryImage, 400)}"
+    ></view>
     <view :class="$style['container']">
       <view v-for="(product, index) in products.data" :key="product.id" :class="$style['grid']">
         <view :class="$style['productItem']" @tap="goToProduct(product.name)">
@@ -99,7 +104,7 @@
 import _ from 'lodash'
 import Taro, { getCurrentInstance } from '@tarojs/taro'
 import { mapState, mapGetters } from 'vuex'
-import { optimizeImage } from '@/utils/image'
+import { optimizeImage, backgroundImageUrl } from '@/utils/image'
 import Price from '@/components/Price'
 import CustomNav from './CustomNav'
 
@@ -158,6 +163,10 @@ export default {
     activeSubCategories() {
       const category = _.find(this.categories.data, { id: this.activeRootCategoryId })
       return category ? category.children : []
+    },
+    activeRootCategoryImage() {
+      const category = _.find(this.categories.data, { id: this.activeRootCategoryId })
+      return _.get(category, 'image.src') ? category.image : null
     }
   },
   created() {},
@@ -184,6 +193,7 @@ export default {
   },
   methods: {
     optimizeImage,
+    backgroundImageUrl,
     goToProduct(productName) {
       /* 没有特别原因不要用 wx 的方法, 全部用 Taro 上的方法 */
       Taro.navigateTo({ url: `/pages/product/index?name=${productName}` })
@@ -355,6 +365,15 @@ export default {
     color: $color-text;
     font-weight: bold;
   }
+}
+.categoryImage {
+  display: block;
+  margin: 8px;
+  padding-top: 33.333333%;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  border-radius: 4px;
 }
 .container {
   @include clearfix();
