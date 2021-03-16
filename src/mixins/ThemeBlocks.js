@@ -59,7 +59,10 @@ export default {
     blocks() {
       const key = (this.pageType && this.pageName) ? `${this.pageType}/${this.pageName}` : this.pageType
       const blocks = _.filter(this.$store.state.theme.blocksOfPage[key] || [], (block) => !block.hidden)
-      return _.map(blocks, (block) => {
+      return _.map(blocks, (block, index) => {
+        const id = block.id || `index-${index}`
+        // 确保每个 block 都有一个 id 属性, 这个是为了渲染不出错
+        // TODO, 另外在建站工具模式下如果发现 id 缺失, 应该和工具通信, 修补 id !!!
         const css = { ...(block.css || {}) }
         if (_.isObject(css.backgroundImage)) {
           css.backgroundImage = backgroundImageUrl(css.backgroundImage, 400)
@@ -75,7 +78,7 @@ export default {
         })
         const componentClass = BLOCKS_MAP[block.name]
         return {
-          ...block, css, componentClass
+          ...block, id, css, componentClass
         }
       })
     }
