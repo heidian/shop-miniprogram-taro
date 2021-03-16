@@ -8,7 +8,7 @@
         <view :class="$style['cartItem']">
           <view :class="$style['itemContainter']">
             <view :class="$style['itemCheck']">
-              <icon v-if="mainCartItem.checked" type="success" size="20" color="#ff5a00"></icon>
+              <icon v-if="mainCartItem.checked" type="success" size="20" :color="$globalColors['--color-primary']"></icon>
               <view v-else :class="$style['disabledCheckbox']" style="width: 20px;height: 20px;"></view>
               <!-- <icon v-else type="circle" size="20"></icon> -->
             </view>
@@ -29,7 +29,7 @@
         <view :class="$style['cartItem']" v-for="item in otherCartItems" :key="item.product.id">
           <view :class="$style['itemContainter']">
             <view v-if="item.variant && item.variant.is_available" :class="$style['itemCheck']" @tap="() => checkItem(item)">
-              <icon v-if="item.checked" type="success" size="20" color="#ff5a00"></icon>
+              <icon v-if="item.checked" type="success" size="20" :color="$globalColors['--color-primary']"></icon>
               <icon v-else-if="item.variant && item.variant.is_available" type="circle" size="20"></icon>
             </view>
             <view v-else :class="$style['itemCheck']">
