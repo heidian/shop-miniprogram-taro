@@ -7,9 +7,15 @@
     >
       <view
         class="accordion__title"
-        :style="settingsData.titleBackgroundColor ? { 'backgroundColor': settingsData.titleBackgroundColor } : {}"
+        :style="settingsData.titleBackgroundColor ? {
+          'backgroundColor': settingsData.titleBackgroundColor,
+          ...getTextStyle(item.title)
+        } : {
+          ...getTextStyle(item.title)
+        }"
         @tap="onTapTitle(index)"
       >
+        <!-- textStyle 放在上面, 这样箭头和标题的颜色就一样了 -->
         <text>{{ getTextValue(item.title) }}</text>
         <text class="accordion__icon el-icon-arrow-down" v-if="expandedIndex === index"></text>
         <text class="accordion__icon el-icon-arrow-right" v-else></text>
@@ -54,6 +60,9 @@ export default {
   methods: {
     getTextValue(textObj) {
       return _.get(textObj, 'value', '')
+    },
+    getTextStyle(textObj) {
+      return _.get(textObj, 'style', {})
     },
     getHtmlValue(htmlObj) {
       return _.get(htmlObj, 'html', '')
