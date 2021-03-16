@@ -30,6 +30,11 @@ function listenFromStyleEditor(event) {
       case 'UPDATE_BLOCK_VISIBILITY':
         return store.commit('theme/updateBlockVisibility', payload)
     }
+  } else if(type === 'scroll' && method === 'SCROLL_TO_BLOCK' && payload.id && window.document) {
+    const $scrollEl = window.document.getElementsByClassName('taro-tabbar__panel')[0]
+    if (!$scrollEl) return;
+    const targetElement = window.document.getElementById(`block--${payload.id}`)
+    targetElement.scrollIntoView({behavior: "smooth"})
   }
 }
 
@@ -67,7 +72,7 @@ function updateBlocksSize() {
 
   if (_.isEmpty(blocksOfPage[key])) return;
 
-  const $scrollEl = document.getElementsByClassName('taro-tabbar__panel')[0]
+  const $scrollEl = window.document.getElementsByClassName('taro-tabbar__panel')[0]
   if (!$scrollEl) return;
   const payload = {
     scrollTop: $scrollEl.scrollTop || 0,
