@@ -177,24 +177,5 @@ export default {
   font-size: 15px;
   margin-top: 10px;
 }
-.accessoriesTitle {
-  font-size: 14px;
-  line-height: 1.7;
-}
-.accessoriesPrice {
-  font-size: 13px;
-  font-weight: normal;
-  line-height: 1.7;
-  color: $color-orange;
-}
-.itemRow {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  & + & {
-    margin-top: 10px;
-  }
-}
 </style>
 
