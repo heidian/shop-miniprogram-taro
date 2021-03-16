@@ -82,6 +82,8 @@ export default {
         Taro.switchTab({ url: parse.url })
       } else if (parse.openType === 'navigate') {
         Taro.navigateTo({ url: parse.url })
+      } else if (parse.openType === 'scrollToBlock') {
+        Taro.pageScrollTo({ selector: `#block--${parse.url}` })
       }
     }
   },

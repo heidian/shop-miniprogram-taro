@@ -1,15 +1,15 @@
 <template>
   <view class="block--image" :style="css">
-    <navigator
-      hover-class="none"
-      :url="getUrl(settingsData.url)" :open-type="getOpenType(settingsData.url)"
-    >
-      <image class="image" :src="optimizeImage(settingsData.image)" mode="widthFix"></image>
-    </navigator>
+    <image
+      class="image" mode="widthFix"
+      :src="optimizeImage(settingsData.image)"
+      @tap="goToUrl(settingsData.url)"
+    ></image>
   </view>
 </template>
 
 <script>
+import Taro from '@tarojs/taro'
 import { optimizeImage } from '@/utils/image'
 import parseUrl from '@/utils/parseUrl'
 
@@ -32,13 +32,15 @@ export default {
   },
   methods: {
     optimizeImage,
-    getUrl(url) {
+    goToUrl(url) {
       const parse = parseUrl(url)
-      return parse.url
-    },
-    getOpenType(url) {
-      const parse = parseUrl(url)
-      return parse.openType
+      if (parse.openType === 'switchTab') {
+        Taro.switchTab({ url: parse.url })
+      } else if (parse.openType === 'navigate') {
+        Taro.navigateTo({ url: parse.url })
+      } else if (parse.openType === 'scrollToBlock') {
+        Taro.pageScrollTo({ selector: `#block--${parse.url}` })
+      }
     }
   }
 }

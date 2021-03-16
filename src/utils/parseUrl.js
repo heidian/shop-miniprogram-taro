@@ -1,10 +1,13 @@
 export default function(url) {
-  const match = (url || '').match(/^(wxpage|wxtab|page|tab):\/\/(.+)$/)
+  const match = (url || '').match(/^(wxpage|wxtab|page|tab|block):\/\/(.+)$/)
   if (match) {
     const [, openType, url] = match
-    return {
-      openType: (openType === 'wxtab' || openType === 'tab') ? 'switchTab' : 'navigate',
-      url: '/' + url
+    if (openType === 'block') {
+      return { openType: 'scrollToBlock', url: url }
+    } else if (openType === 'wxtab' || openType === 'tab') {
+      return { openType: 'switchTab', url: '/' + url }
+    } else if (openType === 'wxpage' || openType === 'page') {
+      return { openType: 'navigate', url: '/' + url }
     }
   } else if (/^(http|https):\/\/.+/.test(url)) {
     return {

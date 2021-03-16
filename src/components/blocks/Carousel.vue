@@ -10,11 +10,11 @@
       >
         <swiper-item v-for="(item, index) in carousel" :key="index">
           <!-- <image class="carousel__image" :src="optimizeImage(item.image, 600)" mode="aspectFit"></image> -->
-          <navigator
+          <view
             :style="{'backgroundImage':backgroundImageUrl(item.image)}"
-            class="carousel__image" hover-class="none"
-            :url="getUrl(item.url)" :open-type="getOpenType(item.url)"
-          ></navigator>
+            class="carousel__image"
+            @tap="goToUrl(item.url)"
+          ></view>
         </swiper-item>
       </swiper>
     </view>
@@ -23,6 +23,7 @@
 
 <script>
 import _ from 'lodash'
+import Taro from '@tarojs/taro'
 import { optimizeImage, backgroundImageUrl } from '@/utils/image'
 import parseUrl from '@/utils/parseUrl'
 
@@ -54,13 +55,15 @@ export default {
   methods: {
     optimizeImage,
     backgroundImageUrl,
-    getUrl(url) {
+    goToUrl(url) {
       const parse = parseUrl(url)
-      return parse.url
-    },
-    getOpenType(url) {
-      const parse = parseUrl(url)
-      return parse.openType
+      if (parse.openType === 'switchTab') {
+        Taro.switchTab({ url: parse.url })
+      } else if (parse.openType === 'navigate') {
+        Taro.navigateTo({ url: parse.url })
+      } else if (parse.openType === 'scrollToBlock') {
+        Taro.pageScrollTo({ selector: `#block--${parse.url}` })
+      }
     }
   },
   watch: {
