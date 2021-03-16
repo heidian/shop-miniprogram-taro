@@ -1,26 +1,18 @@
 <template>
-  <view :class="$style['section']" :style="css">
-    <view :class="$style['sectionTitle']">{{ accessoriesCaption.sectionTitle || '搭配购买' }}</view>
+  <view :class="$style['section']" :style="{ ...css, display: products && products.length ? 'block' : 'none' }">
+    <view :class="$style['sectionHead']">
+      <view :class="$style['sectionTitle']">{{ accessoriesCaption.sectionTitle || '搭配购买' }}</view>
+      <!-- <navigator :class="$style['btnMore']" :url="`/pages/product/accessories/index?product=${product.id}`">查看全部</navigator> -->
+    </view>
     <navigator
       :url="`/pages/product/accessories/index?product=${product.id}`"
       :class="$style['sectionContainer']"
     >
       <view :class="$style['accessoriesImages']">
-        <view :class="$style['itemRow']">
-          <view :class="$style['accessoriesProductItem']" :style="{'background-image': backgroundImageUrl(firstAccessoriesImage, 100)}"></view>
+        <view v-for="product in accessoriesSlicedProduct" :key="product.id" :class="$style['item']">
+          <view :class="$style['itemImage']" :style="{'background-image': backgroundImageUrl(product.image, 100)}"></view>
+          <view :class="$style['itemTitle']">{{ product.title }}</view>
         </view>
-        <view :class="$style['itemRow']">
-          <view
-            v-for="product in accessoriesSlicedProduct"
-            :key="product.id"
-            :class="$style['accessoriesProductItem']"
-            :style="{'background-image': backgroundImageUrl(product.image, 100)}"
-          ></view>
-        </view>
-      </view>
-      <view :class="$style['accessoriesCaption']">
-        <view v-if="accessoriesCaption.title" :class="$style['accessoriesTitle']">{{ accessoriesCaption.title }}</view>
-        <view :class="$style['accessoriesPrice']" >价格 {{ accessoriesMinPrice || '-' }} 元起</view>
       </view>
     </navigator>
   </view>
@@ -61,7 +53,7 @@ export default {
       return _.get(this.products, '[0].image', '')
     },
     accessoriesSlicedProduct() {
-      return (this.products || []).slice(1, 3)
+      return (this.products || []).slice(0, 2)
     },
     accessoriesCaption() {
       const { accessories_section_title, accessories_title } = this.settings_data || {}
@@ -81,7 +73,7 @@ export default {
     backgroundImageUrl,
     fetchAccessories() {
       const params = {
-        fields: 'id,image,price',
+        fields: 'id,image,title,price',
         page_size: 3
       }
       const url = `/shopfront/product/${this.product.id}/accessories/`
@@ -112,39 +104,78 @@ export default {
   overflow: hidden;
   background-color: #ffffff;
 }
-.sectionTitle {
-  font-weight: bold;
-  font-size: 15px;
+.sectionHead {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   padding: 15px 15px 10px;
 }
+.sectionTitle {
+  width: 100%;
+  font-weight: bold;
+  color: $color-text;
+  font-size: 16px;
+  text-align: center;
+}
+.btnMore {
+  display: flex;
+  align-items: center;
+  font-size: 13px;
+  color: $color-text;
+}
 .sectionContainer {
-  background-color: #fafafa;
+  // background-color: #fafafa;
   padding: 10px;
   margin: 0 10px 10px;
   display: flex;
 }
 .accessoriesImages {
-  width: 130px;
+  width: 100%;
   display: flex;
-  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
 }
-.accessoriesCaption {
-  margin-left: 10px;
-  flex: 1;
-  padding: 10px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-.accessoriesProductItem {
-  width: 60px;
-  height: 60px;
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: cover;
+.item {
+  width: calc(50% - 5px);
+  position: relative;
   & + & {
     margin-left: 10px;
   }
+}
+.itemImage {
+  width: 100%;
+  padding-top: 100%;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  position: relative;
+  overflow: hidden;
+  &::before {
+    content: '';
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    right: -50px;
+    bottom: -50px;
+    background-color: rgba(#ffffff, 0.7);
+  }
+  &::after {
+    content: '+';
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    font-size: 24px;
+    line-height: 44px;
+    width: 40px;
+    text-align: center;
+  }
+}
+.itemTitle {
+  text-align: center;
+  font-size: 15px;
+  margin-top: 10px;
 }
 .accessoriesTitle {
   font-size: 14px;
