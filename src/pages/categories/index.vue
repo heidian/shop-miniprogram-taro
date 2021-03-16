@@ -1,5 +1,5 @@
 <template>
-  <view :class="[$style['page'], $style['page--categories']]">
+  <view :class="[$style['page'], $style['page--categories']]" :style="$globalColors">
     <view :class="$style['sidebarWrapper']">
       <side-bar :current="current" @change:current="(index) => onChangeCurrent(index)"></side-bar>
     </view>

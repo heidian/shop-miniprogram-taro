@@ -1,5 +1,5 @@
 <template>
-  <view :class="$style['page']">
+  <view :class="$style['page']" :style="$globalColors">
     <component
       v-for="(block, index) in blocks" :key="index"
       :is="block.componentClass"

@@ -1,5 +1,5 @@
 <template>
-  <view :class="$style['profile']">
+  <view :class="$style['profile']" :style="$globalColors">
     <form class="form">
       <view :class="['form-item', $style['avatar']]">
         <image :src="userInfo.avatar" mode="aspectFill" :class="$style['avatarImage']" @tap="onSelectAvatar"></image>

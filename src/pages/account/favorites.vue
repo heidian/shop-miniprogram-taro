@@ -1,5 +1,5 @@
 <template>
-  <view :class="$style['page']">
+  <view :class="$style['page']" :style="$globalColors">
     <view
       v-for="item in favorites.data" :key="item.id"
       :class="$style['favoriteItem']" @tap="goToProduct(item)"

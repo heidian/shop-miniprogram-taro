@@ -1,5 +1,5 @@
 <template>
-  <view :class="$style['page']" v-if="!pending && orderData">
+  <view :class="$style['page']" v-if="!pending && orderData" :style="$globalColors">
     <view :class="$style['section']">
       <view :class="$style['nameAndMobile']">{{ nameAndMobile }}</view>
       <view :class="$style['address']">{{ fullAddress }}</view>

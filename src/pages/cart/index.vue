@@ -1,5 +1,5 @@
 <template>
-  <view :class="$style['page']">
+  <view :class="$style['page']" :style="$globalColors">
     <view :class="$style['cartGroup']" v-if="cart.items.length">
       <view :class="$style['cartItem']" v-for="item in cart.items" :key="item.variant_id">
         <view :class="$style['cartDelete']" @tap="removeItem(item.id)">删除</view>
@@ -43,7 +43,7 @@
         <price :price="cart.totalPrice" :highlight="true" :keepZero="true"></price>
       </view>
       <button
-        class="button button--round button--orange button--small"
+        class="button button--round button--primary button--small"
         :disabled="checkoutPending || cartIsEmpty" @tap="checkout"
       >{{ checkoutPending ? '正在请求...' : '结算' }}</button>
     </view>

@@ -2,7 +2,7 @@
   <view :class="{
     [$style['page']]: true,
     [$style['disableScroll']]: !isReady
-  }">
+  }" :style="$globalColors">
     <view v-if="!isReady" :class="$style['pending']">
       <image
         mode="aspectFit"

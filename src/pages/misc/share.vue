@@ -2,7 +2,7 @@
   <view :class="{
     [$style['page']]: true,
     [$style['disableScroll']]: !isReady
-  }">
+  }" :style="$globalColors">
     <view :class="{[$style['canvasImageWrapper']]: true, [$style['isProduct']]: !!productId, [$style['ready']]: canvasImageReady}">
       <image
         v-if="canvasImage"

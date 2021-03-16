@@ -1,5 +1,5 @@
 <template>
-  <view :class="$style['settings']">
+  <view :class="$style['settings']" :style="$globalColors">
     <view :class="$style['navigators']">
       <template v-for="item in navigators">
         <button v-if="item.openType" :class="['button', $style['cell']]" :key="item.label" :open-type="item.openType">

@@ -1,5 +1,5 @@
 <template>
-  <view :class="$style['page']">
+  <view :class="$style['page']" :style="$globalColors">
     <view v-for="address in addresses.data" :key="address.id" :class="$style['addressItem']">
       <template v-if="intent === 'checkout'">
         <icon v-if="addressIdOnCheckout === address.id" type="success" size="20" color="#ff5a00" :class="$style['check']"></icon>

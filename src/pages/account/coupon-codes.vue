@@ -1,5 +1,5 @@
 <template>
-  <view :class="$style['page']">
+  <view :class="$style['page']" :style="$globalColors">
     <view
       v-for="couponCode in couponCodes.data" :key="couponCode.id"
       :class="$style['couponCodeItem']"

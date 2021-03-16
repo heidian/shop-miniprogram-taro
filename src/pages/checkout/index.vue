@@ -1,5 +1,5 @@
 <template>
-  <view :class="$style['page']">
+  <view :class="$style['page']" :style="$globalColors">
     <!-- <view class="section">drawerVisible: {{ couponCodesDrawerVisible }}</view> -->
     <view :class="[$style['section'], $style['shippingAddressSummary']]" @tap="goToAddress">
       <view v-if="getField('shipping_address')">

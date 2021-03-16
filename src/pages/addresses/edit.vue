@@ -1,5 +1,5 @@
 <template>
-  <view :class="$style['page']">
+  <view :class="$style['page']" :style="$globalColors">
     <form class="form">
       <view class="form-item">
         <view class="label">收货人</view>

@@ -1,5 +1,5 @@
 <template>
-  <view :class="$style['page']">
+  <view :class="$style['page']" :style="$globalColors">
     <view :class="$style['tabs']">
       <view
         v-for="[value, title] in [
