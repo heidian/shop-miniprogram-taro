@@ -314,7 +314,7 @@ export default {
 }
 .footerIconBtnCartCount {
   font-size: 10px;
-  background-color: $color-orange;
+  background-color: var(--color-primary);
   color: #ffffff;
   line-height: 10px;
   padding: 2px;

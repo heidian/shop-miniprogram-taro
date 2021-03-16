@@ -16,7 +16,7 @@ export default {
     settingsData: {
       type: Object,
       default: () => ({
-        frontColor: '#000000',  // 顶部状态栏文字色
+        frontColor: '#000000',  // 顶部状态栏文字色, 只支持 #000000 和 #ffffff
         backgroundColor: '#ffffff',  // 顶部状态栏背景色
       })
     }

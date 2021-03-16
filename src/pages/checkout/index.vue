@@ -57,7 +57,7 @@
         <price :price="finalPrice" :highlight="true" :keepZero="true"></price>
       </view>
       <button
-        :class="[$style['buttonPayForOrder'], 'button', 'button--round', 'button--orange']"
+        :class="[$style['buttonPayForOrder'], 'button', 'button--round', 'button--primary']"
         :disabled="paymentPending" @tap="pay"
       >{{ paymentPending ? '正在支付...' : '立即支付' }}</button>
     </view>

@@ -134,9 +134,7 @@ page {
   .statusOff {
     color: $color-text-lighter;
   }
-  .statusOn {
-    // color: $color-orange;
-  }
+  .statusOn {}
 }
 .loadMore {
   text-align: center;

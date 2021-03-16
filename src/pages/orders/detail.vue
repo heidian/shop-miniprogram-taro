@@ -54,7 +54,7 @@
         <price :price="orderData.payable_price" :highlight="true" :keepZero="true"></price>
       </view>
       <button
-        :class="[$style['buttonPayForOrder'], 'button', 'button--round', 'button--orange']"
+        :class="[$style['buttonPayForOrder'], 'button', 'button--round', 'button--primary']"
         :disabled="paymentPending" @tap="pay"
       >{{ paymentPending ? '正在支付...' : '继续付款' }}</button>
     </view>

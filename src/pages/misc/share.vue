@@ -24,7 +24,7 @@
       <text :class="$style['saveHint']">保存图片，将好货分享给朋友们吧</text>
       <view :class="$style['btnsWrapper']">
         <button
-          :class="['button', 'button--round', 'button--orange', $style['btnItem']]"
+          :class="['button', 'button--round', 'button--primary', $style['btnItem']]"
           hover-class="hover-class"
           open-type="share">
           <text :class="$style['btnText']">分享给好友</text>
@@ -214,7 +214,6 @@ export default {
 
 <style lang="scss" module>
 @import '@/styles/mixins';
-$color-orange: #ff5a00;
 $color-text: #262626;
 $color-text-light: #666666;
 $color-text-toast: #ffffff;
