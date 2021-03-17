@@ -34,7 +34,7 @@ function listenFromStyleEditor(event) {
     const $scrollEl = window.document.getElementsByClassName('taro-tabbar__panel')[0]
     if (!$scrollEl) return;
     const targetElement = window.document.getElementById(`block--${payload.id}`)
-    targetElement.scrollIntoView({behavior: "smooth"})
+    targetElement && targetElement.scrollIntoView({behavior: "smooth"})
   }
 }
 
