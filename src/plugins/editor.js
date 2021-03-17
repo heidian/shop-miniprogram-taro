@@ -78,45 +78,45 @@ function getCurrentPage() {
   return res
 }
 
-function updateBlocksSize() {
-  const { pageType, pageName } = getCurrentPage()
-  if (!pageType) {
-    return
-  }
-  const key = pageType === 'static' ? `${pageType}/${pageName}` : pageType
-  const blocks = store.state.theme.blocksOfPage[key] || []
-  const $scrollEl = window.document.getElementsByClassName('taro-tabbar__panel')[0]
-  if (!$scrollEl) {
-    return
-  }
-  const viewportBlocks = _.map(blocks, (block) => {
-    const blockId = block.id
-    const payload = { id: blockId, height: 0, offsetTop: 0 }
-    const targetElement = window.document.getElementById(`block--${blockId}`)
-    if (targetElement) {
-      payload['height'] = targetElement.clientHeight
-      payload['offsetTop'] = targetElement.offsetTop
+function initScrollListener(lastPayload = {}) {
+  function updateBlocksSize() {
+    const { pageType, pageName } = getCurrentPage()
+    if (!pageType) {
+      return
     }
-    return payload
-  })
-  const payload = {
-    pageType,
-    pageName,
-    viewport: {
-      scrollTop: $scrollEl.scrollTop || 0,
-      blocks: viewportBlocks
+    const key = pageType === 'static' ? `${pageType}/${pageName}` : pageType
+    const blocks = store.state.theme.blocksOfPage[key] || []
+    const $scrollEl = window.document.getElementsByClassName('taro-tabbar__panel')[0]
+    if (!$scrollEl) {
+      return
     }
-  }
-  _postMessage({
-    type: ShopminiMessageTypes.READY,
-    payload
+    const viewportBlocks = _.map(blocks, (block) => {
+      const blockId = block.id
+      const payload = { id: blockId, height: 0, offsetTop: 0 }
+      const targetElement = window.document.getElementById(`block--${blockId}`)
+      if (targetElement) {
+        payload['height'] = targetElement.clientHeight
+        payload['offsetTop'] = targetElement.offsetTop
+      }
+      return payload
+    })
+    const payload = {
+      pageType,
+      pageName,
+      viewport: {
+        scrollTop: $scrollEl.scrollTop || 0,
+        blocks: viewportBlocks
+      }
+    }
     // payload 格式是 { pageType, pageName, viewport: { blocks: [{ id, height, offsetTop }], scrollTop } }
-  })
-}
-
-function initScrollListener() {
+    if (!_.isEqual(lastPayload, payload)) {
+      // 只有数据变化了才更新
+      _postMessage({ type: ShopminiMessageTypes.READY, payload })
+      lastPayload = payload
+    } else {}
+  }
   updateBlocksSize()
-  setTimeout(initScrollListener, 10)
+  setTimeout(() => initScrollListener(lastPayload), 10)
 }
 
 if (Taro.getEnv() === Taro.ENV_TYPE.WEB && typeof window !== 'undefined' && window.parent) {
