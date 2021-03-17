@@ -146,6 +146,9 @@ const config = {
   h5: {
     publicPath: '/',
     staticDirectory: 'static',
+    router: {
+      mode: 'browser' // 或者是 'hash'
+    },
     webpackChain(chain, webpack) {
       // configWebpackDump(chain, 'webpack.config.h5.js')
       configLodashPlugin(chain)
