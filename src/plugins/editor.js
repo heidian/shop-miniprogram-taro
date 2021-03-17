@@ -119,7 +119,8 @@ function initScrollListener(lastPayload = {}) {
   setTimeout(() => initScrollListener(lastPayload), 10)
 }
 
-if (Taro.getEnv() === Taro.ENV_TYPE.WEB && typeof window !== 'undefined' && window.parent) {
+if (Taro.getEnv() === Taro.ENV_TYPE.WEB && typeof window !== 'undefined' && window.parent !== window) {
+  // window.parent 一定存在, 但如果 window.parent === window 就是没有在 iframe 里
   window.addEventListener('message', listenFromStyleEditor)
   initScrollListener()
 }
