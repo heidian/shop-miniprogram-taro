@@ -53,7 +53,9 @@ function listenFromStyleEditor(event) {
   } else if (type === EditorMessageTypes.SCROLL) {
     if (method === 'SCROLL_TO_BLOCK') {
       const targetElement = window.document.getElementById(`block--${payload.id}`)
-      targetElement.scrollIntoView({ behavior: 'smooth' })
+      if (targetElement) {
+        targetElement.scrollIntoView({ behavior: 'smooth' })
+      }
     }
   }
 }
@@ -62,7 +64,6 @@ function getCurrentPage() {
   const res = {}
   const { pathname, search } = window.location
   const query = qs.parse(search.replace('?', '')) || {}
-
   const pageName = search ? query.name : ''
   if (pathname === '/pages/static/index') {
     res.pageType = 'static'
@@ -79,32 +80,37 @@ function getCurrentPage() {
 
 function updateBlocksSize() {
   const { pageType, pageName } = getCurrentPage()
+  if (!pageType) {
+    return
+  }
   const key = (pageType && pageName) ? `${pageType}/${pageName}` : pageType
   const blocks = store.state.theme.blocksOfPage[key]
   const $scrollEl = window.document.getElementsByClassName('taro-tabbar__panel')[0]
   if (!$scrollEl) {
     return
   }
-  const payload = {
-    scrollTop: $scrollEl.scrollTop || 0,
-    blocksPosition: {}
-  }
-  _.forEach(blocks, (block) => {
+  const viewportBlocks = _.map(blocks, (block) => {
     const blockId = block.id
-    if (blockId) {
-      const targetElement = window.document.getElementById(`block--${blockId}`)
-      if (targetElement) {
-        payload.blocksPosition[blockId] = {
-          height: targetElement.clientHeight,
-          offsetTop: targetElement.offsetTop
-        }
-      }
+    const payload = { id: blockId, height: 0, offsetTop: 0 }
+    const targetElement = window.document.getElementById(`block--${blockId}`)
+    if (targetElement) {
+      payload['height'] = targetElement.clientHeight
+      payload['offsetTop'] = targetElement.offsetTop
     }
+    return payload
   })
+  const payload = {
+    pageType,
+    pageName,
+    viewport: {
+      scrollTop: $scrollEl.scrollTop || 0,
+      blocks: viewportBlocks
+    }
+  }
   _postMessage({
     type: ShopminiMessageTypes.READY,
     payload
-    // payload 格式是 { scrollTop, blocksPosition: { height, offsetTop } }
+    // payload 格式是 { pageType, pageName, viewport: { blocks: [{ id, height, offsetTop }], scrollTop } }
   })
 }
 

@@ -60,18 +60,23 @@ const mutations = {
   resetThemeSettingsData(state, { themeSettingsData }) {
     state.themeSettingsData = { ...themeSettingsData }
   },
-  resetPageSettings(state, { pageType, pageName, pageSettingsData }) {
-    const key = calcuKey(pageType, pageName)
-    // 如果不这么写, 新增一个 [key] 的时候, store 的变化不会被监听到
-    state.blocksOfPage = {
-      ...state.blocksOfPage,
-      [key]: pageSettingsData['components'] || [],
-    }
-  },
+  // resetPageSettings(state, { pageType, pageName, pageSettingsData }) {
+  //   const key = calcuKey(pageType, pageName)
+  //   // 如果不这么写, 新增一个 [key] 的时候, store 的变化不会被监听到
+  //   state.blocksOfPage = {
+  //     ...state.blocksOfPage,
+  //     [key]: pageSettingsData['components'] || [],
+  //   }
+  // },
   resetBlocks(state, { pageType, pageName, blocks }) {
     const key = calcuKey(pageType, pageName)
     // blocks 的格式是 [{ id, css, settings_data }, ...]
-    state.blocksOfPage[key] = blocks
+    // 如果不这么写, 新增一个 [key] 的时候, store 的变化不会被监听到
+    state.blocksOfPage = {
+      ...state.blocksOfPage,
+      [key]: blocks,
+    }
+    // state.blocksOfPage[key] = blocks
   },
   reorderBlocks(state, { pageType, pageName, ids }) {
     const key = calcuKey(pageType, pageName)
@@ -169,7 +174,14 @@ const actions = {
     }
     const res = await API.get('/shopfront/shop/', { params })
     const pageSettingsData = _.get(res.data, 'page.pageconfig.settings_data')
-    commit('resetPageSettings', { pageType, pageName, pageSettingsData })
+    // commit('resetPageSettings', { pageType, pageName, pageSettingsData })
+    const blocks = _.map(pageSettingsData['components'] || [], (block, index) => {
+      const id = block.id || `index-${index}`
+      // 确保每个 block 都有一个 id 属性, 这个是为了渲染不出错
+      // 另外在建站工具模式下如果发现 id 缺失, 应该和工具通信, 修补 id !!!
+      return { ...block, id }
+    })
+    commit('resetBlocks', { pageType, pageName, blocks })
     return res.data
   }
 }
