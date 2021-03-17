@@ -83,8 +83,8 @@ function updateBlocksSize() {
   if (!pageType) {
     return
   }
-  const key = (pageType && pageName) ? `${pageType}/${pageName}` : pageType
-  const blocks = store.state.theme.blocksOfPage[key]
+  const key = pageType === 'static' ? `${pageType}/${pageName}` : pageType
+  const blocks = store.state.theme.blocksOfPage[key] || []
   const $scrollEl = window.document.getElementsByClassName('taro-tabbar__panel')[0]
   if (!$scrollEl) {
     return

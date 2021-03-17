@@ -14,7 +14,7 @@ function lightenColors(colorName, value) {
 }
 
 function calcuKey(pageType, pageName) {
-  return (pageType && pageName) ? `${pageType}/${pageName}` : (pageType ? pageType : '')
+  return pageType === 'static' ? `${pageType}/${pageName}` : pageType
 }
 
 const state = () => {
