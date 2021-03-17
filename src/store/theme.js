@@ -70,6 +70,7 @@ const mutations = {
   },
   resetBlocks(state, { pageType, pageName, blocks }) {
     const key = calcuKey(pageType, pageName)
+    // blocks 的格式是 [{ id, css, settings_data }, ...]
     state.blocksOfPage[key] = blocks
   },
   reorderBlocks(state, { pageType, pageName, ids }) {

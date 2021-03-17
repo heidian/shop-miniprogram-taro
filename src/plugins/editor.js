@@ -3,6 +3,26 @@ import store from '../store/index'
 import _ from 'lodash'
 import qs from 'qs'
 
+const ShopminiMessageTypes = { READY: 'ready' }
+const EditorMessageTypes = { UPDATE: 'update', SCROLL: 'scroll' }
+const EditorMessageMethods = {
+  RESET_BLOCKS: 'RESET_BLOCKS',
+  ADD_BLOCK: 'ADD_BLOCK',
+  REMOVE_BLOCK: 'REMOVE_BLOCK',
+  REORDER_BLOCKS: 'REORDER_BLOCKS',
+  UPDATE_BLOCK_SETTINGS_DATA: 'UPDATE_BLOCK_SETTINGS_DATA',
+  UPDATE_BLOCK_CSS: 'UPDATE_BLOCK_CSS',
+  UPDATE_BLOCK_VISIBILITY: 'UPDATE_BLOCK_VISIBILITY',
+  UPDATE_THEME_SETTINGS_DATA: 'UPDATE_THEME_SETTINGS_DATA',
+}
+
+function _postMessage({ type='', method='', payload={} } = {})  {
+  window.parent.postMessage({
+    sender: 'shopmini_taro',
+    type, method, payload,
+  }, '*')
+}
+
 function listenFromStyleEditor(event) {
   // 通信的格式是 data: { sender, type, method, payload }
   if (!event.data || event.data['sender'] !== 'editor') {
@@ -11,39 +31,31 @@ function listenFromStyleEditor(event) {
   console.log('message from style editor', event)
   const { type, method, payload } = event.data
   // 每一个 case 下一定要写 return, 不然就顺序执行下去了
-  if (type === 'update') {
+  if (type === EditorMessageTypes.UPDATE) {
     switch (method) {
-      case 'RESET_BLOCKS':
+      case EditorMessageMethods.RESET_BLOCKS:
         return store.commit('theme/resetBlocks', payload)
-      case 'REORDER_BLOCKS':
+      case EditorMessageMethods.REORDER_BLOCKS:
         return store.commit('theme/reorderBlocks', payload)
-      case 'ADD_BLOCK':
+      case EditorMessageMethods.ADD_BLOCK:
         return store.commit('theme/addBlock', payload)
-      case 'REMOVE_BLOCK':
+      case EditorMessageMethods.REMOVE_BLOCK:
         return store.commit('theme/removeBlock', payload)
-      case 'UPDATE_BLOCK_SETTINGS_DATA':
+      case EditorMessageMethods.UPDATE_BLOCK_SETTINGS_DATA:
         return store.commit('theme/updateBlockSettingsData', payload)
-      case 'UPDATE_BLOCK_CSS':
+      case EditorMessageMethods.UPDATE_BLOCK_CSS:
         return store.commit('theme/updateBlockCss', payload)
-      case 'UPDATE_THEME_SETTINGS_DATA':
+      case EditorMessageMethods.UPDATE_THEME_SETTINGS_DATA:
         return store.commit('theme/updateThemeSettingsData', payload)
-      case 'UPDATE_BLOCK_VISIBILITY':
+      case EditorMessageMethods.UPDATE_BLOCK_VISIBILITY:
         return store.commit('theme/updateBlockVisibility', payload)
     }
-  } else if(type === 'scroll' && method === 'SCROLL_TO_BLOCK' && payload.id && window.document) {
-    const $scrollEl = window.document.getElementsByClassName('taro-tabbar__panel')[0]
-    if (!$scrollEl) return;
-    const targetElement = window.document.getElementById(`block--${payload.id}`)
-    targetElement && targetElement.scrollIntoView({behavior: "smooth"})
+  } else if (type === EditorMessageTypes.SCROLL) {
+    if (method === 'SCROLL_TO_BLOCK') {
+      const targetElement = window.document.getElementById(`block--${payload.id}`)
+      targetElement.scrollIntoView({ behavior: 'smooth' })
+    }
   }
-}
-
-function postMessage({type, payload})  {
-  window.parent.postMessage({
-    sender: 'shopmini_taro',
-    type,
-    payload
-  }, "*")
 }
 
 function getCurrentPage() {
@@ -67,32 +79,34 @@ function getCurrentPage() {
 
 function updateBlocksSize() {
   const { pageType, pageName } = getCurrentPage()
-  const { blocksOfPage = {} } = store.state.theme
   const key = (pageType && pageName) ? `${pageType}/${pageName}` : pageType
-
-  if (_.isEmpty(blocksOfPage[key])) return;
-
+  const blocks = store.state.theme.blocksOfPage[key]
   const $scrollEl = window.document.getElementsByClassName('taro-tabbar__panel')[0]
-  if (!$scrollEl) return;
+  if (!$scrollEl) {
+    return
+  }
   const payload = {
     scrollTop: $scrollEl.scrollTop || 0,
-    blocksPositionData: {}
+    blocksPosition: {}
   }
-  _.forEach(blocksOfPage[key], blockData => {
-    const blockId = blockData.id
+  _.forEach(blocks, (block) => {
+    const blockId = block.id
     if (blockId) {
       const targetElement = window.document.getElementById(`block--${blockId}`)
       if (targetElement) {
-        payload.blocksPositionData[blockId] = {
+        payload.blocksPosition[blockId] = {
           height: targetElement.clientHeight,
           offsetTop: targetElement.offsetTop
         }
       }
     }
   })
-  postMessage({ type: 'scroll', payload })
+  _postMessage({
+    type: ShopminiMessageTypes.READY,
+    payload
+    // payload 格式是 { scrollTop, blocksPosition: { height, offsetTop } }
+  })
 }
-
 
 function initScrollListener() {
   updateBlocksSize()
@@ -101,6 +115,5 @@ function initScrollListener() {
 
 if (Taro.getEnv() === Taro.ENV_TYPE.WEB && typeof window !== 'undefined' && window.parent) {
   window.addEventListener('message', listenFromStyleEditor)
-
   initScrollListener()
 }
