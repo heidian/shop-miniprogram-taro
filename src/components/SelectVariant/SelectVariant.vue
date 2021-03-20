@@ -179,7 +179,7 @@ export default {
         return _.every(variant.options, (option) => selectResult[option.title] === option.value)
       })
       this.selectedVariant = selectedVariant || {}
-      this.options = { ...options }
+      this.options = options
     },
     onClickAddToCart() {
       if (!this.selectedVariant.id) {
