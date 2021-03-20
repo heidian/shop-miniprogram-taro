@@ -1,25 +1,33 @@
 <template>
-  <view :class="{'block--grids': true, 'scroll': layout === 'scroll'}" :style="css">
+  <view v-if="layout == 'pinterest'" class="block--grids pinterest" :style="css">
+    <view v-for="(columnValue, columnIndex) in Array(columns)" :key="columnIndex" class="pinterest-column">
+      <view
+        v-for="(item, index) in settingsData.grids" :key="index"
+        v-if="index % columns === columnIndex"
+        class="grid-wrapper" :style="gridWrapperStyle"
+      >
+        <view class="grid-item" :style="gridItemStyle" @tap="goToUrl(item.url)">
+          <image
+            v-if="item.image && item.image.src" class="grid__image"
+            :src="optimizeImage(item.image, 200)" mode="widthFix"
+          ></image>
+          <view
+            v-if="item.text && item.text.html" class="grid__text" :style="gridTextStyle(item)"
+            v-html="item.text.html"
+          ></view>
+        </view>
+      </view>
+    </view>
+  </view>
+  <view v-else :class="{'block--grids': true, 'scroll': layout === 'scroll'}" :style="css">
     <view
       v-for="(item, index) in settingsData.grids" :key="index"
-      class="grid-wrapper" :style="gridStyle"
-      @tap="goToUrl(item.url)"
+      class="grid-wrapper" :style="gridWrapperStyle"
     >
-      <view
-        class="grid-item"
-        :style="settingsData.backgroundColor ? { 'backgroundColor': settingsData.backgroundColor } : {}"
-      >
+      <view class="grid-item" :style="gridItemStyle" @tap="goToUrl(item.url)">
+        <view v-if="item.image && item.image.src" class="grid__image" :style="gridImageStyle(item)"></view>
         <view
-          v-if="item.image && item.image.src"
-          class="grid__image"
-          :style="{
-            'paddingTop': paddingTop,
-            'backgroundImage': backgroundImageUrl(item.image, 200)
-          }"
-        ></view>
-        <view
-          v-if="item.text && item.text.html"
-          class="grid__text"
+          v-if="item.text && item.text.html" class="grid__text" :style="gridTextStyle(item)"
           v-html="item.text.html"
         ></view>
       </view>
@@ -42,7 +50,7 @@ export default {
     settingsData: {
       type: Object,
       default: () => ({
-        layout: 'grids',  // scroll|grids
+        layout: 'grids',  // scroll|grids|pinterest
         backgroundColor: null,  // 卡片格子的底色
         grids: [],  // { image: { src, metafield }, text: { html } , url }
         gridGap: 0,  // px 整数
@@ -56,26 +64,52 @@ export default {
   },
   computed: {
     layout() {
-      // scroll 或者是 grids
-      return this.settingsData.layout || 'grids'
+      const layout = this.settingsData.layout || ''
+      return /^(scroll|grids|pinterest)$/.test(layout) ? layout : 'grids'
     },
-    gridStyle() {
-      const style = {}
+    columns() {
       const columns = Math.max(1, +this.settingsData.columns || 0)
+      return columns
+    },
+    gridWrapperStyle() {
+      const style = {}
+      if (this.layout === 'pinterest') {
+        // style['width'] = '100%'
+      } else {
+        const widthPercent = (100 / this.columns).toFixed(6)
+        style['width'] = `${widthPercent}%`
+      }
       const gridGap = +this.settingsData.gridGap || 0
-      const widthPercent = (100 / columns).toFixed(6)
-      style['width'] = `${widthPercent}%`
       style['padding'] = Taro.pxTransform(`${parseInt(gridGap/2)}px`)
       return style
     },
-    paddingTop() {
-      const percent = (100 / (+this.settingsData.imageRatio || 1)).toFixed(6)
-      return `${percent}%`
-    }
+    gridItemStyle() {
+      return this.settingsData.backgroundColor ? {
+        'backgroundColor': this.settingsData.backgroundColor
+      } : {}
+    },
+    // paddingTop() {
+    //   const percent = (100 / (+this.settingsData.imageRatio || 1)).toFixed(6)
+    //   return `${percent}%`
+    // }
   },
   methods: {
     optimizeImage,
     backgroundImageUrl,
+    gridImageStyle(item) {
+      const percent = (100 / (+this.settingsData.imageRatio || 1)).toFixed(6)
+      const paddingTop = `${percent}%`
+      return {
+        'paddingTop': paddingTop,
+        'backgroundImage': this.backgroundImageUrl(item.image, 200)
+      }
+    },
+    gridTextStyle(item) {
+      return {
+        // 如果有底色, 就加一个左右边距
+        'padding': this.settingsData.backgroundColor ? '0 0.5em 0.5em' : ''
+      }
+    },
     goToUrl(url) {
       const parse = parseUrl(url)
       if (parse.openType === 'switchTab') {
@@ -120,6 +154,17 @@ export default {
   }
   .grid__image + .grid__text {
     margin-top: 0.5em;
+  }
+  &.pinterest {
+    flex-wrap: nowrap;
+    .grid__image {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+  }
+  .pinterest-column {
+    flex: 1;
   }
 }
 </style>
