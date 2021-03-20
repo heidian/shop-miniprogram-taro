@@ -148,9 +148,9 @@ export default {
             selected: value === _.get(_.find(this.selectedVariant.options, { title }), 'value')
           }
           if (title === colorOptionTitle) {
-            const colorImageItem = _.find(colorOptionImages, (item) => _.get(item, 'name.value') === value)
+            const colorImageItem = _.find(colorOptionImages, (item) => _.get(item, 'metafield.altText') === value)
             if (colorImageItem) {
-              result['image'] = colorImageItem.image
+              result['image'] = { 'src': colorImageItem.src }
             }
           }
           return result

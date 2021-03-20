@@ -247,9 +247,9 @@ export default {
         let image = this.colorNameToImage[colorName]
         if (!image) {
           const colorOptionImages = _.get(this.$store.state.theme, 'themeSettingsData.colorOptionImages') || []
-          const item = _.find(colorOptionImages, (item) => _.get(item, 'name.value') === colorName)
+          const item = _.find(colorOptionImages, (item) => _.get(item, 'metafield.altText') === colorName)
           if (item) {
-            image = item.image
+            image = { src: item.src }
           }
         }
         return { name: colorName, image }
