@@ -18,9 +18,11 @@ import Grids from '@/components/blocks/Grids'
 // import Text from '@/components/blocks/Text'
 import RichText from '@/components/blocks/RichText'
 import TezignBanner from '@/components/blocks/TezignBanner'
+import ProductSingleMain from '@/components/blocks/product/ProductSingleMain'
+import ProductSingleImages from '@/components/blocks/product/ProductSingleImages'
+import ProductSingleOptions from '@/components/blocks/product/ProductSingleOptions'
 import ProductSingleAccessories from '@/components/blocks/product/ProductSingleAccessories'
 import ProductSingleBodyHtml from '@/components/blocks/product/ProductSingleBodyHtml'
-import ProductSingleMain from '@/components/blocks/product/ProductSingleMain'
 import ProductSingleRelated from '@/components/blocks/product/ProductSingleRelated'
 import LoginForm from '@/components/blocks/api/LoginForm'
 
@@ -37,9 +39,11 @@ const BLOCKS_MAP = {
   // 'blocks/text': Text,
   'blocks/rich_text': RichText,
   'blocks/tezign_banner': TezignBanner,
+  'blocks/product_single_main': ProductSingleMain,
+  'blocks/product_single_images': ProductSingleImages,
+  'blocks/product_single_options': ProductSingleOptions,
   'blocks/product_single_accessories': ProductSingleAccessories,
   'blocks/product_single_body_html': ProductSingleBodyHtml,
-  'blocks/product_single_main': ProductSingleMain,
   'blocks/product_single_related': ProductSingleRelated,
   'blocks/login_form': LoginForm,
 }
