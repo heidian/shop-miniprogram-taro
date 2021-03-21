@@ -4,7 +4,7 @@
     <view :class="$style['productHeader']">
       <price
         :class="$style['productPrice']" :highlight="true" :keepZero="true"
-        :price="currentVariant.price" :compareAtPrice="currentVariant.compare_at_price"
+        :price="variant.price" :compareAtPrice="variant.compare_at_price"
       ></price>
       <!-- 暂时隐藏心愿单按钮
       <view :class="[$style['iconBtn'], $style['iconBtnFavorite']]" @tap="addToFavorite">
@@ -64,15 +64,14 @@ export default {
     return {
       favoriteId: null,
       variantsDrawerVisible: false,
-      currentVariant: this.variant,
     }
   },
   computed: {
     ...mapState(['customer']),
     rebateValue() {
       const rebateRate = _.get(this.product, 'metafields.substores.rebate_rate')
-      if (rebateRate && this.currentVariant) {
-        return +(+rebateRate * +this.currentVariant.price).toFixed(2)
+      if (rebateRate && this.variant) {
+        return +(+rebateRate * +this.variant.price).toFixed(2)
       }
     },
     growthValue() {
@@ -118,11 +117,6 @@ export default {
         } catch(err) { console.log(err) }
       }
     }, 2000),
-  },
-  watch: {
-    variant(newValue) {
-      this.currentVariant = newValue
-    }
   }
 }
 </script>
