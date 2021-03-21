@@ -2,15 +2,27 @@
 <template>
   <view :style="css">
     <!-- indicatorColor='#999' indicatorActiveColor='#333' -->
-    <swiper
-      :class="$style['productImages']"
-      :indicatorDots="false" :vertical="false"
-      :circular="true" :autoplay="true" :interval="5000" :duration="300"
-    >
-      <swiper-item :class="$style['productImagesSwiperItem']" v-for="(image, index) in product.images" :key="image.id">
-        <image :class="$style['productImagesSwiperItemImage']" mode="aspectFit" :src="optimizeImage(image, 400)" @tap="() => previewImage(image, product.images)"></image>
-      </swiper-item>
-    </swiper>
+    <view :class="$style['swiperWrapper']" :style="{'paddingTop': paddingTop}">
+      <swiper
+        :class="$style['swiper']"
+        :indicatorDots="false" :vertical="false"
+        :circular="true" :autoplay="true" :interval="5000" :duration="300"
+      >
+        <swiper-item
+          v-for="(image, index) in product.images" :key="image.id"
+          :class="$style['swiperItem']"
+        >
+          <view
+            :class="$style['productImageItem']"
+            :style="{
+              'backgroundImage': backgroundImageUrl(image),
+              'paddingTop': paddingTop
+            }"
+            :src="optimizeImage(image, 400)" @tap="() => previewImage(image, product.images)"
+          ></view>
+        </swiper-item>
+      </swiper>
+    </view>
   </view>
 </template>
 
@@ -28,7 +40,9 @@ export default {
     },
     settingsData: {
       type: Object,
-      default: () => ({})
+      default: () => ({
+        imageRatio: 1,  // 宽高比
+      })
     },
     product: {
       type: Object,
@@ -45,7 +59,10 @@ export default {
     }
   },
   computed: {
-    //
+    paddingTop() {
+      const percent = (100 / (+this.settingsData.imageRatio || 1)).toFixed(6)
+      return `${percent}%`
+    }
   },
   mounted() {
     //
@@ -65,13 +82,29 @@ export default {
 
 <style lang="scss" module>
 @import '@/styles/variables';
-/* Images Swiper */
-.productImages {
-  width: 100vw;
-  height: 100vw;
+.swiperWrapper {
+  display: block;
+  width: 100%;
+  padding-top: 100%;
+  overflow: hidden;
+  position: relative;
 }
-.productImagesSwiperItemImage {
+.swiper {
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
+}
+.swiperItem {
+  //
+}
+.productImageItem {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
 }
 </style>
