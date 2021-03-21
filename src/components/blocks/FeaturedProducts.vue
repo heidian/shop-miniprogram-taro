@@ -104,11 +104,13 @@ export default {
       return `${percent}%`
     },
     textWrapperPadding() {
-      if (this.settingsData.backgroundColor) {
-        return +this.settingsData.columns === 1 ? '0.5em 1em' : '0.5em 0.5em'
-      } else {
-        return +this.settingsData.columns === 1 ? '0 1em' : '0.5em 0'
-      }
+      // 现在在 css 里直接加上了固定的 padding
+      return {}
+      // if (this.settingsData.backgroundColor) {
+      //   return +this.settingsData.columns === 1 ? '0.5em 1em' : '0.5em 0.5em'
+      // } else {
+      //   return +this.settingsData.columns === 1 ? '0 1em' : '0.5em 0'
+      // }
     }
   },
   mounted() {
@@ -169,6 +171,8 @@ export default {
     position: relative;
     padding-right: percentage(2/3);
     .text-wrapper {
+      // 始终加上 padding, fullwidth 的大一点
+      padding: 0.5em 1em;
       position: absolute;
       right: 0;
       top: 0;
@@ -193,6 +197,8 @@ export default {
     height: 100%;
   }
   .text-wrapper {
+    // 始终加上 padding
+    padding: 0.5em 0.5em;
     .button {
       margin-top: 1em;
       margin-bottom: 0.5em;

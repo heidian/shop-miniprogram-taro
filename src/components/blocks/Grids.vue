@@ -105,9 +105,10 @@ export default {
       }
     },
     gridTextStyle(item) {
+      // 现在在 css 里直接加上了固定的 padding
       return {
         // 如果有底色, 就加一个左右边距
-        'padding': this.settingsData.backgroundColor ? '0 0.5em 0.5em' : ''
+        // 'padding': this.settingsData.backgroundColor ? '0 0.5em 0.5em' : ''
       }
     },
     goToUrl(url) {
@@ -150,7 +151,8 @@ export default {
     background-repeat: no-repeat;
   }
   .grid__text {
-    //
+    // 始终加上 padding
+    padding: 0 0.5em 0.5em;
   }
   .grid__image + .grid__text {
     margin-top: 0.5em;
