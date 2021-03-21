@@ -7,6 +7,7 @@
         :class="$style['swiper']"
         :indicatorDots="false" :vertical="false"
         :circular="true" :autoplay="true" :interval="5000" :duration="300"
+        :current="currentImageIndex"
       >
         <swiper-item
           v-for="(image, index) in product.images" :key="image.id"
@@ -55,7 +56,7 @@ export default {
   },
   data() {
     return {
-      //
+      currentImageIndex: 0
     }
   },
   computed: {
@@ -65,7 +66,7 @@ export default {
     }
   },
   mounted() {
-    //
+    this.setCurrentImageIndex()
   },
   methods: {
     optimizeImage,
@@ -76,7 +77,20 @@ export default {
         urls: _.map(images, 'src')
       })
     },
+    setCurrentImageIndex() {
+      if (this.variant && this.variant.productimage_id) {
+        const index = _.findIndex(this.product.images, (image) => image.id == this.variant.productimage_id)
+        if (index >= 0) {
+          this.currentImageIndex = index
+        }
+      }
+    }
   },
+  watch: {
+    variant(newVal) {
+      this.setCurrentImageIndex()
+    }
+  }
 }
 </script>
 
