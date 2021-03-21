@@ -1,16 +1,6 @@
 <template>
   <view :style="css">
     <view :class="$style['section']">
-      <!-- indicatorColor='#999' indicatorActiveColor='#333' -->
-      <swiper
-        :class="$style['productImages']"
-        :indicatorDots="false" :vertical="false"
-        :circular="true" :autoplay="true" :interval="5000" :duration="300"
-      >
-        <swiper-item :class="$style['productImagesSwiperItem']" v-for="(image, index) in product.images" :key="image.id">
-          <image :class="$style['productImagesSwiperItemImage']" mode="aspectFit" :src="optimizeImage(image, 400)" @tap="() => previewImage(image, product.images)"></image>
-        </swiper-item>
-      </swiper>
       <!-- 商品价格和添加心愿单 -->
       <view :class="$style['productHeader']">
         <price
@@ -235,12 +225,6 @@ export default {
         } catch(err) { console.log(err) }
       }
     }, 2000),
-    previewImage(image, images) {
-      Taro.previewImage({
-        current: _.get(image, 'src'),
-        urls: _.map(images, 'src')
-      })
-    },
   },
   watch: {
     variant(newValue) {
@@ -260,16 +244,6 @@ export default {
   + .section {
     margin-top: 10px;
   }
-}
-
-/* Images Swiper */
-.productImages {
-  width: 100vw;
-  height: 100vw;
-}
-.productImagesSwiperItemImage {
-  width: 100%;
-  height: 100%;
 }
 
 /* 标题和描述 */
