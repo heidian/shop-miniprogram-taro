@@ -90,7 +90,7 @@ import SelectVariant from '@/components/SelectVariant/SelectVariant'
 import Price from '@/components/Price'
 
 export default {
-  name: 'ProductSingleBuy',
+  name: 'ProductSingleMain',
   components: {
     SelectVariant,
     Price,
