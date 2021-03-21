@@ -12,26 +12,26 @@
         } : {}"
         @tap="goToProduct(product.name)"
       >
-        <view class="image-wrapper" :style="{'paddingTop': imagePaddingTop}">
-          <image
-            class="image" mode="aspectFill" :lazy-load="true"
-            :src="optimizeImage(product.image, 200)"
-          ></image>
+        <view class="image-wrapper">
+          <view
+            class="image" :style="{
+              'paddingTop': imagePaddingTop,
+              'backgroundImage': backgroundImageUrl(product.image, 200),
+            }"
+          ></view>
         </view>
-        <view class="text-wrapper" :style="{
-          // 如果有底色, 就加一个左右边距
-          'padding': textWrapperPadding
-        }">
-          <view class="title">{{ product.title }}</view>
-          <view>
+        <view class="text-wrapper">
+          <view class="title">
+            <text>{{ product.title }}</text>
+            <text style="opacity: 0.8; font-size: 0.9em;">{{ '\n' }}{{ product.description }}</text>
+          </view>
+          <view class="price-and-button">
             <price
               class="price" :highlight="false" :keepZero="false"
               :price="product.price" :compareAtPrice="product.compare_at_price"
             ></price>
-          </view>
-          <view>
             <button
-              class="button button--round button--mini button--dark"
+              class="button button--round button--mini button--primary"
               v-if="settingsData.buyButton"
               :style="{'backgroundColor': settingsData.buyButtonBackground}"
             >购买</button>
@@ -103,15 +103,14 @@ export default {
       const percent = (100 / (+this.settingsData.imageRatio || 1)).toFixed(6)
       return `${percent}%`
     },
-    textWrapperPadding() {
-      // 现在在 css 里直接加上了固定的 padding
-      return {}
-      // if (this.settingsData.backgroundColor) {
-      //   return +this.settingsData.columns === 1 ? '0.5em 1em' : '0.5em 0.5em'
-      // } else {
-      //   return +this.settingsData.columns === 1 ? '0 1em' : '0.5em 0'
-      // }
-    }
+    // 现在在 css 里直接加上了固定的 padding
+    // textWrapperPadding() {
+    //   if (this.settingsData.backgroundColor) {
+    //     return +this.settingsData.columns === 1 ? '0.5em 1em' : '0.5em 0.5em'
+    //   } else {
+    //     return +this.settingsData.columns === 1 ? '0 1em' : '0.5em 0'
+    //   }
+    // }
   },
   mounted() {
     this.fetchProducts()
@@ -125,7 +124,7 @@ export default {
       const res = await API.get('/shopfront/product/', {
         params: {
           ...productsQuery,
-          fields: ['id', 'name', 'title', 'description', 'image', 'price', 'compare_at_price', 'metafields'].join(',')
+          fields: ['id', 'name', 'title', 'description', 'image', 'price', 'compare_at_price'].join(',')
         }
       })
       this.products = {
@@ -167,43 +166,17 @@ export default {
   .product-item {
     overflow: hidden;
   }
-  .product-item__fullwidth {
-    position: relative;
-    padding-right: percentage(2/3);
-    .text-wrapper {
-      // 始终加上 padding, fullwidth 的大一点
-      padding: 0.5em 1em;
-      position: absolute;
-      right: 0;
-      top: 0;
-      width: percentage(2/3);
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      button, .price {
-        margin: 0;
-      }
-    }
-  }
   .image-wrapper {
-    position: relative;
+    //
   }
   .image {
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
   }
   .text-wrapper {
     // 始终加上 padding
     padding: 0.5em 0.5em;
-    .button {
-      margin-top: 1em;
-      margin-bottom: 0.5em;
-      width: 70px;
-    }
   }
   .title {
     line-height: 1.4em;
@@ -215,9 +188,52 @@ export default {
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
   }
+  .price-and-button {
+    //
+  }
   .price {
+    display: block;
     margin-top: 0.2em;
     margin-bottom: 0.2em;
+  }
+  .button {
+    margin-top: 1em;
+    margin-bottom: 0.5em;
+    width: 70px;
+  }
+
+  /* 覆盖 column === 1 时候的样式 */
+  .product-item__fullwidth {
+    display: flex;
+    align-items: stretch;
+    justify-content: flex-start;
+    .image-wrapper {
+      flex: 1;
+    }
+    .text-wrapper {
+      flex: 2;
+      // 始终加上 padding, fullwidth 的大一点
+      padding: 0.5em 1em;
+    }
+    .title {
+      height: 4.2em;
+      -webkit-line-clamp: 3;
+    }
+    .price-and-button {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 1em;
+    }
+    .price {
+      font-size: 1.1em;
+    }
+    .button, .price {
+      margin: 0;
+    }
+    // .image {
+    //   min-height: 100%;  // 右边的文字有可能比左边的图片高
+    // }
   }
 }
 </style>
