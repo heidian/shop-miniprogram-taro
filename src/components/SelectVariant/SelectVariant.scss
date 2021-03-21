@@ -83,6 +83,10 @@
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
+    &:global(.is-selected) {
+      border-color: transparent;
+      box-shadow: 0 0 0 1px $color-text-light;
+    }
   }
 }
 
