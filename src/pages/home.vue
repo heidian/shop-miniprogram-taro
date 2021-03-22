@@ -25,12 +25,13 @@ export default {
     return {}
   },
   computed: {},
-  created() {},
-  onLoad() {
+  onShow() {
     if (this.$store.state.config.shopname === 'tezignlove') {
       Taro.hideTabBar()
     }
   },
+  // 不能覆盖 onLoad
+  // onLoad() {},
   onReachBottom() {},
   async mounted() {
     const data = await this.fetchPageConfig('home')
