@@ -152,10 +152,7 @@ export default {
   }
   .grid__text {
     // 始终加上 padding
-    padding: 0 0.5em 0.5em;
-  }
-  .grid__image + .grid__text {
-    margin-top: 0.5em;
+    padding: 0.5em 0.5em;
   }
   &.pinterest {
     flex-wrap: nowrap;
