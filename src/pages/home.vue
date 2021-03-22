@@ -14,6 +14,7 @@ import _ from 'lodash'
 import Taro, { getCurrentInstance } from '@tarojs/taro'
 import { mapState } from 'vuex'
 import ThemeBlocks from '@/mixins/ThemeBlocks'
+import { syncTabBarStyleWithTheme } from '@/utils'
 
 export default {
   name: 'Home',
@@ -29,6 +30,7 @@ export default {
     if (this.$store.state.config.shopname === 'tezignlove') {
       Taro.hideTabBar()
     }
+    syncTabBarStyleWithTheme()
   },
   // 不能覆盖 onLoad
   // onLoad() {},

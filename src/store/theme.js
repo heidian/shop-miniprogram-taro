@@ -2,6 +2,7 @@ import _ from 'lodash'
 import Vue from 'vue'
 import tinycolor from 'tinycolor2'
 import Taro from '@tarojs/taro'
+import { syncTabBarStyleWithTheme } from '@/utils'
 import { API } from '@/utils/api'
 
 function lightenColors(colorName, value) {
@@ -59,6 +60,7 @@ const getters = {
 const mutations = {
   resetThemeSettingsData(state, { themeSettingsData }) {
     state.themeSettingsData = { ...themeSettingsData }
+    syncTabBarStyleWithTheme()
   },
   // resetPageSettings(state, { pageType, pageName, pageSettingsData }) {
   //   const key = calcuKey(pageType, pageName)
@@ -144,6 +146,7 @@ const mutations = {
       ...state.themeSettingsData,
       ...settingsData,
     }
+    syncTabBarStyleWithTheme()
   }
 }
 
