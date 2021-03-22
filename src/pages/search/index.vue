@@ -167,6 +167,9 @@ export default {
     activeRootCategoryImage() {
       const category = _.find(this.categories.data, { id: this.activeRootCategoryId })
       return _.get(category, 'image.src') ? category.image : null
+    },
+    hasMore() {
+      return this.products.data.length < this.products.count
     }
   },
   created() {},
@@ -256,7 +259,16 @@ export default {
       })
       return _.filter(results, (item) => !!item.image)
     },
-  }
+  },
+  async onPullDownRefresh() {
+    await this.fetchProducts()
+    Taro.stopPullDownRefresh()
+  },
+  async onReachBottom() {
+    if (this.hasMore) {
+      await this.fetchProducts({ more: true })
+    }
+  },
 }
 </script>
 

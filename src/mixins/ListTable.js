@@ -46,6 +46,8 @@ function StoreListTable(propertyName, storeName) {
     methods: {
       async updateDefaultParams(defaultParams, { fetch = true } = {}) {
         this.$store.commit(`${storeName}/setDefaultParams`, defaultParams)
+        this.$store.commit(`${storeName}/setPage`, 1)
+        // 页面上并没有 pagination, 因为 fetchMore 里面会导致 page 增加, 修改了跟和参数以后都要重置 page
         if (fetch) {
           await this.fetchList()
         }
@@ -58,12 +60,16 @@ function StoreListTable(propertyName, storeName) {
       },
       async updatePageSize(pageSize, { fetch = true } = {}) {
         this.$store.commit(`${storeName}/setPageSize`, pageSize)
+        this.$store.commit(`${storeName}/setPage`, 1)
+        // 页面上并没有 pagination, 因为 fetchMore 里面会导致 page 增加, 修改了跟和参数以后都要重置 page
         if (fetch) {
           await this.fetchList()
         }
       },
       async updateOrderBy(orderBy, { fetch = true } = {}) {
         this.$store.commit(`${storeName}/setOrderBy`, orderBy)
+        this.$store.commit(`${storeName}/setPage`, 1)
+        // 页面上并没有 pagination, 因为 fetchMore 里面会导致 page 增加, 修改了跟和参数以后都要重置 page
         if (fetch) {
           await this.fetchList()
         }
@@ -165,6 +171,8 @@ function LocalListTable(propertyName, urlRoot) {
     methods: {
       async updateDefaultParams(defaultParams, { fetch = true } = {}) {
         this[propertyName].defaultParams = defaultParams || {}
+        this[propertyName].page = 1
+        // 页面上并没有 pagination, 因为 fetchMore 里面会导致 page 增加, 修改了跟和参数以后都要重置 page
         if (fetch) {
           await this.fetchList()
         }
@@ -177,12 +185,16 @@ function LocalListTable(propertyName, urlRoot) {
       },
       async updatePageSize(pageSize, { fetch = true } = {}) {
         this[propertyName].pageSize = pageSize || 10
+        this[propertyName].page = 1
+        // 页面上并没有 pagination, 因为 fetchMore 里面会导致 page 增加, 修改了跟和参数以后都要重置 page
         if (fetch) {
           await this.fetchList()
         }
       },
       async updateOrderBy(orderBy, { fetch = true } = {}) {
         this[propertyName].orderBy = orderBy || null
+        this[propertyName].page = 1
+        // 页面上并没有 pagination, 因为 fetchMore 里面会导致 page 增加, 修改了跟和参数以后都要重置 page
         if (fetch) {
           await this.fetchList()
         }
