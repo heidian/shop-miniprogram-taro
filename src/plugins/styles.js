@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import Vue from 'vue'
 import Taro from '@tarojs/taro'
 
@@ -17,7 +18,8 @@ if (Taro.getEnv() === Taro.ENV_TYPE.WEB) {
 Taro.initPxTransform({
   designWidth: 375,
   deviceRatio: {
-    375: 1 / 2
+    // 375: 1 / 2
+    375: 2
   }
 })
 

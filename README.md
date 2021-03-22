@@ -54,6 +54,7 @@ taro doctor
 2. 逐个更新本地项目中的taro相关依赖版本。
 
 目前固定 taro 版本到最新的稳定版 3.0.9, 新的 3.0.11 版本的 initPxTransform 有问题, 应该是改过规则了
+目前 taro 已经更新到 3.0.28, Taro.initPxTransform 的规则改了, 得把 375 设置成 2 才行
 
 
 ### H5 版本启动方式
