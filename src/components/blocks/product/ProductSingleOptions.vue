@@ -239,18 +239,13 @@ export default {
     color: transparent;
     height: 28px;  // 20 + (2 + 2) * 2
     width: 28px;  // 20 + (2 + 2) * 2
-    margin-left: 1px;
-    margin-top: 1px;
+    padding: 0;
     min-width: 0;
     overflow: hidden;
     border-radius: 0;
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    &:global(.is-selected) {
-      border-color: transparent;
-      box-shadow: 0 0 0 1px $color-text-light;
-    }
   }
 }
 </style>
