@@ -3,75 +3,25 @@
     :class="$style['page']"
     :style="{'paddingTop': pagePaddingTop, ...$globalColors}"
   >
+
     <custom-nav
       :q="products.filter.q"
       @submit="onSubmitSearch"
-      :customStyle="customNavStyle"
-      :homeBtnStyle="homeBtnStyle"
-    />
-    <scroll-view
-      :class="$style['categoriesBar']"
-      :style="{'top': categoriesBarTop}"
-      :scroll-x="true" :enhanced="true" :show-scrollbar="false"
-      :scroll-into-view="activeRootCategoryId ? `search-category-${activeRootCategoryId}` : null"
-      :scroll-with-animation="true"
-    >
-      <view :class="$style['categoriesInner']">
-        <view
-          :class="[$style['categoryItem'], !activeRootCategoryId && 'is-active']"
-          @tap="() => filterRootCategory(null)"
-        ><text :class="$style['categoryText']">全部</text></view>
-        <view
-          v-for="category in categories.data" :key="category.id"
-          :class="[$style['categoryItem'], (category.id === activeRootCategoryId) && 'is-active']"
-          :id="`search-category-${category.id}`"
-          @tap="() => filterRootCategory(category.id)"
-        ><text :class="$style['categoryText']">{{ category.title }}</text></view>
-      </view>
-    </scroll-view>
-    <view :class="$style['filterBar']" :style="{'top': filtersBarTop}">
-      <view
-        :class="{[$style['filterItem']]:true,'is-active':products.orderBy==='-published_at'}"
-        @tap="onClickOrderBy('-published_at')"
-      >新品</view>
-      <view
-        :class="{[$style['filterItem']]:true,'is-active':products.orderBy==='price'}"
-        @tap="onClickOrderBy('price')"
-      >价格</view>
-      <view
-        :class="{[$style['filterItem']]:true,'is-active':products.orderBy==='-sold_quantity'}"
-        @tap="onClickOrderBy('-sold_quantity')"
-      >销量</view>
-      <view
-        :class="{
-          [$style['filterItem']]: true,
-          'is-active': activeRootCategoryId && +products.filter.category !== activeRootCategoryId
-        }"
-        @tap="subCategoryDrawerVisible = !subCategoryDrawerVisible"
-      >筛选</view>
-    </view>
-    <drawer
-      v-if="!!activeRootCategoryId" :visible.sync="subCategoryDrawerVisible"
-      position="right" header="筛选" :style="{'top': filtersDrawerTop}"
-    >
-      <view :class="$style['subCategoriesWrapper']">
-        <view
-          @tap="() => filterRootCategory(activeRootCategoryId)"
-          :class="[$style['subCategoryItem'], (activeRootCategoryId === +products.filter.category) && 'is-active']"
-        >全部</view>
-        <view
-          v-for="item in activeSubCategories" :key="item.id" @tap="() => filterSubCategory(item.id)"
-          :class="[$style['subCategoryItem'], (item.id === +products.filter.category) && 'is-active']"
-        >{{ item.title }}</view>
-      </view>
-    </drawer>
+    ></custom-nav>
+
+    <search-filters
+      :products="products"
+      @updateFilter="(filters) => updateFilter(filters, { partial: false, fetch: true })"
+      @updateOrderBy="(orderBy) => updateOrderBy(orderBy, { fetch: true })"
+    ></search-filters>
+
     <view
       v-if="activeRootCategoryImage"
       :class="$style['categoryImage']"
       :style="{'backgroundImage': backgroundImageUrl(activeRootCategoryImage, 400)}"
     ></view>
-    <view :class="$style['container']">
-      <view v-for="(product, index) in products.data" :key="product.id" :class="$style['grid']">
+    <view :class="$style['productGrids']">
+      <view v-for="(product, index) in products.data" :key="product.id" :class="$style['gridWrapper']">
         <view :class="$style['productItem']" @tap="goToProduct(product.name)">
           <view :class="$style['imageWrapper']">
             <image
@@ -98,6 +48,8 @@
         </view>
       </view>
     </view>
+    <!-- end product grids -->
+    <!-- TODO 加一个 loading/more 的状态 -->
   </view>
 </template>
 
@@ -107,8 +59,8 @@ import Taro, { getCurrentInstance } from '@tarojs/taro'
 import { mapState, mapGetters } from 'vuex'
 import { optimizeImage, backgroundImageUrl } from '@/utils/image'
 import Price from '@/components/Price'
-import Drawer from '@/components/Drawer'
 import CustomNav from './CustomNav'
+import SearchFilters from './SearchFilters'
 
 import ListTable from '@/mixins/ListTable'
 // const listTableMixin = ListTable('products', { urlRoot: '/shopfront/product/' })
@@ -121,13 +73,11 @@ export default {
   ],
   components: {
     CustomNav,
-    Drawer,
+    SearchFilters,
     Price,
   },
   data() {
     return {
-      activeRootCategoryId: null,
-      subCategoryDrawerVisible: false,
       colorNameToImage: {},
     }
   },
@@ -140,35 +90,12 @@ export default {
     customNavHeight() {
       return this.system.statusBarHeight + 44
     },
-    customNavStyle () {
-      return {
-        'height': Taro.pxTransform(this.customNavHeight),
-        'paddingTop': Taro.pxTransform(this.system.statusBarHeight + 3)
-      }
-    },
-    homeBtnStyle() {
-      return {
-        'top': Taro.pxTransform(this.system.statusBarHeight + 3)
-      }
-    },
     pagePaddingTop() {
       return Taro.pxTransform(this.customNavHeight + 35 + 40)
     },
-    categoriesBarTop() {
-      return Taro.pxTransform(this.customNavHeight)
-    },
-    filtersBarTop() {
-      return Taro.pxTransform(this.customNavHeight + 35)
-    },
-    filtersDrawerTop() {
-      return Taro.pxTransform(this.customNavHeight)
-    },
-    activeSubCategories() {
-      const category = _.find(this.categories.data, { id: this.activeRootCategoryId })
-      return category ? category.children : []
-    },
     activeRootCategoryImage() {
-      const category = _.find(this.categories.data, { id: this.activeRootCategoryId })
+      const activeRootCategoryId = this.getRootCategoryId(this.products.filter.category)
+      const category = _.find(this.categories.data, { id: activeRootCategoryId })
       return _.get(category, 'image.src') ? category.image : null
     },
     hasMore() {
@@ -204,39 +131,15 @@ export default {
       /* 没有特别原因不要用 wx 的方法, 全部用 Taro 上的方法 */
       Taro.navigateTo({ url: `/pages/product/index?name=${productName}` })
     },
-    filterRootCategory(categoryId) {
-      // 虽然 fetchProducts 里面也会计算 activeRootCategoryId, 但这里早点设置也没事
-      this.subCategoryDrawerVisible = false
-      this.activeRootCategoryId = categoryId
-      // 因为有 partial: false, 这里其实不需要专门把 q 重置为空, 为了避免混淆, 现在先这么保留着
-      this.updateFilter({ q: '', category: categoryId }, { partial: false, fetch: false })
-      this.fetchProducts()
-    },
-    filterSubCategory(categoryId) {
-      this.subCategoryDrawerVisible = false
-      // 因为有 partial: false, 这里其实不需要专门把 q 重置为空, 为了避免混淆, 现在先这么保留着
-      this.updateFilter({ q: '', category: categoryId }, { partial: false, fetch: false })
-      this.fetchProducts()
-    },
     async fetchProducts({ more = false } = {}) {
       // fetchList 和 fetchMore 统一在这里调用, 因为调用前后还要处理各种 UI 元素
       // Taro.showNavigationBarLoading()
       if (more) {
         await this.fetchMore()
       } else {
-        // TODO active category
-        this.activeRootCategoryId = this.getRootCategoryId(this.products.filter.category)
         await this.fetchList()
       }
       // Taro.hideNavigationBarLoading()
-    },
-    onClickOrderBy(orderBy) {
-      if (this.products.orderBy === orderBy) {
-        this.updateOrderBy('', { fetch: false })
-      } else {
-        this.updateOrderBy(orderBy, { fetch: false })
-      }
-      this.fetchProducts()
     },
     onSubmitSearch(q) {
       // 因为有 partial: false, 这里其实不需要专门把 category 重置为空, 为了避免混淆, 现在先这么保留着
@@ -283,87 +186,6 @@ export default {
   overflow: hidden;
   background-color: $color-bg-gray;
 }
-.categoriesBar {
-  position: fixed;
-  z-index: $z-index-navbar;
-  left: 0;
-  // top: 0;  // inline 动态定义
-  height: 35px;
-  width: 100%;
-  background-color: #fff;
-}
-.categoriesInner {
-  display: inline-block;
-  white-space: nowrap;
-  padding: 0 5px;
-}
-.categoryItem {
-  display: inline-block;
-  vertical-align: middle;
-  padding: 0 12px;
-  .categoryText {
-    display: inline-block;
-    font-size: 15px;
-    padding-top: 5px;
-    border-bottom: 2px solid transparent;
-    line-height: 35px - 5px - 2px;
-    color: $color-text-light;
-  }
-  &:global(.is-active) {
-    .categoryText {
-      border-bottom-color: $color-text;
-      color: $color-text;
-      font-weight: bold;
-    }
-  }
-}
-.filterBar {
-  position: fixed;
-  z-index: $z-index-navbar;
-  left: 0;
-  // top: 35px;  // inline 动态定义
-  height: 39px;
-  border-top: 1px solid $color-divider;
-  width: 100%;
-  background-color: #ffffff;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 15px;
-}
-.filterItem {
-  padding: 4px 9px;
-  border: 1px solid transparent;
-  width: 70px;
-  text-align: center;
-  font-size: 12px;
-  line-height: 16px;
-  border-radius: 13px;
-  color: $color-text-light;
-  background-color: $color-bg-gray;
-  &:global(.is-active) {
-    // border-color: darken($color-bg-gray, 10%);
-    // border-color: $color-text;
-    background-color: darken($color-bg-gray, 10%);
-    color: $color-text;
-    font-weight: bold;
-  }
-}
-.subCategoriesWrapper {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-start;
-  justify-content: flex-start;
-}
-.subCategoryItem {
-  padding: 8px 15px;
-  font-size: 13px;
-  color: $color-text-light;
-  &:global(.is-active) {
-    color: $color-text;
-    font-weight: bold;
-  }
-}
 .categoryImage {
   display: block;
   margin: 8px;
@@ -373,11 +195,11 @@ export default {
   background-size: cover;
   border-radius: 4px;
 }
-.container {
+.productGrids {
   @include clearfix();
   padding: 5px;
 }
-.grid {
+.gridWrapper {
   float: left;
   width: 50%;
   padding: 5px;

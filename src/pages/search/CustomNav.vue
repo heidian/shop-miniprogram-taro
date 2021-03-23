@@ -1,5 +1,5 @@
 <template>
-  <view :class="$style['customNav']" :style="customStyle">
+  <view :class="$style['customNav']" :style="navBarStyle">
     <input
       :class="$style['input']"
       type="text"
@@ -15,6 +15,7 @@
 
 <script>
 import Taro from '@tarojs/taro'
+import { mapState, mapGetters } from 'vuex'
 
 export default {
   props: {
@@ -23,26 +24,31 @@ export default {
       required: false,
       default: ''
     },
-    customStyle: {
-      type: Object,
-      default: () => {
-        return {}
-      }
-    },
-    homeBtnStyle: {
-      type: Object,
-      default: () => {
-        return {}
-      }
-    },
   },
   data() {
     return {
       cachedQ: this.q || ''
     }
   },
+  computed: {
+    ...mapState(['system']),
+    customNavHeight() {
+      return this.system.statusBarHeight + 44
+    },
+    navBarStyle() {
+      return {
+        'height': Taro.pxTransform(this.customNavHeight),
+        'paddingTop': Taro.pxTransform(this.system.statusBarHeight + 3)
+      }
+    },
+    homeBtnStyle() {
+      return {
+        'top': Taro.pxTransform(this.system.statusBarHeight + 3)
+      }
+    }
+  },
   watch: {
-    q (newValue) {
+    q(newValue) {
       this.cachedQ = newValue || ''
     }
   },

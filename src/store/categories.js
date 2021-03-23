@@ -4,7 +4,7 @@ import { API } from '@/utils/api'
 const state = () => {
   return {
     _fetched: false,  // categories 只运行一次
-    _rootCategoryId: {},
+    _rootCategory: {},
     pending: false,
     error: {},
     data: []
@@ -32,7 +32,7 @@ const mutations = {
     state.pending = false
     state.error = _.cloneDeep(error || {})
   },
-  setData (state, { data } = {}) {
+  setData(state, { data } = {}) {
     state._fetched = true
     state.data = _.cloneDeep(data || [])
     const rootCategory = {}
