@@ -50,20 +50,21 @@
         @tap="subCategoryDrawerVisible = !subCategoryDrawerVisible"
       >筛选</view>
     </view>
-    <view
-      v-if="!!activeRootCategoryId"
-      :class="[$style['subCategoriesWrapper'], subCategoryDrawerVisible && 'is-visible']"
-      :style="{'top': subCategoriesWrapperTop}"
+    <drawer
+      v-if="!!activeRootCategoryId" :visible.sync="subCategoryDrawerVisible"
+      position="right" header="筛选" :style="{'top': filtersDrawerTop}"
     >
-      <view
-        @tap="() => filterRootCategory(activeRootCategoryId)"
-        :class="[$style['subCategoryItem'], (activeRootCategoryId === +products.filter.category) && 'is-active']"
-      >全部</view>
-      <view
-        v-for="item in activeSubCategories" :key="item.id" @tap="() => filterSubCategory(item.id)"
-        :class="[$style['subCategoryItem'], (item.id === +products.filter.category) && 'is-active']"
-      >{{ item.title }}</view>
-    </view>
+      <view :class="$style['subCategoriesWrapper']">
+        <view
+          @tap="() => filterRootCategory(activeRootCategoryId)"
+          :class="[$style['subCategoryItem'], (activeRootCategoryId === +products.filter.category) && 'is-active']"
+        >全部</view>
+        <view
+          v-for="item in activeSubCategories" :key="item.id" @tap="() => filterSubCategory(item.id)"
+          :class="[$style['subCategoryItem'], (item.id === +products.filter.category) && 'is-active']"
+        >{{ item.title }}</view>
+      </view>
+    </drawer>
     <view
       v-if="activeRootCategoryImage"
       :class="$style['categoryImage']"
@@ -106,6 +107,7 @@ import Taro, { getCurrentInstance } from '@tarojs/taro'
 import { mapState, mapGetters } from 'vuex'
 import { optimizeImage, backgroundImageUrl } from '@/utils/image'
 import Price from '@/components/Price'
+import Drawer from '@/components/Drawer'
 import CustomNav from './CustomNav'
 
 import ListTable from '@/mixins/ListTable'
@@ -119,6 +121,7 @@ export default {
   ],
   components: {
     CustomNav,
+    Drawer,
     Price,
   },
   data() {
@@ -157,8 +160,8 @@ export default {
     filtersBarTop() {
       return Taro.pxTransform(this.customNavHeight + 35)
     },
-    subCategoriesWrapperTop() {
-      return Taro.pxTransform(this.customNavHeight + 35 + 40)
+    filtersDrawerTop() {
+      return Taro.pxTransform(this.customNavHeight)
     },
     activeSubCategories() {
       const category = _.find(this.categories.data, { id: this.activeRootCategoryId })
@@ -347,27 +350,10 @@ export default {
   }
 }
 .subCategoriesWrapper {
-  position: fixed;
-  z-index: $z-index-navbar - 1;
-  padding: 15px;
-  // top: 35px + 40px;  // inline 动态定义
-  left: 0;
-  width: 100%;
-  background-color: #fff;
-  box-shadow: 0 5px 5px rgba(0, 0, 0, 0.05);
   display: flex;
   flex-wrap: wrap;
   align-items: flex-start;
   justify-content: flex-start;
-  // opacity: 0;
-  visibility: hidden;
-  transform: translate3d(0, -100%, 0);
-  transition: all .1s ease-in-out;
-  &:global(.is-visible) {
-    // opacity: 1;
-    visibility: visible;
-    transform: translate3d(0, 0, 0);
-  }
 }
 .subCategoryItem {
   padding: 8px 15px;
