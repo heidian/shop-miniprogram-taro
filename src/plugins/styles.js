@@ -35,13 +35,3 @@ Vue.mixin({
   }
 })
 // Vue.prototype.$globalColors = store.getters['theme/globalColors']
-
-
-/* 这个只在小程序端有效, H5 其实也应该处理, 只能另外想办法了 */
-Taro.options.html.transformElement = (el) => {
-  const fontSize = _.get(el, 'style.fontSize')
-  if (fontSize && /^\d+(\.\d+)?(px)?$/.test(fontSize)) {
-    el.style.fontSize = Taro.pxTransform(fontSize)
-  }
-  return el
-}

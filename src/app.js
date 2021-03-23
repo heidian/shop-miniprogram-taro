@@ -12,6 +12,7 @@ import analytics from './utils/analytics'
 import './plugins/styles'
 import './plugins/filters'
 import './plugins/redirects'
+import './plugins/html'
 import './plugins/editor'
 
 /*
