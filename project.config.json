@@ -23,7 +23,7 @@
     "compileHotReLoad": false,
     "useMultiFrameRuntime": true,
     "useApiHook": true,
-    "useApiHostProcess": false,
+    "useApiHostProcess": true,
     "babelSetting": {
       "ignore": [],
       "disablePlugins": [],
@@ -56,44 +56,10 @@
     "miniprogram": {
       "list": [
         {
-          "id": -1,
-          "name": "pages/static/index",
-          "pathName": "pages/static/index",
-          "query": "name=gifts",
-          "scene": null
-        },
-        {
           "id": 1,
           "name": "pages/home with scene",
           "pathName": "pages/home",
           "query": "scene=r%3Dpdt%26id%3D84858%26s%3Dshare%26c%3Drff439",
-          "scene": null
-        },
-        {
-          "id": 4,
-          "name": "pages/checkout/index",
-          "pathName": "pages/checkout/index",
-          "query": "token=5000c8e9815b0160f553d7f1c412c5ad70f9be26",
-          "scene": null
-        },
-        {
-          "id": -1,
-          "name": "pages/account/index",
-          "pathName": "pages/account/index",
-          "query": "",
-          "scene": null
-        },
-        {
-          "id": -1,
-          "name": "pages/misc/share",
-          "pathName": "pages/misc/share",
-          "query": "product=85453",
-          "scene": null
-        },
-        {
-          "name": "pages/product/index",
-          "pathName": "pages/product/index",
-          "query": "id=88148",
           "scene": null
         },
         {
@@ -106,24 +72,6 @@
           "name": "pages/search/index",
           "pathName": "pages/search/index",
           "query": "",
-          "scene": null
-        },
-        {
-          "name": "pages/product/accessories/index",
-          "pathName": "pages/product/accessories/index",
-          "query": "product=88133",
-          "scene": null
-        },
-        {
-          "name": "pages/product/reviews-fitting/post",
-          "pathName": "pages/product/reviews-fitting/post",
-          "query": "product=88148&variant=1050901",
-          "scene": null
-        },
-        {
-          "name": "pages/product/reviews-fitting/index",
-          "pathName": "pages/product/reviews-fitting/index",
-          "query": "product=88148",
           "scene": null
         }
       ]
