@@ -4,7 +4,7 @@
       v-for="(block, index) in blocks" :key="index"
       :is="block.componentClass"
       :css="block.css" :settingsData="block.settings_data"
-      :id="'block--' + block.id"
+      :class="'_block_' + block.id"
     ></component>
   </view>
 </template>

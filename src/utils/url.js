@@ -32,6 +32,6 @@ export function goToUrl(url) {
   } else if (parse.openType === 'navigate') {
     Taro.navigateTo({ url: parse.url })
   } else if (parse.openType === 'scrollToBlock') {
-    Taro.pageScrollTo({ selector: `#block--${parse.url}` })
+    Taro.pageScrollTo({ selector: `._block_${parse.url}` })
   }
 }

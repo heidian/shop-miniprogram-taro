@@ -15,7 +15,7 @@
         v-for="(block, index) in blocks" :key="index"
         :is="block.componentClass"
         :css="block.css" :settingsData="block.settings_data"
-        :id="'block--' + block.id"
+        :class="'_block_' + block.id"
         :product="product" :variant.sync="currentVariant"
       ></component>
       <!-- product 和 variant 是这个页面特有的属性, 组件不需要就不接收就行了 -->

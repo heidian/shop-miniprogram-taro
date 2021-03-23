@@ -52,7 +52,7 @@ function listenFromStyleEditor(event) {
     }
   } else if (type === EditorMessageTypes.SCROLL) {
     if (method === 'SCROLL_TO_BLOCK') {
-      const targetElement = window.document.getElementById(`block--${payload.id}`)
+      const targetElement = window.document.getElementsByClassName(`_block_${payload.id}`)[0]
       if (targetElement) {
         targetElement.scrollIntoView({ behavior: 'smooth' })
       }
@@ -93,7 +93,7 @@ function initScrollListener(lastPayload = {}) {
     const viewportBlocks = _.map(blocks, (block) => {
       const blockId = block.id
       const payload = { id: blockId, height: 0, offsetTop: 0 }
-      const targetElement = window.document.getElementById(`block--${blockId}`)
+      const targetElement = window.document.getElementsByClassName(`_block_${blockId}`)[0]
       if (targetElement) {
         payload['height'] = targetElement.clientHeight
         payload['offsetTop'] = targetElement.offsetTop
