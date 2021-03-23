@@ -11,7 +11,7 @@ import _ from 'lodash'
 import Taro from '@tarojs/taro'
 import { API } from '@/utils/api'
 import { optimizeImage } from '@/utils/image'
-import parseUrl from '@/utils/parseUrl'
+import { parseUrl } from '@/utils/url'
 import { mapState } from 'vuex'
 
 export default {

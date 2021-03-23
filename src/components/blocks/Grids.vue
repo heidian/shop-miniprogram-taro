@@ -39,7 +39,7 @@
 import _ from 'lodash'
 import Taro from '@tarojs/taro'
 import { optimizeImage, backgroundImageUrl } from '@/utils/image'
-import parseUrl from '@/utils/parseUrl'
+import { parseUrl } from '@/utils/url'
 
 export default {
   props: {

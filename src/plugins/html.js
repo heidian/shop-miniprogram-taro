@@ -1,6 +1,6 @@
 import _ from 'lodash'
 import Taro from '@tarojs/taro'
-import parseUrl from '@/utils/parseUrl'
+import { parseUrl } from '@/utils/url'
 
 
 /* 这个只在小程序端有效, H5 其实也应该处理, 只能另外想办法了 */

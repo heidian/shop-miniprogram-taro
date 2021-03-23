@@ -1,4 +1,4 @@
-export default function(url) {
+export function parseUrl(url) {
   const match = (url || '').match(/^(wxpage|wxtab|page|tab|block):\/\/(.+)$/)
   if (match) {
     const [, openType, url] = match
