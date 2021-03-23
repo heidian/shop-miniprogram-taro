@@ -5,6 +5,10 @@ import { goToUrl, parseUrl } from '@/utils/url'
 
 /* 这个只在小程序端有效, H5 其实也应该处理, 只能另外想办法了 */
 Taro.options.html.transformElement = (el) => {
+  if (el.h5tagName === 'br') {
+    // console.log(el, el.textContent, el.innerHTML)
+    el.textContent = '\n'
+  }
   if (el.h5tagName === 'a') {
     // TODO 这里要研究下, 会不会内存溢出
     const handler = ((href) => {
