@@ -1,5 +1,5 @@
 <template>
-  <drawer-bottom :visible="isVisible" @close="onClose" @open="onOpen" header="商品明细">
+  <drawer position="bottom" :visible="isVisible" @close="onClose" @open="onOpen" header="商品明细">
     <scroll-view :scrollY="true" :scrollWithAnimation="true" :class="$style['linesWrapper']">
       <view v-if="pending" :class="$style['loadingText']">正在加载</view>
       <template v-else>
@@ -19,7 +19,7 @@
         </view>
       </template>
     </scroll-view>
-  </drawer-bottom>
+  </drawer>
 </template>
 
 <script>
@@ -28,7 +28,7 @@ import Taro from '@tarojs/taro'
 import { mapState } from 'vuex'
 import { optimizeImage, backgroundImageUrl } from '@/utils/image'
 import Price from '@/components/Price'
-import DrawerBottom from '@/components/DrawerBottom'
+import Drawer from '@/components/Drawer'
 
 export default {
   name: 'CheckoutProducts',
@@ -40,7 +40,7 @@ export default {
   },
   components: {
     Price,
-    DrawerBottom
+    Drawer
   },
   data() {
     return {

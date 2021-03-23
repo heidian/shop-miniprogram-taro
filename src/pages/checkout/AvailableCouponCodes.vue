@@ -1,7 +1,7 @@
 <template>
-  <drawer-bottom
+  <drawer
     :visible="isVisible" @close="onClose" @open="onOpen"
-    header="优惠券" :class="$style['couponCodes']"
+    position="bottom" header="优惠券" :class="$style['couponCodes']"
   >
     <scroll-view :scrollY="true" :scrollWithAnimation="true" :class="$style['list']">
       <view :class="$style['redeem']">
@@ -29,7 +29,7 @@
         </view>
       </template>
     </scroll-view>
-  </drawer-bottom>
+  </drawer>
 </template>
 
 <script>
@@ -38,7 +38,7 @@ import Taro from '@tarojs/taro'
 import { mapState } from 'vuex'
 import { optimizeImage, backgroundImageUrl } from '@/utils/image'
 import { formatDateTime } from '@/utils/formatters'
-import DrawerBottom from '@/components/DrawerBottom'
+import Drawer from '@/components/Drawer'
 
 export default {
   name: 'AvailableCouponCodes',
@@ -49,7 +49,7 @@ export default {
     }
   },
   components: {
-    DrawerBottom
+    Drawer
   },
   data() {
     return {

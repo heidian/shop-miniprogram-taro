@@ -1,6 +1,6 @@
 <template>
-  <drawer-bottom
-    :visible="isVisible" @close="onClose" @open="onOpen"
+  <drawer
+    position="bottom" :visible="isVisible" @close="onClose" @open="onOpen"
     header="分享" :class="$style['drawer']"
   >
     <view :class="$style['drawerBody']">
@@ -17,14 +17,14 @@
         <view>生成分享海报</view>
       </button>
     </view>
-  </drawer-bottom>
+  </drawer>
 </template>
 
 <script>
 import _ from 'lodash'
 import Taro from '@tarojs/taro'
 import { mapState } from 'vuex'
-import DrawerBottom from '@/components/DrawerBottom'
+import Drawer from '@/components/Drawer'
 
 export default {
   name: 'ShareDrawer',
@@ -39,7 +39,7 @@ export default {
     }
   },
   components: {
-    DrawerBottom
+    Drawer
   },
   data() {
     return {

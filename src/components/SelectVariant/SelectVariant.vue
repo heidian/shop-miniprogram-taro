@@ -1,7 +1,7 @@
 <template>
-  <drawer-bottom
+  <drawer
     :visible.sync="isVisible" @close="onDrawerClose" @open="onDrawerOpen"
-    header="选择" :class="$style['drawerBody']"
+    position="bottom" header="选择" :class="$style['drawerBody']"
   >
     <view :class="$style['header']">
       <image :class="$style['variantImage']" :src="selectedVariant.image|imageUrl(200)" mode="aspectFill" @tap="onPreviewImage"></image>
@@ -52,7 +52,7 @@
         @tap="isVisible = false"
       >确定</button>
     </view>
-  </drawer-bottom>
+  </drawer>
 </template>
 
 <script>
@@ -64,12 +64,12 @@ import { handleErr } from '@/utils/errHelper'
 import { optimizeImage, backgroundImageUrl } from '@/utils/image'
 import Price from '@/components/Price'
 import InputNumber from '@/components/InputNumber'
-import DrawerBottom from '@/components/DrawerBottom'
+import Drawer from '@/components/Drawer'
 
 export default {
   name: 'SelectVariant',
   components: {
-    DrawerBottom,
+    Drawer,
     Price,
     InputNumber
   },
