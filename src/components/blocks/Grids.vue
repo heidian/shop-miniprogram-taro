@@ -39,7 +39,7 @@
 import _ from 'lodash'
 import Taro from '@tarojs/taro'
 import { optimizeImage, backgroundImageUrl } from '@/utils/image'
-import { parseUrl } from '@/utils/url'
+import { goToUrl } from '@/utils/url'
 
 export default {
   props: {
@@ -96,6 +96,7 @@ export default {
   methods: {
     optimizeImage,
     backgroundImageUrl,
+    goToUrl,
     gridImageStyle(item) {
       const percent = (100 / (+this.settingsData.imageRatio || 1)).toFixed(6)
       const paddingTop = `${percent}%`
@@ -111,16 +112,6 @@ export default {
         // 'padding': this.settingsData.backgroundColor ? '0 0.5em 0.5em' : ''
       }
     },
-    goToUrl(url) {
-      const parse = parseUrl(url)
-      if (parse.openType === 'switchTab') {
-        Taro.switchTab({ url: parse.url })
-      } else if (parse.openType === 'navigate') {
-        Taro.navigateTo({ url: parse.url })
-      } else if (parse.openType === 'scrollToBlock') {
-        Taro.pageScrollTo({ selector: `#block--${parse.url}` })
-      }
-    }
   },
   filters: {}
 }

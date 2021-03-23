@@ -25,7 +25,7 @@
 import _ from 'lodash'
 import Taro from '@tarojs/taro'
 import { optimizeImage, backgroundImageUrl } from '@/utils/image'
-import { parseUrl } from '@/utils/url'
+import { goToUrl } from '@/utils/url'
 
 export default {
   props: {
@@ -55,16 +55,7 @@ export default {
   methods: {
     optimizeImage,
     backgroundImageUrl,
-    goToUrl(url) {
-      const parse = parseUrl(url)
-      if (parse.openType === 'switchTab') {
-        Taro.switchTab({ url: parse.url })
-      } else if (parse.openType === 'navigate') {
-        Taro.navigateTo({ url: parse.url })
-      } else if (parse.openType === 'scrollToBlock') {
-        Taro.pageScrollTo({ selector: `#block--${parse.url}` })
-      }
-    }
+    goToUrl,
   },
   watch: {
     'settingsData.carousel': {

@@ -1,3 +1,5 @@
+import Taro from '@tarojs/taro'
+
 export function parseUrl(url) {
   const match = (url || '').match(/^(wxpage|wxtab|page|tab|block):\/\/(.+)$/)
   if (match) {
@@ -20,5 +22,16 @@ export function parseUrl(url) {
       openType: 'navigate',
       url: ''
     }
+  }
+}
+
+export function goToUrl(url) {
+  const parse = parseUrl(url)
+  if (parse.openType === 'switchTab') {
+    Taro.switchTab({ url: parse.url })
+  } else if (parse.openType === 'navigate') {
+    Taro.navigateTo({ url: parse.url })
+  } else if (parse.openType === 'scrollToBlock') {
+    Taro.pageScrollTo({ selector: `#block--${parse.url}` })
   }
 }
