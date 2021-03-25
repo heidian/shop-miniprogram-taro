@@ -20,34 +20,58 @@
         ><text :class="$style['categoryText']">{{ category.title }}</text></view>
       </view>
     </scroll-view>
+    <!-- 因为这个页面用了自定义 navbar, 需要修改 drawer 的样式 -->
     <drawer
-      :class="$style['drawerFilter']" :visible.sync="subCategoryDrawerVisible"
-      position="right" header="筛选" :style="{'top': filtersDrawerTop}"
+      :visible.sync="subCategoryDrawerVisible"
+      position="right" header="筛选" :style="filtersDrawerStyle"
     >
-      <view :class="$style['drawerFilterSection']">
-        <view :class="$style['drawerFilterTitle']">排序</view>
-        <view :class="$style['drawerFilterBody']">
-          <view
-            v-for="([title, field], index) in [
-              ['新品', '-published_at'], ['价格', 'price'], ['销量', '-sold_quantity']
-            ]" :key="index"
-            :class="[$style['drawerFilterItem'], products.orderBy===field && 'is-active']"
-            @tap="onClickOrderBy(field)"
-          >{{ title }}</view>
+      <view :class="$style['drawerFilter']">
+        <view :class="$style['filterSection']">
+          <view :class="$style['filterTitle']">排序</view>
+          <view :class="$style['filterBodyInline']">
+            <view
+              v-for="([title, field], index) in [
+                ['新品', '-published_at'], ['价格', 'price'], ['销量', '-sold_quantity']
+              ]" :key="index"
+              :class="[$style['filterItem'], products.orderBy===field && 'is-active']"
+              @tap="onClickOrderBy(field)"
+            >{{ title }}</view>
+          </view>
         </view>
-      </view>
-      <!-- 二级分类 -->
-      <view v-if="!!activeRootCategoryId" :class="$style['drawerFilterSection']">
-        <view :class="$style['drawerFilterTitle']">分类</view>
-        <view :class="$style['drawerFilterBody']">
-          <view
-            @tap="() => filterRootCategory(activeRootCategoryId)"
-            :class="[$style['drawerFilterItem'], (activeRootCategoryId === +products.filter.category) && 'is-active']"
-          >全部</view>
-          <view
-            v-for="item in activeSubCategories" :key="item.id" @tap="() => filterSubCategory(item.id)"
-            :class="[$style['drawerFilterItem'], (item.id === +products.filter.category) && 'is-active']"
-          >{{ item.title }}</view>
+        <!-- 二级分类 -->
+        <view v-if="!!activeRootCategoryId" :class="$style['filterSection']">
+          <view :class="$style['filterTitle']">分类</view>
+          <view :class="$style['filterBody']">
+            <view
+              @tap="() => filterRootCategory(activeRootCategoryId)"
+              :class="[$style['filterItem'], (activeRootCategoryId === +products.filter.category) && 'is-active']"
+            >全部</view>
+            <view
+              v-for="item in activeSubCategories" :key="item.id" @tap="() => filterSubCategory(item.id)"
+              :class="[$style['filterItem'], (item.id === +products.filter.category) && 'is-active']"
+            >{{ item.title }}</view>
+          </view>
+        </view>
+        <!-- 其他筛选条件 -->
+        <view :class="$style['filterSection']">
+          <view :class="$style['filterTitle']">面料</view>
+          <view :class="$style['filterBody']">
+            <view
+              v-for="(item, index) in [
+                '面料A', '面料B', '面料C', '面料D', '面料E', '面料F'
+              ]" :key="index" :class="[$style['filterItem']]"
+            >{{ item }}</view>
+          </view>
+        </view>
+        <view :class="$style['filterSection']">
+          <view :class="$style['filterTitle']">尺码</view>
+          <view :class="$style['filterBody']">
+            <view
+              v-for="(item, index) in [
+                'XL', 'XXL', 'M', 'S', 'XS', 'XXS'
+              ]" :key="index" :class="[$style['filterItem']]"
+            >{{ item }}</view>
+          </view>
         </view>
       </view>
     </drawer>
@@ -107,8 +131,13 @@ export default {
     categoriesBarTop() {
       return Taro.pxTransform(this.customNavHeight)
     },
-    filtersDrawerTop() {
-      return Taro.pxTransform(this.customNavHeight)
+    filtersDrawerStyle() {
+      const top = Taro.pxTransform(this.customNavHeight)
+      return {
+        'top': top,
+        'bottom': '0px',
+        'height': 'unset'
+      }
     },
     activeSubCategories() {
       const category = _.find(this.categories.data, { id: this.activeRootCategoryId })
@@ -189,40 +218,54 @@ export default {
 }
 
 .drawerFilter {
-  :global(.drawer__body) {
-    background-color: #fff;
-  }
+  height: 100%;
+  overflow: auto;
+  background-color: #fff;
 }
-.drawerFilterSection {
+.filterSection {
   margin-bottom: 20px;
 }
-.drawerFilterTitle {
-  font-weight: bold;
-  padding: 5px 15px;
+.filterTitle {
+  font-size: 15px;
+  line-height: 20px;
+  padding: 0 15px;
 }
-.drawerFilterBody {
+.filterBody {
+  padding: 5px 10px;
+  .filterItem {
+    padding: 5px;
+    font-size: 13px;
+    line-height: 16px;
+    // color: $color-text-light;
+    &:global(.is-active) {
+      // color: $color-text;
+      font-weight: bold;
+    }
+  }
+}
+.filterBodyInline {
   padding: 5px 5px;
   display: flex;
   flex-wrap: wrap;
   align-items: flex-start;
   justify-content: flex-start;
-}
-.drawerFilterItem {
-  padding: 4px 14px;
-  margin: 5px;
-  border: 1px solid transparent;
-  text-align: center;
-  font-size: 12px;
-  line-height: 16px;
-  border-radius: 13px;
-  color: $color-text-light;
-  background-color: $color-bg-gray;
-  &:global(.is-active) {
-    // border-color: darken($color-bg-gray, 10%);
-    // border-color: $color-text;
-    background-color: darken($color-bg-gray, 10%);
-    color: $color-text;
-    font-weight: bold;
+  .filterItem {
+    padding: 4px 14px;
+    margin: 5px;
+    border: 1px solid transparent;
+    text-align: center;
+    font-size: 12px;
+    line-height: 16px;
+    border-radius: 13px;
+    color: $color-text-light;
+    background-color: $color-bg-gray;
+    &:global(.is-active) {
+      // border-color: darken($color-bg-gray, 10%);
+      // border-color: $color-text;
+      background-color: darken($color-bg-gray, 10%);
+      color: $color-text;
+      font-weight: bold;
+    }
   }
 }
 
