@@ -20,42 +20,46 @@
         ><text :class="$style['categoryText']">{{ category.title }}</text></view>
       </view>
     </scroll-view>
-    <view :class="$style['filterBar']" :style="{'top': filtersBarTop}">
-      <view
-        :class="{[$style['filterItem']]:true,'is-active':products.orderBy==='-published_at'}"
-        @tap="onClickOrderBy('-published_at')"
-      >新品</view>
-      <view
-        :class="{[$style['filterItem']]:true,'is-active':products.orderBy==='price'}"
-        @tap="onClickOrderBy('price')"
-      >价格</view>
-      <view
-        :class="{[$style['filterItem']]:true,'is-active':products.orderBy==='-sold_quantity'}"
-        @tap="onClickOrderBy('-sold_quantity')"
-      >销量</view>
-      <view
-        :class="{
-          [$style['filterItem']]: true,
-          'is-active': activeRootCategoryId && +products.filter.category !== activeRootCategoryId
-        }"
-        @tap="subCategoryDrawerVisible = !subCategoryDrawerVisible"
-      >筛选</view>
-    </view>
     <drawer
-      v-if="!!activeRootCategoryId" :visible.sync="subCategoryDrawerVisible"
+      :class="$style['drawerFilter']" :visible.sync="subCategoryDrawerVisible"
       position="right" header="筛选" :style="{'top': filtersDrawerTop}"
     >
-      <view :class="$style['subCategoriesWrapper']">
-        <view
-          @tap="() => filterRootCategory(activeRootCategoryId)"
-          :class="[$style['subCategoryItem'], (activeRootCategoryId === +products.filter.category) && 'is-active']"
-        >全部</view>
-        <view
-          v-for="item in activeSubCategories" :key="item.id" @tap="() => filterSubCategory(item.id)"
-          :class="[$style['subCategoryItem'], (item.id === +products.filter.category) && 'is-active']"
-        >{{ item.title }}</view>
+      <view :class="$style['drawerFilterSection']">
+        <view :class="$style['drawerFilterTitle']">排序</view>
+        <view :class="$style['drawerFilterBody']">
+          <view
+            v-for="([title, field], index) in [
+              ['新品', '-published_at'], ['价格', 'price'], ['销量', '-sold_quantity']
+            ]" :key="index"
+            :class="[$style['drawerFilterItem'], products.orderBy===field && 'is-active']"
+            @tap="onClickOrderBy(field)"
+          >{{ title }}</view>
+        </view>
+      </view>
+      <!-- 二级分类 -->
+      <view v-if="!!activeRootCategoryId" :class="$style['drawerFilterSection']">
+        <view :class="$style['drawerFilterTitle']">分类</view>
+        <view :class="$style['drawerFilterBody']">
+          <view
+            @tap="() => filterRootCategory(activeRootCategoryId)"
+            :class="[$style['drawerFilterItem'], (activeRootCategoryId === +products.filter.category) && 'is-active']"
+          >全部</view>
+          <view
+            v-for="item in activeSubCategories" :key="item.id" @tap="() => filterSubCategory(item.id)"
+            :class="[$style['drawerFilterItem'], (item.id === +products.filter.category) && 'is-active']"
+          >{{ item.title }}</view>
+        </view>
       </view>
     </drawer>
+    <view :class="$style['floatingButtons']">
+      <view
+        :class="{
+          [$style['floatingButtonItem']]: true,
+          'is-dirty': activeRootCategoryId && +products.filter.category !== activeRootCategoryId
+        }"
+        @tap="subCategoryDrawerVisible = !subCategoryDrawerVisible"
+      ><text class="el-icon-s-operation"></text></view>
+    </view>
   </view>
 </template>
 
@@ -103,9 +107,6 @@ export default {
     categoriesBarTop() {
       return Taro.pxTransform(this.customNavHeight)
     },
-    filtersBarTop() {
-      return Taro.pxTransform(this.customNavHeight + 35)
-    },
     filtersDrawerTop() {
       return Taro.pxTransform(this.customNavHeight)
     },
@@ -131,6 +132,7 @@ export default {
       this.$emit('updateFilter', { q: '', category: categoryId })
     },
     onClickOrderBy(orderBy) {
+      this.subCategoryDrawerVisible = false
       if (this.products.orderBy === orderBy) {
         orderBy = ''
       }
@@ -185,24 +187,30 @@ export default {
     }
   }
 }
-.filterBar {
-  position: fixed;
-  z-index: $z-index-navbar;
-  left: 0;
-  // top: 35px;  // inline 动态定义
-  height: 39px;
-  border-top: 1px solid $color-divider;
-  width: 100%;
-  background-color: #ffffff;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 15px;
+
+.drawerFilter {
+  :global(.drawer__body) {
+    background-color: #fff;
+  }
 }
-.filterItem {
-  padding: 4px 9px;
+.drawerFilterSection {
+  margin-bottom: 20px;
+}
+.drawerFilterTitle {
+  font-weight: bold;
+  padding: 5px 15px;
+}
+.drawerFilterBody {
+  padding: 5px 5px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+.drawerFilterItem {
+  padding: 4px 14px;
+  margin: 5px;
   border: 1px solid transparent;
-  width: 70px;
   text-align: center;
   font-size: 12px;
   line-height: 16px;
@@ -217,19 +225,25 @@ export default {
     font-weight: bold;
   }
 }
-.subCategoriesWrapper {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-start;
-  justify-content: flex-start;
+
+.floatingButtons {
+  position: fixed;
+  z-index: $z-index-navbar;
+  bottom: 30px;
+  right: 30px;
 }
-.subCategoryItem {
-  padding: 8px 15px;
-  font-size: 13px;
-  color: $color-text-light;
-  &:global(.is-active) {
-    color: $color-text;
-    font-weight: bold;
+.floatingButtonItem {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #fff;
+  box-shadow: 0 0 5px rgba(#000, 0.5);
+  &:global(.is-dirty) {
+    color: red;
   }
 }
 </style>

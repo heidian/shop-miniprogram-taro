@@ -91,7 +91,7 @@ export default {
       return this.system.statusBarHeight + 44
     },
     pagePaddingTop() {
-      return Taro.pxTransform(this.customNavHeight + 35 + 40)
+      return Taro.pxTransform(this.customNavHeight + 35)
     },
     activeRootCategoryImage() {
       const activeRootCategoryId = this.getRootCategoryId(this.products.filter.category)
@@ -183,6 +183,7 @@ export default {
 @import '@/styles/variables';
 .page {
   // padding-top: 35px + 40px;  // inline 动态定义
+  min-height: 100vh;
   overflow: hidden;
   background-color: $color-bg-gray;
 }
