@@ -12,7 +12,7 @@ export default {
     return {
       ...state(),
       defaultParams: {
-        fields: ['id', 'name', 'title', 'description', 'image', 'price', 'compare_at_price', 'metafields'].join(',')
+        fields: ['id', 'name', 'title', 'description', 'image', 'price', 'compare_at_price'].join(',')
       },
       lastRefreshed: null
     }

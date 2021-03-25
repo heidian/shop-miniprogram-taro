@@ -10,8 +10,10 @@
           ></image>
         </view>
         <view :class="$style['textWrapper']">
-          <view :class="$style['title']">{{ product.title }}</view>
-          <!-- <view :class="$style['description']">{{ product.description }}</view> -->
+          <view :class="$style['title']">
+            <text>{{ product.title }}</text>
+            <text style="opacity: 0.8; font-size: 0.9em;">{{ '\n' }}{{ product.description }}</text>
+          </view>
           <price
             :class="$style['price']" :highlight="false" :keepZero="true"
             :price="product.price" :compareAtPrice="product.compare_at_price"
@@ -114,22 +116,16 @@ export default {
 .textWrapper {
   padding: 7px;
 }
-.title,
-.description {
-  font-size: 12px;
-  line-height: 15px;
-  height: 30px;
-  letter-spacing: 1px;
-  word-break: break-all;
-  @include ellipsis(2);
-  margin-bottom: 5px;
-}
 .title {
   font-weight: 500;
   color: $color-text;
-}
-.description {
-  color: $color-text-light;
+  font-size: 12px;
+  line-height: 15px;
+  height: 45px;
+  letter-spacing: 1px;
+  word-break: break-all;
+  @include ellipsis(3);
+  margin-bottom: 5px;
 }
 .imageWrapper {
   width: 100%;

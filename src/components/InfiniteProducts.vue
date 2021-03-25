@@ -7,12 +7,6 @@
             :class="$style['image']" mode="aspectFill" :lazy-load="true"
             :src="optimizeImage(product.image, 200)"
           ></image>
-          <view
-            :class="$style['productGrowthValue']"
-            v-if="product.metafields.substores && product.metafields.substores.growth_value"
-          >
-            <text class="el-icon-star-on"></text>成长值 {{ product.metafields.substores.growth_value }}
-          </view>
         </view>
         <view :class="$style['textWrapper']">
           <view :class="$style['title']">{{ product.title }}</view>
@@ -150,20 +144,6 @@ export default {
   top: 0;
   width: 100%;
   height: 100%;
-}
-.productGrowthValue {
-  position: absolute;
-  bottom: 5px;
-  left: 5px;
-  padding: 0 6px;
-  font-size: 11px;
-  font-weight: bold;
-  line-height: 18px;
-  height: 18px;
-  border-radius: 2px;
-  box-shadow: 0 4px 10px 0 rgba(0, 0, 0, 0.1);
-  background-image: linear-gradient(109deg, #e8cca7, #edd6b8 53%, #e6caa5 83%);
-  color: #5c411a;
 }
 .viewMore, .loadMore {
   display: block;
