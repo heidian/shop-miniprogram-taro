@@ -52,7 +52,8 @@ function combineURLs(baseURL, relativeURL, searchQuery) {
   const fullURL = relativeURL ?
     baseURL.replace(/\/+$/, '') + '/' + relativeURL.replace(/^\/+/, '') :
     baseURL
-  return fullURL + (fullURL.indexOf('?') === -1 ? '?' : '&') + qs.stringify(searchQuery)
+  const searchString = qs.stringify(searchQuery, { arrayFormat: 'repeat' })
+  return fullURL + (fullURL.indexOf('?') === -1 ? '?' : '&') + searchString
 }
 
 const API = {
