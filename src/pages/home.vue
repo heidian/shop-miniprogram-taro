@@ -6,6 +6,7 @@
       :css="block.css" :settingsData="block.settings_data"
       :class="'_block_' + block.id"
     ></component>
+    <floating-buttons />
   </view>
 </template>
 
@@ -13,6 +14,7 @@
 import _ from 'lodash'
 import Taro, { getCurrentInstance } from '@tarojs/taro'
 import { mapState } from 'vuex'
+import FloatingButtons from '@/components/FloatingButtons/FloatingButtons'
 import ThemeBlocks from '@/mixins/ThemeBlocks'
 import { syncTabBarStyleWithTheme } from '@/utils'
 
@@ -21,7 +23,9 @@ export default {
   mixins: [
     ThemeBlocks  // 会在页面上产生 blocks, pageType 和 pageName 三个变量
   ],
-  components: {},
+  components: {
+    FloatingButtons,
+  },
   data() {
     return {}
   },

@@ -83,15 +83,16 @@
         </view>
       </view>
     </drawer>
-    <view :class="$style['floatingButtons']">
-      <view
-        :class="{
-          [$style['floatingButtonItem']]: true,
-          'is-dirty': activeRootCategoryId && +getFilter('category') !== activeRootCategoryId
-        }"
-        @tap="subCategoryDrawerVisible = !subCategoryDrawerVisible"
-      ><text class="el-icon-s-operation"></text></view>
-    </view>
+    <floating-buttons>
+      <floating-button-item @tap="subCategoryDrawerVisible = !subCategoryDrawerVisible">
+        <text
+          class="el-icon-s-operation"
+          :class="{
+            [$style['isDirty']]: activeRootCategoryId && +getFilter('category') !== activeRootCategoryId
+          }"
+        ></text>
+      </floating-button-item>
+    </floating-buttons>
   </view>
 </template>
 
@@ -99,11 +100,15 @@
 import _ from 'lodash'
 import Taro from '@tarojs/taro'
 import { mapState, mapGetters } from 'vuex'
+import FloatingButtons from '@/components/FloatingButtons/FloatingButtons'
+import FloatingButtonItem from '@/components/FloatingButtons/FloatingButtonItem'
 import Drawer from '@/components/Drawer'
 
 export default {
   components: {
     Drawer,
+    FloatingButtons,
+    FloatingButtonItem,
   },
   props: {
     products: {
@@ -321,25 +326,7 @@ export default {
     }
   }
 }
-
-.floatingButtons {
-  position: fixed;
-  z-index: $z-index-navbar;
-  bottom: 30px;
-  right: 30px;
-}
-.floatingButtonItem {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  font-size: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: #fff;
-  box-shadow: 0 0 5px rgba(#000, 0.5);
-  &:global(.is-dirty) {
-    color: red;
-  }
+.isDirty {
+  color: red;
 }
 </style>
