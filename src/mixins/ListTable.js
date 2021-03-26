@@ -6,7 +6,7 @@ import { API } from '@/utils/api'
 
 function filterValueToString(value, type) {
   if (_.isNil(value) || value === '') {
-    return ''
+    return type === 'Array' ? [] : ''
   }
   if (type === 'ISO') {
     return moment(value).toISOString()
@@ -14,6 +14,11 @@ function filterValueToString(value, type) {
     return _.map(value, (v) => filterValueToString(v, 'ISO')).join(',')
   } else if (type === 'CSV' && _.isArray(value)) {
     return _.map(value, (v) => filterValueToString(v, '')).join(',')
+  } else if (type === 'Array') {
+    if (!_.isArray(value)) {
+      value = [ value ]
+    }
+    return _.map(value, (v) => filterValueToString(v, ''))
   } else {
     return value.toString()
   }
@@ -21,18 +26,21 @@ function filterValueToString(value, type) {
 
 function stringToFilterValue(value, type) {
   if (_.isNil(value) || value === '') {
-    return ''
+    return type === 'Array' ? [] : ''
   }
-  // filter 里面存着的值一定得是字符串, 所以这里强制 toString()
-  value = value.toString()
   if (type === 'ISO') {
     return moment(value).toDate()
   } else if (type === 'ISO-CSV') {
     return _.map(value.split(','), (v) => stringToFilterValue(v, 'ISO'))
   } else if (type === 'CSV') {
     return _.map(value.split(','), (v) => stringToFilterValue(v, ''))
+  } else if (type === 'Array') {
+    if (!_.isArray(value)) {
+      value = [ value ]
+    }
+    return _.map(value, (v) => stringToFilterValue(v, ''))
   } else {
-    return value
+    return value.toString()
   }
 }
 
