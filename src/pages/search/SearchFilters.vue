@@ -44,11 +44,11 @@
           <view :class="$style['filterBody']">
             <view
               @tap="() => filterRootCategory(activeRootCategoryId)"
-              :class="[$style['filterItem'], (activeRootCategoryId === +products.filter.category) && 'is-active']"
+              :class="[$style['filterItem'], (activeRootCategoryId === +getFilter('category')) && 'is-active']"
             >全部</view>
             <view
               v-for="item in activeSubCategories" :key="item.id" @tap="() => filterSubCategory(item.id)"
-              :class="[$style['filterItem'], (item.id === +products.filter.category) && 'is-active']"
+              :class="[$style['filterItem'], (item.id === +getFilter('category')) && 'is-active']"
             >{{ item.title }}</view>
           </view>
         </view>
@@ -57,19 +57,27 @@
           <view :class="$style['filterTitle']">面料</view>
           <view :class="$style['filterBody']">
             <view
-              v-for="(item, index) in [
-                '面料A', '面料B', '面料C', '面料D', '面料E', '面料F'
-              ]" :key="index" :class="[$style['filterItem']]"
+              @tap="() => updateTagFilter('面料', '')"
+              :class="[$style['filterItem'], (!getTagFilter('面料')) && 'is-active']"
+            >全部</view>
+            <view
+              v-for="(item, index) in tagFilters['面料']" :key="index"
+              @tap="() => updateTagFilter('面料', item)"
+              :class="[$style['filterItem'], (item === getTagFilter('面料')) && 'is-active']"
             >{{ item }}</view>
           </view>
         </view>
         <view :class="$style['filterSection']">
-          <view :class="$style['filterTitle']">尺码</view>
+          <view :class="$style['filterTitle']">颜色</view>
           <view :class="$style['filterBody']">
             <view
-              v-for="(item, index) in [
-                'XL', 'XXL', 'M', 'S', 'XS', 'XXS'
-              ]" :key="index" :class="[$style['filterItem']]"
+              @tap="() => updateTagFilter('颜色', '')"
+              :class="[$style['filterItem'], (!getTagFilter('颜色')) && 'is-active']"
+            >全部</view>
+            <view
+              v-for="(item, index) in tagFilters['颜色']" :key="index"
+              @tap="() => updateTagFilter('颜色', item)"
+              :class="[$style['filterItem'], (item === getTagFilter('颜色')) && 'is-active']"
             >{{ item }}</view>
           </view>
         </view>
@@ -79,7 +87,7 @@
       <view
         :class="{
           [$style['floatingButtonItem']]: true,
-          'is-dirty': activeRootCategoryId && +products.filter.category !== activeRootCategoryId
+          'is-dirty': activeRootCategoryId && +getFilter('category') !== activeRootCategoryId
         }"
         @tap="subCategoryDrawerVisible = !subCategoryDrawerVisible"
       ><text class="el-icon-s-operation"></text></view>
@@ -105,12 +113,28 @@ export default {
         orderBy: null,
         data: [],
       })
-    }
+    },
+    getFilter: {
+      type: Function,
+      required: true
+    },
+    updateFilter: {
+      type: Function,
+      required: true
+    },
+    updateOrderBy: {
+      type: Function,
+      required: true
+    },
   },
   data() {
     return {
       activeRootCategoryId: null,
       subCategoryDrawerVisible: false,
+      tagFilters: {
+        '面料': ['面料A', '面料B', '面料C', '面料D', '面料E', '面料F'],
+        '颜色': ['美人黑', '暮光蓝', '暮光红', '暮光白',],
+      }
     }
   },
   created() {},
@@ -145,7 +169,7 @@ export default {
     },
   },
   mounted() {
-    this.activeRootCategoryId = this.getRootCategoryId(this.products.filter.category)
+    this.activeRootCategoryId = this.getRootCategoryId(this.getFilter('category'))
   },
   methods: {
     filterRootCategory(categoryId) {
@@ -153,25 +177,56 @@ export default {
       // 虽然 updateFilter 以后再通过 watch 机制回来也会计算 activeRootCategoryId, 但这里早点设置也没事
       this.activeRootCategoryId = categoryId
       // 因为有 partial: false, 这里其实不需要专门把 q 重置为空, 为了避免混淆, 现在先这么保留着
-      this.$emit('updateFilter', { q: '', category: categoryId })
+      this.updateFilter({ q: '', category: categoryId }, { partial: false, fetch: true })
     },
     filterSubCategory(categoryId) {
       this.subCategoryDrawerVisible = false
       // 因为有 partial: false, 这里其实不需要专门把 q 重置为空, 为了避免混淆, 现在先这么保留着
-      this.$emit('updateFilter', { q: '', category: categoryId })
+      this.updateFilter({ q: '', category: categoryId }, { partial: false, fetch: true })
     },
     onClickOrderBy(orderBy) {
       this.subCategoryDrawerVisible = false
       if (this.products.orderBy === orderBy) {
         orderBy = ''
       }
-      this.$emit('updateOrderBy', orderBy)
+      this.updateOrderBy(orderBy, { fetch: true })
     },
+    getTagFilter(group) {
+      // tag 都是 颜色:暮光蓝 这种格式的
+      const tagKV = {}
+      _.forEach(this.getFilter('tag', 'Array'), (tag) => {
+        const [k, v] = tag.split(':')
+        if (k && v) {
+          tagKV[k] = v
+        }
+      })
+      return tagKV[group] || ''
+    },
+    updateTagFilter(group, tag) {
+      this.subCategoryDrawerVisible = false
+      const tagKV = {}
+      _.forEach(this.getFilter('tag', 'Array'), (tag) => {
+        const [k, v] = tag.split(':')
+        if (k && v) {
+          tagKV[k] = v
+        }
+      })
+      tagKV[group] = tag
+      const tags = []
+      _.forEach(tagKV, (v, k) => {
+        if (k && v) {
+          tags.push(`${k}:${v}`)
+        }
+      })
+      this.updateFilter({
+        tag: { value: tags, type: 'Array' }
+      }, { partial: false, fetch: true })
+    }
   },
   watch: {
     'products.filter': {
       handler: function(newVal) {
-        this.activeRootCategoryId = this.getRootCategoryId(this.products.filter.category)
+        this.activeRootCategoryId = this.getRootCategoryId(this.getFilter('category'))
       },
       deep: true
     }

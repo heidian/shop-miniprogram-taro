@@ -11,8 +11,9 @@
 
     <search-filters
       :products="products"
-      @updateFilter="(filters) => updateFilter(filters, { partial: false, fetch: true })"
-      @updateOrderBy="(orderBy) => updateOrderBy(orderBy, { fetch: true })"
+      :getFilter="getFilter"
+      :updateFilter="updateFilter"
+      :updateOrderBy="updateOrderBy"
     ></search-filters>
 
     <view
