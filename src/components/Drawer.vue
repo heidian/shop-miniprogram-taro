@@ -10,7 +10,9 @@
         <text>{{ header }}</text>
         <view class="drawer__close" @tap="handleClose">×</view>
       </view>
-      <slot></slot>
+      <view class="drawer__content">
+        <slot></slot>
+      </view>
       <view class="drawer__footer">
         <slot name="footer"></slot>
       </view>
@@ -92,23 +94,20 @@ export default {
   .drawer__body {
     position: absolute;
     z-index: $z-index-drawer + 1;
-    // bottom: 0;
-    // left: 0;
-    // width: 100%;
-    // min-height: 300px;
     background-color: $color-bg-gray;
-    // border-top-left-radius: 16px;
-    // border-top-right-radius: 16px;
+    display: flex;
+    flex-direction: column;
     overflow: hidden;
   }
   .drawer__header {
+    flex: 0;
+    position: relative;
     padding: 12px;
     line-height: 20px;
     text-align: center;
     font-weight: bold;
     background-color: #fff;
     // @include clearfix();
-    position: relative;
   }
   .drawer__close {
     position: absolute;
@@ -123,11 +122,12 @@ export default {
     text-align: center;
     opacity: 0.5;
   }
+  .drawer__content {
+    flex: 1;
+    overflow: auto;
+  }
   .drawer__footer {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
+    flex: 0;
     background-color: #fff;
   }
   /* animation styles start */
