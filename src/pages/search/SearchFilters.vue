@@ -181,8 +181,7 @@ export default {
     },
     filterSubCategory(categoryId) {
       this.subCategoryDrawerVisible = false
-      // 因为有 partial: false, 这里其实不需要专门把 q 重置为空, 为了避免混淆, 现在先这么保留着
-      this.updateFilter({ q: '', category: categoryId }, { partial: false, fetch: true })
+      this.updateFilter({ category: categoryId }, { partial: true, fetch: true })
     },
     onClickOrderBy(orderBy) {
       this.subCategoryDrawerVisible = false
@@ -220,7 +219,7 @@ export default {
       })
       this.updateFilter({
         tag: { value: tags, type: 'Array' }
-      }, { partial: false, fetch: true })
+      }, { partial: true, fetch: true })
     }
   },
   watch: {

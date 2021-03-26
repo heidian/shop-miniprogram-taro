@@ -1,6 +1,6 @@
 {
-  "extEnable": false,
-  "directCommit": false,
+  "extEnable": true,
+  "directCommit": true,
   "extAppid": "wxa2ee14c5a3ab7d2d",
   "ext": {
     "extAppid": "wxa2ee14c5a3ab7d2d",
