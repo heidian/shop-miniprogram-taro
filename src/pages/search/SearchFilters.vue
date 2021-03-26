@@ -273,8 +273,7 @@ export default {
 }
 
 .drawerFilter {
-  height: 100%;
-  overflow: auto;
+  overflow: hidden;
   background-color: #fff;
 }
 .filterSection {
