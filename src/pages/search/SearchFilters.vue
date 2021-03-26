@@ -84,6 +84,9 @@
       </view>
     </drawer>
     <floating-buttons>
+      <!-- <floating-button-item>
+        <text class="el-icon-shopping-cart-2"></text>
+      </floating-button-item> -->
       <floating-button-item @tap="subCategoryDrawerVisible = !subCategoryDrawerVisible">
         <text
           class="el-icon-s-operation"

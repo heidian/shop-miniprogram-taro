@@ -13,7 +13,7 @@
             @touchend="(e) => handleTouchEnd(e, item.id)"
           >
             <view :class="$style['itemCheck']" @tap="checkItem(item.id, item.checked ? false : true)">
-              <icon v-if="item.checked" type="success" size="20" color="#ff5a00"></icon>
+              <icon v-if="item.checked" type="success" size="20" :color="$globalColors['--color-primary']"></icon>
               <icon v-else type="circle" size="20"></icon>
             </view>
             <image :class="$style['variantImage']" :src="optimizeImage(item.variant.image, 100)" mode="aspectFill"></image>
