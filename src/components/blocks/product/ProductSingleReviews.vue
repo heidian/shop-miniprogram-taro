@@ -40,12 +40,12 @@ import _ from 'lodash'
 import { API } from '@/utils/api'
 import { optimizeImage, backgroundImageUrl } from '@/utils/image'
 
-import ReviewItem from './reviews/ReviewItem'
+import ReviewItem from '../../../pages/product/reviews/ReviewItem'
 
 /* 页面私有组件放在页面同一个目录下,
 因为 taro 无法实现 vue 的 scoped css, 样式写在页面和组件里都可以, 注意 class 冲突就行 */
 export default {
-  name: 'ProductReviews',
+  name: 'ProductSingleReviews',
   props: {
     sectionTitle: {
       tyoe: String,

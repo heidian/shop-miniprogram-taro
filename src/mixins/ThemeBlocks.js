@@ -24,6 +24,7 @@ import ProductSingleOptions from '@/components/blocks/product/ProductSingleOptio
 import ProductSingleAccessories from '@/components/blocks/product/ProductSingleAccessories'
 import ProductSingleBodyHtml from '@/components/blocks/product/ProductSingleBodyHtml'
 import ProductSingleRelated from '@/components/blocks/product/ProductSingleRelated'
+import ProductSingleReviews from '@/components/blocks/product/ProductSingleReviews'
 import LoginForm from '@/components/blocks/api/LoginForm'
 
 // import getTestPageConfig from './_getTestPageConfig'
@@ -45,6 +46,7 @@ const BLOCKS_MAP = {
   'blocks/product_single_accessories': ProductSingleAccessories,
   'blocks/product_single_body_html': ProductSingleBodyHtml,
   'blocks/product_single_related': ProductSingleRelated,
+  'blocks/product_single_reviews': ProductSingleReviews,
   'blocks/login_form': LoginForm,
 }
 

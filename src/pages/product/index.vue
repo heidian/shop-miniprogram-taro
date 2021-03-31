@@ -3,14 +3,8 @@
     :class="{[$style['page']]: true, [$style['pageIphoneX']]: isLikeIphoneX}"
     :style="$globalColors"
   >
-
+    <!-- 以下为可配置板块 -->
     <template v-if="product.id">
-      <!--
-      <product-single-buy :product="product" :variant.sync="currentVariant"></product-single-buy>
-      <product-single-accessories :product="product" :variant.sync="currentVariant"></product-single-accessories>
-      <product-single-body-html :product="product" :variant.sync="currentVariant"></product-single-body-html>
-      <product-single-related :product="product" :variant.sync="currentVariant"></product-single-related>
-      -->
       <component
         v-for="(block, index) in blocks" :key="index"
         :is="block.componentClass"
@@ -20,20 +14,13 @@
       ></component>
       <!-- product 和 variant 是这个页面特有的属性, 组件不需要就不接收就行了 -->
     </template>
+    <!-- 以上为可配置板块 -->
+
     <view v-else :class="$style['productLoadingPlaceholder']">
       <text class="el-icon-loading"></text>
     </view>
 
-    <!-- 以上为可配置板块 -->
-
-    <!-- 暂时隐藏评论板块
-    <view :class="$style['pageSection']" v-if="product.id">
-      <product-reviews :productId="product.id"/>
-    </view>
-    -->
-
     <!-- 底部菜单 -->
-
     <template v-if="product.id">
       <view :class="$style['footer']" v-if="tezignShareEnabled">
         <button
@@ -90,13 +77,11 @@ import ThemeBlocks from '@/mixins/ThemeBlocks'
 import Price from '@/components/Price'
 import SelectVariant from '@/components/SelectVariant/SelectVariant'
 import TezignShareDialog from './TezignShareDialog'
-import ProductReviews from './ProductReviews'
 
 export default {
   name: 'Product',
   components: {
     /* 组件名称用首字母大写, template 里面标签不能用大写, 全部用小写+减号 */
-    ProductReviews,
     SelectVariant,
     Price,
     TezignShareDialog,
