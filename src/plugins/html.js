@@ -5,6 +5,10 @@ import { goToUrl, parseUrl } from '@/utils/url'
 
 /* 这个只在小程序端有效, H5 其实也应该处理, 只能另外想办法了 */
 Taro.options.html.transformElement = (el) => {
+  if (el.nodeName === 'text') {
+    el.props = { ...el.props, decode: true }
+    // 加上 decode 才能处理 &nbsp;
+  }
   if (el.h5tagName === 'br') {
     el.textContent = '\n'
   }
