@@ -21,7 +21,7 @@
         <text class="accordion__icon el-icon-arrow-right" v-else></text>
       </view>
       <view
-        class="accordion__content"
+        class="accordion__content taro_html"
         :style="settingsData.contentBackgroundColor ? { 'backgroundColor': settingsData.contentBackgroundColor } : {}"
         v-html="getHtmlValue(item.content)"
       ></view>
