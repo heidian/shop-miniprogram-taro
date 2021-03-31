@@ -51,7 +51,7 @@ export default {
   },
   data() {
     return {
-      expandedIndex: 0
+      expandedIndex: null
     }
   },
   computed: {
@@ -65,7 +65,8 @@ export default {
       return _.get(textObj, 'style', {})
     },
     getHtmlValue(htmlObj) {
-      return _.get(htmlObj, 'html', '')
+      const htmlValue = _.get(htmlObj, 'html', '')
+      return htmlValue.replace(/((&nbsp;\s*)+)/g, '<span>$1</span>')
     },
     onTapTitle(index) {
       if (this.expandedIndex === index) {
