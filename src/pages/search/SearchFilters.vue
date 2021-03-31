@@ -103,9 +103,9 @@
 import _ from 'lodash'
 import Taro from '@tarojs/taro'
 import { mapState, mapGetters } from 'vuex'
+import Drawer from '@/components/Drawer'
 import FloatingButtons from '@/components/FloatingButtons/FloatingButtons'
 import FloatingButtonItem from '@/components/FloatingButtons/FloatingButtonItem'
-import Drawer from '@/components/Drawer'
 
 export default {
   components: {

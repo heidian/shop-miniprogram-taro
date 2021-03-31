@@ -14,8 +14,8 @@
 import _ from 'lodash'
 import Taro, { getCurrentInstance } from '@tarojs/taro'
 import { mapState } from 'vuex'
-import FloatingButtons from '@/components/FloatingButtons/FloatingButtons'
 import ThemeBlocks from '@/mixins/ThemeBlocks'
+import FloatingButtons from '@/components/FloatingButtons/FloatingButtons'
 import { syncTabBarStyleWithTheme } from '@/utils'
 
 export default {
