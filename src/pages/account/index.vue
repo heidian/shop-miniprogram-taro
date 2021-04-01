@@ -15,11 +15,12 @@
         <image :class="$style['avatar']" mode="aspectFill" :src="DEFAULT_AVATAR"></image>
         <navigator url="/pages/login/index" :class="$style['loginLink']" hover-class="none">去登录</navigator>
       </template>
-      <image
+      <!-- <image
         v-if="customer.isAuthenticated && customer.data.mobile"
         src="https://up.img.heidiancdn.com/o_1cbbcvna21ardpe01d411d7bm9a0qrcode.svg"
         :class="$style['cardQrCode']"
-        @tap="openQrModal"/>
+        @tap="openQrModal"
+      ></image> -->
     </view>
     <view :class="$style['gridMenus']">
       <view :class="$style['gridMenusHeader']">
@@ -54,6 +55,9 @@
           <view :class="[$style['cellArrow'], 'el-icon-arrow-right']"></view>
         </navigator>
       </template>
+    </view>
+    <view :class="$style['buttonWrapper']" v-if="customer.isAuthenticated">
+      <button class="button" type="warn" @tap="handleLogout">登出</button>
     </view>
     <hs-dialog :visible.sync="qrDialogVisible">
       <view :class="$style['dialogHeader']" slot="header">会员扫码</view>
@@ -97,13 +101,19 @@ export default {
         url: '/pages/orders/index?filter=cancelled', iconClass: 'el-icon-circle-close', text: '已取消'
       }],
       cellNavigators: [{
+        url: '/pages/profile/edit', iconClass: 'el-icon-user', text: '个人信息'
+      }, {
         url: '/pages/account/coupon-codes', iconClass: 'el-icon-collection-tag', text: '优惠券'
       }, {
         url: '/pages/addresses/index', iconClass: 'el-icon-location-outline', text: '收货地址'
+      // }, {
+      //   url: '/pages/account/favorites', iconClass: 'el-icon-star-off', text: '我的收藏'
+      // }, {
+      //   url: '/pages/account/settings', iconClass: 'el-icon-setting', text: '设置'
       }, {
-        url: '/pages/account/favorites', iconClass: 'el-icon-star-off', text: '我的收藏'
+        openType: 'contact', iconClass: 'el-icon-headset', text: '联系客服'
       }, {
-        url: '/pages/account/settings', iconClass: 'el-icon-setting', text: '设置'
+        url: '/pages/static/index?name=about', iconClass: 'el-icon-goods', text: '关于我们'
       }]
     }
   },
@@ -133,6 +143,10 @@ export default {
     throttleFetchCustomer: _.throttle(function() {
       // this.$store.dispatch('customer/getCustomer')  // 目前看起来不需要
     }, 5000, { leading: true, trailing: false }),
+    handleLogout () {
+      this.$store.dispatch('customer/logout')
+      Taro.reLaunch({ url: '/pages/account/index' })
+    },
     openQrModal() {
       const customerQrcodeBase64 = drawImg(this.customer.data.mobile, {
         typeNumber: 4,
@@ -161,7 +175,8 @@ export default {
   flex-direction: row;
   justify-content: flex-start;
   align-items: center;
-  margin-bottom: 30px;
+  margin-bottom: 10px;
+  padding: 20px 15px 10px;
 }
 .avatar {
   width: 50px;
@@ -244,8 +259,10 @@ export default {
   align-items: center;
   position: relative;
   line-height: 20px;
-  + .cellMenuItem::after {
-    content: '';
+  // button::after 在 _buttons.scss 里被设成了 display: none
+  // 如果这里改回 display: block 还得覆盖默认的样式, 不如直接用 before
+  + .cellMenuItem::before {
+    content: "";
     position: absolute;
     left: 15px;
     right: 15px;
@@ -268,6 +285,15 @@ export default {
     height: 12px;
     opacity: 0.2;
     margin-left: auto;
+  }
+}
+
+.buttonWrapper {
+  width: 100%;
+  padding: 15px;
+  :global(.button) {
+    display: block;
+    width: 100%;
   }
 }
 
