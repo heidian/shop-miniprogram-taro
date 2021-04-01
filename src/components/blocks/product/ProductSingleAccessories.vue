@@ -6,11 +6,11 @@
     </view>
     <navigator
       :url="`/pages/product/accessories/index?product=${product.id}`"
-      :class="$style['sectionContainer']"
+      :class="$style['sectionContainer']" hover-class="none"
     >
       <view :class="$style['accessoriesImages']">
         <view v-for="product in accessoriesSlicedProduct" :key="product.id" :class="$style['item']">
-          <view :class="$style['itemImage']" :style="{'background-image': backgroundImageUrl(product.image, 100)}"></view>
+          <view :class="$style['itemImage']" :style="{'background-image': backgroundImageUrl(product.image, 200)}"></view>
           <view :class="$style['itemTitle']">{{ product.title }}</view>
         </view>
       </view>
@@ -115,7 +115,7 @@ export default {
   width: 100%;
   font-weight: bold;
   color: $color-text;
-  font-size: 16px;
+  font-size: 15px;
   text-align: center;
 }
 .btnMore {
@@ -174,7 +174,6 @@ export default {
 }
 .itemTitle {
   text-align: center;
-  font-size: 15px;
   margin-top: 10px;
 }
 </style>

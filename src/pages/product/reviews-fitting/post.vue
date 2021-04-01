@@ -318,7 +318,7 @@ page {
   text-align: left;
 }
 .hint {
-  font-size: 12px;
+  font-size: 0.8em;
 }
 .textCenter {
   text-align: center;
@@ -348,8 +348,7 @@ page {
   }
 }
 .formItemLabel {
-  font-size: 15px;
-  font-weight: 500;
+  font-weight: bold;
   line-height: 20px;
   margin-bottom: 5px;
   &.required::after {
@@ -360,7 +359,7 @@ page {
   }
 }
 .formItemHint {
-  font-size: 13px;
+  font-size: 0.9em;
   margin-bottom: 5px;
 }
 .formItemValue {
@@ -369,7 +368,6 @@ page {
   background-color: #ffffff;
   border: 1px solid rgba(#272727, 0.7);
   line-height: 20px;
-  font-size: 14px;
   padding: 10px 15px;
   &.formItemValueReadOnly {
     background-color: #fefefe;
@@ -382,7 +380,6 @@ page {
   background-color: #ffffff;
   border: 1px solid rgba(#272727, 0.7);
   line-height: 20px;
-  font-size: 14px;
   padding: 10px 15px;
 }
 .formItemValue:focus {
@@ -437,7 +434,7 @@ page {
   align-items: center;
 }
 .sliderHint {
-  font-size: 13px;
+  font-size: 0.9em;
 }
 .formBtn {
   width: 100%;

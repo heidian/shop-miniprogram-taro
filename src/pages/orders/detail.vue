@@ -18,7 +18,11 @@
             <price :price="line.price"></price>
             <text :class="$style['lineQuantity']">x{{ line.quantity }}</text>
           </view>
-          <button v-if="showReviewBtn" class="button button--mini" :class="$style['reviewBtn']" @tap="() => clickReviewBtn(line)">添加评价</button>
+          <button
+            v-if="showReviewBtn"
+            class="button button--mini button--round button--primary" :class="$style['reviewBtn']"
+            @tap="() => clickReviewBtn(line)"
+          >添加评价</button>
         </view>
       </view>
       <view :class="$style['dividerHorizontal']"></view>
@@ -38,7 +42,13 @@
       <button :class="['button', $style['customerService']]" open-type="contact"><text class="el-icon-headset"></text> 联系客服</button>
     </view>
     <view :class="$style['section']">
-      <view>总计: <price :price="orderData.total_price" :keepZero="true" :highlight="true"></price></view>
+      <view>
+        <text>总计: </text>
+        <price
+          :class="$style['totalPrice']"
+          :price="orderData.total_price" :keepZero="true" :highlight="true"
+        ></price>
+      </view>
       <view :class="$style['dividerHorizontal']"></view>
       <view :class="$style['statusLine']">支付方式: {{ PaymentChannels[orderData.selected_channel] }}</view>
       <view :class="$style['statusLine']">订单编号: {{ orderData.order_number }}</view>
@@ -51,7 +61,10 @@
     <view :class="$style['footer']" v-if="continuePay">
       <view>
         <text>未付款金额:</text>
-        <price :price="orderData.payable_price" :highlight="true" :keepZero="true"></price>
+        <price
+          :class="$style['totalPrice']"
+          :price="orderData.payable_price" :highlight="true" :keepZero="true"
+        ></price>
       </view>
       <button
         :class="[$style['buttonPayForOrder'], 'button', 'button--round', 'button--primary']"
@@ -265,6 +278,9 @@ page {
   display: flex;
   align-items: center;
   justify-content: space-between;
+}
+.totalPrice {
+  font-size: 1.4em;
 }
 .customerService {
   display: block;
