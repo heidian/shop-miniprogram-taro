@@ -32,6 +32,7 @@
 <script>
 import _ from 'lodash'
 import Taro from '@tarojs/taro'
+import { sanitizeHtml } from '@/utils/formatters'
 
 export default {
   props: {
@@ -65,8 +66,7 @@ export default {
       return _.get(textObj, 'style', {})
     },
     getHtmlValue(htmlObj) {
-      const htmlValue = _.get(htmlObj, 'html', '')
-      return htmlValue.replace(/((&nbsp;\s*)+)/g, '<span>$1</span>')
+      return sanitizeHtml(_.get(htmlObj, 'html', ''))
     },
     onTapTitle(index) {
       if (this.expandedIndex === index) {

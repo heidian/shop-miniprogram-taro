@@ -14,7 +14,7 @@
           <view
             v-if="item.text && item.text.html"
             class="grid__text taro_html" :style="gridTextStyle(item)"
-            v-html="item.text.html"
+            v-html="sanitizeHtml(item.text.html)"
           ></view>
         </view>
       </view>
@@ -30,7 +30,7 @@
         <view
           v-if="item.text && item.text.html"
           class="grid__text taro_html" :style="gridTextStyle(item)"
-          v-html="item.text.html"
+          v-html="sanitizeHtml(item.text.html)"
         ></view>
       </view>
     </view>
@@ -41,6 +41,7 @@
 import _ from 'lodash'
 import Taro from '@tarojs/taro'
 import { optimizeImage, backgroundImageUrl } from '@/utils/image'
+import { sanitizeHtml } from '@/utils/formatters'
 import { goToUrl } from '@/utils/url'
 
 export default {
@@ -99,6 +100,7 @@ export default {
     optimizeImage,
     backgroundImageUrl,
     goToUrl,
+    sanitizeHtml,
     gridImageStyle(item) {
       const percent = (100 / (+this.settingsData.imageRatio || 1)).toFixed(6)
       const paddingTop = `${percent}%`

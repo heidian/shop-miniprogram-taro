@@ -11,6 +11,7 @@
 // import '@tarojs/taro/html.css'
 import _ from 'lodash'
 import Taro from '@tarojs/taro'
+import { sanitizeHtml } from '@/utils/formatters'
 
 export default {
   name: 'ProductSingleBodyHtml',
@@ -36,7 +37,7 @@ export default {
     //   return Taro.getEnv() === Taro.ENV_TYPE.WEAPP
     // },
     bodyHtml() {
-      return this.product.body_html_mobile || this.product.body_html
+      return sanitizeHtml(this.product.body_html_mobile || this.product.body_html)
     },
   }
 }

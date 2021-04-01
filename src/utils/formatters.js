@@ -28,3 +28,9 @@ export const formatDateTime = (value, fmt = 'YYYY-MM-DD HH:mm') => {
   const v = moment(value)
   return v.isValid() ? v.format(fmt) : '-'
 }
+
+export const sanitizeHtml = (html) => {
+  html = html || ''
+  html = html.replace(/((&nbsp;\s*)+)/g, '<span>$1</span>')
+  return html
+}

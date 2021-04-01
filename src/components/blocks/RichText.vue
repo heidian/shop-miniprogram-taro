@@ -5,8 +5,9 @@
 </template>
 
 <script>
-import Taro from '@tarojs/taro'
 import _ from 'lodash'
+import Taro from '@tarojs/taro'
+import { sanitizeHtml } from '@/utils/formatters'
 
 export default {
   props: {
@@ -28,7 +29,7 @@ export default {
   },
   computed: {
     htmlValue() {
-      return _.get(this.settingsData, 'content.html', '')
+      return sanitizeHtml(_.get(this.settingsData, 'content.html', ''))
     }
   },
   mounted() {},
