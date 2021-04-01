@@ -194,17 +194,16 @@ export default {
   -webkit-box-orient: vertical;
 }
 .priceAndButton {
-  //
-}
-.price {
-  display: block;
-  margin-top: 0.2em;
-  margin-bottom: 0.2em;
-}
-.button {
-  margin-top: 1em;
-  margin-bottom: 0.5em;
-  width: 70px;
+  .price {
+    display: block;
+    margin-top: 0.2em;
+    margin-bottom: 0.2em;
+  }
+  :global(.button) {
+    margin-top: 1em;
+    margin-bottom: 0.5em;
+    width: 70px;
+  }
 }
 
 /* 覆盖 column === 1 时候的样式 */
@@ -229,12 +228,12 @@ export default {
     align-items: center;
     justify-content: space-between;
     margin-top: 1em;
-  }
-  .price {
-    font-size: 1.1em;
-  }
-  .button, .price {
-    margin: 0;
+    .price {
+      font-size: 1.1em;
+    }
+    :global(.button), .price {
+      margin: 0;
+    }
   }
   // .image {
   //   min-height: 100%;  // 右边的文字有可能比左边的图片高
