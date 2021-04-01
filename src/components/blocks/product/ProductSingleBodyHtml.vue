@@ -1,9 +1,9 @@
 <template>
   <view :class="$style['section']" :style="css">
     <view :class="$style['sectionTitle']">图文详情</view>
-    <!-- <view v-if="bodyHtml" class="'taro_html'" :class="$style['productHtml']" v-html="bodyHtml"></view> -->
-    <wxparse v-if="shouldParseHtml" :html="bodyHtml"></wxparse>
-    <view v-else v-html="bodyHtml" :class="$style['h5BodyHtml']"></view>
+    <!-- <wxparse v-if="shouldParseHtml" :html="bodyHtml"></wxparse>
+    <view v-else v-html="bodyHtml" :class="$style['h5BodyHtml']"></view> -->
+    <view v-html="bodyHtml" :class="[$style['h5BodyHtml'], 'taro_html']"></view>
   </view>
 </template>
 
@@ -32,9 +32,9 @@ export default {
     return {}
   },
   computed: {
-    shouldParseHtml() {
-      return Taro.getEnv() === Taro.ENV_TYPE.WEAPP
-    },
+    // shouldParseHtml() {
+    //   return Taro.getEnv() === Taro.ENV_TYPE.WEAPP
+    // },
     bodyHtml() {
       return this.product.body_html_mobile || this.product.body_html
     },

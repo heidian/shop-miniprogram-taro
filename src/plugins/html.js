@@ -5,10 +5,6 @@ import { goToUrl, parseUrl } from '@/utils/url'
 
 /* 这个只在小程序端有效, H5 其实也应该处理, 只能另外想办法了 */
 Taro.options.html.transformElement = (el) => {
-  if (el.nodeName === 'text') {
-    el.props = { ...el.props, decode: true }
-    // 加上 decode 才能处理 &nbsp;
-  }
   if (el.h5tagName === 'br') {
     el.textContent = '\n'
   }
@@ -22,6 +18,21 @@ Taro.options.html.transformElement = (el) => {
     源码里面没体现出来，但是 Taro 很可能在其他地方会销毁这些事件
     */
     el.addEventListener('tap', handler)
+  }
+  if (el.tagName === 'TEXT') {
+    // tagName 是 nodeName 的大写, 更规范一点, nodeName 可能混合大小写
+    if (_.find(el.childNodes, (node) => node.tagName && node.tagName != 'TEXT')) {
+      /* TEXT 下面不能有其他标签, 但如果 tagName 是空 (这种情况有比如 nodeName 是 '#text'), 就是一个纯文本节点, 就没事 */
+      el.tagName = 'VIEW'
+      el.nodeName = 'view'
+    } else {
+      el.props = { ...el.props, decode: true }
+      // 加上 decode 才能处理 &nbsp;
+    }
+  }
+  if (el.tagName === 'IMAGE') {
+    el.props = { ...el.props, mode: 'widthFix' }
+    // _taro.scss 里面有定义 .img 的样式
   }
   const fontSize = _.get(el, 'style.fontSize')
   if (fontSize && /^\d+(\.\d+)?(px)?$/.test(fontSize)) {

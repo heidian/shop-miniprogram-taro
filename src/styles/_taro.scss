@@ -151,4 +151,12 @@ taro-image-core {
   input[type="hidden"] {
     display: none !important;
   }
+  .img {
+    display: block;
+    // TODO: 这个是为了消除底部的留白, 如果遇到问题, 需要再优化下
+    // 有一种优化方案是父元素使用 display: flex
+    width: 100%;
+    height: unset;
+    max-width: 100%;
+  }
 }
