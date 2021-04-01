@@ -18,9 +18,16 @@ export function parseUrl(url) {
     }
   } else {
     // 需要解析一下 shopfront 链接
-    return {
-      openType: 'navigate',
-      url: ''
+    if (url === '/') {
+      return parseUrl('tab://pages/home')
+    } else if (/^\/page\/(\w+)/.test(url)) {
+      url = url.replace(/^\/page\/(\w+)/, 'page://pages/static/index?name=$1')
+      return parseUrl(url)
+    } else if (/^\/products\/(\w+)/.test(url)) {
+      url = url.replace(/^\/page\/(\w+)/, 'page://pages/product/index?name=$1')
+      return parseUrl(url)
+    } else {
+      return { openType: 'navigate', url: '' }
     }
   }
 }

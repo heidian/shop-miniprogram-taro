@@ -51,7 +51,7 @@ export default {
   },
   data() {
     return {
-      expandedIndex: null
+      expandedIndex: 0
     }
   },
   computed: {
