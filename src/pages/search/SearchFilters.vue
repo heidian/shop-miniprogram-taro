@@ -1,25 +1,35 @@
 <template>
   <view>
-    <scroll-view
-      :class="$style['categoriesBar']"
-      :style="{'top': categoriesBarTop}"
-      :scroll-x="true" :enhanced="true" :show-scrollbar="false"
-      :scroll-into-view="activeRootCategoryId ? `search-category-${activeRootCategoryId}` : null"
-      :scroll-with-animation="true"
-    >
-      <view :class="$style['categoriesInner']">
-        <view
-          :class="[$style['categoryItem'], !activeRootCategoryId && 'is-active']"
-          @tap="() => filterRootCategory(null)"
-        ><text :class="$style['categoryText']">全部</text></view>
-        <view
-          v-for="category in categories.data" :key="category.id"
-          :class="[$style['categoryItem'], (category.id === activeRootCategoryId) && 'is-active']"
-          :id="`search-category-${category.id}`"
-          @tap="() => filterRootCategory(category.id)"
-        ><text :class="$style['categoryText']">{{ category.title }}</text></view>
+    <view :class="$style['categoriesBar']" :style="{'top': categoriesBarTop}">
+      <scroll-view
+        :class="$style['categoriesScroll']"
+        :scroll-x="true" :enhanced="true" :show-scrollbar="false"
+        :scroll-into-view="activeRootCategoryId ? `search-category-${activeRootCategoryId}` : null"
+        :scroll-with-animation="true"
+      >
+        <view :class="$style['categoriesInner']">
+          <view
+            :class="[$style['categoryItem'], !activeRootCategoryId && 'is-active']"
+            @tap="() => filterRootCategory(null)"
+          ><text :class="$style['categoryText']">全部</text></view>
+          <view
+            v-for="category in categories.data" :key="category.id"
+            :class="[$style['categoryItem'], (category.id === activeRootCategoryId) && 'is-active']"
+            :id="`search-category-${category.id}`"
+            @tap="() => filterRootCategory(category.id)"
+          ><text :class="$style['categoryText']">{{ category.title }}</text></view>
+        </view>
+      </scroll-view>
+      <view
+        :class="$style['categoriesFilterButton']"
+        @tap="subCategoryDrawerVisible = !subCategoryDrawerVisible"
+      >
+        <!-- class="el-icon-s-operation" -->
+        <text :class="{
+          'is-dirty': activeRootCategoryId && +getFilter('category') !== activeRootCategoryId
+        }">筛选</text>
       </view>
-    </scroll-view>
+    </view>
     <!-- 因为这个页面用了自定义 navbar, 需要修改 drawer 的样式 -->
     <drawer
       :visible.sync="subCategoryDrawerVisible"
@@ -83,10 +93,10 @@
         </view>
       </view>
     </drawer>
-    <floating-buttons>
-      <!-- <floating-button-item>
+    <!-- <floating-buttons>
+      <floating-button-item>
         <text class="el-icon-shopping-cart-2"></text>
-      </floating-button-item> -->
+      </floating-button-item>
       <floating-button-item @tap="subCategoryDrawerVisible = !subCategoryDrawerVisible">
         <text
           class="el-icon-s-operation"
@@ -95,7 +105,7 @@
           }"
         ></text>
       </floating-button-item>
-    </floating-buttons>
+    </floating-buttons> -->
   </view>
 </template>
 
@@ -104,14 +114,14 @@ import _ from 'lodash'
 import Taro from '@tarojs/taro'
 import { mapState, mapGetters } from 'vuex'
 import Drawer from '@/components/Drawer'
-import FloatingButtons from '@/components/FloatingButtons/FloatingButtons'
-import FloatingButtonItem from '@/components/FloatingButtons/FloatingButtonItem'
+// import FloatingButtons from '@/components/FloatingButtons/FloatingButtons'
+// import FloatingButtonItem from '@/components/FloatingButtons/FloatingButtonItem'
 
 export default {
   components: {
     Drawer,
-    FloatingButtons,
-    FloatingButtonItem,
+    // FloatingButtons,
+    // FloatingButtonItem,
   },
   props: {
     products: {
@@ -252,6 +262,35 @@ export default {
   height: 35px;
   width: 100%;
   background-color: #fff;
+  padding-right: 60px;
+}
+.categoriesScroll {
+  width: 100%;
+  height: 100%;
+}
+.categoriesFilterButton {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 50px;
+  height: 100%;
+  // font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: $color-text-light;
+  :global(.is-dirty) {
+    color: $color-text;
+    font-weight: bold;
+  }
+  &::after {
+    position: absolute;
+    content: "";
+    left: 0;
+    top: 10px;
+    height: 15px;
+    border-left: 1px solid $color-divider;
+  }
 }
 .categoriesInner {
   display: inline-block;
@@ -328,8 +367,5 @@ export default {
       font-weight: bold;
     }
   }
-}
-.isDirty {
-  color: red;
 }
 </style>

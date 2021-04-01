@@ -16,6 +16,8 @@
       :updateOrderBy="updateOrderBy"
     ></search-filters>
 
+    <floating-buttons />
+
     <view
       v-if="activeRootCategoryImage"
       :class="$style['categoryImage']"
@@ -62,6 +64,7 @@ import { optimizeImage, backgroundImageUrl } from '@/utils/image'
 import Price from '@/components/Price'
 import CustomNav from './CustomNav'
 import SearchFilters from './SearchFilters'
+import FloatingButtons from '@/components/FloatingButtons/FloatingButtons'
 
 import ListTable from '@/mixins/ListTable'
 // const listTableMixin = ListTable('products', { urlRoot: '/shopfront/product/' })
@@ -73,9 +76,10 @@ export default {
     ListTable('products', { storeName: 'lists/products' })
   ],
   components: {
+    Price,
     CustomNav,
     SearchFilters,
-    Price,
+    FloatingButtons,
   },
   data() {
     return {
