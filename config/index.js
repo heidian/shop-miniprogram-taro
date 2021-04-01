@@ -78,8 +78,8 @@ const config = {
   copy: {
     patterns: [
       // { from: 'node_modules/lodash/lodash.min.js', to: 'dist/npm/lodash/lodash.min.js' },
-      { from: 'src/ext.json', to: 'dist/ext.json' },
-      { from: 'src/sitemap.json', to: 'dist/sitemap.json' }
+      { from: 'ext.json', to: 'dist/ext.json' },
+      { from: 'sitemap.json', to: 'dist/sitemap.json' }
     ],
     options: {}
   },
