@@ -7,9 +7,15 @@
     <template v-if="!$slots.default">
       <floating-button-item @tap="goToCart">
         <text class="el-icon-shopping-cart-2"></text>
+        <text>购物车</text>
+      </floating-button-item>
+      <floating-button-item open-type="share">
+        <text class="el-icon-share"></text>
+        <text>分享</text>
       </floating-button-item>
       <floating-button-item open-type="contact">
         <text class="el-icon-headset"></text>
+        <text>客服</text>
       </floating-button-item>
       <!-- <floating-button-item>
         <text class="el-icon-more"></text>
@@ -68,8 +74,8 @@ export default {
   padding: 0;
   border: 0;
   border-radius: 50%;
-  font-size: 20px;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   background-color: rgba(#fff, 0.95);
@@ -77,6 +83,11 @@ export default {
   margin: 10px 0;
   &::after {
     display: none;
+  }
+  font-size: 8px;
+  line-height: 1;
+  [class^="el-icon-"] {
+    font-size: 20px;
   }
 }
 .floating-buttons__collapse {
