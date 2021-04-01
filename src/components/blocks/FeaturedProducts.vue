@@ -1,10 +1,14 @@
+<!-- 复杂的通用组件最好也用 module, 减少全局样式冲突, 比如这个组件里用到了 .price, 就会和 <price> 组件冲突 -->
 <template>
-  <view :class="{'block--featured-products': true, 'scroll': layout === 'scroll'}" :style="css">
-    <view v-for="product in products.data" :key="product.id" :style="gridStyle" class="grid-wrapper">
+  <view :class="{
+    [$style['featuredProducts']]: true,
+    'scroll': layout === 'scroll'
+  }" :style="css">
+    <view v-for="product in products.data" :key="product.id" :style="gridStyle" :class="$style['gridWrapper']">
       <view
         :class="{
-          'product-item': true,
-          'product-item__fullwidth': columns === 1
+          [$style['productItem']]: true,
+          [$style['productItemFullwidth']]: columns === 1
         }"
         :style="settingsData.backgroundColor ? {
           'borderRadius': '4px',  // 如果有底色, 就加一个圆角
@@ -12,22 +16,22 @@
         } : {}"
         @tap="goToProduct(product.name)"
       >
-        <view class="image-wrapper">
+        <view :class="$style['imageWrapper']">
           <view
-            class="image" :style="{
+            :class="$style['image']" :style="{
               'paddingTop': imagePaddingTop,
               'backgroundImage': backgroundImageUrl(product.image, 200),
             }"
           ></view>
         </view>
-        <view class="text-wrapper">
-          <view class="title">
+        <view :class="$style['textWrapper']">
+          <view :class="$style['title']">
             <text>{{ product.title }}</text>
             <text style="opacity: 0.8; font-size: 0.9em;">{{ '\n' }}{{ product.description }}</text>
           </view>
-          <view class="price-and-button">
+          <view :class="$style['priceAndButton']">
             <price
-              class="price" :highlight="false" :keepZero="false"
+              :class="$style['price']" :highlight="true" :keepZero="false"
               :price="product.price" :compareAtPrice="product.compare_at_price"
             ></price>
             <button
@@ -150,90 +154,90 @@ export default {
 }
 </script>
 
-<style lang="scss">
-.block--featured-products {
+<style lang="scss" module>
+.featuredProducts {
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-start;
   align-items: flex-start;
-  &.scroll {
+  &:global(.scroll) {
     flex-wrap: nowrap;
     overflow-x: scroll;
-    > .grid-wrapper {
+    > .gridWrapper {
       flex: none;
     }
   }
-  .product-item {
-    overflow: hidden;
+}
+.productItem {
+  overflow: hidden;
+}
+.imageWrapper {
+  //
+}
+.image {
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+.textWrapper {
+  // 始终加上 padding
+  padding: 0.5em 0.5em;
+}
+.title {
+  line-height: 1.4em;
+  height: 2.8em;
+  font-weight: 500;
+  overflow : hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+.priceAndButton {
+  //
+}
+.price {
+  display: block;
+  margin-top: 0.2em;
+  margin-bottom: 0.2em;
+}
+.button {
+  margin-top: 1em;
+  margin-bottom: 0.5em;
+  width: 70px;
+}
+
+/* 覆盖 column === 1 时候的样式 */
+.productItemFullwidth {
+  display: flex;
+  align-items: stretch;
+  justify-content: flex-start;
+  .imageWrapper {
+    flex: 1;
   }
-  .image-wrapper {
-    //
-  }
-  .image {
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center;
-  }
-  .text-wrapper {
-    // 始终加上 padding
-    padding: 0.5em 0.5em;
+  .textWrapper {
+    flex: 2;
+    // 始终加上 padding, fullwidth 的大一点
+    padding: 0.5em 1em;
   }
   .title {
-    line-height: 1.4em;
-    height: 2.8em;
-    font-weight: 500;
-    overflow : hidden;
-    text-overflow: ellipsis;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
+    height: 4.2em;
+    -webkit-line-clamp: 3;
   }
-  .price-and-button {
-    //
+  .priceAndButton {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 1em;
   }
   .price {
-    display: block;
-    margin-top: 0.2em;
-    margin-bottom: 0.2em;
+    font-size: 1.1em;
   }
-  .button {
-    margin-top: 1em;
-    margin-bottom: 0.5em;
-    width: 70px;
+  .button, .price {
+    margin: 0;
   }
-
-  /* 覆盖 column === 1 时候的样式 */
-  .product-item__fullwidth {
-    display: flex;
-    align-items: stretch;
-    justify-content: flex-start;
-    .image-wrapper {
-      flex: 1;
-    }
-    .text-wrapper {
-      flex: 2;
-      // 始终加上 padding, fullwidth 的大一点
-      padding: 0.5em 1em;
-    }
-    .title {
-      height: 4.2em;
-      -webkit-line-clamp: 3;
-    }
-    .price-and-button {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-top: 1em;
-    }
-    .price {
-      font-size: 1.1em;
-    }
-    .button, .price {
-      margin: 0;
-    }
-    // .image {
-    //   min-height: 100%;  // 右边的文字有可能比左边的图片高
-    // }
-  }
+  // .image {
+  //   min-height: 100%;  // 右边的文字有可能比左边的图片高
+  // }
 }
 </style>
