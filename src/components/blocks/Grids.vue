@@ -12,7 +12,8 @@
             :src="optimizeImage(item.image, 200)" mode="widthFix"
           ></image>
           <view
-            v-if="item.text && item.text.html" class="grid__text" :style="gridTextStyle(item)"
+            v-if="item.text && item.text.html"
+            class="grid__text taro_html" :style="gridTextStyle(item)"
             v-html="item.text.html"
           ></view>
         </view>
@@ -27,7 +28,8 @@
       <view class="grid-item" :style="gridItemStyle" @tap="goToUrl(item.url)">
         <view v-if="item.image && item.image.src" class="grid__image" :style="gridImageStyle(item)"></view>
         <view
-          v-if="item.text && item.text.html" class="grid__text" :style="gridTextStyle(item)"
+          v-if="item.text && item.text.html"
+          class="grid__text taro_html" :style="gridTextStyle(item)"
           v-html="item.text.html"
         ></view>
       </view>

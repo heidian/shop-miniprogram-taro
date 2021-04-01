@@ -3,7 +3,7 @@
     <view :class="$style['sectionTitle']">图文详情</view>
     <!-- <wxparse v-if="shouldParseHtml" :html="bodyHtml"></wxparse>
     <view v-else v-html="bodyHtml" :class="$style['h5BodyHtml']"></view> -->
-    <view v-html="bodyHtml" :class="[$style['h5BodyHtml'], 'taro_html']"></view>
+    <view v-html="bodyHtml" class="taro_html"></view>
   </view>
 </template>
 
@@ -55,11 +55,10 @@ export default {
   padding: 15px 15px 10px;
   text-align: center;
 }
-// TODO 修复一些 web 环境下 body html 的样式, 还需要进一步优化
-.h5BodyHtml {
-  img {
-    max-width: 100%;
-    display: block;
-  }
-}
+// .h5BodyHtml {
+//   img {
+//     max-width: 100%;
+//     display: block;
+//   }
+// }
 </style>

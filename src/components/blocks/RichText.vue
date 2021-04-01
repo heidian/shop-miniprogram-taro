@@ -1,6 +1,6 @@
 <template>
   <view class="block--rich-text" :style="css">
-    <view class="html" v-html="htmlValue"></view>
+    <view class="taro_html" v-html="htmlValue"></view>
   </view>
 </template>
 
@@ -39,7 +39,7 @@ export default {
 
 <style lang="scss">
 .block--rich-text {
-  .html {
+  .taro_html {
     display: block;
     width: 100%;
     overflow: hidden;
