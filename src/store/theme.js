@@ -45,13 +45,13 @@ const getters = {
       colorBg, colorText, colorPrimary,
     } = state.themeSettingsData
     if (colorPrimary) {
-      Object.assign(globalColors, lightenColors('--color-primary', colorPrimary))
+      _.extend(globalColors, lightenColors('--color-primary', colorPrimary))
     }
     if (colorBg) {
-      Object.assign(globalColors, { '--color-bg': colorBg })
+      _.extend(globalColors, { '--color-bg': colorBg })
     }
     if (colorText) {
-      Object.assign(globalColors, { '--color-text': colorText })
+      _.extend(globalColors, { '--color-text': colorText })
     }
     return { ...state.globalColors, ...globalColors }
   }
