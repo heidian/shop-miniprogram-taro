@@ -23,8 +23,8 @@ export function parseUrl(url) {
     } else if (/^\/page\/(\w+)/.test(url)) {
       url = url.replace(/^\/page\/(\w+)/, 'page://pages/static/index?name=$1')
       return parseUrl(url)
-    } else if (/^\/products\/(\w+)/.test(url)) {
-      url = url.replace(/^\/page\/(\w+)/, 'page://pages/product/index?name=$1')
+    } else if (/^\/products\/(\w+)(\?(.+))?/.test(url)) {
+      url = url.replace(/^\/products\/(\w+)(\?(.+))?/, 'page://pages/product/index?name=$1$3')
       return parseUrl(url)
     } else {
       return { openType: 'navigate', url: '' }
