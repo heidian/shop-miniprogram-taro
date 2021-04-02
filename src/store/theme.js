@@ -167,7 +167,8 @@ const actions = {
     // const blocks = _.cloneDeep(pageConfig['settings_data']['components'])
     const params = {
       'fields[shop]': 'id,title',
-      'fields[page]': 'title,pageconfig',
+      'fields[page]': 'id,title,pageconfig,body_html',
+      // body_html 在 static/index.vue 里面要用, 主要是给 PageSingleBodyHtml 板块
       'scope': 'miniprogram',
       // 'preview_theme_id': PREVIEW_THEME_ID,  // 上线以后要删掉
       'page_type': pageType

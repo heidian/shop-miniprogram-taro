@@ -5,6 +5,7 @@
       :is="block.componentClass"
       :css="block.css" :settingsData="block.settings_data"
       :class="'_block_' + block.id"
+      :page="page"
     ></component>
   </view>
 </template>
@@ -24,7 +25,9 @@ export default {
     //
   },
   data() {
-    return {}
+    return {
+      page: {}
+    }
   },
   created() {},
   onReachBottom() {},
@@ -32,8 +35,9 @@ export default {
     const pageType = 'static'
     const pageName = getCurrentInstance().router.params.name
     const data = await this.fetchPageConfig(pageType, pageName)
+    this.page = data.page
     Taro.setNavigationBarTitle({
-      title: data.page.title
+      title: this.page.title
     })
   },
   methods: {
