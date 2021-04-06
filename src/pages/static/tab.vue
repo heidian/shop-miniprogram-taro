@@ -16,40 +16,47 @@ import Taro, { getCurrentInstance } from '@tarojs/taro'
 import ThemeBlocks from '@/mixins/ThemeBlocks'
 
 export default {
-  name: 'Static',
+  name: 'StaticTab',
   mixins: [
     ThemeBlocks  // 会在页面上产生 blocks, pageType 和 pageName 三个变量
   ],
-  components: {},
   computed: {
-    //
+    tabBarPageName() {
+      const tabBarList = _.get(this.$store.state.theme, 'themeSettingsData.tabBar.list', [])
+      const item = _.find(tabBarList, { 'pagePath': 'pages/static/tab' })
+      return item ? item.pageName : null
+    }
   },
   data() {
     return {
       page: {}
     }
   },
-  created() {},
-  onReachBottom() {},
-  async mounted() {
-    const pageType = 'static'
-    // const pageName = getCurrentInstance().router.params.name
-    const pageName = 'e410ff'
-    const data = await this.fetchPageConfig(pageType, pageName)
-    this.page = data.page
-    Taro.setNavigationBarTitle({
-      title: this.page.title
-    })
+  mounted() {
+    this.fetchPage()
   },
   methods: {
-    //
+    async fetchPage() {
+      const pageType = 'static'
+      const pageName = this.tabBarPageName
+      if (pageName) {
+        const data = await this.fetchPageConfig(pageType, pageName)
+        this.page = data.page
+        Taro.setNavigationBarTitle({
+          title: this.page.title
+        })
+      }
+    }
+  },
+  watch: {
+    tabBarPageName() {
+      this.fetchPage()
+    }
   }
 }
 </script>
 
 <style lang="scss" module>
 @import '@/styles/variables';
-.page {
-  //
-}
+.page {}
 </style>
