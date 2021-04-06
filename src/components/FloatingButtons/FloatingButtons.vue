@@ -1,5 +1,6 @@
 <template>
   <view :class="{
+    'floating-buttons--hidden': hidden,
     'floating-buttons': true,
     'collapsible': !$slots.default || $slots.default.length > 1,
     'collapsed': collapsed
@@ -34,6 +35,7 @@
 </template>
 
 <script>
+import _ from 'lodash'
 import Taro from '@tarojs/taro'
 import FloatingButtonItem from './FloatingButtonItem'
 
@@ -48,7 +50,13 @@ export default {
       collapsed: false
     }
   },
-  computed: {},
+  computed: {
+    hidden() {
+      const globalFloatingButtons = _.get(this.$store.state.theme, 'themeSettingsData.globalFloatingButtons')
+      // 如果有自定义的按钮, 就忽略配置
+      return !this.$slots.default && !globalFloatingButtons
+    }
+  },
   mounted() {},
   methods: {
     goToCart() {
@@ -67,6 +75,9 @@ export default {
   z-index: $z-index-navbar;
   bottom: 15px;
   right: 20px;
+}
+.floating-buttons--hidden {
+  display: none;
 }
 .floating-buttons__item {
   width: 40px;

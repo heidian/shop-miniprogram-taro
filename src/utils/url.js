@@ -27,7 +27,7 @@ export function parseUrl(url) {
       url = url.replace(/^\/products\/(\w+)(\?(.+))?/, 'page://pages/product/index?name=$1$3')
       return parseUrl(url)
     } else {
-      return { openType: 'navigate', url: '' }
+      return { openType: '', url: '' }
     }
   }
 }
