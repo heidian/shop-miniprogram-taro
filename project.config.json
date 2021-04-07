@@ -21,9 +21,8 @@
     "checkSiteMap": false,
     "uploadWithSourceMap": true,
     "compileHotReLoad": false,
-    "useMultiFrameRuntime": true,
+    "useMultiFrameRuntime": false,
     "useApiHook": true,
-    "useApiHostProcess": true,
     "babelSetting": {
       "ignore": [],
       "disablePlugins": [],
@@ -72,6 +71,12 @@
           "name": "pages/search/index",
           "pathName": "pages/search/index",
           "query": "",
+          "scene": null
+        },
+        {
+          "name": "pages/product/reviews-fitting/index",
+          "pathName": "pages/product/reviews-fitting/index",
+          "query": "product=88148",
           "scene": null
         }
       ]
