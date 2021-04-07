@@ -1,4 +1,4 @@
-import moment from 'moment'
+import dayjs from 'dayjs'
 
 export const formatCurrency = (value, { keepZero } = {}) => {
   /* parseFloat 和 + 不同, parseFloat 不会把 null, '' 和 [] 变成 0, 但是 + 会 */
@@ -17,7 +17,7 @@ export const formatDate = (value) => {
   if (!value) {
     return '-';
   }
-  const v = moment(value)
+  const v = dayjs(value)
   return v.isValid() ? v.format('YYYY-MM-DD') : '-'
 }
 
@@ -25,7 +25,7 @@ export const formatDateTime = (value, fmt = 'YYYY-MM-DD HH:mm') => {
   if (!value) {
     return '-';
   }
-  const v = moment(value)
+  const v = dayjs(value)
   return v.isValid() ? v.format(fmt) : '-'
 }
 

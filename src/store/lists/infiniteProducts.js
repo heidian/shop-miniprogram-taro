@@ -1,5 +1,4 @@
 import _ from 'lodash'
-import moment from 'moment'
 import ListStore from '../factory/List'
 // export default ListStore('/shopfront/product/')
 // InfiniteProducts 板块专用, 所有地方的 InfiniteProducts 显示的内容是一样的, 但是这个板块内部自己有一些刷新的逻辑

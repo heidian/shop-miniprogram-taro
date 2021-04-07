@@ -1,6 +1,6 @@
 import Taro from '@tarojs/taro'
 import _ from 'lodash'
-import moment from 'moment'
+import dayjs from 'dayjs'
 import { mapState } from 'vuex'
 import { API } from '@/utils/api'
 
@@ -9,7 +9,7 @@ function filterValueToString(value, type) {
     return type === 'Array' ? [] : ''
   }
   if (type === 'ISO') {
-    return moment(value).toISOString()
+    return dayjs(value).toISOString()
   } else if (type === 'ISO-CSV' && _.isArray(value)) {
     return _.map(value, (v) => filterValueToString(v, 'ISO')).join(',')
   } else if (type === 'CSV' && _.isArray(value)) {
@@ -29,7 +29,7 @@ function stringToFilterValue(value, type) {
     return type === 'Array' ? [] : ''
   }
   if (type === 'ISO') {
-    return moment(value).toDate()
+    return dayjs(value).toDate()
   } else if (type === 'ISO-CSV') {
     return _.map(value.split(','), (v) => stringToFilterValue(v, 'ISO'))
   } else if (type === 'CSV') {
