@@ -29,9 +29,7 @@ export default {
     current: Number
   },
   data() {
-    return {
-
-    }
+    return {}
   },
   computed: {
     ...mapState('categories', {
@@ -39,7 +37,7 @@ export default {
     })
   },
   methods: {
-    onTapItem (idx) {
+    onTapItem(idx) {
       this.$emit('change:current', idx)
     }
   },
@@ -51,8 +49,9 @@ export default {
 .sidebar {
   width: 100%;
   height: 100%;
-  border-right: 1px solid $color-divider;
-  background-color: #fff;
+  // border-right: 1px solid $color-divider;
+  // background-color: #fff;
+  background-color: $color-bg-gray;
   &::-webkit-scrollbar {
     display: none;
   }
@@ -69,10 +68,14 @@ export default {
     top: 10px;
     bottom: 10px;
     left: 0;
-    border-left: 4px solid transparent;
+    border-left: 3px solid transparent;
   }
   &.active::before {
-    border-left-color: $color-text;
+    // border-left-color: $color-text;
+    border-left-color: var(--color-primary);
+  }
+  &.active {
+    background-color: #fff;
   }
 }
 .itemText {
@@ -82,4 +85,3 @@ export default {
   white-space: nowrap;
 }
 </style>
-

@@ -1,5 +1,5 @@
 <template>
-  <view :class="[$style['page'], $style['page--categories']]" :style="$globalColors">
+  <view :class="$style['page']" :style="$globalColors">
     <view :class="$style['sidebarWrapper']">
       <side-bar :current="current" @change:current="(index) => onChangeCurrent(index)"></side-bar>
     </view>
@@ -38,9 +38,6 @@ export default {
 <style lang="scss" module>
 @import '@/styles/variables';
 .page {
-  //
-}
-.page--categories {
   height: 100vh;
   overflow: hidden;
   background-color: #fff;
