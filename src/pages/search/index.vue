@@ -24,34 +24,10 @@
       :style="{'backgroundImage': backgroundImageUrl(activeRootCategoryImage, 400)}"
     ></view>
     <view :class="$style['productGrids']">
-      <view v-for="(product, index) in products.data" :key="product.id" :class="$style['gridWrapper']">
-        <view :class="$style['productItem']" @tap="goToProduct(product.name)">
-          <view :class="$style['imageWrapper']">
-            <image
-              :class="$style['image']" mode="aspectFill" :lazy-load="true"
-              :src="optimizeImage(product.image, 200)"
-            ></image>
-          </view>
-          <view :class="$style['textWrapper']">
-            <view :class="$style['title']">{{ product.title }}</view>
-            <view :class="$style['description']">{{ product.description }}</view>
-            <price
-              :class="$style['price']" :highlight="true" :keepZero="true"
-              :price="product.price" :compareAtPrice="product.compare_at_price"
-            ></price>
-          </view>
-          <view :class="$style['colorOptionsWrapper']">
-            <image
-              v-for="item in getProductColorOptions(product)" :key="item.name"
-              :class="$style['colorOptionsItem']"
-              mode="aspectFill" :lazy-load="true"
-              :src="optimizeImage(item.image, 40)"
-            ></image>
-          </view>
-        </view>
+      <view v-for="product in products.data" :key="product.id" :class="$style['gridWrapper']">
+        <product-item :product="product"></product-item>
       </view>
     </view>
-    <!-- end product grids -->
     <!-- TODO 加一个 loading/more 的状态 -->
   </view>
 </template>
@@ -61,9 +37,9 @@ import _ from 'lodash'
 import Taro, { getCurrentInstance } from '@tarojs/taro'
 import { mapState, mapGetters } from 'vuex'
 import { optimizeImage, backgroundImageUrl } from '@/utils/image'
-import Price from '@/components/Price'
 import CustomNav from './CustomNav'
 import SearchFilters from './SearchFilters'
+import ProductItem from './ProductItem'
 import FloatingButtons from '@/components/FloatingButtons/FloatingButtons'
 
 import ListTable from '@/mixins/ListTable'
@@ -76,17 +52,14 @@ export default {
     ListTable('products', { storeName: 'lists/products' })
   ],
   components: {
-    Price,
     CustomNav,
     SearchFilters,
+    ProductItem,
     FloatingButtons,
   },
   data() {
-    return {
-      colorNameToImage: {},
-    }
+    return {}
   },
-  created() {},
   computed: {
     ...mapState(['categories', 'system']),
     ...mapGetters('categories', [
@@ -112,7 +85,8 @@ export default {
     // 初始化过滤参数
     const defaultParams = {
       'fields': [
-        'id', 'name', 'title', 'description', 'image', 'price', 'compare_at_price', 'options', // 'variants',
+        'id', 'name', 'title', 'description', 'published_at',
+        'image', 'price', 'compare_at_price', 'options', // 'variants',
       ].join(','),
       // 'fields[variants]': ['id', 'options'].join(','),
     }
@@ -150,25 +124,6 @@ export default {
       // 因为有 partial: false, 这里其实不需要专门把 category 重置为空, 为了避免混淆, 现在先这么保留着
       this.updateFilter({ q, category: '' }, { partial: false, fetch: false })
       this.fetchProducts()
-    },
-    getProductColorOptions(product) {
-      const colorOptionTitle = _.get(this.$store.state.theme, 'themeSettingsData.colorOptionTitle.value') || ''
-      const option = _.find(product.options, { title: colorOptionTitle }) || []
-      if (!option) {
-        return []
-      }
-      const results = _.map(option.values, (colorName) => {
-        let image = this.colorNameToImage[colorName]
-        if (!image) {
-          const colorOptionImages = _.get(this.$store.state.theme, 'themeSettingsData.colorOptionImages') || []
-          const item = _.find(colorOptionImages, (item) => _.get(item, 'metafield.altText') === colorName)
-          if (item) {
-            image = { src: item.src }
-          }
-        }
-        return { name: colorName, image }
-      })
-      return _.filter(results, (item) => !!item.image)
     },
   },
   async onPullDownRefresh() {
@@ -211,58 +166,6 @@ export default {
   padding: 5px;
   &:nth-child(2n+1) {
     clear: both;
-  }
-}
-.productItem {
-  width: 100%;
-  border-radius: 5px;
-  // box-shadow: 0 3px 5px rgba(#000, 0.2);
-  background-color: #fff;
-  overflow: hidden;
-  .textWrapper {
-    padding: 7px;
-  }
-  .title, .description {
-    font-size: 12px;
-    line-height: 15px;
-    height: 30px;
-    letter-spacing: 1px;
-    word-break: break-all;
-    @include ellipsis(2);
-    margin-bottom: 5px;
-  }
-  .title {
-    font-weight: 500;
-    color: $color-text;
-  }
-  .description {
-    color: $color-text-light;
-  }
-  .imageWrapper {
-    width: 100%;
-    padding-top: 100%;
-    position: relative;
-  }
-  .image {
-    display: block;
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-  }
-  .colorOptionsWrapper {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    padding: 0 7px 7px;
-  }
-  .colorOptionsItem {
-    width: 15px;
-    height: 15px;
-    + .colorOptionsItem {
-      margin-left: 5px;
-    }
   }
 }
 </style>
