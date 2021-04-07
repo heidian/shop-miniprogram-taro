@@ -32,6 +32,7 @@
 
 <script>
 import _ from 'lodash'
+import dayjs from 'dayjs'
 import Taro from '@tarojs/taro'
 import { mapState, mapGetters } from 'vuex'
 import { optimizeImage, backgroundImageUrl } from '@/utils/image'
@@ -87,10 +88,13 @@ export default {
       this.productColorOptions = _.filter(results, (item) => !!item.image)
     },
     getProductTag() {
-      this.productTag = {
-        value: 'New',
-        color: '#ff0000',
-      }
+      const days = dayjs().diff(dayjs(this.product.published_at), 'day')
+      if (days <= 7) {
+        this.productTag = {
+          value: 'New',
+          color: '#ff0000',
+        }
+      } else {}
     }
   },
 }
