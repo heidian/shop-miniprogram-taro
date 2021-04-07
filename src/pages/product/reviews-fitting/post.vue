@@ -74,7 +74,7 @@
               :class="$style['slider']"
               :value="form.fitValue.value"
               @change="(e) => form.fitValue.value = +e.detail.value"
-              :min="0" :max="2" :step="1"
+              :min="0" :max="100" :step="1"
               backgroundColor="#272727"
               activeColor="#847CB4"
               :blockSize="14"
@@ -184,7 +184,7 @@ export default {
           unit: ''
         },
         fitValue: {
-          value: 1,  // 0: 宽松，1: 合身，2: 紧致,
+          value: 50,  // 0: 宽松，50: 合身，100: 紧致,
           label: '合身度',
           unit: ''
         },
@@ -260,9 +260,9 @@ export default {
         if (item.value) {
           if (item.label === '合身度') {
             // 如果是合身度，需要将数字再转化成字符串
-            content += item.label + '：' + ['宽松', '合身', '紧致'][item.value] + '\n'
+            content += item.label + ':' + item.value + '\n'
           } else {
-            content += item.label + '：' + item.value + '\n'
+            content += item.label + ':' + item.value + '\n'
           }
         }
       })

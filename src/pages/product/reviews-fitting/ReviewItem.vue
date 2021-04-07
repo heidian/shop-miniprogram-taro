@@ -15,7 +15,7 @@
         :class="$style['slider']"
         :value="fitValue"
         :disabled="true"
-        :min="0" :max="2" :step="1"
+        :min="0" :max="100" :step="1"
         backgroundColor="#272727"
         activeColor="#847CB4"
         :blockSize="14"
@@ -68,14 +68,14 @@ export default {
   },
   data () {
     return {
-      fitValueOptions: ['宽松', '合身', '紧致']
+      // fitValueOptions: ['宽松', '合身', '紧致']
     }
   },
   computed: {
     reviewContent() {
       const contentList = _.split(_.get(this.review, 'content', ''), '\n')
       return _.fromPairs(_.map(contentList, item => {
-        return _.split(item, '：')
+        return _.split(item, ':')
       }))
     },
     scoreValue() {
@@ -83,7 +83,8 @@ export default {
       return +score || 0
     },
     fitValue() {
-      return _.findIndex(this.fitValueOptions, option => option === this.reviewContent['合身度'])
+      return +this.reviewContent['合身度'] || 0
+      // return _.findIndex(this.fitValueOptions, option => option === this.reviewContent['合身度'])
     },
     otherContent() {
       return _.pick(this.reviewContent, ['购买尺寸', '身高', '体重', '腰围', '臀围'])
