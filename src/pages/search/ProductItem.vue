@@ -20,11 +20,12 @@
     </view>
     <view :class="$style['colorOptionsWrapper']">
       <image
-        v-for="item in productColorOptions" :key="item.name"
+        v-for="item in productColorOptions.slice(0, 6)" :key="item.name"
         :class="$style['colorOptionsItem']"
         mode="aspectFill" :lazy-load="true"
         :src="optimizeImage(item.image, 40)"
       ></image>
+      <view v-if="productColorOptions.length > 6" :class="[$style['colorOptionsItem'], 'el-icon-plus']"></view>
     </view>
   </view>
 </template>
@@ -154,6 +155,7 @@ export default {
   .colorOptionsItem {
     width: 15px;
     height: 15px;
+    color: $color-text-light;
     + .colorOptionsItem {
       margin-left: 5px;
     }
