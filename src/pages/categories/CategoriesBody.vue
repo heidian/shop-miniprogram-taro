@@ -71,7 +71,7 @@ export default {
     },
     onAnimationfinish(e) {
       const index = e.detail.current
-      Taro.vibrateShort()
+      // Taro.vibrateShort()
       this.$emit('change:current', index)
     }
   },

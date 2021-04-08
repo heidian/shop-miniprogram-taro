@@ -59,7 +59,7 @@ export default {
 .item {
   width: 100%;
   text-align: center;
-  margin: 5px auto;
+  margin: 0 0 5px;
   position: relative;
   color: $color-text;
   &::before {
@@ -81,7 +81,7 @@ export default {
 .itemText {
   font-size: 13px;
   font-weight: 600;
-  line-height: 40px;
+  line-height: 45px;
   white-space: nowrap;
 }
 </style>

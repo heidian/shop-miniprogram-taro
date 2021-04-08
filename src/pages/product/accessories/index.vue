@@ -267,7 +267,7 @@ export default {
         return this.$store.dispatch('cart/add', { variantId: variant.id, quantity, attributes })
       })
       Promise.all(promiseList).then(() => {
-        Taro.vibrateShort()
+        // Taro.vibrateShort()
         Taro.showToast({ title: '成功加入购物车', icon: 'none', duration: 1000 })
       }).catch(handleErr)
     },

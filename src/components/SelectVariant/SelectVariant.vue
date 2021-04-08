@@ -203,7 +203,7 @@ export default {
         quantity: this.quantity,
         attributes: {}
       }).then(() => {
-        Taro.vibrateShort()
+        // Taro.vibrateShort()
         Taro.showToast({ title: '成功加入购物车', icon: 'none', duration: 1000 })
         this.isVisible = false  // 这个执行了以后自动会调用 onDrawerClose
       }).catch(handleErr)
