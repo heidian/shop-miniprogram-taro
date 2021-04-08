@@ -14,6 +14,7 @@ import FeaturedProducts from '@/components/blocks/FeaturedProducts'
 import Carousel from '@/components/blocks/Carousel'
 import Accordion from '@/components/blocks/Accordion'
 import Image from '@/components/blocks/Image'
+import Video from '@/components/blocks/Video'
 import Grids from '@/components/blocks/Grids'
 // import Text from '@/components/blocks/Text'
 import RichText from '@/components/blocks/RichText'
@@ -38,6 +39,7 @@ const BLOCKS_MAP = {
   'blocks/carousel': Carousel,
   'blocks/accordion': Accordion,
   'blocks/image': Image,
+  'blocks/video': Video,
   'blocks/grids': Grids,
   // 'blocks/text': Text,
   'blocks/rich_text': RichText,
