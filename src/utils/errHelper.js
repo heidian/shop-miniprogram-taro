@@ -2,7 +2,6 @@ import _ from 'lodash'
 import Taro from '@tarojs/taro'
 
 export const handleErr = (err) => {
-  Taro.hideLoading()
   // Taro.hideLoading()  // 不应该写这个
   if (err.response && (err.response.status == 403 || err.response.status == 401)) {
     // 403 和 401 不要做任何操作, 有时候这种错误未必就是登录就能解决的

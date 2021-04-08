@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import qs from 'qs'
 import Taro from '@tarojs/taro'
 import store from '../store/index'
@@ -30,7 +31,8 @@ const interceptor = async function (chain) {
       header['Authorization'] = `CustomerToken ${token}`
     }
   } catch (e) {}
-  return chain.proceed(requestParams).then((response) => {
+  try {
+    const response = await chain.proceed(requestParams)
     // 这里改成和 axios 类似的格式, { status, data, headers }
     const { statusCode, data, header } = response
     if (statusCode >= 200 && statusCode < 300) {
@@ -40,7 +42,23 @@ const interceptor = async function (chain) {
       error.response = { data, status: statusCode, headers: header }
       throw error
     }
-  })
+  } catch(response) {
+    if (response instanceof Error) {
+      throw response
+    // } else if (Taro.getEnv() === Taro.ENV_TYPE.WEB) {
+    } else if (typeof Response !== 'undefined' && response instanceof Response) {
+      // 网页版的 response 比较特殊, 单独处理, 应该是用了这个 https://developer.mozilla.org/zh-CN/docs/Web/API/Response
+      const status = response.status
+      const data = await response.json()
+      const headers = {}
+      response.headers.forEach((v, k) => headers[k] = v)
+      const error = new Error('Request Error')
+      error.response = { data, status, headers }
+      throw error
+    } else {
+      throw new Error('Unexpected Request Error')
+    }
+  }
 }
 Taro.addInterceptor(interceptor)
 
@@ -53,7 +71,11 @@ function combineURLs(baseURL, relativeURL, searchQuery) {
     baseURL.replace(/\/+$/, '') + '/' + relativeURL.replace(/^\/+/, '') :
     baseURL
   const searchString = qs.stringify(searchQuery, { arrayFormat: 'repeat' })
-  return fullURL + (fullURL.indexOf('?') === -1 ? '?' : '&') + searchString
+  if (searchString) {
+    return fullURL + (fullURL.indexOf('?') === -1 ? '?' : '&') + searchString
+  } else {
+    return fullURL
+  }
 }
 
 const API = {
