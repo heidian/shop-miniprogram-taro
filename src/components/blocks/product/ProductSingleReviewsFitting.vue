@@ -1,12 +1,7 @@
 <template>
-  <view :class="$style['sectionInner']" :style="css">
+  <view :class="$style['sectionInner']" :style="sectionStyle">
     <view :class="$style['sectionHead']">
-      <text :class="$style['sectionTitle']">评论（{{reviewTotalCount}}）</text>
-      <navigator
-        v-if="reviewTotalCount > 0"
-        :class="$style['reviewsMore']"
-        :url="`/pages/product/reviews-fitting/index?product=${product.id}`"
-      >查看全部</navigator>
+      <text :class="$style['sectionTitle']">用户评价</text>
     </view>
     <view :class="$style['sectionContainer']">
       <navigator
@@ -29,6 +24,13 @@
           :disableDownload="true"
         ></review-item>
       </view>
+    </view>
+    <view :class="$style['sectionFooter']">
+      <navigator
+        class="button button--primary button--small"
+        :class="$style['btnMore']"
+        :url="`/pages/product/reviews-fitting/index?product=${product.id}`"
+      >探索更多</navigator>
     </view>
     <!-- 闭合标签尽量和文本内容紧贴, 避免出现前后空格, 内部元素是标签就随意 -->
   </view>
@@ -70,6 +72,12 @@ export default {
       firstReviewPending: (state) => state.pending,
       firstReviewData: (state) => state.data[0]
     }),
+    sectionStyle() {
+      return this.reviewTotalCount === 0 ? {
+        ...this.css,
+        display: 'none'
+      } : this.css
+    }
   },
   data() {
     return {}
@@ -92,43 +100,35 @@ export default {
 <style lang="scss" module>
 @import '@/styles/variables';
 .sectionInner {
-  padding-left: 15px;
-  padding-right: 15px;
+  // padding-left: 15px;
+  // padding-right: 15px;
   overflow: hidden;
 }
 .sectionHead {
   width: 100%;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
-  margin: 20px auto 10px;
+  padding: 20px 0;
+  border-bottom: 1px solid $color-divider;
 }
 .sectionTitle {
+  width: 100%;
   font-weight: bold;
   color: $color-text;
-  font-size: 16px;
+  font-size: 15px;
+  text-align: center;
 }
 .sectionContainer {
   margin: 10px auto;
 }
-.reviewsMore {
-  display: flex;
-  align-items: center;
-  font-size: 13px;
-  color: rgba(0, 0, 0, 0.8);
-  &::after {
-    content: "";
-    position: relative;
-    display: inline-block;
-    width: 0;
-    height: 0;
-    top: 50%;
-    margin-left: 2px;
-    margin-top: -3px;
-    border: 3px solid transparent;
-    border-width: 3px 6px;
-    border-left-color: rgba(0, 0, 0, 0.8);
-  }
+.sectionFooter {
+  text-align: center;
+  padding-bottom: 40px;
+}
+.btnMore {
+  width: 180px;
+  border-radius: 0;
 }
 .navigatorNew {
   margin-top: 10px;

@@ -78,6 +78,12 @@
           "pathName": "pages/product/reviews-fitting/index",
           "query": "product=88148",
           "scene": null
+        },
+        {
+          "name": "pages/product/index",
+          "pathName": "pages/product/index",
+          "query": "name=ideal-basic-pants-alloy-grey&__key_=16178559512842",
+          "scene": null
         }
       ]
     }
