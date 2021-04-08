@@ -1,3 +1,4 @@
+<!-- Taro 是先用 vue 完全编译好输出节点再一次性填充到一个 wxml 模板里, 这里的 key 写法和 vue 一样 -->
 <template>
   <view
     :class="{[$style['page']]: true, [$style['pageIphoneX']]: isLikeIphoneX}"
