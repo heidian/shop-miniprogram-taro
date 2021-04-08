@@ -39,7 +39,15 @@
       <input-number :class="$style['quantityInput']" :min="1" v-model="quantity"></input-number>
     </view>
     <view :class="{[$style['buttonsWrapper']]: true, [$style['isLikeIphoneX']]: isLikeIphoneX}">
-      <button v-if="openType === 'add_to_cart'"
+      <button v-if="!openType"
+        :class="['button', 'button--primary', 'button--outline', 'button--small', 'button--round']"
+        @tap="isVisible = false"
+      >确定</button>
+      <button v-else-if="inventoryDeny"
+        :class="['button', 'button--primary', 'button--outline', 'button--small', 'button--round']"
+        disabled
+      >库存不足</button>
+      <button v-else-if="openType === 'add_to_cart'"
         :class="['button', 'button--primary', 'button--outline', 'button--small', 'button--round']"
         @tap="onClickAddToCart"
       >加入购物车</button>
@@ -47,10 +55,6 @@
         :class="['button', 'button--primary', 'button--small', 'button--round']"
         @tap="onClickBuyNow"
       >立即购买</button>
-      <button v-else
-        :class="['button', 'button--primary', 'button--outline', 'button--small', 'button--round']"
-        @tap="isVisible = false"
-      >确定</button>
     </view>
   </drawer>
 </template>
@@ -107,7 +111,11 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('system', ['isLikeIphoneX'])
+    ...mapGetters('system', ['isLikeIphoneX']),
+    inventoryDeny() {
+      return this.selectedVariant.inventory_policy === 'deny' &&
+        (+this.selectedVariant.inventory_quantity) < (+this.quantity)
+    }
   },
   methods: {
     optimizeImage,
@@ -217,13 +225,14 @@ export default {
         }]
       }).then(({ token }) => {
         Taro.hideLoading()
+        this.isVisible = false  // 这个执行了以后自动会调用 onDrawerClose
         Taro.navigateTo({ url: `/pages/checkout/index?token=${token}` })
       }).catch((err) => {
         Taro.hideLoading()
         handleErr(err)
       })
     },
-    onPreviewImage () {
+    onPreviewImage() {
       const url = _.get(this.selectedVariant, 'image.src')
       if (url) {
         Taro.previewImage({
