@@ -25,6 +25,7 @@ import ProductSingleAccessories from '@/components/blocks/product/ProductSingleA
 import ProductSingleBodyHtml from '@/components/blocks/product/ProductSingleBodyHtml'
 import ProductSingleRelated from '@/components/blocks/product/ProductSingleRelated'
 import ProductSingleReviews from '@/components/blocks/product/ProductSingleReviews'
+import ProductSingleReviewsFitting from '@/components/blocks/product/ProductSingleReviewsFitting'
 import PageSingleBodyHtml from '@/components/blocks/PageSingleBodyHtml'
 import LoginForm from '@/components/blocks/api/LoginForm'
 
@@ -65,6 +66,9 @@ export default {
   },
   computed: {
     blocks() {
+      if (this.$store.state.config.shopname === 'joyberry') {
+        BLOCKS_MAP['blocks/product_single_reviews'] = ProductSingleReviewsFitting
+      }
       const key = (this.pageType && this.pageName) ? `${this.pageType}/${this.pageName}` : this.pageType
       const blocks = _.filter(this.$store.state.theme.blocksOfPage[key] || [], (block) => !block.hidden)
       return _.map(blocks, (block, index) => {
