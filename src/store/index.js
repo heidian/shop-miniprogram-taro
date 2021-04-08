@@ -21,7 +21,7 @@ Vue.use(Vuex)
 确保比如 getOpenId 等其他任何地方一定可以获得 appid */
 const state = () => {
   const config = {
-    apiroot: API_URL,
+    apiroot: '',
     shopname: '',
     shopid: '',
     appid: '',
@@ -34,13 +34,15 @@ const state = () => {
     config.shopname = shopname
     config.shopid = shopid
   } else if (Taro.getEnv() === Taro.ENV_TYPE.WEB) {
-    /* 本地测试的时候需要指定 API_URL 为店铺域名, 这样也就不需要 shopname 了
-    shopname 和 shopid 单独使用只在 analytics 里面, 而网页版不启用 analytics, 所以空着没关系 */
+    /* shopid 单独使用只在 analytics 里面, 而网页版不启用 analytics, 所以空着没关系 */
     /* 线上部署的时候, API_URL 是 heidianapi.com, 然后从域名里面提取一下 shopname
     注意 apiroot 不能直接用 /api/ 因为这个版本的 xxx.heidian.mobi/api/ 没有解析到 shopbackend */
+    config.apiroot = API_URL
     const match = location.hostname.match(/^([a-zA-Z-]+)\.heidian\.mobi$/)
     if (match) {
       config.shopname = match[1]
+    } else {
+      config.shopname = DEBUG_SHOP_NAME
     }
   }
   return {

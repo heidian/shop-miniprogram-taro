@@ -3,7 +3,8 @@ module.exports = {
     NODE_ENV: '"production"'
   },
   defineConstants: {
-    API_URL: '"https://heidianapi.com/api/"'
+    API_URL: '"https://heidianapi.com/api/"',
+    DEBUG_SHOP_NAME: '""'
   },
   mini: {
     sassLoaderOption: {
