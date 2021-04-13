@@ -1,6 +1,6 @@
 <template>
   <view :class="$style['section']" :style="css">
-    <view :class="$style['sectionTitle']">图文详情</view>
+    <!-- <view :class="$style['sectionTitle']">图文详情</view> -->
     <!-- <wxparse v-if="shouldParseHtml" :html="bodyHtml"></wxparse>
     <view v-else v-html="bodyHtml" :class="$style['h5BodyHtml']"></view> -->
     <view v-html="bodyHtml" class="taro_html"></view>
@@ -50,12 +50,12 @@ export default {
   overflow: hidden;
   background-color: #ffffff;
 }
-.sectionTitle {
-  font-weight: bold;
-  font-size: 15px;
-  padding: 15px 15px 10px;
-  text-align: center;
-}
+// .sectionTitle {
+//   font-weight: bold;
+//   font-size: 15px;
+//   padding: 15px 15px 10px;
+//   text-align: center;
+// }
 // .h5BodyHtml {
 //   img {
 //     max-width: 100%;

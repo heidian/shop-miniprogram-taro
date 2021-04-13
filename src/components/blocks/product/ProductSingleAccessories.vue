@@ -1,9 +1,5 @@
 <template>
   <view :class="$style['section']" :style="{ ...css, display: products && products.length ? 'block' : 'none' }">
-    <view :class="$style['sectionHead']">
-      <view :class="$style['sectionTitle']">{{ accessoriesCaption.sectionTitle || '搭配购买' }}</view>
-      <!-- <navigator :class="$style['btnMore']" :url="`/pages/product/accessories/index?product=${product.id}`">查看全部</navigator> -->
-    </view>
     <navigator
       :url="`/pages/product/accessories/index?product=${product.id}`"
       :class="$style['sectionContainer']" hover-class="none"
@@ -55,13 +51,6 @@ export default {
     accessoriesSlicedProduct() {
       return (this.products || []).slice(0, 2)
     },
-    accessoriesCaption() {
-      const { accessories_section_title, accessories_title } = this.settings_data || {}
-      return {
-        sectionTitle: _.get(accessories_section_title, 'value') || accessories_section_title,
-        title: _.get(accessories_title, 'value') || accessories_title
-      }
-    },
     accessoriesMinPrice() {
       const price_list = _.map(this.products || [], (r_p) => {
         return +(r_p.price || 0)
@@ -104,30 +93,9 @@ export default {
   overflow: hidden;
   background-color: #ffffff;
 }
-.sectionHead {
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 15px 15px 10px;
-}
-.sectionTitle {
-  width: 100%;
-  font-weight: bold;
-  color: $color-text;
-  font-size: 15px;
-  text-align: center;
-}
-.btnMore {
-  display: flex;
-  align-items: center;
-  font-size: 13px;
-  color: $color-text;
-}
 .sectionContainer {
   // background-color: #fafafa;
   padding: 10px;
-  margin: 0 10px 10px;
   display: flex;
 }
 .accessoriesImages {
@@ -177,4 +145,3 @@ export default {
   margin-top: 10px;
 }
 </style>
-
