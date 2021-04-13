@@ -15,22 +15,31 @@
     </view>
     <view :class="$style['optionsWrapper']">
       <view v-for="option in options" :key="`${product.id}-${option.title}`" :class="$style['optionGroup']">
-        <view :class="$style['optionTitle']">{{ option.title }}</view>
+        <view :class="$style['optionTitle']">
+          <text>{{ option.title }}</text>
+          <text
+            v-if="option.title === colorOptionTitle"  :class="$style['optionTitleAppend']"
+          >{{ getSelectedValue(option) }}</text>
+        </view>
         <view :class="$style['optionValues']">
           <view
             v-for="item in option.items" :key="`${product.id}-${item.value}`"
             :class="{
-              [$style['optionLabel']]: true,
-              [$style['optionLabelImage']]: !!item.image,
+              [valueHasImage(option, item) ? $style['optionLabelImage'] : $style['optionLabelText']]: true,
               'is-selected': item.selected,
               'is-disabled': item.disabled,
             }"
-            :style="item.image ? {
-              'backgroundImage': backgroundImageUrl(item.image)
-            } : {}"
             @tap="() => onClickOptionValue(option.title, item.value)"
-          >{{item.value}}</view>
+          >
+            <image
+              v-if="valueHasImage(option, item)"
+              :src="optimizeImage(colorOptionImages[item.value])"
+              :class="$style['image']" mode="aspectFill"
+            ></image>
+            <template v-else>{{item.value}}</template>
+          </view>
         </view>
+        <!-- /optionValues -->
       </view>
     </view>
     <!-- 不然会在页面上出现一个很诡异的浮动的内容为 "1" 的输入框 -->
@@ -103,15 +112,18 @@ export default {
   data() {
     return {
       isVisible: !!this.visible,
+      pending: true,
       variants: [],
-      options: [],
       selectedVariant: {},
       quantity: 1,
-      pending: true
+      colorOptionTitle: '',
+      colorOptionImages: {}, // { optionValue: imageSrc, ... }
+      options: [],
     }
   },
   computed: {
     ...mapGetters('system', ['isLikeIphoneX']),
+    ...mapState('theme', ['themeSettingsData']),
     inventoryDeny() {
       return this.selectedVariant.inventory_policy === 'deny' &&
         (+this.selectedVariant.inventory_quantity) < (+this.quantity)
@@ -120,13 +132,13 @@ export default {
   methods: {
     optimizeImage,
     backgroundImageUrl,
-    resetData() {
-      this.variants = []
-      this.options = []
-      this.selectedVariant = {}
-      this.quantity = 1
-      this.pending = true
-    },
+    // resetData() {
+    //   this.variants = []
+    //   this.options = []
+    //   this.selectedVariant = {}
+    //   this.quantity = 1
+    //   this.pending = true
+    // },
     onDrawerClose() {
       this.$emit('update:visible', false)
       if (this.selectedVariant.id) {
@@ -142,11 +154,23 @@ export default {
       this.quantity = 1
       this.selectedVariant = { ...this.variant }
       this.variants = _.map(this.product.variants, variant => ({ ...variant }))
-      this.options = this.formatOptions()
+      this.configColorOptions()
+      this.formatOptions()
+    },
+    valueHasImage(option, item) {
+      return option.title === this.colorOptionTitle && !!this.colorOptionImages[item.value]
+    },
+    getSelectedValue(option) {
+      return _.get(_.find(option.items, { selected: true }), 'value') || ''
+    },
+    configColorOptions() {
+      this.colorOptionTitle = _.get(this.themeSettingsData, 'colorOptionTitle.value') || ''
+      const colorOptionImages = _.get(this.themeSettingsData, 'colorOptionImages') || []
+      this.colorOptionImages = _.fromPairs(_.map(colorOptionImages, (image) => {
+        return [_.get(image, 'metafield.altText') || '', image]
+      }))
     },
     formatOptions() {
-      const colorOptionTitle = _.get(this.$store.state.theme, 'themeSettingsData.colorOptionTitle.value') || ''
-      const colorOptionImages = _.get(this.$store.state.theme, 'themeSettingsData.colorOptionImages') || []
       const results = _.map(this.product.options, (option) => {
         const title = option.title
         const items = _.map(option.values, (value) => {
@@ -155,17 +179,11 @@ export default {
             disabled: false,
             selected: value === _.get(_.find(this.selectedVariant.options, { title }), 'value')
           }
-          if (title === colorOptionTitle) {
-            const colorImageItem = _.find(colorOptionImages, (item) => _.get(item, 'metafield.altText') === value)
-            if (colorImageItem) {
-              result['image'] = { 'src': colorImageItem.src }
-            }
-          }
           return result
         })
         return { title, items }
       })
-      return results
+      this.options = results
     },
     onClickOptionValue(title, value) {
       const options = _.cloneDeep(this.options)

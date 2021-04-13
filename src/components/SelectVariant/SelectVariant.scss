@@ -45,6 +45,12 @@
   font-size: 13px;
   margin-bottom: 10px;
   font-weight: bold;
+  .optionTitleAppend {
+    font-weight: normal;
+    margin-left: 0.5em;
+    font-size: 0.9em;
+    color: $color-text-light;
+  }
 }
 .optionValues {
   // width: 100%;
@@ -54,7 +60,7 @@
   flex-wrap: wrap;
   align-items: center;
 }
-.optionLabel {
+.optionLabelText {
   font-size: 12px;
   margin-right: 8px;
   margin-bottom: 8px;
@@ -73,17 +79,24 @@
   &:global(.is-disabled) {
     color: $color-text-light;
   }
-  &.optionLabelImage {
-    color: transparent;
-    height: 28px;  // 20 + (2 + 2) * 2
-    width: 28px;  // 20 + (2 + 2) * 2
-    padding: 0;
-    min-width: 0;
-    overflow: hidden;
-    border-radius: 0;
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
+}
+.optionLabelImage {
+  height: 28px;  // 20 + (2 + 2) * 2
+  width: 28px;  // 20 + (2 + 2) * 2
+  margin-right: 8px;
+  margin-bottom: 8px;
+  overflow: hidden;
+  border: 2px solid transparent;
+  &:global(.is-selected) {
+    border-color: $color-text;
+  }
+  &:global(.is-disabled) {
+    // TODO
+  }
+  .image {
+    display: block;
+    width: 100%;
+    height: 100%;
   }
 }
 
