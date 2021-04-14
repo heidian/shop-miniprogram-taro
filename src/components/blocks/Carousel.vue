@@ -61,9 +61,9 @@ export default {
     },
     indicatorStyle() {
       if (this.carousel && this.carousel.length > 1) {
-        const indicatorColor = this.settingsData.indicatorColor || '#eee'
+        const indicatorColor = this.settingsData.indicatorColor || '#f5f5f5'
         return {
-          'background-color': indicatorColor
+          'backgroundColor': indicatorColor
         }
       } else {
         return { 'display': 'none' }
@@ -71,13 +71,13 @@ export default {
     },
     indicatorDotStyle() {
       if (this.carousel && this.carousel.length > 1) {
-        const indicatorColor = this.settingsData.indicatorColor || '#eee'
+        const indicatorColor = this.settingsData.indicatorColor || '#f5f5f5'
         const left = this.current / this.carousel.length
         const width = 1 / this.carousel.length
         return {
           'left': `${(left * 100).toFixed(2)}%`,
           'width': `${(width * 100).toFixed(2)}%`,
-          'background-color': tinycolor(indicatorColor).darken(10).toString(),
+          'backgroundColor': tinycolor(indicatorColor).darken(10).toString(),
         }
       } else {
         return { 'display': 'none' }
