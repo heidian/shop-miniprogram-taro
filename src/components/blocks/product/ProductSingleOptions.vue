@@ -8,29 +8,29 @@
       </view>
     </view>
     <view v-if="optionsLayout === 'tiled'" :class="$style['optionsWrapper']">
-      <view v-for="option in options" :key="`${product.id}-${option.title}`" :class="$style['optionGroup']">
+      <view v-for="{ title, values } in product.options" :key="`${product.id}-${title}`" :class="$style['optionGroup']">
         <view :class="$style['optionTitle']">
-          <text>{{ option.title }}</text>
+          <text>{{ title }}</text>
           <text
-            v-if="option.title === colorOptionTitle"  :class="$style['optionTitleAppend']"
-          >{{ getSelectedValue(option) }}</text>
+            v-if="title === colorOptionTitle" :class="$style['optionTitleAppend']"
+          >{{ selected[title] }}</text>
         </view>
         <view :class="$style['optionValues']">
           <view
-            v-for="item in option.items" :key="`${product.id}-${item.value}`"
+            v-for="value in values" :key="`${product.id}-${value}`"
             :class="{
-              [valueHasImage(option, item) ? $style['optionLabelImage'] : $style['optionLabelText']]: true,
-              'is-selected': item.selected,
-              'is-disabled': item.disabled,
+              [valueHasImage(title, value) ? $style['optionLabelImage'] : $style['optionLabelText']]: true,
+              'is-selected': selected[title] === value,
+              'is-disabled': disabled[title] && !!disabled[title][value],
             }"
-            @tap="() => onClickOptionValue(option.title, item.value)"
+            @tap="() => onClickOptionValue(title, value)"
           >
             <image
-              v-if="valueHasImage(option, item)"
-              :src="optimizeImage(colorOptionImages[item.value])"
+              v-if="valueHasImage(title, value)"
+              :src="optimizeImage(colorOptionImages[value])"
               :class="$style['image']" mode="aspectFill"
             ></image>
-            <template v-else>{{item.value}}</template>
+            <template v-else>{{ value }}</template>
           </view>
         </view>
         <!-- /optionValues -->
@@ -85,16 +85,18 @@ export default {
   data() {
     return {
       variantsDrawerVisible: false,
-      currentVariant: this.variant,
       colorOptionTitle: '',
       colorOptionImages: {}, // { optionValue: imageSrc, ... }
-      options: [],  // { title, items: { value, disabled, selected } } */
+
+      currentVariant: this.variant,
+      selected: {},  // 当前完整的选项 { [title]:value, ... }
+      disabled: {},  // 当前禁用的条目 { [title]: { [value]: true, ... }, ... }
       lastSelection: {},  // 上一次的选项 { [title]: value }
     }
   },
   created() {
     this.configColorOptions()
-    this.formatOptions()
+    this.calcSelectedAndDisabled()
     this.lastSelection = {}
   },
   computed: {
@@ -112,11 +114,8 @@ export default {
   methods: {
     optimizeImage,
     backgroundImageUrl,
-    valueHasImage(option, item) {
-      return option.title === this.colorOptionTitle && !!this.colorOptionImages[item.value]
-    },
-    getSelectedValue(option) {
-      return _.get(_.find(option.items, { selected: true }), 'value') || ''
+    valueHasImage(title, value) {
+      return title === this.colorOptionTitle && !!this.colorOptionImages[value]
     },
     configColorOptions() {
       this.colorOptionTitle = _.get(this.themeSettingsData, 'colorOptionTitle.value') || ''
@@ -125,49 +124,54 @@ export default {
         return [_.get(image, 'metafield.altText') || '', image]
       }))
     },
-    formatOptions() {
-      // variants 先转化成 { id, [title]: [value], ... } 的形式
-      const variants = _.map(this.product.variants, (variant) => {
-        const data = { id: variant.id }
-        _.forEach(variant.options, ({ title, value }) => data[title] = value)
-        return data
-      })
-      const frozen = _.find(variants, { id: this.currentVariant.id })
-      this.options = _.map(this.product.options, ({ title, values }) => {
-        const items = _.map(values, (value) => {
-          const selected = frozen[title] === value
+    calcSelectedAndDisabled() {
+      const variants = this.pairVariantOptions()  // variants 转化成 { id, [title]: [value], ... } 的形式
+      const _selected = _.find(variants, { id: this.currentVariant.id })
+      this.selected = _.omit(_selected, ['id'])
+      const disabled = {}  // { [title]: { [value]: true|false } }
+      _.forEach(this.product.options, ({ title, values }) => {
+        const disabledValues = {}
+        _.forEach(values, (value) => {
           const disabled = !_.find(variants, { ...this.lastSelection, [title]: value })
           // disabled 是根据当前选择的条目进行排除
-          return { value, selected, disabled }
+          disabledValues[value] = disabled
         })
-        return { title, items }
+        disabled[title] = disabledValues
       })
+      this.disabled = disabled
     },
     onClickOptionValue(selectedTitle, selectedValue) {
-      // variants 先转化成 { id, [title]: [value], ... } 的形式
-      const variants = _.map(this.product.variants, (variant) => {
-        const data = { id: variant.id }
-        _.forEach(variant.options, ({ title, value }) => data[title] = value)
-        return data
-      })
+      const variants = this.pairVariantOptions()  // variants 转化成 { id, [title]: [value], ... } 的形式
       const frozen = { [selectedTitle]: selectedValue }
       while (true) {
-        const option = _.find(this.options, (option) => typeof frozen[option.title] === 'undefined')
+        // 循环寻找没有被放进 frozen 里面的 option
+        const option = _.find(this.product.options, (option) => typeof frozen[option.title] === 'undefined')
         if (!option) {
           break
         }
-        const selectedItem = _.find(option.items, { selected: true })  // 一定存在
-        if (!_.find(variants, { ...frozen, [option.title]: selectedItem.value })) {
-          const fallbackVariant = _.find(variants, { ...frozen })
+        const variant = _.find(variants, {
+          ...frozen,
+          [option.title]: this.selected[option.title]
+        })  // 判断在 frozen 条件下, 当前 option 的选项是否有对应的 variant
+        if (!variant) {
+          const fallbackVariant = _.find(variants, { ...frozen })  // 找到第一个满足 frozen 条件的 variant
           frozen[option.title] = fallbackVariant[option.title]
         } else {
-          frozen[option.title] = selectedItem.value
+          frozen[option.title] = this.selected[option.title]
         }
       }
       this.lastSelection = { [selectedTitle]: selectedValue }
       const frozenVariant = _.find(variants, { ...frozen })  // 一定存在
       this.onSelectVariant(frozenVariant.id)
-      // 上面这个会触发一次 variant 的 watch 导致重新执行 formatOptions, 然后会更新 this.options
+      // 上面这个会触发一次 variant 的 watch 导致重新执行 calcSelectedAndDisabled, 然后会更新 selected 和 disabled
+    },
+    pairVariantOptions() {
+      // variants 转化成 { id, [title]: [value], ... } 的形式
+      return _.map(this.product.variants, (variant) => {
+        const data = { id: variant.id }
+        _.forEach(variant.options, ({ title, value }) => data[title] = value)
+        return data
+      })
     },
     onSelectVariant(variantId, quantity) {
       if (variantId && variantId !== this.currentVariant.id) {
@@ -185,7 +189,7 @@ export default {
     },
     variant(newValue) {
       this.currentVariant = newValue
-      this.formatOptions()
+      this.calcSelectedAndDisabled()
     }
   }
 }
