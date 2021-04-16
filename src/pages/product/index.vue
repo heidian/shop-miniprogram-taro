@@ -63,7 +63,10 @@
       @close="onVariantsDrawerClosed"
     ></select-variant>
 
-    <tezign-share-dialog :visible.sync="tezignShareDialogVisible"></tezign-share-dialog>
+    <tezign-share-dialog
+      v-if="tezignShareEnabled"
+      :visible.sync="tezignShareDialogVisible"
+    ></tezign-share-dialog>
 
   </view>
 </template>

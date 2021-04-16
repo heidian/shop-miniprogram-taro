@@ -112,13 +112,12 @@ export default {
   data() {
     return {
       isVisible: !!this.visible,
-      pending: true,
-      variants: [],
       selectedVariant: {},
       quantity: 1,
       colorOptionTitle: '',
       colorOptionImages: {}, // { optionValue: imageSrc, ... }
-      options: [],
+      options: [],  // { title, items: { value, disabled, selected } } */
+      lastSelection: {},  // 上一次的选项 { [title]: value }
     }
   },
   computed: {
@@ -133,12 +132,17 @@ export default {
     optimizeImage,
     backgroundImageUrl,
     // resetData() {
-    //   this.variants = []
-    //   this.options = []
-    //   this.selectedVariant = {}
     //   this.quantity = 1
-    //   this.pending = true
+    //   this.selectedVariant = {}
+    //   this.options = []
     // },
+    initializeOnOpen() {
+      this.quantity = 1
+      this.selectedVariant = this.variant
+      this.configColorOptions()
+      this.formatOptions()
+      this.lastSelection = {}
+    },
     onDrawerClose() {
       this.$emit('update:visible', false)
       if (this.selectedVariant.id) {
@@ -151,11 +155,7 @@ export default {
     onDrawerOpen() {
       this.$emit('update:visible', true)
       // 打开 drawer 的时候处理初始值, 就不需要 watch 除了 visible 以外其他 props 的变化了
-      this.quantity = 1
-      this.selectedVariant = { ...this.variant }
-      this.variants = _.map(this.product.variants, variant => ({ ...variant }))
-      this.configColorOptions()
-      this.formatOptions()
+      this.initializeOnOpen()
     },
     valueHasImage(option, item) {
       return option.title === this.colorOptionTitle && !!this.colorOptionImages[item.value]
@@ -171,41 +171,48 @@ export default {
       }))
     },
     formatOptions() {
-      const results = _.map(this.product.options, (option) => {
-        const title = option.title
-        const items = _.map(option.values, (value) => {
-          const result = {
-            value: value,
-            disabled: false,
-            selected: value === _.get(_.find(this.selectedVariant.options, { title }), 'value')
-          }
-          return result
+      // variants 先转化成 { id, [title]: [value], ... } 的形式
+      const variants = _.map(this.product.variants, (variant) => {
+        const data = { id: variant.id }
+        _.forEach(variant.options, ({ title, value }) => data[title] = value)
+        return data
+      })
+      const frozen = _.find(variants, { id: this.selectedVariant.id })
+      this.options = _.map(this.product.options, ({ title, values }) => {
+        const items = _.map(values, (value) => {
+          const selected = frozen[title] === value
+          const disabled = !_.find(variants, { ...this.lastSelection, [title]: value })
+          // disabled 是根据当前选择的条目进行排除
+          return { value, selected, disabled }
         })
         return { title, items }
       })
-      this.options = results
     },
-    onClickOptionValue(title, value) {
-      const options = _.cloneDeep(this.options)
-      const selectResult = {}
-      _.forEach(options, (option) => {
-        _.forEach(option.items, (item) => {
-          if (option.title === title) {
-            item.selected = (item.value === value) ? !item.selected : false
-          }
-          if (item.selected) {
-            selectResult[option.title] = item.value
-          }
-          if (option.title !== title) {
-            // 不是当前选择的那一项, 需要处理下 disable
-          }
-        })
+    onClickOptionValue(selectedTitle, selectedValue) {
+      // variants 先转化成 { id, [title]: [value], ... } 的形式
+      const variants = _.map(this.product.variants, (variant) => {
+        const data = { id: variant.id }
+        _.forEach(variant.options, ({ title, value }) => data[title] = value)
+        return data
       })
-      const selectedVariant = _.find(this.variants, (variant) => {
-        return _.every(variant.options, (option) => selectResult[option.title] === option.value)
-      })
-      this.selectedVariant = selectedVariant || {}
-      this.options = options
+      const frozen = { [selectedTitle]: selectedValue }
+      while (true) {
+        const option = _.find(this.options, (option) => typeof frozen[option.title] === 'undefined')
+        if (!option) {
+          break
+        }
+        const selectedItem = _.find(option.items, { selected: true })  // 一定存在
+        if (!_.find(variants, { ...frozen, [option.title]: selectedItem.value })) {
+          const fallbackVariant = _.find(variants, { ...frozen })
+          frozen[option.title] = fallbackVariant[option.title]
+        } else {
+          frozen[option.title] = selectedItem.value
+        }
+      }
+      this.lastSelection = { [selectedTitle]: selectedValue }
+      const frozenVariant = _.find(variants, { ...frozen })  // 一定存在
+      this.selectedVariant = _.find(this.product.variants, { id: frozenVariant.id })
+      this.formatOptions()  // 要重新执行一次修改 selected 和 disabled
     },
     onClickAddToCart() {
       if (!this.selectedVariant.id) {

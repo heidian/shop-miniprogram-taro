@@ -76,9 +76,6 @@
     border-color: $color-text;
     background-color: #fff;
   }
-  &:global(.is-disabled) {
-    color: $color-text-light;
-  }
 }
 .optionLabelImage {
   height: 28px;  // 20 + (2 + 2) * 2
@@ -90,13 +87,18 @@
   &:global(.is-selected) {
     border-color: $color-text;
   }
-  &:global(.is-disabled) {
-    // TODO
-  }
   .image {
     display: block;
     width: 100%;
     height: 100%;
+  }
+}
+.optionLabelText,
+.optionLabelImage {
+  position: relative;
+  &:global(.is-disabled) {
+    // color: $color-text-light;
+    opacity: 0.5;
   }
 }
 

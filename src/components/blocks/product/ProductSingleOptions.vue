@@ -89,11 +89,13 @@ export default {
       colorOptionTitle: '',
       colorOptionImages: {}, // { optionValue: imageSrc, ... }
       options: [],  // { title, items: { value, disabled, selected } } */
+      lastSelection: {},  // 上一次的选项 { [title]: value }
     }
   },
   created() {
     this.configColorOptions()
     this.formatOptions()
+    this.lastSelection = {}
   },
   computed: {
     ...mapState('theme', ['themeSettingsData']),
@@ -124,43 +126,48 @@ export default {
       }))
     },
     formatOptions() {
-      const results = _.map(this.product.options, (option) => {
-        const title = option.title
-        const items = _.map(option.values, (value) => {
-          const result = {
-            value: value,
-            disabled: false,
-            selected: value === _.get(_.find(this.currentVariant.options, { title }), 'value')
-          }
-          return result
+      // variants 先转化成 { id, [title]: [value], ... } 的形式
+      const variants = _.map(this.product.variants, (variant) => {
+        const data = { id: variant.id }
+        _.forEach(variant.options, ({ title, value }) => data[title] = value)
+        return data
+      })
+      const frozen = _.find(variants, { id: this.currentVariant.id })
+      this.options = _.map(this.product.options, ({ title, values }) => {
+        const items = _.map(values, (value) => {
+          const selected = frozen[title] === value
+          const disabled = !_.find(variants, { ...this.lastSelection, [title]: value })
+          // disabled 是根据当前选择的条目进行排除
+          return { value, selected, disabled }
         })
         return { title, items }
       })
-      this.options = results
     },
-    onClickOptionValue(title, value) {
-      const options = _.cloneDeep(this.options)
-      const selectResult = {}
-      _.forEach(options, (option) => {
-        _.forEach(option.items, (item) => {
-          if (option.title === title) {
-            item.selected = (item.value === value) ? !item.selected : false
-          }
-          if (item.selected) {
-            selectResult[option.title] = item.value
-          }
-          if (option.title !== title) {
-            // 不是当前选择的那一项, 需要处理下 disable
-          }
-        })
+    onClickOptionValue(selectedTitle, selectedValue) {
+      // variants 先转化成 { id, [title]: [value], ... } 的形式
+      const variants = _.map(this.product.variants, (variant) => {
+        const data = { id: variant.id }
+        _.forEach(variant.options, ({ title, value }) => data[title] = value)
+        return data
       })
-      const currentVariant = _.find(this.product.variants, (variant) => {
-        return _.every(variant.options, (option) => selectResult[option.title] === option.value)
-      })
-      if (currentVariant) {
-        this.onSelectVariant(currentVariant.id)
+      const frozen = { [selectedTitle]: selectedValue }
+      while (true) {
+        const option = _.find(this.options, (option) => typeof frozen[option.title] === 'undefined')
+        if (!option) {
+          break
+        }
+        const selectedItem = _.find(option.items, { selected: true })  // 一定存在
+        if (!_.find(variants, { ...frozen, [option.title]: selectedItem.value })) {
+          const fallbackVariant = _.find(variants, { ...frozen })
+          frozen[option.title] = fallbackVariant[option.title]
+        } else {
+          frozen[option.title] = selectedItem.value
+        }
       }
-      this.options = options
+      this.lastSelection = { [selectedTitle]: selectedValue }
+      const frozenVariant = _.find(variants, { ...frozen })  // 一定存在
+      this.onSelectVariant(frozenVariant.id)
+      // 上面这个会触发一次 variant 的 watch 导致重新执行 formatOptions, 然后会更新 this.options
     },
     onSelectVariant(variantId, quantity) {
       if (variantId && variantId !== this.currentVariant.id) {
@@ -259,9 +266,6 @@ export default {
     border-color: $color-text;
     background-color: #fff;
   }
-  &:global(.is-disabled) {
-    color: $color-text-light;
-  }
 }
 .optionLabelImage {
   height: 28px;  // 20 + (2 + 2) * 2
@@ -273,13 +277,18 @@ export default {
   &:global(.is-selected) {
     border-color: $color-text;
   }
-  &:global(.is-disabled) {
-    // TODO
-  }
   .image {
     display: block;
     width: 100%;
     height: 100%;
+  }
+}
+.optionLabelText,
+.optionLabelImage {
+  position: relative;
+  &:global(.is-disabled) {
+    // color: $color-text-light;
+    opacity: 0.5;
   }
 }
 </style>
