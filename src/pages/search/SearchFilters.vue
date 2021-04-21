@@ -39,11 +39,16 @@
       :class="$style['fineTuningButtonsWrapper']"
       @tap="subCategoryDrawerVisible = !subCategoryDrawerVisible"
     >
-      <view :class="[$style['fineTuningButton'], isFiltersDirty && 'is-dirty']">
-        <text class="el-icon-s-operation"></text> 筛选
-      </view>
-      <view :class="[$style['fineTuningButton'], (!!products.orderBy) && 'is-dirty']">
-        <text class="el-icon-sort"></text> 排序
+      <view
+        :class="[$style['fineTuningButtonsInner'], fixFineTuningOnTop && 'is-fixed']"
+        :style="fixFineTuningOnTop ? { 'top': fineTuningBarTop } : {}"
+      >
+        <view :class="[$style['fineTuningButton'], isFiltersDirty && 'is-dirty']">
+          <text class="el-icon-s-operation"></text> 筛选
+        </view>
+        <view :class="[$style['fineTuningButton'], (!!products.orderBy) && 'is-dirty']">
+          <text class="el-icon-sort"></text> 排序
+        </view>
       </view>
     </view>
 
@@ -169,6 +174,7 @@ export default {
     return {
       activeRootCategoryId: null,
       subCategoryDrawerVisible: false,
+      fixFineTuningOnTop: false,
       // TODO 这部分只是给 joyberry 用的
       colorOptionTitle: '',
       colorOptionImages: {}, // { optionValue: imageSrc, ... }
@@ -194,6 +200,10 @@ export default {
     categoriesBarTop() {
       return Taro.pxTransform(this.customNavHeight)
     },
+    fineTuningBarTop() {
+      // categoriesBar 高度是 35
+      return Taro.pxTransform(this.customNavHeight + 35)
+    },
     filtersDrawerStyle() {
       const top = Taro.pxTransform(this.customNavHeight)
       return {
@@ -207,8 +217,8 @@ export default {
       return category ? category.children : []
     },
     activeRootCategoryImage() {
-      const activeRootCategoryId = this.getRootCategoryId(this.getFilter('category'))
-      const category = _.find(this.categories.data, { id: activeRootCategoryId })
+      // const activeRootCategoryId = this.getRootCategoryId(this.getFilter('category'))
+      const category = _.find(this.categories.data, { id: this.activeRootCategoryId })
       return _.get(category, 'image.src') ? category.image : null
     },
     isFiltersDirty() {
@@ -293,7 +303,12 @@ export default {
       this.updateFilter({
         tag: { value: tags, type: 'Array' }
       }, { partial: true, fetch: true })
-    }
+    },
+    handlePageScroll(scrollTop) {
+      Taro.pxTransform(this.customNavHeight)
+      const imageHeight = this.activeRootCategoryImage ? (this.system.screenWidth - 16) / 3 + (8 + 10) : 10
+      this.fixFineTuningOnTop = scrollTop > imageHeight
+    },
   },
   watch: {
     'themeSettingsData': {
@@ -389,10 +404,23 @@ export default {
   border-radius: 4px;
 }
 .fineTuningButtonsWrapper {
-  margin: 10px 15px 0;
-  display: flex;
-  align-items: center;
-  justify-content: space-around;
+  margin-top: 10px;
+  height: 40px;
+  .fineTuningButtonsInner {
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    // background-color: rgba(#fff, 0);
+    // transition: all .2s ease-in-out;
+    &:global(.is-fixed) {
+      position: fixed;
+      z-index: $z-index-navbar;
+      left: 0;
+      width: 100%;
+      background-color: rgba(#fff, 1);
+    }
+  }
   .fineTuningButton {
     padding: 6px 12px;
     &:global(.is-dirty) {

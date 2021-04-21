@@ -10,6 +10,7 @@
     ></custom-nav>
 
     <search-filters
+      ref="searchFilters"
       :products="products"
       :getFilter="getFilter"
       :updateFilter="updateFilter"
@@ -125,6 +126,9 @@ export default {
       await this.fetchProducts({ more: true })
     }
   },
+  onPageScroll(e) {
+    this.$refs['searchFilters'].handlePageScroll(e.scrollTop)
+  }
 }
 </script>
 
