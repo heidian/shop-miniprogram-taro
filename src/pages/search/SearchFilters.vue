@@ -20,13 +20,8 @@
           ><text :class="$style['categoryText']">{{ category.title }}</text></view>
         </view>
       </scroll-view>
-      <!-- <view
-        :class="$style['categoriesFilterButton']"
-        @tap="subCategoryDrawerVisible = !subCategoryDrawerVisible"
-      >
-        <text :class="{
-          'is-dirty': activeRootCategoryId && +getFilter('category') !== activeRootCategoryId
-        }">筛选</text>
+      <!-- <view :class="$style['categoriesFilterButton']" @tap="subCategoryDrawerVisible = !subCategoryDrawerVisible">
+        <text :class="{ 'is-dirty': isFiltersDirty }">筛选</text>
       </view> -->
     </view>
 
@@ -72,7 +67,7 @@
         </view>
         <!-- 二级分类 -->
         <view v-if="!!activeRootCategoryId" :class="$style['filterSection']">
-          <view :class="$style['filterTitle']">分类</view>
+          <view :class="$style['filterTitle']">分类 (多选)</view>
           <view :class="$style['filterBodyRows']">
             <view
               @tap="() => filterRootCategory(activeRootCategoryId)"
@@ -80,7 +75,10 @@
             >全部</view>
             <view
               v-for="item in activeSubCategories" :key="item.id" @tap="() => filterSubCategory(item.id)"
-              :class="[$style['filterItem'], (item.id === +getFilter('category')) && 'is-active']"
+              :class="{
+                [$style['filterItem']]: true,
+                'is-active': (getFilter('category__in', 'CSV') || []).indexOf('' + item.id) >= 0
+              }"
             >{{ item.title }}</view>
           </view>
         </view>
@@ -115,18 +113,23 @@
           </view>
         </view>
       </view>
+      <view slot="footer" :class="$style['drawerFilterFooter']">
+        <button
+          :class="['button', 'button--small']"
+          @tap="updateFilter({}, { partial: false, fetch: true })"
+        >重制</button>
+        <button
+          :class="['button', 'button--small', 'button--primary']"
+          @tap="subCategoryDrawerVisible = false"
+        >确定</button>
+      </view>
     </drawer>
     <!-- <floating-buttons>
       <floating-button-item>
         <text class="el-icon-shopping-cart-2"></text>
       </floating-button-item>
       <floating-button-item @tap="subCategoryDrawerVisible = !subCategoryDrawerVisible">
-        <text
-          class="el-icon-s-operation"
-          :class="{
-            [$style['isDirty']]: activeRootCategoryId && +getFilter('category') !== activeRootCategoryId
-          }"
-        ></text>
+        <text class="el-icon-s-operation" :class="{[$style['isDirty']]: isFiltersDirty}"></text>
       </floating-button-item>
     </floating-buttons> -->
   </view>
@@ -187,7 +190,6 @@ export default {
   computed: {
     ...mapState(['categories', 'system']),
     ...mapState('theme', ['themeSettingsData']),
-    ...mapGetters('categories', [ 'getRootCategoryId' ]),
     customNavHeight() {
       return this.system.statusBarHeight + 44
       // return 0
@@ -218,19 +220,18 @@ export default {
       return category ? category.children : []
     },
     activeRootCategoryImage() {
-      // const activeRootCategoryId = this.getRootCategoryId(this.getFilter('category'))
       const category = _.find(this.categories.data, { id: this.activeRootCategoryId })
       return _.get(category, 'image.src') ? category.image : null
     },
     isFiltersDirty() {
       return (
-        (!!this.getFilter('category') && +this.getFilter('category') !== this.activeRootCategoryId) ||
-        (!_.isEmpty(this.getFilter('tag', 'Array')))
+        !_.isEmpty(this.getFilter('category__in', 'CSV')) ||
+        !_.isEmpty(this.getFilter('tag', 'Array'))
       )
     }
   },
   created() {
-    this.activeRootCategoryId = this.getRootCategoryId(this.getFilter('category'))
+    this.getRootCategoryId()
     this.fetchTagFilters()
     this.configColorOptions()
   },
@@ -244,19 +245,44 @@ export default {
         return [_.get(image, 'metafield.altText') || '', image]
       }))
     },
+    getRootCategoryId() {
+      // this.activeRootCategoryId = this.getRootCategoryId(this.getFilter('category'))
+      const getRootCategoryId = this.$store.getters['categories/getRootCategoryId']
+      const category = this.getFilter('category')
+      const categoryIn = this.getFilter('category__in', 'CSV') || []
+      this.activeRootCategoryId = getRootCategoryId(category || categoryIn[0])
+    },
     filterRootCategory(categoryId) {
-      this.subCategoryDrawerVisible = false
+      // this.subCategoryDrawerVisible = false
       // 虽然 updateFilter 以后再通过 watch 机制回来也会计算 activeRootCategoryId, 但这里早点设置也没事
       this.activeRootCategoryId = categoryId
       // 因为有 partial: false, 这里其实不需要专门把其他参数置为空
       this.updateFilter({ category: categoryId }, { partial: false, fetch: true })
     },
     filterSubCategory(categoryId) {
-      this.subCategoryDrawerVisible = false
-      this.updateFilter({ category: categoryId }, { partial: true, fetch: true })
+      // this.subCategoryDrawerVisible = false
+      categoryId = '' + categoryId
+      const categories = this.getFilter('category__in', 'CSV') || []
+      const index = categories.indexOf(categoryId)
+      if (index >= 0) {
+        categories.splice(index, 1)
+      } else {
+        categories.push(categoryId)
+      }
+      if (categories.length) {
+        this.updateFilter({
+          'category__in': { value: categories, type: 'CSV' },
+          'category': '',
+        }, { partial: true, fetch: true })
+      } else {
+        this.updateFilter({
+          'category__in': '',
+          'category': this.activeRootCategoryId,
+        }, { partial: true, fetch: true })
+      }
     },
     onClickOrderBy(orderBy) {
-      this.subCategoryDrawerVisible = false
+      // this.subCategoryDrawerVisible = false
       if (this.products.orderBy === orderBy) {
         orderBy = ''
       }
@@ -286,7 +312,7 @@ export default {
       return tagKV[group] || ''
     },
     updateTagFilter(group, tag) {
-      this.subCategoryDrawerVisible = false
+      // this.subCategoryDrawerVisible = false
       const tagKV = {}
       _.forEach(this.getFilter('tag', 'Array'), (tag) => {
         const [k, v] = tag.split(':')
@@ -320,7 +346,7 @@ export default {
     },
     'products.filter': {
       handler: function(newVal) {
-        this.activeRootCategoryId = this.getRootCategoryId(this.getFilter('category'))
+        this.getRootCategoryId()
       },
       deep: true
     }
@@ -520,6 +546,18 @@ export default {
         border: 1px solid $color-text;
       }
       font-weight: bold;
+    }
+  }
+}
+.drawerFilterFooter {
+  padding: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  :global(.button) {
+    flex: 1;
+    + :global(.button) {
+      margin-left: 5px;
     }
   }
 }

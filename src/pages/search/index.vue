@@ -58,9 +58,6 @@ export default {
   },
   computed: {
     ...mapState(['categories', 'system']),
-    ...mapGetters('categories', [
-      'getRootCategoryId'
-    ]),
     customNavHeight() {
       return this.system.statusBarHeight + 44
       // return 0
