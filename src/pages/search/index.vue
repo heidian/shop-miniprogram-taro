@@ -18,11 +18,6 @@
 
     <floating-buttons />
 
-    <view
-      v-if="activeRootCategoryImage"
-      :class="$style['categoryImage']"
-      :style="{'backgroundImage': backgroundImageUrl(activeRootCategoryImage, 400)}"
-    ></view>
     <view :class="$style['productGrids']">
       <view v-for="product in products.data" :key="product.id" :class="$style['gridWrapper']">
         <product-item :product="product"></product-item>
@@ -70,11 +65,6 @@ export default {
     },
     pagePaddingTop() {
       return Taro.pxTransform(this.customNavHeight + 35)
-    },
-    activeRootCategoryImage() {
-      const activeRootCategoryId = this.getRootCategoryId(this.products.filter.category)
-      const category = _.find(this.categories.data, { id: activeRootCategoryId })
-      return _.get(category, 'image.src') ? category.image : null
     },
     hasMore() {
       return this.products.data.length < this.products.count
@@ -146,15 +136,6 @@ export default {
   min-height: 100vh;
   overflow: hidden;
   background-color: $color-bg-gray;
-}
-.categoryImage {
-  display: block;
-  margin: 8px;
-  padding-top: 33.333333%;
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: cover;
-  border-radius: 4px;
 }
 .productGrids {
   @include clearfix();

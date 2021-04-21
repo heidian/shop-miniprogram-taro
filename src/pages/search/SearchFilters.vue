@@ -20,16 +20,33 @@
           ><text :class="$style['categoryText']">{{ category.title }}</text></view>
         </view>
       </scroll-view>
-      <view
+      <!-- <view
         :class="$style['categoriesFilterButton']"
         @tap="subCategoryDrawerVisible = !subCategoryDrawerVisible"
       >
-        <!-- class="el-icon-s-operation" -->
         <text :class="{
           'is-dirty': activeRootCategoryId && +getFilter('category') !== activeRootCategoryId
         }">筛选</text>
+      </view> -->
+    </view>
+
+    <view
+      v-if="activeRootCategoryImage"
+      :class="$style['categoryImage']"
+      :style="{'backgroundImage': backgroundImageUrl(activeRootCategoryImage, 400)}"
+    ></view>
+    <view
+      :class="$style['fineTuningButtonsWrapper']"
+      @tap="subCategoryDrawerVisible = !subCategoryDrawerVisible"
+    >
+      <view :class="[$style['fineTuningButton'], isFiltersDirty && 'is-dirty']">
+        <text class="el-icon-s-operation"></text> 筛选
+      </view>
+      <view :class="[$style['fineTuningButton'], (!!products.orderBy) && 'is-dirty']">
+        <text class="el-icon-sort"></text> 排序
       </view>
     </view>
+
     <!-- 因为这个页面用了自定义 navbar, 需要修改 drawer 的样式 -->
     <drawer
       :visible.sync="subCategoryDrawerVisible"
@@ -189,6 +206,17 @@ export default {
       const category = _.find(this.categories.data, { id: this.activeRootCategoryId })
       return category ? category.children : []
     },
+    activeRootCategoryImage() {
+      const activeRootCategoryId = this.getRootCategoryId(this.getFilter('category'))
+      const category = _.find(this.categories.data, { id: activeRootCategoryId })
+      return _.get(category, 'image.src') ? category.image : null
+    },
+    isFiltersDirty() {
+      return (
+        (!!this.getFilter('category') && +this.getFilter('category') !== this.activeRootCategoryId) ||
+        (!_.isEmpty(this.getFilter('tag', 'Array')))
+      )
+    }
   },
   created() {
     this.activeRootCategoryId = this.getRootCategoryId(this.getFilter('category'))
@@ -295,36 +323,36 @@ export default {
   height: 35px;
   width: 100%;
   background-color: #fff;
-  padding-right: 60px;
+  // padding-right: 60px;
 }
 .categoriesScroll {
   width: 100%;
   height: 100%;
 }
-.categoriesFilterButton {
-  position: absolute;
-  right: 0;
-  top: 0;
-  width: 50px;
-  height: 100%;
-  // font-size: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: $color-text-light;
-  :global(.is-dirty) {
-    color: $color-text;
-    font-weight: bold;
-  }
-  &::after {
-    position: absolute;
-    content: "";
-    left: 0;
-    top: 10px;
-    height: 15px;
-    border-left: 1px solid $color-divider;
-  }
-}
+// .categoriesFilterButton {
+//   position: absolute;
+//   right: 0;
+//   top: 0;
+//   width: 50px;
+//   height: 100%;
+//   // font-size: 20px;
+//   display: flex;
+//   align-items: center;
+//   justify-content: center;
+//   color: $color-text-light;
+//   :global(.is-dirty) {
+//     color: $color-text;
+//     font-weight: bold;
+//   }
+//   &::after {
+//     position: absolute;
+//     content: "";
+//     left: 0;
+//     top: 10px;
+//     height: 15px;
+//     border-left: 1px solid $color-divider;
+//   }
+// }
 .categoriesInner {
   display: inline-block;
   white-space: nowrap;
@@ -351,9 +379,36 @@ export default {
   }
 }
 
+.categoryImage {
+  display: block;
+  margin: 8px;
+  padding-top: 33.333333%;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  border-radius: 4px;
+}
+.fineTuningButtonsWrapper {
+  margin: 10px 15px 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  .fineTuningButton {
+    padding: 6px 12px;
+    &:global(.is-dirty) {
+      font-weight: bold;
+    }
+  }
+  :global([class^="el-icon-"]) {
+    margin-right: 0.2em;
+    font-size: 1.1em;
+  }
+}
+
 .drawerFilter {
   overflow: hidden;
   background-color: #fff;
+  min-height: 100%;
 }
 .filterSection {
   margin-bottom: 20px;
