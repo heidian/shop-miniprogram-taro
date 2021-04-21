@@ -1,9 +1,10 @@
 import _ from 'lodash'
 import Taro from '@tarojs/taro'
+import { optimizeImage } from '@/utils/image'
 import { goToUrl, parseUrl } from '@/utils/url'
 
 
-/* 这个只在小程序端有效, H5 其实也应该处理, 只能另外想办法了 */
+/* 这个只在小程序端有效, H5 其实也应该处理, 这个放在 formatters.js 的 sanitizeHtml 里面 */
 Taro.options.html.transformElement = (el) => {
   if (el.h5tagName === 'br') {
     el.textContent = '\n'
@@ -31,7 +32,9 @@ Taro.options.html.transformElement = (el) => {
     }
   }
   if (el.tagName === 'IMAGE') {
-    el.props = { ...el.props, mode: 'widthFix' }
+    const src = optimizeImage(el.props.src)
+    const mode = 'widthFix'
+    el.props = { ...el.props, src, mode }
     // _taro.scss 里面有定义 .img 的样式
   }
   const fontSize = _.get(el, 'style.fontSize')

@@ -1,3 +1,5 @@
+import Taro from '@tarojs/taro'
+import { optimizeImage } from '@/utils/image'
 import dayjs from 'dayjs'
 
 export const formatCurrency = (value, { keepZero } = {}) => {
@@ -32,5 +34,15 @@ export const formatDateTime = (value, fmt = 'YYYY-MM-DD HH:mm') => {
 export const sanitizeHtml = (html) => {
   html = html || ''
   html = html.replace(/((&nbsp;\s*)+)/g, '<span>$1</span>')
+  if (Taro.getEnv() === Taro.ENV_TYPE.WEB) {
+    // web 环境下不触发 Taro.options.html, 这里需要专门处理
+    const $div = window.document.createElement('div')
+    $div.innerHTML = html
+    $div.querySelectorAll('img').forEach(($img) => {
+      const src = optimizeImage($img.getAttribute('src'))
+      $img.setAttribute('src', src)
+    })
+    html = $div.innerHTML
+  }
   return html
 }

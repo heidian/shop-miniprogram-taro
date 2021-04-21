@@ -8,7 +8,7 @@
         @change="onChange"
       >
         <swiper-item v-for="(item, index) in carousel" :key="index">
-          <!-- <image class="carousel__image" :src="optimizeImage(item.image, 600)" mode="aspectFit"></image> -->
+          <!-- <image class="carousel__image" :src="optimizeImage(item.image)" mode="aspectFit"></image> -->
           <view
             :style="{'backgroundImage':backgroundImageUrl(item.image)}"
             class="carousel__image"
