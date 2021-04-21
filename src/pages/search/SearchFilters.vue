@@ -60,7 +60,7 @@
       <view :class="$style['drawerFilter']">
         <view :class="$style['filterSection']">
           <view :class="$style['filterTitle']">排序</view>
-          <view :class="$style['filterBodyInline']">
+          <view :class="$style['filterBodyPills']">
             <view
               v-for="([title, field], index) in [
                 ['新品', '-published_at'], ['价格', 'price'], ['销量', '-sold_quantity']
@@ -73,7 +73,7 @@
         <!-- 二级分类 -->
         <view v-if="!!activeRootCategoryId" :class="$style['filterSection']">
           <view :class="$style['filterTitle']">分类</view>
-          <view :class="$style['filterBody']">
+          <view :class="$style['filterBodyRows']">
             <view
               @tap="() => filterRootCategory(activeRootCategoryId)"
               :class="[$style['filterItem'], (activeRootCategoryId === +getFilter('category')) && 'is-active']"
@@ -87,7 +87,7 @@
         <!-- 其他筛选条件 -->
         <view :class="$style['filterSection']">
           <view :class="$style['filterTitle']">面料</view>
-          <view :class="$style['filterBody']">
+          <view :class="$style['filterBodyRows']">
             <view
               @tap="() => updateTagFilter('面料', '')"
               :class="[$style['filterItem'], (!getTagFilter('面料')) && 'is-active']"
@@ -437,31 +437,43 @@ export default {
 .drawerFilter {
   overflow: hidden;
   background-color: #fff;
+  padding: 5px 15px 30px;
   min-height: 100%;
 }
-.filterSection {
-  margin-bottom: 20px;
-}
+.filterSection {}
 .filterTitle {
-  font-size: 15px;
-  line-height: 20px;
-  padding: 0 15px;
+  margin: 15px auto 5px;
 }
-.filterBody {
-  padding: 5px 10px;
+.filterBodyRows {
   .filterItem {
-    padding: 5px;
+    padding: 5px 5px 5px 15px;
     font-size: 13px;
     line-height: 20px;
-    // color: $color-text-light;
+    position: relative;
+    &::after {
+      content: "";
+      position: absolute;
+      left: -2px;
+      top: 9px;
+      width: 12px;
+      height: 12px;
+      border: 2px solid $color-text;
+    }
     &:global(.is-active) {
-      // color: $color-text;
-      font-weight: bold;
+      &::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 11px;
+        width: 8px;
+        height: 8px;
+        background-color: $color-text;
+      }
+      // font-weight: bold;
     }
   }
 }
-.filterBodyInline {
-  padding: 5px 10px;
+.filterBodyPills {
   display: flex;
   flex-wrap: wrap;
   align-items: flex-start;
@@ -486,7 +498,6 @@ export default {
   }
 }
 .filterBodyImages {
-  padding: 5px 10px;
   display: flex;
   flex-wrap: wrap;
   align-items: flex-start;
