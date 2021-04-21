@@ -79,7 +79,7 @@
         </view>
         <view :class="$style['filterSection']">
           <view :class="$style['filterTitle']">颜色</view>
-          <view :class="$style['filterBody']">
+          <view :class="$style['filterBodyImages']">
             <view
               @tap="() => updateTagFilter('颜色', '')"
               :class="[$style['filterItem'], (!getTagFilter('颜色')) && 'is-active']"
@@ -87,8 +87,9 @@
             <view
               v-for="(item, index) in tagFilters['颜色']" :key="index"
               @tap="() => updateTagFilter('颜色', item)"
-              :class="[$style['filterItem'], (item === getTagFilter('颜色')) && 'is-active']"
-            >{{ item }}</view>
+              :class="[$style['filterItem'], 'has-image', (item === getTagFilter('颜色')) && 'is-active']"
+              :style="{'backgroundImage': backgroundImageUrl(colorOptionImages[item])}"
+            ></view>
           </view>
         </view>
       </view>
@@ -114,6 +115,7 @@ import _ from 'lodash'
 import Taro from '@tarojs/taro'
 import { mapState, mapGetters } from 'vuex'
 import { API } from '@/utils/api'
+import { optimizeImage, backgroundImageUrl } from '@/utils/image'
 import Drawer from '@/components/Drawer'
 // import FloatingButtons from '@/components/FloatingButtons/FloatingButtons'
 // import FloatingButtonItem from '@/components/FloatingButtons/FloatingButtonItem'
@@ -151,18 +153,18 @@ export default {
       activeRootCategoryId: null,
       subCategoryDrawerVisible: false,
       // TODO 这部分只是给 joyberry 用的
+      colorOptionTitle: '',
+      colorOptionImages: {}, // { optionValue: imageSrc, ... }
       tagFilters: {
         '面料': [],
         '颜色': [],
       }
     }
   },
-  created() {},
   computed: {
     ...mapState(['categories', 'system']),
-    ...mapGetters('categories', [
-      'getRootCategoryId'
-    ]),
+    ...mapState('theme', ['themeSettingsData']),
+    ...mapGetters('categories', [ 'getRootCategoryId' ]),
     customNavHeight() {
       return this.system.statusBarHeight + 44
     },
@@ -191,8 +193,18 @@ export default {
   created() {
     this.activeRootCategoryId = this.getRootCategoryId(this.getFilter('category'))
     this.fetchTagFilters()
+    this.configColorOptions()
   },
   methods: {
+    optimizeImage,
+    backgroundImageUrl,
+    configColorOptions() {
+      this.colorOptionTitle = _.get(this.themeSettingsData, 'colorOptionTitle.value') || ''
+      const colorOptionImages = _.get(this.themeSettingsData, 'colorOptionImages') || []
+      this.colorOptionImages = _.fromPairs(_.map(colorOptionImages, (image) => {
+        return [_.get(image, 'metafield.altText') || '', image]
+      }))
+    },
     filterRootCategory(categoryId) {
       this.subCategoryDrawerVisible = false
       // 虽然 updateFilter 以后再通过 watch 机制回来也会计算 activeRootCategoryId, 但这里早点设置也没事
@@ -256,6 +268,12 @@ export default {
     }
   },
   watch: {
+    'themeSettingsData': {
+      handler(newValue) {
+        this.configColorOptions()
+      },
+      deep: true,
+    },
     'products.filter': {
       handler: function(newVal) {
         this.activeRootCategoryId = this.getRootCategoryId(this.getFilter('category'))
@@ -359,14 +377,14 @@ export default {
   }
 }
 .filterBodyInline {
-  padding: 5px 5px;
+  padding: 5px 10px;
   display: flex;
   flex-wrap: wrap;
   align-items: flex-start;
   justify-content: flex-start;
   .filterItem {
     padding: 4px 14px;
-    margin: 5px;
+    margin: 0 10px 10px 0;
     border: 1px solid transparent;
     text-align: center;
     font-size: 12px;
@@ -379,6 +397,33 @@ export default {
       // border-color: $color-text;
       background-color: darken($color-bg-gray, 10%);
       color: $color-text;
+      font-weight: bold;
+    }
+  }
+}
+.filterBodyImages {
+  padding: 5px 10px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: flex-start;
+  .filterItem {
+    margin: 0 5px 5px 0;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    overflow: hidden;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    &:global(.is-active) {
+      &:global(.has-image) {
+        border: 1px solid $color-text;
+      }
       font-weight: bold;
     }
   }
