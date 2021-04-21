@@ -4,10 +4,10 @@
     :style="{'paddingTop': pagePaddingTop, ...$globalColors}"
   >
 
-    <!-- <custom-nav
+    <custom-nav
       :q="products.filter.q"
       @submit="onSubmitSearch"
-    ></custom-nav> -->
+    ></custom-nav>
 
     <search-filters
       ref="searchFilters"
@@ -62,8 +62,8 @@ export default {
       'getRootCategoryId'
     ]),
     customNavHeight() {
-      // return this.system.statusBarHeight + 44
-      return 0
+      return this.system.statusBarHeight + 44
+      // return 0
     },
     pagePaddingTop() {
       return Taro.pxTransform(this.customNavHeight + 35)

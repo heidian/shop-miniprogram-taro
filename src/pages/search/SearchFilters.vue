@@ -189,8 +189,8 @@ export default {
     ...mapState('theme', ['themeSettingsData']),
     ...mapGetters('categories', [ 'getRootCategoryId' ]),
     customNavHeight() {
-      // return this.system.statusBarHeight + 44
-      return 0
+      return this.system.statusBarHeight + 44
+      // return 0
     },
     customNavStyle() {
       return {
