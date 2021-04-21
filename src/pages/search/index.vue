@@ -121,9 +121,9 @@ export default {
       // Taro.hideNavigationBarLoading()
     },
     onSubmitSearch(q) {
-      // 因为有 partial: false, 这里其实不需要专门把 category 重置为空, 为了避免混淆, 现在先这么保留着
-      this.updateFilter({ q, category: '' }, { partial: false, fetch: false })
-      this.fetchProducts()
+      // 因为有 partial: false, 这里其实不需要专门把其他过滤参数重置为空
+      this.updateFilter({ q }, { partial: false, fetch: true })
+      // this.fetchProducts()
     },
   },
   async onPullDownRefresh() {

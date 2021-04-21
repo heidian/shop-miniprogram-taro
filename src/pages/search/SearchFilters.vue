@@ -113,6 +113,7 @@
 import _ from 'lodash'
 import Taro from '@tarojs/taro'
 import { mapState, mapGetters } from 'vuex'
+import { API } from '@/utils/api'
 import Drawer from '@/components/Drawer'
 // import FloatingButtons from '@/components/FloatingButtons/FloatingButtons'
 // import FloatingButtonItem from '@/components/FloatingButtons/FloatingButtonItem'
@@ -149,9 +150,10 @@ export default {
     return {
       activeRootCategoryId: null,
       subCategoryDrawerVisible: false,
+      // TODO 这部分只是给 joyberry 用的
       tagFilters: {
-        '面料': ['面料A', '面料B', '面料C', '面料D', '面料E', '面料F'],
-        '颜色': ['美人黑', '暮光蓝', '暮光红', '暮光白',],
+        '面料': [],
+        '颜色': [],
       }
     }
   },
@@ -186,16 +188,17 @@ export default {
       return category ? category.children : []
     },
   },
-  mounted() {
+  created() {
     this.activeRootCategoryId = this.getRootCategoryId(this.getFilter('category'))
+    this.fetchTagFilters()
   },
   methods: {
     filterRootCategory(categoryId) {
       this.subCategoryDrawerVisible = false
       // 虽然 updateFilter 以后再通过 watch 机制回来也会计算 activeRootCategoryId, 但这里早点设置也没事
       this.activeRootCategoryId = categoryId
-      // 因为有 partial: false, 这里其实不需要专门把 q 重置为空, 为了避免混淆, 现在先这么保留着
-      this.updateFilter({ q: '', category: categoryId }, { partial: false, fetch: true })
+      // 因为有 partial: false, 这里其实不需要专门把其他参数置为空
+      this.updateFilter({ category: categoryId }, { partial: false, fetch: true })
     },
     filterSubCategory(categoryId) {
       this.subCategoryDrawerVisible = false
@@ -207,6 +210,18 @@ export default {
         orderBy = ''
       }
       this.updateOrderBy(orderBy, { fetch: true })
+    },
+    fetchTagFilters() {
+      API.get('/shopfront/product_tag/', {
+        params: { page_size: 999 }
+      }).then(({ data }) => {
+        _.forEach(data.results, (tag) => {
+          const [title, value] = tag.title.split(':')
+          if (title === '面料' || title === '颜色') {
+            this.tagFilters[title].push(value)
+          }
+        })
+      }).catch((err) => { console.log(err) })
     },
     getTagFilter(group) {
       // tag 都是 颜色:暮光蓝 这种格式的
@@ -335,7 +350,7 @@ export default {
   .filterItem {
     padding: 5px;
     font-size: 13px;
-    line-height: 16px;
+    line-height: 20px;
     // color: $color-text-light;
     &:global(.is-active) {
       // color: $color-text;
