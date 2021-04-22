@@ -26,7 +26,7 @@
       </view>
     </form>
     <view :class="$style['buttonsWrapper']">
-      <button open-type="getUserInfo" @getUserInfo="getUserInfo" :class="['button', $style['wechatBtn']]" type="primary">
+      <button @tap="getUserProfile" :class="['button', $style['wechatBtn']]" type="primary">
         <image :class="$style['buttonIcon']" src="https://up.img.heidiancdn.com/o_1cgtnj1nadol7n31b8n1lfidgb0wechat.png"></image>使用微信信息
       </button>
       <button class="button button--dark" @tap="submitForm">保存</button>
@@ -112,15 +112,20 @@ export default {
         handleErr(err)
       })
     },
-    getUserInfo (e) {
-      const { userInfo } = e.detail
-      const { nickName, gender, avatarUrl } = userInfo
-      this.userInfo = {
-        ...this.userInfo,
-        full_name: nickName,
-        avatar: avatarUrl
-      }
-      this.genderIndex = gender
+    getUserProfile() {
+      // 这个暂时没有 Taro 的借口
+      wx.getUserProfile({
+        desc: '用于完善会员资料', // 声明获取用户个人信息后的用途，后续会展示在弹窗中，请谨慎填写
+        success: (res) => {
+          const { nickName, gender, avatarUrl } = res.userInfo
+          this.userInfo = {
+            ...this.userInfo,
+            full_name: nickName,
+            avatar: avatarUrl
+          }
+          this.genderIndex = gender
+        }
+      })
     },
     onSelectAvatar () {
       if (!!this.uploading) return
