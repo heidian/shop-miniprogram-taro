@@ -334,7 +334,7 @@ export default {
     handlePageScroll(scrollTop) {
       Taro.pxTransform(this.customNavHeight)
       const imageHeight = this.activeRootCategoryImage ? (this.system.screenWidth - 16) / 3 + (8 + 10) : 10
-      this.fixFineTuningOnTop = scrollTop > imageHeight
+      this.fixFineTuningOnTop = scrollTop >= imageHeight
     },
   },
   watch: {
@@ -499,9 +499,10 @@ export default {
   flex-wrap: wrap;
   align-items: flex-start;
   justify-content: flex-start;
+  margin-right: -10px;
   .filterItem {
-    padding: 4px 14px;
     margin: 0 10px 10px 0;
+    padding: 4px 14px;
     border: 1px solid transparent;
     text-align: center;
     font-size: 12px;
@@ -523,10 +524,11 @@ export default {
   flex-wrap: wrap;
   align-items: flex-start;
   justify-content: flex-start;
+  margin-right: -4px;
   .filterItem {
-    margin: 0 5px 5px 0;
-    width: 32px;
-    height: 32px;
+    margin: 0 4px 4px 0;
+    width: 24px;
+    height: 24px;
     border-radius: 50%;
     background-size: cover;
     background-position: center;
@@ -539,6 +541,7 @@ export default {
     &:global(.is-active) {
       &:global(.has-image) {
         border: 1px solid $color-text;
+        box-shadow: inset 0 0 0 2px #ffffff;
       }
       font-weight: bold;
     }
