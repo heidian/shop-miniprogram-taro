@@ -83,7 +83,7 @@
           </view>
         </view>
         <!-- 其他筛选条件 -->
-        <view :class="$style['filterSection']">
+        <view :class="$style['filterSection']" v-if="tagFilters['面料'] && tagFilters['面料'].length">
           <view :class="$style['filterTitle']">面料</view>
           <view :class="$style['filterBodyRows']">
             <view
@@ -97,7 +97,7 @@
             >{{ item }}</view>
           </view>
         </view>
-        <view :class="$style['filterSection']">
+        <view :class="$style['filterSection']" v-if="tagFilters['颜色'] && tagFilters['颜色'].length">
           <view :class="$style['filterTitle']">颜色</view>
           <view :class="$style['filterBodyImages']">
             <view
