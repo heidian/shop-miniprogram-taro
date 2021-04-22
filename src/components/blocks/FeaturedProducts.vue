@@ -5,24 +5,15 @@
     'scroll': layout === 'scroll'
   }" :style="css">
     <view v-for="product in products.data" :key="product.id" :style="gridStyle" :class="$style['gridWrapper']">
-      <view
-        :class="{
-          [$style['productItem']]: true,
-          [$style['productItemFullwidth']]: columns === 1
-        }"
-        :style="settingsData.backgroundColor ? {
-          'borderRadius': '4px',  // 如果有底色, 就加一个圆角
-          'backgroundColor': settingsData.backgroundColor
-        } : {}"
-        @tap="goToProduct(product.name)"
-      >
+      <view :class="{
+        [$style['productItem']]: true,
+        [$style['productItemFullwidth']]: columns === 1
+      }" :style="productItemStyle" @tap="goToProduct(product.name)">
         <view :class="$style['imageWrapper']">
-          <view
-            :class="$style['image']" :style="{
-              'paddingTop': imagePaddingTop,
-              'backgroundImage': backgroundImageUrl(product.image, 200),
-            }"
-          ></view>
+          <view :class="$style['image']" :style="{
+            'paddingTop': imagePaddingTop,
+            'backgroundImage': backgroundImageUrl(product.image, 200),
+          }"></view>
         </view>
         <view :class="$style['textWrapper']">
           <view :class="$style['title']">
@@ -67,6 +58,8 @@ export default {
       default: () => ({
         layout: 'grids',  // scroll|grids
         backgroundColor: null,  // 商品格子的底色
+        boxShadow: null,  // 商品格子阴影
+        textColor: null,  // 商品格子文字颜色
         productsQuery: {},  // 商品过滤参数
         gridGap: 0,  // px 整数
         imageRatio: 1,  // 宽高比
@@ -101,6 +94,21 @@ export default {
       style['width'] = `${widthPercent}%`
       style['padding'] = Taro.pxTransform(`${parseInt(gridGap/2)}px`)
       style['fontSize'] = columns >= 3 ? '0.75em' : (columns === 2 ? '0.95em' : '1em')
+      return style
+    },
+    productItemStyle() {
+      const style = {}
+      if (this.settingsData.backgroundColor) {
+        style['backgroundColor'] = this.settingsData.backgroundColor
+        style['borderRadius'] = '4px'  // 如果有底色或阴影, 就加一个圆角
+      }
+      if (this.settingsData.boxShadow) {
+        style['boxShadow'] = `0 0 4px 0 ${this.settingsData.boxShadow}`
+        style['borderRadius'] = '4px'  // 如果有底色或阴影, 就加一个圆角
+      }
+      if (this.settingsData.textColor) {
+        style['color'] = this.settingsData.textColor
+      }
       return style
     },
     imagePaddingTop() {
