@@ -5,7 +5,7 @@
     'drawer--visible': isVisible
   }">
     <view class="drawer__mask" @tap="handleClose"></view>
-    <view class="drawer__body">
+    <view class="drawer__body" :style="isLikeIphoneX ? { 'paddingBottom': '20px' } : {}">
       <view class="drawer__header">
         <text>{{ header }}</text>
         <view class="drawer__close" @tap="handleClose">×</view>
@@ -21,6 +21,7 @@
 </template>
 
 <script>
+import { mapState, mapGetters } from 'vuex'
 export default {
   name: 'Drawer',
   props: {
@@ -43,7 +44,7 @@ export default {
     }
   },
   computed: {
-    //
+    ...mapGetters('system', ['isLikeIphoneX']),
   },
   mounted() {
     if (this.visible) {
@@ -94,7 +95,7 @@ export default {
   .drawer__body {
     position: absolute;
     z-index: $z-index-drawer + 1;
-    background-color: $color-bg-gray;
+    background-color: #fff;
     display: flex;
     flex-direction: column;
     overflow: hidden;
@@ -106,7 +107,6 @@ export default {
     line-height: 20px;
     text-align: center;
     font-weight: bold;
-    background-color: #fff;
     // @include clearfix();
   }
   .drawer__close {
@@ -128,7 +128,6 @@ export default {
   }
   .drawer__footer {
     flex: 0;
-    background-color: #fff;
   }
   /* animation styles start */
   opacity: 0;

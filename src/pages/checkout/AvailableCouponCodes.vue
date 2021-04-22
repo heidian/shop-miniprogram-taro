@@ -1,7 +1,7 @@
 <template>
   <drawer
+    position="bottom" header="优惠券" :class="$style['drawer']"
     :visible="isVisible" @close="onClose" @open="onOpen"
-    position="bottom" header="优惠券" :class="$style['couponCodes']"
   >
     <scroll-view :scrollY="true" :scrollWithAnimation="true" :class="$style['list']">
       <view :class="$style['redeem']">
@@ -125,77 +125,83 @@ export default {
 
 <style lang="scss" module>
 @import '@/styles/variables';
-.couponCodes {
-  .loadingText {
-    padding: 20px;
-    text-align: center;
-    color: $color-text-lighter;
+.drawer {
+  :global(.drawer__body) {
+    background-color: $color-bg-gray;
   }
-  .list {
-    height: 60vh;
+  :global(.drawer__header) {
+    background-color: #fff;
   }
-  .item {
+}
+.loadingText {
+  padding: 20px;
+  text-align: center;
+  color: $color-text-lighter;
+}
+.list {
+  height: 60vh;
+}
+.item {
+  height: 80px;
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: #fff;
+  margin: 10px;
+  padding: 10px 50px 10px 90px;
+  position: relative;
+  .image {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 80px;
     height: 80px;
-    border-radius: 8px;
-    overflow: hidden;
-    background-color: #fff;
-    margin: 10px;
-    padding: 10px 50px 10px 90px;
-    position: relative;
-    .image {
-      position: absolute;
-      left: 0;
-      top: 0;
-      width: 80px;
-      height: 80px;
-      background-color: #aaa;
-    }
-    .caption {
-      height: 100%;
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      align-items: flex-start;
-      >.title, >.verboseTitle, >.startEnd {
-        overflow: hidden;
-        white-space: nowrap;
-        max-width: 100%;
-        text-overflow: ellipsis;
-      }
-      >.verboseTitle, >.startEnd {
-        color: $color-text-lighter;
-        font-size: 0.8em;
-      }
-    }
-    .check {
-      position: absolute;
-      right: 10px;
-      top: 30px;
-    }
+    background-color: #aaa;
   }
-  .redeem {
-    margin-top: 10px;
-    margin-left: 10px;
-    margin-right: 10px;
-    padding: 0px;
+  .caption {
+    height: 100%;
+    width: 100%;
     display: flex;
+    flex-direction: column;
     justify-content: space-between;
-    align-items: center;
-    background-color: #fff;
-    border-radius: 8px;
-    overflow: hidden;
+    align-items: flex-start;
+    >.title, >.verboseTitle, >.startEnd {
+      overflow: hidden;
+      white-space: nowrap;
+      max-width: 100%;
+      text-overflow: ellipsis;
+    }
+    >.verboseTitle, >.startEnd {
+      color: $color-text-lighter;
+      font-size: 0.8em;
+    }
   }
-  .input {
-    flex: 1;
-    display: block;
-    padding-left: 10px;
-    height: 36px;
-    line-height: 36px;
+  .check {
+    position: absolute;
+    right: 10px;
+    top: 30px;
   }
-  .btnRedeen {
-    border-top-left-radius: 0;
-    border-bottom-left-radius: 0;
-  }
+}
+.redeem {
+  margin-top: 10px;
+  margin-left: 10px;
+  margin-right: 10px;
+  padding: 0px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+}
+.input {
+  flex: 1;
+  display: block;
+  padding-left: 10px;
+  height: 36px;
+  line-height: 36px;
+}
+.btnRedeen {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
 }
 </style>

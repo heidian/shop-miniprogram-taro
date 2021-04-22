@@ -462,9 +462,7 @@ export default {
 
 .drawerFilter {
   overflow: hidden;
-  background-color: #fff;
   padding: 5px 15px 30px;
-  min-height: 100%;
 }
 .filterSection {}
 .filterTitle {

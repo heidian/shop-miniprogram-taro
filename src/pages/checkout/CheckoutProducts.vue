@@ -1,5 +1,8 @@
 <template>
-  <drawer position="bottom" :visible="isVisible" @close="onClose" @open="onOpen" header="商品明细">
+  <drawer
+    position="bottom" header="商品明细" :class="$style['drawer']"
+    :visible="isVisible" @close="onClose" @open="onOpen"
+  >
     <scroll-view :scrollY="true" :scrollWithAnimation="true" :class="$style['linesWrapper']">
       <view v-if="pending" :class="$style['loadingText']">正在加载</view>
       <template v-else>
@@ -76,6 +79,14 @@ export default {
 
 <style lang="scss" module>
 @import '@/styles/variables';
+.drawer {
+  :global(.drawer__body) {
+    background-color: $color-bg-gray;
+  }
+  :global(.drawer__header) {
+    background-color: #fff;
+  }
+}
 .loadingText {
   padding: 20px;
   text-align: center;

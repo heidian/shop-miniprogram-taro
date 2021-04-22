@@ -47,7 +47,7 @@
       <view>数量</view>
       <input-number :class="$style['quantityInput']" :min="1" v-model="quantity"></input-number>
     </view>
-    <view :class="{[$style['buttonsWrapper']]: true, [$style['isLikeIphoneX']]: isLikeIphoneX}">
+    <view :class="$style['buttonsWrapper']">
       <button v-if="!openType"
         :class="['button', 'button--primary', 'button--outline', 'button--small', 'button--round']"
         @tap="isVisible = false"
@@ -71,7 +71,7 @@
 <script>
 import Taro from '@tarojs/taro'
 import _ from 'lodash'
-import { mapState, mapGetters } from 'vuex'
+import { mapState } from 'vuex'
 import { API } from '@/utils/api'
 import { handleErr } from '@/utils/errHelper'
 import { optimizeImage, backgroundImageUrl } from '@/utils/image'
@@ -123,7 +123,6 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('system', ['isLikeIphoneX']),
     ...mapState('theme', ['themeSettingsData']),
     inventoryDeny() {
       return this.currentVariant.inventory_policy === 'deny' &&
