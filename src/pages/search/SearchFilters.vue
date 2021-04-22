@@ -117,7 +117,7 @@
         <button
           :class="['button', 'button--small']"
           @tap="updateFilter({}, { partial: false, fetch: true })"
-        >重制</button>
+        >重置</button>
         <button
           :class="['button', 'button--small', 'button--primary']"
           @tap="subCategoryDrawerVisible = false"
@@ -486,14 +486,9 @@ export default {
       border: 2px solid $color-text;
     }
     &:global(.is-active) {
-      &::before {
-        content: "";
-        position: absolute;
-        left: 0;
-        top: 11px;
-        width: 8px;
-        height: 8px;
+      &::after {
         background-color: $color-text;
+        box-shadow: inset 0 0 0 1px #fff
       }
       // font-weight: bold;
     }
