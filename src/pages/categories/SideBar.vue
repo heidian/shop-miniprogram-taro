@@ -80,8 +80,10 @@ export default {
 }
 .itemText {
   font-size: 13px;
-  font-weight: 600;
   line-height: 45px;
   white-space: nowrap;
+  .active & {
+    font-weight: bold;
+  }
 }
 </style>
