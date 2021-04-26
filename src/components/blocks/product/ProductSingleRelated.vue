@@ -1,25 +1,28 @@
 <template>
-  <view :class="$style['container']" :style="css">
+  <view :class="$style['section']" :style="css">
     <view :class="$style['sectionTitle']">猜你喜欢</view>
-    <view v-for="(product, index) in relatedProducts" :key="product.id" :class="$style['grid']">
-      <view :class="$style['productItem']" @tap="goToProduct(product.name)">
-        <view :class="$style['imageWrapper']">
-          <image
-            :class="$style['image']" mode="aspectFill" :lazy-load="true"
-            :src="optimizeImage(product.image, 200)"
-          ></image>
-        </view>
-        <view :class="$style['textWrapper']">
-          <view :class="$style['title']">
-            <text>{{ product.title }}</text>
-            <text style="opacity: 0.8; font-size: 0.9em;">{{ '\n' }}{{ product.description }}</text>
+    <view :class="$style['container']">
+      <view v-for="(product, index) in relatedProducts" :key="product.id" :class="$style['grid']">
+        <view :class="$style['productItem']" @tap="goToProduct(product.name)">
+          <view :class="$style['imageWrapper']">
+            <image
+              :class="$style['image']" mode="aspectFill" :lazy-load="true"
+              :src="optimizeImage(product.image, 200)"
+            ></image>
           </view>
-          <price
-            :class="$style['price']" :highlight="false" :keepZero="true"
-            :price="product.price" :compareAtPrice="product.compare_at_price"
-          ></price>
+          <view :class="$style['textWrapper']">
+            <view :class="$style['title']">
+              <text>{{ product.title }}</text>
+              <text style="opacity: 0.8; font-size: 0.9em;">{{ '\n' }}{{ product.description }}</text>
+            </view>
+            <price
+              :highlight="true" :keepZero="false"
+              :price="product.price" :compareAtPrice="product.compare_at_price"
+            ></price>
+          </view>
         </view>
       </view>
+      <!-- /.grid -->
     </view>
   </view>
 </template>
@@ -86,23 +89,25 @@ export default {
 <style lang="scss" module>
 @import '@/styles/mixins';
 @import '@/styles/variables';
-.container {
-  @include clearfix();
-  padding: 5px;
+.section {
+  overflow: hidden;
 }
 .sectionTitle {
   width: 100%;
-  padding: 20px 5px 15px;
+  padding: 15px 15px 0;
   font-size: 15px;
   text-align: center;
   font-weight: bold;
+}
+.container {
+  @include clearfix();
+  padding: 5px;
 }
 .grid {
   float: left;
   width: 50%;
   padding: 5px;
-  // &:nth-child(2n+1) {
-  &:nth-child(2n) {  // 因为最顶上有一个 sectionTitle, 这里奇偶要变一下
+  &:nth-child(2n+1) {
     clear: both;
   }
 }

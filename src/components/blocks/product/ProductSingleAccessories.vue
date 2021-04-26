@@ -1,5 +1,9 @@
 <template>
   <view :class="$style['section']" :style="{ ...css, display: products && products.length ? 'block' : 'none' }">
+    <view
+      v-if="settingsData.sectionTitle && settingsData.sectionTitle.value"
+      :class="$style['sectionTitle']" :style="settingsData.sectionTitle.style || {}"
+    >{{ settingsData.sectionTitle.value }}</view>
     <navigator
       :url="`/pages/product/accessories/index?product=${product.id}`"
       :class="$style['sectionContainer']" hover-class="none"
@@ -28,7 +32,9 @@ export default {
     },
     settingsData: {
       type: Object,
-      default: () => ({})
+      default: () => ({
+        sectionTitle: { value: '' },  // 板块标题
+      })
     },
     product: {
       type: Object,
@@ -92,6 +98,10 @@ export default {
 .section {
   overflow: hidden;
   background-color: #ffffff;
+}
+.sectionTitle {
+  text-align: center;
+  padding: 15px 15px 0;
 }
 .sectionContainer {
   // background-color: #fafafa;
