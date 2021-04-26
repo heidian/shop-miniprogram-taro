@@ -9,6 +9,9 @@
         v-if="productTag.value"
         :class="$style['productTag']" :style="{'backgroundColor': productTag.color}"
       >{{ productTag.value }}</view>
+      <view :class="$style['zoomIcon']" @tap.stop="handleZoom">
+        <text class="el-icon-zoom-in"></text>
+      </view>
     </view>
     <view :class="$style['textWrapper']">
       <view :class="$style['title']">{{ product.title }}</view>
@@ -35,6 +38,7 @@ import _ from 'lodash'
 import dayjs from 'dayjs'
 import Taro from '@tarojs/taro'
 import { mapState, mapGetters } from 'vuex'
+import { API } from '@/utils/api'
 import { optimizeImage, backgroundImageUrl } from '@/utils/image'
 import Price from '@/components/Price'
 
@@ -95,6 +99,21 @@ export default {
           color: '#ff0000',
         }
       } else {}
+    },
+    handleZoom() {
+      Taro.showLoading({})
+      API.get(`/shopfront/product/${this.product.id}/`, {
+        params: { fields: 'id,images' }
+      }).then((res) => {
+        const images = res.data.images
+        if (images.length) {
+          const urls = _.map(images, (image) => this.optimizeImage(image))
+          Taro.previewImage({ current: urls[0], urls })
+        }
+        Taro.hideLoading()
+      }).catch((err) => {
+        Taro.hideLoading()
+      })
     }
   },
 }
@@ -109,60 +128,69 @@ export default {
   // box-shadow: 0 3px 5px rgba(#000, 0.2);
   background-color: #fff;
   overflow: hidden;
-  .textWrapper {
-    padding: 7px;
-  }
-  .title, .description {
-    font-size: 12px;
-    line-height: 15px;
-    height: 30px;
-    letter-spacing: 1px;
-    word-break: break-all;
-    @include ellipsis(2);
-    margin-bottom: 5px;
-  }
-  .title {
-    font-weight: 500;
-    color: $color-text;
-  }
-  .description {
-    color: $color-text-light;
-  }
-  .imageWrapper {
-    width: 100%;
-    padding-top: 100%;
-    position: relative;
-  }
-  .image {
-    display: block;
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-  }
-  .productTag {
-    position: absolute;
-    top: 0;
-    left: 0;
-    font-size: 12px;
-    line-height: 16px;
-    padding: 2px 6px;
-    color: #fff;
-  }
-  .colorOptionsWrapper {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    padding: 0 7px 7px;
-  }
-  .colorOptionsItem {
-    width: 15px;
-    height: 15px;
-    color: $color-text-light;
-    + .colorOptionsItem {
-      margin-left: 5px;
-    }
+}
+.textWrapper {
+  padding: 7px;
+}
+.title, .description {
+  font-size: 12px;
+  line-height: 15px;
+  height: 30px;
+  letter-spacing: 1px;
+  word-break: break-all;
+  @include ellipsis(2);
+  margin-bottom: 5px;
+}
+.title {
+  font-weight: 500;
+  color: $color-text;
+}
+.description {
+  color: $color-text-light;
+}
+.imageWrapper {
+  width: 100%;
+  padding-top: 100%;
+  position: relative;
+}
+.image {
+  display: block;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+}
+.productTag {
+  position: absolute;
+  top: 0;
+  left: 0;
+  font-size: 12px;
+  line-height: 16px;
+  padding: 2px 6px;
+  color: #fff;
+}
+.zoomIcon {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: block;
+  font-size: 16px;
+  padding: 5px 10px 15px 15px;
+  opacity: 0.7;
+}
+.colorOptionsWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 0 7px 7px;
+}
+.colorOptionsItem {
+  width: 15px;
+  height: 15px;
+  color: $color-text-light;
+  + .colorOptionsItem {
+    margin-left: 5px;
   }
 }
 </style>
