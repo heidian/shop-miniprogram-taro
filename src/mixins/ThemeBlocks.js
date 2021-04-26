@@ -17,6 +17,7 @@ import Image from '@/components/blocks/Image'
 import Video from '@/components/blocks/Video'
 import Grids from '@/components/blocks/Grids'
 // import Text from '@/components/blocks/Text'
+import Marquee from '@/components/blocks/Marquee'
 import RichText from '@/components/blocks/RichText'
 import TezignBanner from '@/components/blocks/TezignBanner'
 import ProductSingleMain from '@/components/blocks/product/ProductSingleMain'
@@ -42,6 +43,7 @@ const BLOCKS_MAP = {
   'blocks/video': Video,
   'blocks/grids': Grids,
   // 'blocks/text': Text,
+  'blocks/marquee': Marquee,
   'blocks/rich_text': RichText,
   'blocks/tezign_banner': TezignBanner,
   'blocks/product_single_main': ProductSingleMain,
