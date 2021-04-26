@@ -30,20 +30,26 @@
       :class="$style['categoryImage']"
       :style="{'backgroundImage': backgroundImageUrl(activeRootCategoryImage, 400)}"
     ></view>
-    <view
-      :class="$style['fineTuningButtonsWrapper']"
-      @tap="subCategoryDrawerVisible = !subCategoryDrawerVisible"
-    >
+    <view :class="$style['fineTuningButtonsWrapper']">
       <view
         :class="[$style['fineTuningButtonsInner'], fixFineTuningOnTop && 'is-fixed']"
         :style="fixFineTuningOnTop ? { 'top': fineTuningBarTop } : {}"
       >
-        <view :class="[$style['fineTuningButton'], isFiltersDirty && 'is-dirty']">
-          <text class="el-icon-s-operation"></text> 筛选
-        </view>
-        <view :class="[$style['fineTuningButton'], (!!products.orderBy) && 'is-dirty']">
-          <text class="el-icon-sort"></text> 排序
-        </view>
+        <view
+          :class="[$style['fineTuningButton'], isFiltersDirty && 'is-dirty']"
+          @tap="subCategoryDrawerVisible = !subCategoryDrawerVisible"
+        ><text class="el-icon-s-operation"></text> 筛选</view>
+        <!-- <view
+          :class="[$style['fineTuningButton'], (!!products.orderBy) && 'is-dirty']"
+        ><text class="el-icon-sort"></text> 排序</view> -->
+        <picker :class="$style['fineTuningButton']" mode="selector"
+          @change="onPickOrderBy" :value="orderByIndex" :range="orderByOptions" range-key="title"
+        >
+          <view class="picker">
+            <!-- {{ orderByOptions[orderByIndex].title }} -->
+            <text class="el-icon-sort"></text> 排序
+          </view>
+        </picker>
       </view>
     </view>
 
@@ -53,7 +59,7 @@
       position="right" header="筛选" :style="filtersDrawerStyle"
     >
       <view :class="$style['drawerFilter']">
-        <view :class="$style['filterSection']">
+        <!-- <view :class="$style['filterSection']">
           <view :class="$style['filterTitle']">排序</view>
           <view :class="$style['filterBodyPills']">
             <view
@@ -64,7 +70,7 @@
               @tap="onClickOrderBy(field)"
             >{{ title }}</view>
           </view>
-        </view>
+        </view> -->
         <!-- 二级分类 -->
         <view v-if="!!activeRootCategoryId" :class="$style['filterSection']">
           <view :class="$style['filterTitle']">分类 (多选)</view>
@@ -184,7 +190,13 @@ export default {
       tagFilters: {
         '面料': [],
         '颜色': [],
-      }
+      },
+      orderByOptions: [
+        { title: '新品', value: '-published_at' },
+        { title: '价格', value: 'price' },
+        { title: '销量', value: '-sold_quantity' }
+      ],
+      orderByIndex: 0,
     }
   },
   computed: {
@@ -286,6 +298,11 @@ export default {
       if (this.products.orderBy === orderBy) {
         orderBy = ''
       }
+      this.updateOrderBy(orderBy, { fetch: true })
+    },
+    onPickOrderBy(e) {
+      this.orderByIndex = +e.detail.value
+      const orderBy = _.get(this.orderByOptions[this.orderByIndex], 'value')
       this.updateOrderBy(orderBy, { fetch: true })
     },
     fetchTagFilters() {
