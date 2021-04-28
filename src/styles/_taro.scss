@@ -16,17 +16,18 @@ taro-image-core {
 
 /* v-html 默认样式基础上的一些优化, 根节点需要加上 .taro_html */
 .taro_html {
-  // padding-left: 15px;
-  // padding-right: 15px;
+  padding-left: 15px;
+  padding-right: 15px;
   .img {
     display: block;
-    // margin-left: -15px;
-    // margin-right: -15px;
-    // TODO: 这个是为了消除底部的留白, 如果遇到问题, 需要再优化下
+    // TODO: 这个 display: block 是为了消除底部的留白, 如果遇到问题, 需要再优化下
     // 有一种优化方案是父元素使用 display: flex
-    width: 100%;
+    margin-left: -15px;
+    margin-right: -15px;
+    // width: calc(100% + 30px);
+    width: auto;
+    // max-width: 100%;
     height: unset;
-    max-width: 100%;
   }
   // html.js 里面已经处理了在 br 的文字里面加上 "\n", 所以 .taro_html 里面样式不再需要了
   .br::before {
