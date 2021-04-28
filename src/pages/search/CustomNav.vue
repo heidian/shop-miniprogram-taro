@@ -7,9 +7,14 @@
       v-model="cachedQ"
       confirm-type="search"
       @confirm="onSubmitSearch">
-    <navigator :class="$style['home']" :style="homeBtnStyle" url="/pages/home" open-type="switchTab" hover-class="none">
-      <text class="el-icon-s-home" :class="$style['homeIcon']"></text>
-    </navigator>
+    <view
+      v-if="showBack" @tap="goBack"
+      :class="$style['button']" :style="buttonStyle"
+    ><text class="el-icon-arrow-left"></text></view>
+    <navigator
+      v-else url="/pages/home" open-type="switchTab"
+      :class="$style['button']" :style="buttonStyle" hover-class="none"
+    ><text class="el-icon-s-home"></text></navigator>
   </view>
 </template>
 
@@ -41,10 +46,13 @@ export default {
         'paddingTop': Taro.pxTransform(this.system.statusBarHeight + 3)
       }
     },
-    homeBtnStyle() {
+    buttonStyle() {
       return {
         'top': Taro.pxTransform(this.system.statusBarHeight + 3)
       }
+    },
+    showBack() {
+      return Taro.getCurrentPages().length > 1
     }
   },
   watch: {
@@ -55,7 +63,10 @@ export default {
   methods: {
     onSubmitSearch() {
       this.$emit('submit', this.cachedQ)
-    }
+    },
+    goBack() {
+      Taro.navigateBack()
+    },
   }
 }
 </script>
@@ -83,7 +94,7 @@ export default {
   border-radius: 16px;
   padding: 5px 15px;
 }
-.home {
+.button {
   position: absolute;
   top: 0;
   left: 10px;
@@ -94,7 +105,7 @@ export default {
   align-items: center;
   border: 1px solid $color-divider;
   border-radius: 16px;
-  .homeIcon {
+  :global([class^="el-icon-"]) {
     display: block;
     font-size: 18px;
     color: $color-text;
