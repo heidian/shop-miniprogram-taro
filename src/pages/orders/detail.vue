@@ -21,7 +21,7 @@
           <button
             v-if="showReviewBtn"
             class="button button--mini button--round button--primary" :class="$style['reviewBtn']"
-            @tap="() => clickReviewBtn(line)"
+            @tap="() => onClickReviewBtn(line)"
           >添加评价</button>
         </view>
       </view>
@@ -56,6 +56,12 @@
       <view :class="$style['statusLine']">订单状态: {{ OrderStatus[orderData.order_status] }}</view>
       <view :class="$style['statusLine']">交易状态: {{ OrderFinancialStatus[orderData.financial_status] }}</view>
       <view :class="$style['statusLine']">发货状态: {{ OrderFulfillmentStatus[orderData.fulfillment_status] }}</view>
+      <view :class="$style['orderActionsWrapper']">
+        <button
+          v-if="continuePay" :class="['button', 'button--round', 'button--small']"
+          @tap="handleCancelOrder"
+        >取消订单</button> <!-- 需要继续付款的就是可以取消的订单 -->
+      </view>
       <!-- <view>成交时间: {{ orderData.closed_at|datetime }}</view> -->
     </view>
     <view :class="$style['footer']" v-if="continuePay">
@@ -112,7 +118,7 @@ export default {
       return this.$store.state.config.shopname
     },
     showReviewBtn() {
-      return this.shopName === 'joyberry'
+      return this.shopName === 'joyberry' && this.orderData.financial_status !== 'pending'
     },
     nameAndMobile() {
       const { full_name, mobile } = this.orderData.shipping_address || this.orderData
@@ -193,12 +199,45 @@ export default {
         }
       })
     },
-    clickReviewBtn (orderline = {}) {
-      const { product, variant } = orderline
-      if (product && product.id && variant && variant.id) {
-        Taro.navigateTo({ url: `/pages/product/reviews-fitting/post?product=${product.id}&variant=${variant.id}` })
+    handleCancelOrder() {
+      const cancel = async () => {
+        Taro.showLoading({ title: '正在取消订单' })
+        try {
+          const reason = '买家取消订单'
+          const res = await API.post(`/customers/order/${this.orderId}/cancel/`, { reason })
+          Taro.showToast({ title: '订单已取消', icon: 'none', duration: 1000 })
+        } catch(err) {
+          // console.log(err)
+          Taro.showModal({ title: '订单取消失败', showCancel: false })
+        }
+        Taro.hideLoading()
+        this.fetchOrder()
       }
-    }
+      // Taro.showActionSheet({
+      //   itemList: ['A', 'B', 'C'],
+      //   success: function (res) { console.log(res.tapIndex) },
+      //   fail: function (res) { console.log(res.errMsg) }
+      // })
+      Taro.showModal({
+        success: (res) => {
+          if (res.confirm) { cancel() }
+        },
+        // title: '取消订单',
+        // content: '取消订单后，如需重新购买商品，需要重新下单',
+        content: '确定取消订单？',
+        cancelText: '关闭',
+        confirmText: '确定取消',
+        confirmColor: this.$globalColors['--color-primary'],
+      })
+    },
+    onClickReviewBtn(orderline) {
+      const { product, variant } = orderline
+      if (product && variant) {
+        Taro.navigateTo({
+          url: `/pages/product/reviews-fitting/post?product=${product.id}&variant=${variant.id}`
+        })
+      }
+    },
   }
 }
 </script>
@@ -296,6 +335,15 @@ page {
   & + .statusLine {
     margin-top: 10px;
   }
+}
+.orderActionsWrapper {
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  // :global(.button) {
+  //   width: 100px;
+  // }
 }
 .footer {
   position: fixed;
