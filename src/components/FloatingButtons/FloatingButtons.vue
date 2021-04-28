@@ -22,13 +22,15 @@
         <text class="el-icon-more"></text>
       </floating-button-item> -->
       <floating-button-item class="floating-buttons__collapse" @tap="collapsed=!collapsed">
-        <text class="el-icon-plus"></text>
+        <!-- <text class="el-icon-plus"></text> -->
+        <text class="el-icon-close"></text>
       </floating-button-item>
     </template>
     <template v-else>
       <slot></slot>
       <floating-button-item class="floating-buttons__collapse" @tap="collapsed=!collapsed">
-        <text class="el-icon-plus"></text>
+        <!-- <text class="el-icon-plus"></text> -->
+        <text class="el-icon-close"></text>
       </floating-button-item>
     </template>
   </view>
@@ -99,6 +101,10 @@ export default {
   line-height: 1;
   [class^="el-icon-"] {
     font-size: 20px;
+  }
+  .el-icon-close {
+    // 关闭/打开 按钮大一点
+    font-size: 25px;
   }
 }
 .floating-buttons__collapse {
