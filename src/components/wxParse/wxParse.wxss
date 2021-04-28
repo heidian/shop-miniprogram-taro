@@ -18,7 +18,8 @@
     line-height: 1.8;
 }
 view{
-    word-break:break-all; overflow:auto;
+    /* TODO 下面这个样式应该去掉, 污染了全局, 不过现在没有任何地方引入 wxParse 了 */
+    /*word-break:break-all; overflow:auto;*/
 }
 .wxParse-inline{
     display: inline;
