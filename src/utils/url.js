@@ -26,6 +26,9 @@ export function parseUrl(url) {
     } else if (/^\/products\/(\w+)(\?(.+))?/.test(url)) {
       url = url.replace(/^\/products\/(\w+)(\?(.+))?/, 'page://pages/product/index?name=$1$3')
       return parseUrl(url)
+    } else if (/^\/search(\?.+)?/.test(url)) {
+      url = url.replace(/^\/search(\?.+)?/, 'page://pages/search/index$1')
+      return parseUrl(url)
     } else {
       return { openType: '', url: '' }
     }
