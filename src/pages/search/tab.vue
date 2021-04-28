@@ -31,7 +31,7 @@
 <script>
 import SearchMixin from './search'
 export default {
-  name: 'Search',
+  name: 'SearchTab',
   mixins: [ SearchMixin ]
 }
 </script>

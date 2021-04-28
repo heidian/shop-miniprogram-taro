@@ -9,6 +9,7 @@ export default {
     'pages/account/favorites',
     'pages/profile/edit',
     'pages/search/index',
+    'pages/search/tab',
     'pages/product/index',
     'pages/product/reviews/index',
     'pages/product/reviews/post',
