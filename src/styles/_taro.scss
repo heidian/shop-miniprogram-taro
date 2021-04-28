@@ -1,3 +1,4 @@
+@import "taro-default";
 // 修复 taro 下的一些样式
 
 /* #ifdef h5 */
@@ -13,160 +14,23 @@ taro-image-core {
 /* #endif */
 
 
+/* v-html 默认样式基础上的一些优化, 根节点需要加上 .taro_html */
 .taro_html {
+  // padding-left: 15px;
+  // padding-right: 15px;
   .img {
     display: block;
+    // margin-left: -15px;
+    // margin-right: -15px;
     // TODO: 这个是为了消除底部的留白, 如果遇到问题, 需要再优化下
     // 有一种优化方案是父元素使用 display: flex
     width: 100%;
     height: unset;
     max-width: 100%;
   }
-}
-
-
-/* v-html 下的默认样式, 需要 .taro_html */
-.taro_html {
-  .html, .address, .blockquote, .body, .dd, .div, .dl, .dt, .fieldset, .form, .frame, .frameset,
-  .h1, .h2, .h3, .h4, .h5, .h6, .noframes, .ol, .p, .ul, .center, .dir, .hr, .menu, .pre {
-    display: block;
-    unicode-bidi: embed;
-  }
-  .li {
-    display: list-item;
-  }
-  .head {
-    display: none;
-  }
-  .table {
-    display: table;
-  }
-  .tr {
-    display: table-row;
-  }
-  .thead {
-    display: table-header-group;
-  }
-  .tbody {
-    display: table-row-group;
-  }
-  .tfoot {
-    display: table-footer-group;
-  }
-  .col {
-    display: table-column;
-  }
-  .colgroup {
-    display: table-column-group;
-  }
-  .td, .th {
-    display: table-cell;
-  }
-  .caption {
-    display: table-caption;
-  }
-  .th {
-    font-weight: bolder;
-    text-align: center;
-  }
-  .caption {
-    text-align: center;
-  }
-  // .body {
-  //   margin: 8px;
-  // }
-  // .h1 {
-  //   font-size: 2em;
-  //   margin: 0.67em 0;
-  // }
-  // .h2 {
-  //   font-size: 1.5em;
-  //   margin: 0.75em 0;
-  // }
-  // .h3 {
-  //   font-size: 1.17em;
-  //   margin: 0.83em 0;
-  // }
-  // .h4, .p, .blockquote, .ul, .fieldset, .form, .ol, .dl, .dir, .menu {
-  //   margin: 1.12em 0;
-  // }
-  // .h5 {
-  //   font-size: 0.83em;
-  //   margin: 1.5em 0;
-  // }
-  // .h6 {
-  //   font-size: 0.75em;
-  //   margin: 1.67em 0;
-  // }
-  .h1, .h2, .h3, .h4, .h5, .h6, .b, .strong {
-    font-weight: bolder;
-  }
-  .blockquote {
-    margin-left: 40px;
-    margin-right: 40px;
-  }
-  .i, .cite, .em, .var, .address {
-    font-style: italic;
-  }
-  .pre, .tt, .code, .kbd, .samp {
-    font-family: monospace;
-  }
-  .pre {
-    white-space: pre;
-  }
-  .button, .textarea, .input, .select {
-    display: inline-block;
-  }
-  .big {
-    font-size: 1.17em;
-  }
-  .small, .sub, .sup {
-    font-size: 0.83em;
-  }
-  .sub {
-    vertical-align: sub;
-  }
-  .sup {
-    vertical-align: super;
-  }
-  .table {
-    border-spacing: 2px;
-  }
-  .thead, .tbody, .tfoot {
-    vertical-align: middle;
-  }
-  .td, .th, .tr {
-    vertical-align: inherit;
-  }
-  .s,
-  .strike,
-  .del {
-    text-decoration: line-through;
-  }
-  .hr {
-    border: 1px inset;
-  }
-  .ol, .ul, .dir, .menu, .dd {
-    margin-left: 40px;
-  }
-  .ol {
-    list-style-type: decimal;
-  }
-  .ol .ul, .ul .ol, .ul .ul, .ol .ol {
-    margin-top: 0;
-    margin-bottom: 0;
-  }
-  .u, .ins {
-    text-decoration: underline;
-  }
-  .br:before {
-    content: "\A";
-    white-space: pre-line;
-  }
-  .center {
-    text-align: center;
-  }
-  input[type="hidden"] {
-    display: none !important;
+  // html.js 里面已经处理了在 br 的文字里面加上 "\n", 所以 .taro_html 里面样式不再需要了
+  .br::before {
+    content: "";
+    white-space: normal;
   }
 }
