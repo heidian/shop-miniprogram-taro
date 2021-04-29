@@ -3,7 +3,7 @@
     <image
       class="image" mode="widthFix"
       :src="optimizeImage(settingsData.image)"
-      @tap="goToUrl(settingsData.url)"
+      @tap="onClickImage"
     ></image>
   </view>
 </template>
@@ -33,6 +33,14 @@ export default {
   methods: {
     optimizeImage,
     goToUrl,
+    onClickImage() {
+      if (this.settingsData.url) {
+        this.goToUrl(this.settingsData.url)
+      } else {
+        const src = this.optimizeImage(this.settingsData.image)
+        Taro.previewImage({ current: src, urls: [src] })
+      }
+    }
   }
 }
 </script>

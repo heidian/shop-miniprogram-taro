@@ -4,11 +4,13 @@
       <video
         class="video"
         :src="videoSrc"
-        :controls="controls"
-        :autoplay="autoplay"
-        :loop="loop"
-        :muted="muted"
+        :controls="true"
+        :autoplay="!!settingsData.autoplay"
+        :loop="!!settingsData.autoplay"
+        muted="true"
+        :show-mute-btn="true"
       ></video>
+      <!-- muted 参数有点怪异, 需要用字符串的 'true' -->
     </view>
   </view>
 </template>
@@ -27,7 +29,8 @@ export default {
       type: Object,
       default: () => ({
         video: {},
-        videoRatio: 16/9  // 宽高比
+        videoRatio: 16/9,  // 宽高比
+        autoplay: false,
       })
     }
   },
@@ -35,19 +38,6 @@ export default {
     return {}
   },
   computed: {
-    autoplay() {
-      return !!this.settingsData.autoplay
-    },
-    muted() {
-      // 如果是 autoplay 就只能 muted
-      return this.autoplay
-    },
-    controls() {
-      return !this.autoplay
-    },
-    loop() {
-      return this.autoplay
-    },
     videoSrc() {
       return _.get(this.settingsData, 'video.src') || ''
     },
