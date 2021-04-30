@@ -1,5 +1,14 @@
 <template>
   <view>
+    <view :class="$style['searchInputWrapper']">
+      <text class="el-icon-search"></text>
+      <input
+        :class="$style['searchInput']" type="text" placeholder="搜索商品关键词"
+        confirm-type="search" :value="getFilter('q')"
+        @confirm="(e) => updateFilter({ q: e.detail.value }, { partial: false })"
+      />
+      <text class="el-icon-close" v-if="getFilter('q')" @tap="updateFilter({ q: '' }, { partial: false })"></text>
+    </view>
     <view :class="$style['categoriesBar']" :style="{'top': categoriesBarTop}">
       <scroll-view
         :class="$style['categoriesScroll']"
@@ -206,18 +215,16 @@ export default {
       // return this.system.statusBarHeight + 44
       return 0
     },
-    customNavStyle() {
-      return {
-        'height': Taro.pxTransform(this.customNavHeight),
-        'paddingTop': Taro.pxTransform(this.system.statusBarHeight + 3)
-      }
+    searchInputTop() {
+      return Taro.pxTransform(this.customNavHeight)
     },
     categoriesBarTop() {
-      return Taro.pxTransform(this.customNavHeight)
+      // searchInput 高度是 40
+      return Taro.pxTransform(this.customNavHeight + 40)
     },
     fineTuningBarTop() {
       // categoriesBar 高度是 35
-      return Taro.pxTransform(this.customNavHeight + 35)
+      return Taro.pxTransform(this.customNavHeight + 40 + 35)
     },
     filtersDrawerStyle() {
       const top = Taro.pxTransform(this.customNavHeight)
@@ -374,6 +381,29 @@ export default {
 <style lang="scss" module>
 @import '@/styles/mixins';
 @import '@/styles/variables';
+.searchInputWrapper {
+  position: fixed;
+  z-index: $z-index-navbar;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: $color-bg-gray;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  .searchInput {
+    flex: 1;
+    display: block;
+    height: 40px;
+    border-color: transparent;
+    background-color: transparent;
+    padding: 5px;
+  }
+  :global([class^="el-icon-"]) {
+    display: block;
+    padding: 8px 10px;
+  }
+}
 .categoriesBar {
   position: fixed;
   z-index: $z-index-navbar;

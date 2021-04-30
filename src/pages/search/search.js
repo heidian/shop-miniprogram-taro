@@ -32,7 +32,8 @@ export default {
       return 0
     },
     pagePaddingTop() {
-      return Taro.pxTransform(this.customNavHeight + 35)
+      // searchInput 高度是 40, categoriesBar 高度是 35
+      return Taro.pxTransform(this.customNavHeight + 40 + 35)
     },
     hasMore() {
       return this.products.data.length < this.products.count
@@ -78,11 +79,22 @@ export default {
       }
       // Taro.hideNavigationBarLoading()
     },
-    onSubmitSearch(q) {
-      // 因为有 partial: false, 这里其实不需要专门把其他过滤参数重置为空
-      this.updateFilter({ q }, { partial: false, fetch: true })
-      // this.fetchProducts()
-    },
+    // onSubmitSearch(q) {
+    //   // 因为有 partial: false, 这里其实不需要专门把其他过滤参数重置为空
+    //   this.updateFilter({ q }, { partial: false, fetch: true })
+    //   // this.fetchProducts()
+    // },
+  },
+  watch: {
+    'products.pending': {
+      handler: function(navVal, oldVal) {
+        if (navVal) {
+          Taro.showNavigationBarLoading()
+        } else {
+          Taro.hideNavigationBarLoading()
+        }
+      }
+    }
   },
   async onPullDownRefresh() {
     await this.fetchProducts()
