@@ -49,7 +49,7 @@ export default {
       return this.system.statusBarHeight
     },
     navbarHeight() {
-      return 40
+      return 44
     },
     pagePaddingTop() {
       return Taro.pxTransform(this.statusBarHeight + this.navbarHeight)
@@ -92,7 +92,7 @@ export default {
   background-color: #ffffff;
 }
 .navbar {
-  height: 40px;
+  height: 44px;
   // background-color: red;
   overflow: hidden;
   display: flex;
@@ -106,6 +106,7 @@ export default {
   text-overflow: ellipsis;
   white-space: nowrap;
   font-weight: bold;
+  font-size: 13px;
 }
 .navbarLeft,
 .navbarRight {
