@@ -103,7 +103,7 @@
     height: 40px;
     display: flex;
     align-items: center;
-    justify-content: space-around;
+    justify-content: space-evenly;
     // background-color: rgba(#fff, 0);
     // transition: all .2s ease-in-out;
     &:global(.is-fixed) {
@@ -115,7 +115,9 @@
     }
   }
   .fineTuningButton {
-    padding: 6px 12px;
+    border: 1px solid #ddd;
+    padding: 8px 16px;
+    // padding: 6px 12px;
     &:global(.is-dirty) {
       font-weight: bold;
     }

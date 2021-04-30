@@ -1,11 +1,16 @@
 <template>
   <view :class="$style['page']" :style="{'paddingTop': pagePaddingTop, ...$globalColors}">
-    <view :class="$style['customNav']" :style="navBarStyle">
-      <view :class="$style['title']">{{ shopTitle }}</view>
-      <navigator
-        url="/pages/search/index" open-type="navigate"
-        :class="$style['button']" :style="buttonStyle" hover-class="none"
-      ><text class="el-icon-search"></text></navigator>
+    <view :class="$style['navWrapper']" :style="{'paddingTop': navWrapperPaddingTop}">
+      <view :class="$style['navbar']">
+        <view :class="$style['navbarLeft']">
+          <navigator
+            url="/pages/search/index" open-type="navigate"
+            :class="$style['navbarButton']" hover-class="none"
+          ><text class="el-icon-search"></text></navigator>
+        </view>
+        <view :class="$style['navbarTitle']">{{ shopTitle }}</view>
+        <view :class="$style['navbarRight']"></view>
+      </view>
     </view>
     <component
       v-for="(block, index) in blocks" :key="index"
@@ -40,22 +45,17 @@ export default {
   },
   computed: {
     ...mapState(['system']),
-    customNavHeight() {
-      return this.system.statusBarHeight + 44
+    statusBarHeight() {
+      return this.system.statusBarHeight
     },
-    navBarStyle() {
-      return {
-        'height': Taro.pxTransform(this.customNavHeight),
-        'paddingTop': Taro.pxTransform(this.system.statusBarHeight + 3)
-      }
-    },
-    buttonStyle() {
-      return {
-        'top': Taro.pxTransform(this.system.statusBarHeight + 3)
-      }
+    navbarHeight() {
+      return 40
     },
     pagePaddingTop() {
-      return Taro.pxTransform(this.customNavHeight)
+      return Taro.pxTransform(this.statusBarHeight + this.navbarHeight)
+    },
+    navWrapperPaddingTop() {
+      return Taro.pxTransform(this.statusBarHeight)
     },
   },
   onShow() {
@@ -81,7 +81,7 @@ export default {
 <style lang="scss" module>
 @import '@/styles/variables';
 .page {}
-.customNav {
+.navWrapper {
   width: 100%;
   position: fixed;
   z-index: $z-index-navbar;
@@ -90,34 +90,38 @@ export default {
   right: 0;
   overflow: hidden;
   background-color: #ffffff;
-  padding-right: 100px;
-  padding-left: 100px;
-  padding-bottom: 5px;
 }
-.title {
-  width: 100%;
-  height: 32px;
-  line-height: 32px;
+.navbar {
+  height: 40px;
+  // background-color: red;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.navbarTitle {
+  flex: 1;
   text-align: center;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  font-weight: bold;
 }
-.button {
-  position: absolute;
-  top: 0;
-  left: 10px;
-  height: 32px;
-  width: 32px;
+.navbarLeft,
+.navbarRight {
+  min-height: 1px;
+  width: 100px;
+}
+.navbarLeft {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  border: 1px solid $color-divider;
-  border-radius: 16px;
-  :global([class^="el-icon-"]) {
-    display: block;
-    font-size: 18px;
-    color: $color-text;
-  }
+  padding-left: 8px;
+}
+.navbarButton {
+  padding: 5px 7px;
+  font-size: 18px;
+  line-height: 20px;
+  // :global([class^="el-icon-"]) {
+  //   color: $color-text;
+  // }
 }
 </style>
