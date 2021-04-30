@@ -1,4 +1,5 @@
 export default {
   navigationBarTitleText: '',
-  enableShareAppMessage: true
+  enableShareAppMessage: true,
+  navigationStyle: 'custom',
 }
