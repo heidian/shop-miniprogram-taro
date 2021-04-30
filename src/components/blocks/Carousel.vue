@@ -135,19 +135,19 @@ export default {
   }
   .carousel-indicator {
     position: relative;
-    margin: 10px auto;
-    width: 50%;
-    height: 10px;
-    border-radius: 10px;
-    padding-left: 5px;
-    padding-right: 5px;
+    margin: 4px auto;
+    width: 100px;
+    height: 4px;
+    border-radius: 4px;
+    padding-left: 2px;
+    padding-right: 2px;
   }
   .carousel-indicator__dot {
     position: absolute;
     top: 0;
     left: 0;
-    height: 10px;
-    border-radius: 5px;
+    height: 4px;
+    border-radius: 2px;
     transition: all .5s ease-in-out;
   }
 }
