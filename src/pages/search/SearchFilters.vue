@@ -63,10 +63,7 @@
     </view>
 
     <!-- 因为这个页面用了自定义 navbar, 需要修改 drawer 的样式 -->
-    <drawer
-      :visible.sync="subCategoryDrawerVisible"
-      position="right" header="筛选" :style="filtersDrawerStyle"
-    >
+    <drawer :visible.sync="subCategoryDrawerVisible" position="right" header="筛选" :style="filtersDrawerStyle">
       <view :class="$style['drawerFilter']">
         <!-- <view :class="$style['filterSection']">
           <view :class="$style['filterTitle']">排序</view>
@@ -129,14 +126,8 @@
         </view>
       </view>
       <view slot="footer" :class="$style['drawerFilterFooter']">
-        <button
-          :class="['button', 'button--small']"
-          @tap="updateFilter({}, { partial: false, fetch: true })"
-        >重置</button>
-        <button
-          :class="['button', 'button--small', 'button--primary']"
-          @tap="subCategoryDrawerVisible = false"
-        >确定</button>
+        <button :class="['button', 'button--small']" @tap="clearFilters">重置</button>
+        <button :class="['button', 'button--small', 'button--primary']" @tap="subCategoryDrawerVisible = false">确定</button>
       </view>
     </drawer>
     <!-- <floating-buttons>
@@ -359,37 +350,11 @@ export default {
         tag__in: { value: tagIn, type: 'Array' }
       }, { partial: true, fetch: true })
     },
-    // getTagFilter(group) {
-    //   // tag 都是 颜色:暮光蓝 这种格式的
-    //   const tagKV = {}
-    //   _.forEach(this.getFilter('tag', 'Array'), (tag) => {
-    //     const [k, v] = tag.split(':')
-    //     if (k && v) {
-    //       tagKV[k] = v
-    //     }
-    //   })
-    //   return tagKV[group] || ''
-    // },
-    // updateTagFilter(group, tag) {
-    //   // this.subCategoryDrawerVisible = false
-    //   const tagKV = {}
-    //   _.forEach(this.getFilter('tag', 'Array'), (tag) => {
-    //     const [k, v] = tag.split(':')
-    //     if (k && v) {
-    //       tagKV[k] = v
-    //     }
-    //   })
-    //   tagKV[group] = tag
-    //   const tags = []
-    //   _.forEach(tagKV, (v, k) => {
-    //     if (k && v) {
-    //       tags.push(`${k}:${v}`)
-    //     }
-    //   })
-    //   this.updateFilter({
-    //     tag: { value: tags, type: 'Array' }
-    //   }, { partial: true, fetch: true })
-    // },
+    clearFilters() {
+      this.tagFilterValues = { '面料': [], '颜色': [] }
+      this.updateFilter({}, { partial: false, fetch: true })
+      this.subCategoryDrawerVisible = false
+    },
     handlePageScroll(scrollTop) {
       Taro.pxTransform(this.customNavHeight)
       const imageHeight = this.activeRootCategoryImage ? (this.system.screenWidth - 16) / 3 + (8 + 10) : 10
