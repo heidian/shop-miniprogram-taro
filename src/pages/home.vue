@@ -106,7 +106,6 @@ export default {
   text-overflow: ellipsis;
   white-space: nowrap;
   font-weight: bold;
-  font-size: 13px;
 }
 .navbarLeft,
 .navbarRight {
