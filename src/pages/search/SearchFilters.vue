@@ -81,7 +81,7 @@
           </view>
         </view> -->
         <!-- 二级分类 -->
-        <view v-if="!!activeRootCategoryId" :class="$style['filterSection']">
+        <view v-if="!!activeRootCategoryId && activeSubCategories.length" :class="$style['filterSection']">
           <view :class="$style['filterTitle']">分类 (多选)</view>
           <view :class="$style['filterBodyRows']">
             <view
@@ -98,32 +98,32 @@
           </view>
         </view>
         <!-- 其他筛选条件 -->
-        <view :class="$style['filterSection']" v-if="tagFilters['面料'] && tagFilters['面料'].length">
+        <view :class="$style['filterSection']" v-if="tagFilterOptions['面料'] && tagFilterOptions['面料'].length">
           <view :class="$style['filterTitle']">面料</view>
           <view :class="$style['filterBodyRows']">
             <view
-              @tap="() => updateTagFilter('面料', '')"
-              :class="[$style['filterItem'], (!getTagFilter('面料')) && 'is-active']"
+              @tap="() => resetTagFilter('面料')"
+              :class="[$style['filterItem'], (!tagFilterValues['面料'].length) && 'is-active']"
             >全部</view>
             <view
-              v-for="(item, index) in tagFilters['面料']" :key="index"
-              @tap="() => updateTagFilter('面料', item)"
-              :class="[$style['filterItem'], (item === getTagFilter('面料')) && 'is-active']"
-            >{{ item }}</view>
+              v-for="(tagValue, index) in tagFilterOptions['面料']" :key="index"
+              @tap="() => toggleTagFilter('面料', tagValue)"
+              :class="[$style['filterItem'], (tagFilterValues['面料'].indexOf(tagValue) >= 0) && 'is-active']"
+            >{{ tagValue }}</view>
           </view>
         </view>
-        <view :class="$style['filterSection']" v-if="tagFilters['颜色'] && tagFilters['颜色'].length">
+        <view :class="$style['filterSection']" v-if="tagFilterOptions['颜色'] && tagFilterOptions['颜色'].length">
           <view :class="$style['filterTitle']">颜色</view>
           <view :class="$style['filterBodyImages']">
             <view
-              @tap="() => updateTagFilter('颜色', '')"
-              :class="[$style['filterItem'], (!getTagFilter('颜色')) && 'is-active']"
+              @tap="() => resetTagFilter('颜色')"
+              :class="[$style['filterItem'], (!tagFilterValues['颜色'].length) && 'is-active']"
             >全部</view>
             <view
-              v-for="(item, index) in tagFilters['颜色']" :key="index"
-              @tap="() => updateTagFilter('颜色', item)"
-              :class="[$style['filterItem'], 'has-image', (item === getTagFilter('颜色')) && 'is-active']"
-              :style="{'backgroundImage': backgroundImageUrl(colorOptionImages[item])}"
+              v-for="(tagValue, index) in tagFilterOptions['颜色']" :key="index"
+              @tap="() => toggleTagFilter('颜色', tagValue)"
+              :class="[$style['filterItem'], 'has-image', (tagFilterValues['颜色'].indexOf(tagValue) >= 0) && 'is-active']"
+              :style="{'backgroundImage': backgroundImageUrl(colorOptionImages[tagValue])}"
             ></view>
           </view>
         </view>
@@ -196,7 +196,11 @@ export default {
       // TODO 这部分只是给 joyberry 用的
       colorOptionTitle: '',
       colorOptionImages: {}, // { optionValue: imageSrc, ... }
-      tagFilters: {
+      tagFilterOptions: {
+        '面料': [],
+        '颜色': [],
+      },
+      tagFilterValues: {
         '面料': [],
         '颜色': [],
       },
@@ -245,7 +249,7 @@ export default {
     isFiltersDirty() {
       return (
         !_.isEmpty(this.getFilter('category__in', 'CSV')) ||
-        !_.isEmpty(this.getFilter('tag', 'Array'))
+        !_.isEmpty(this.getFilter('tag__in', 'Array'))
       )
     }
   },
@@ -319,42 +323,73 @@ export default {
         _.forEach(data.results, (tag) => {
           const [title, value] = tag.title.split(':')
           if (title === '面料' || title === '颜色') {
-            this.tagFilters[title].push(value)
+            this.tagFilterOptions[title].push(value)
           }
         })
       }).catch((err) => { console.log(err) })
     },
-    getTagFilter(group) {
-      // tag 都是 颜色:暮光蓝 这种格式的
-      const tagKV = {}
-      _.forEach(this.getFilter('tag', 'Array'), (tag) => {
-        const [k, v] = tag.split(':')
-        if (k && v) {
-          tagKV[k] = v
-        }
-      })
-      return tagKV[group] || ''
+    inTagFilter(group, value) {
+      const tag = `${group}:${value}`
+      this.getFilter('tag__in', 'Array')
     },
-    updateTagFilter(group, tag) {
-      // this.subCategoryDrawerVisible = false
-      const tagKV = {}
-      _.forEach(this.getFilter('tag', 'Array'), (tag) => {
-        const [k, v] = tag.split(':')
-        if (k && v) {
-          tagKV[k] = v
-        }
-      })
-      tagKV[group] = tag
-      const tags = []
-      _.forEach(tagKV, (v, k) => {
-        if (k && v) {
-          tags.push(`${k}:${v}`)
+    resetTagFilter(group) {
+      this.tagFilterValues[group] = []
+      this.submitTagFilters()
+    },
+    toggleTagFilter(group, tagValue) {
+      const values = this.tagFilterValues[group]
+      const index = values.indexOf(tagValue)
+      if (index >= 0) {
+        values.splice(index, 1)
+      } else {
+        values.push(tagValue)
+      }
+      this.submitTagFilters()
+    },
+    submitTagFilters() {
+      // 把 tagFilterValues 的值更新到 store 里
+      const tagIn = []
+      _.forEach(this.tagFilterValues, (values, group) => {
+        if (values.length) {
+          const filterValue = _.map(values, (value) => `${group}:${value}`)
+          tagIn.push(filterValue.join(','))
         }
       })
       this.updateFilter({
-        tag: { value: tags, type: 'Array' }
+        tag__in: { value: tagIn, type: 'Array' }
       }, { partial: true, fetch: true })
     },
+    // getTagFilter(group) {
+    //   // tag 都是 颜色:暮光蓝 这种格式的
+    //   const tagKV = {}
+    //   _.forEach(this.getFilter('tag', 'Array'), (tag) => {
+    //     const [k, v] = tag.split(':')
+    //     if (k && v) {
+    //       tagKV[k] = v
+    //     }
+    //   })
+    //   return tagKV[group] || ''
+    // },
+    // updateTagFilter(group, tag) {
+    //   // this.subCategoryDrawerVisible = false
+    //   const tagKV = {}
+    //   _.forEach(this.getFilter('tag', 'Array'), (tag) => {
+    //     const [k, v] = tag.split(':')
+    //     if (k && v) {
+    //       tagKV[k] = v
+    //     }
+    //   })
+    //   tagKV[group] = tag
+    //   const tags = []
+    //   _.forEach(tagKV, (v, k) => {
+    //     if (k && v) {
+    //       tags.push(`${k}:${v}`)
+    //     }
+    //   })
+    //   this.updateFilter({
+    //     tag: { value: tags, type: 'Array' }
+    //   }, { partial: true, fetch: true })
+    // },
     handlePageScroll(scrollTop) {
       Taro.pxTransform(this.customNavHeight)
       const imageHeight = this.activeRootCategoryImage ? (this.system.screenWidth - 16) / 3 + (8 + 10) : 10
