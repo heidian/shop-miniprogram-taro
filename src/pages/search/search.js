@@ -28,8 +28,8 @@ export default {
   computed: {
     ...mapState(['categories', 'system']),
     customNavHeight() {
-      return this.system.statusBarHeight + 44
-      // return 0
+      // return this.system.statusBarHeight + 44
+      return 0
     },
     pagePaddingTop() {
       return Taro.pxTransform(this.customNavHeight + 35)

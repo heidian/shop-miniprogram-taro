@@ -203,8 +203,8 @@ export default {
     ...mapState(['categories', 'system']),
     ...mapState('theme', ['themeSettingsData']),
     customNavHeight() {
-      return this.system.statusBarHeight + 44
-      // return 0
+      // return this.system.statusBarHeight + 44
+      return 0
     },
     customNavStyle() {
       return {

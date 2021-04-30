@@ -1,13 +1,9 @@
 <template>
-  <view
-    :class="$style['page']"
-    :style="{'paddingTop': pagePaddingTop, ...$globalColors}"
-  >
-
-    <custom-nav
+  <view :class="$style['page']" :style="{'paddingTop': pagePaddingTop, ...$globalColors}">
+    <!-- <custom-nav
       :q="products.filter.q"
       @submit="onSubmitSearch"
-    ></custom-nav>
+    ></custom-nav> -->
 
     <search-filters
       ref="searchFilters"
