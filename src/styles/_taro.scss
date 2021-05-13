@@ -16,14 +16,14 @@ taro-image-core {
 
 /* v-html 默认样式基础上的一些优化, 根节点需要加上 .taro_html */
 .taro_html {
-  padding-left: 15px;
-  padding-right: 15px;
+  padding-left: 20px;
+  padding-right: 20px;
   .img {
     display: block;
     // TODO: 这个 display: block 是为了消除底部的留白, 如果遇到问题, 需要再优化下
     // 有一种优化方案是父元素使用 display: flex
-    margin-left: -15px;
-    margin-right: -15px;
+    margin-left: -20px;
+    margin-right: -20px;
     // width: calc(100% + 30px);
     width: auto;
     // max-width: 100%;
