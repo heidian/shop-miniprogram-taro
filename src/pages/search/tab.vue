@@ -20,7 +20,8 @@
         <product-item :product="product"></product-item>
       </view>
     </view>
-    <!-- TODO 加一个 loading/more 的状态 -->
+
+    <view v-if="products.pending" :class="$style['loading']"><text class="el-icon-more"></text></view>
   </view>
 </template>
 

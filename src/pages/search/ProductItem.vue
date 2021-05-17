@@ -92,13 +92,14 @@ export default {
       this.productColorOptions = _.filter(results, (item) => !!item.image)
     },
     getProductTag() {
-      const days = dayjs().diff(dayjs(this.product.published_at), 'day')
-      if (days <= 7) {
-        this.productTag = {
-          value: 'New',
-          color: '#ff0000',
-        }
-      } else {}
+      return {}
+      // const days = dayjs().diff(dayjs(this.product.published_at), 'day')
+      // if (days <= 7) {
+      //   this.productTag = {
+      //     value: 'New',
+      //     color: '#ff0000',
+      //   }
+      // } else {}
     },
     handleZoom() {
       Taro.showLoading({})
