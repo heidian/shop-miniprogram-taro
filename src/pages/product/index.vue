@@ -164,7 +164,7 @@ export default {
     async fetchProduct({ productId, productName } = {}) {
       // TODO 要处理 404
       const fields = [
-        'id', 'title', 'description', 'image', 'images', 'variants', 'options',
+        'id', 'name', 'title', 'description', 'image', 'images', 'variants', 'options',
         'body_html', 'body_html_mobile', 'published', 'published_at', 'metafields'
       ].join(',')
       let product = null
