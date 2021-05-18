@@ -98,10 +98,10 @@
         <view :class="$style['filterSection']" v-if="tagFilterOptions['面料'] && tagFilterOptions['面料'].length">
           <view :class="$style['filterTitle']">面料</view>
           <view :class="$style['filterBodyRows']">
-            <view
+            <!-- <view
               @tap="() => resetTagFilter('面料')"
               :class="[$style['filterItem'], (!tagFilterValues['面料'].length) && 'is-active']"
-            >全部</view>
+            >全部</view> -->
             <view
               v-for="(tagValue, index) in tagFilterOptions['面料']" :key="index"
               @tap="() => toggleTagFilter('面料', tagValue)"
@@ -112,10 +112,10 @@
         <view :class="$style['filterSection']" v-if="tagFilterOptions['颜色'] && tagFilterOptions['颜色'].length">
           <view :class="$style['filterTitle']">颜色</view>
           <view :class="$style['filterBodyImages']">
-            <view
+            <!-- <view
               @tap="() => resetTagFilter('颜色')"
               :class="[$style['filterItem'], (!tagFilterValues['颜色'].length) && 'is-active']"
-            >全部</view>
+            >全部</view> -->
             <view
               v-for="(tagValue, index) in tagFilterOptions['颜色']" :key="index"
               @tap="() => toggleTagFilter('颜色', tagValue)"
