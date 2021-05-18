@@ -19,7 +19,6 @@ import Grids from '@/components/blocks/Grids'
 // import Text from '@/components/blocks/Text'
 import Marquee from '@/components/blocks/Marquee'
 import RichText from '@/components/blocks/RichText'
-import TezignBanner from '@/components/blocks/TezignBanner'
 import ProductSingleMain from '@/components/blocks/product/ProductSingleMain'
 import ProductSingleImages from '@/components/blocks/product/ProductSingleImages'
 import ProductSingleOptions from '@/components/blocks/product/ProductSingleOptions'
@@ -27,9 +26,12 @@ import ProductSingleAccessories from '@/components/blocks/product/ProductSingleA
 import ProductSingleBodyHtml from '@/components/blocks/product/ProductSingleBodyHtml'
 import ProductSingleRelated from '@/components/blocks/product/ProductSingleRelated'
 import ProductSingleReviews from '@/components/blocks/product/ProductSingleReviews'
-import ProductSingleReviewsFitting from '@/components/blocks/product/ProductSingleReviewsFitting'
 import PageSingleBodyHtml from '@/components/blocks/PageSingleBodyHtml'
 import LoginForm from '@/components/blocks/api/LoginForm'
+
+import TezignBanner from '@/components/blocks/misc/TezignBanner'
+import JoyberryProductSingleColors from '@/components/blocks/misc/JoyberryProductSingleColors'
+import JoyberryProductSingleReviews from '@/components/blocks/misc/JoyberryProductSingleReviews'
 
 // import getTestPageConfig from './_getTestPageConfig'
 // const PREVIEW_THEME_ID = 13390
@@ -45,7 +47,6 @@ const BLOCKS_MAP = {
   // 'blocks/text': Text,
   'blocks/marquee': Marquee,
   'blocks/rich_text': RichText,
-  'blocks/tezign_banner': TezignBanner,
   'blocks/product_single_main': ProductSingleMain,
   'blocks/product_single_images': ProductSingleImages,
   'blocks/product_single_options': ProductSingleOptions,
@@ -55,6 +56,9 @@ const BLOCKS_MAP = {
   'blocks/product_single_reviews': ProductSingleReviews,
   'blocks/page_single_body_html': PageSingleBodyHtml,
   'blocks/login_form': LoginForm,
+
+  'blocks/tezign_banner': TezignBanner,
+  'blocks/joyberry_product_single_colors': JoyberryProductSingleColors,
 }
 
 if (Taro.getEnv() === Taro.ENV_TYPE.WEB) {
@@ -71,7 +75,7 @@ export default {
   computed: {
     blocks() {
       if (this.$store.state.config.shopname === 'joyberry') {
-        BLOCKS_MAP['blocks/product_single_reviews'] = ProductSingleReviewsFitting
+        BLOCKS_MAP['blocks/product_single_reviews'] = JoyberryProductSingleReviews
       }
       const key = (this.pageType && this.pageName) ? `${this.pageType}/${this.pageName}` : this.pageType
       const blocks = _.filter(this.$store.state.theme.blocksOfPage[key] || [], (block) => !block.hidden)

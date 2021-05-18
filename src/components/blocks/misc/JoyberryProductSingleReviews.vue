@@ -48,7 +48,7 @@ import ReviewItem from '../../../pages/product/reviews-fitting/ReviewItem'
 /* 页面私有组件放在页面同一个目录下,
 因为 taro 无法实现 vue 的 scoped css, 样式写在页面和组件里都可以, 注意 class 冲突就行 */
 export default {
-  name: 'ProductSingleReviewsFitting',
+  name: 'JoyberryProductSingleReviews',
   props: {
     css: {
       type: Object,
