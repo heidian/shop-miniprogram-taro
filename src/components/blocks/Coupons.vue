@@ -2,12 +2,10 @@
   <view :class="$style['Coupons']" :style="css">
     <view v-for="coupon in coupons.data" :key="coupon.id" :class="$style['gridWrapper']">
       <view :class="$style['couponItem']" @tap="redeemCoupon(coupon)">
-        <view :class="$style['imageWrapper']">
-          <image
-            :src="optimizeImage(coupon.redeem_image, 400)"
-            mode="heightFix" :class="$style['image']"
-          ></image>
-        </view>
+        <image
+          :src="optimizeImage(coupon.redeem_image, 400)"
+          mode="heightFix" :class="$style['image']"
+        ></image>
       </view>
     </view>
   </view>
@@ -18,6 +16,7 @@ import _ from 'lodash'
 import Taro from '@tarojs/taro'
 import { API } from '@/utils/api'
 import { optimizeImage, backgroundImageUrl } from '@/utils/image'
+import { mapState } from 'vuex'
 import Price from '@/components/Price'
 
 export default {
@@ -46,7 +45,9 @@ export default {
     }
   },
   computed: {
-    //
+    ...mapState('customer', {
+      isAuthenticated: (state) => state.isAuthenticated,
+    }),
   },
   mounted() {
     this.fetchCoupons()
@@ -70,7 +71,20 @@ export default {
       }
     },
     redeemCoupon(coupon) {
-      //
+      if (this.isAuthenticated) {
+        const url = `/customers/coupon/${coupon.code_prefix}/redeem/`
+        Taro.showLoading({ title: '领取中' })
+        API.post(url).then(() => {
+          Taro.hideLoading()
+          Taro.showToast({ title: '领取成功!', icon: 'success', duration: 1000 })
+        }).catch((err) => {
+          const msg = _.get(err, 'response.data.detail') || ''
+          Taro.hideLoading()
+          Taro.showToast({ title: '领取失败, ' + msg, icon: 'none', duration: 2000 })
+        })
+      } else {
+        Taro.navigateTo({ url: '/pages/login/index' })
+      }
     }
   },
   watch: {
@@ -101,9 +115,6 @@ export default {
 }
 .couponItem {
   overflow: hidden;
-}
-.imageWrapper {
-  //
 }
 .image {
   background-size: contain;
