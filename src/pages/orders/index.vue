@@ -42,7 +42,17 @@
           <view :class="$style['totalQty']">共{{ order.lines.length }}件</view>
         </view>
       </view>
-      <view :class="$style['footer']"></view>
+      <view :class="$style['footer']">
+        <button
+          v-if="canContinuePay(order)"
+          class="button button--primary button--mini button--round button--outline"
+          @tap.stop="handleCancelOrder(order)"
+        >取消订单</button>
+        <button
+          class="button button--primary button--mini button--round button--outline"
+          @tap.stop="handleAddToCart(order)"
+        >再来一单</button>
+      </view>
     </view>
     <view v-if="!orders.count" :class="$style['emptyOrdersText']">您还没有相关订单</view>
   </view>
@@ -100,13 +110,17 @@ export default {
       this.updateDefaultParams({
         'fields': ['id', 'order_status', 'financial_status', 'fulfillment_status',
                    'lines', 'total_price', 'created_at'].join(','),
-        'fields[lines]': ['id', 'image', 'title'].join(','),
+        'fields[lines]': ['id', 'image', 'title', 'variant'].join(','),
       }, { fetch: false })
       this.fetchOrders()
     }
   },
   methods: {
     optimizeImage,
+    canContinuePay(order) {
+      return order.order_status === 'open' && (
+        order.financial_status === 'pending' || order.financial_status === 'partially_paid')
+    },
     async fetchOrders({ more=false } = {}) {
       Taro.showNavigationBarLoading()
       if (more) {
@@ -124,7 +138,61 @@ export default {
     },
     goToDetail(orderId) {
       Taro.navigateTo({ url: '/pages/orders/detail?id=' + orderId })
-    }
+    },
+    async handleAddToCart(order) {
+      Taro.showLoading({ title: '正在加入购物车' })
+      await new Promise((resolve) => {
+        const lines = [ ...order.lines ]
+        const addToCart = () => {
+          const line = lines.pop()
+          if (!line) {
+            return resolve()  // 加上 return 确保如果以后 if else 后面加其他代码, 也不会执行
+          } else if (line.variant) {
+            this.$store.dispatch('cart/add', {
+              variantId: line.variant.id,
+              quantity: line.quantity,
+            }).then(() => {}).catch(() => {})
+            setTimeout(addToCart, 1000)
+          } else {
+            setTimeout(addToCart, 0)
+          }
+        }
+        addToCart()
+      })
+      Taro.hideLoading()
+      Taro.switchTab({ url: '/pages/cart/index' })
+    },
+    handleCancelOrder(order) {
+      const cancel = async () => {
+        Taro.showLoading({ title: '正在取消订单' })
+        try {
+          const reason = '买家取消订单'
+          const res = await API.post(`/customers/order/${order.id}/cancel/`, { reason })
+          Taro.showToast({ title: '订单已取消', icon: 'none', duration: 1000 })
+        } catch(err) {
+          // console.log(err)
+          Taro.showModal({ title: '订单取消失败', showCancel: false })
+        }
+        Taro.hideLoading()
+        this.fetchOrders()
+      }
+      // Taro.showActionSheet({
+      //   itemList: ['A', 'B', 'C'],
+      //   success: function (res) { console.log(res.tapIndex) },
+      //   fail: function (res) { console.log(res.errMsg) }
+      // })
+      Taro.showModal({
+        success: (res) => {
+          if (res.confirm) { cancel() }
+        },
+        // title: '取消订单',
+        // content: '取消订单后，如需重新购买商品，需要重新下单',
+        content: '确定取消订单？',
+        cancelText: '关闭',
+        confirmText: '确定取消',
+        confirmColor: this.$globalColors['--color-primary'],
+      })
+    },
   }
 }
 </script>
@@ -162,7 +230,7 @@ page {
   margin: 10px;
   border-radius: 6px;
   background-color: #fff;
-  padding: 15px 10px;
+  padding: 10px;
   // 一个样例, 不处理下面的 .btn
   :global(.btn) {
     color: red;
@@ -185,7 +253,12 @@ page {
   }
 }
 .footer {
-  //
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  :global(.button) {
+    margin-left: 10px;
+  }
 }
 .lines {
   display: flex;
