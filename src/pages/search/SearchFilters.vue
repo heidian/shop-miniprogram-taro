@@ -95,20 +95,6 @@
           </view>
         </view>
         <!-- 其他筛选条件 -->
-        <view :class="$style['filterSection']" v-if="tagFilterOptions['面料'] && tagFilterOptions['面料'].length">
-          <view :class="$style['filterTitle']">面料</view>
-          <view :class="$style['filterBodyRows']">
-            <!-- <view
-              @tap="() => resetTagFilter('面料')"
-              :class="[$style['filterItem'], (!tagFilterValues['面料'].length) && 'is-active']"
-            >全部</view> -->
-            <view
-              v-for="(tagValue, index) in tagFilterOptions['面料']" :key="index"
-              @tap="() => toggleTagFilter('面料', tagValue)"
-              :class="[$style['filterItem'], (tagFilterValues['面料'].indexOf(tagValue) >= 0) && 'is-active']"
-            >{{ tagValue }}</view>
-          </view>
-        </view>
         <view :class="$style['filterSection']" v-if="tagFilterOptions['颜色'] && tagFilterOptions['颜色'].length">
           <view :class="$style['filterTitle']">颜色</view>
           <view :class="$style['filterBodyImages']">
@@ -123,6 +109,22 @@
               :style="{'backgroundImage': backgroundImageUrl(colorOptionImages[tagValue])}"
             ></view>
           </view>
+        </view>
+        <view v-for="(tagValueOptions, tagGroup) in tagFilterOptions" :key="tagGroup" :class="$style['filterSection']">
+          <template v-if="tagValueOptions.length && tagGroup !== '颜色'">
+            <view :class="$style['filterTitle']">{{ tagGroup }}</view>
+            <view :class="$style['filterBodyRows']">
+              <!-- <view
+                @tap="() => resetTagFilter(tagGroup)"
+                :class="[$style['filterItem'], (!tagValueOptions) && 'is-active']"
+              >全部</view> -->
+              <view
+                v-for="(tagValue, index) in tagValueOptions" :key="index"
+                @tap="() => toggleTagFilter(tagGroup, tagValue)"
+                :class="[$style['filterItem'], (tagFilterValues[tagGroup].indexOf(tagValue) >= 0) && 'is-active']"
+              >{{ tagValue }}</view>
+            </view>
+          </template>
         </view>
       </view>
       <view slot="footer" :class="$style['drawerFilterFooter']">
@@ -188,12 +190,18 @@ export default {
       colorOptionTitle: '',
       colorOptionImages: {}, // { optionValue: imageSrc, ... }
       tagFilterOptions: {
-        '面料': [],
+        // tags 过滤选项
         '颜色': [],
+        '场景': [],
+        '面料': [],
+        '支撑度': [],
       },
       tagFilterValues: {
-        '面料': [],
+        // products 参数中的 tags 过滤值
         '颜色': [],
+        '场景': [],
+        '面料': [],
+        '支撑度': [],
       },
       orderByOptions: [
         { title: '新品', value: '-published_at' },
@@ -313,7 +321,8 @@ export default {
       }).then(({ data }) => {
         _.forEach(data.results, (tag) => {
           const [title, value] = tag.title.split(':')
-          if (title === '面料' || title === '颜色') {
+          if (this.tagFilterOptions[title]) {
+            // 只处理 tagFilterOptions 存在的 key
             this.tagFilterOptions[title].push(value)
           }
         })
@@ -347,11 +356,16 @@ export default {
         }
       })
       this.updateFilter({
-        tag__in: { value: tagIn, type: 'Array' }
+        tag__in: {
+          value: tagIn.slice(0, 3),  // 只支持3项, 直接忽略更多的
+          type: 'Array'
+        }
       }, { partial: true, fetch: true })
     },
     clearFilters() {
-      this.tagFilterValues = { '面料': [], '颜色': [] }
+      for (let key in this.tagFilterValues) {
+        this.tagFilterValues[key] = []
+      }
       this.updateFilter({}, { partial: false, fetch: true })
       this.subCategoryDrawerVisible = false
     },
