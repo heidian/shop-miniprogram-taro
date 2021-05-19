@@ -4,6 +4,9 @@
 /* #ifdef h5 */
 taro-image-core {
   text-align: center;
+  &[mode="heightFix"] .taro-img__mode-heightfix {
+    max-height: 100%;
+  }
 }
 .taro_html {
   img {

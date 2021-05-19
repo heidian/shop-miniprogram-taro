@@ -19,6 +19,7 @@ import Grids from '@/components/blocks/Grids'
 // import Text from '@/components/blocks/Text'
 import Marquee from '@/components/blocks/Marquee'
 import RichText from '@/components/blocks/RichText'
+import Coupons from '@/components/blocks/Coupons'
 import ProductSingleMain from '@/components/blocks/product/ProductSingleMain'
 import ProductSingleImages from '@/components/blocks/product/ProductSingleImages'
 import ProductSingleOptions from '@/components/blocks/product/ProductSingleOptions'
@@ -47,6 +48,7 @@ const BLOCKS_MAP = {
   // 'blocks/text': Text,
   'blocks/marquee': Marquee,
   'blocks/rich_text': RichText,
+  'blocks/coupons': Coupons,
   'blocks/product_single_main': ProductSingleMain,
   'blocks/product_single_images': ProductSingleImages,
   'blocks/product_single_options': ProductSingleOptions,
