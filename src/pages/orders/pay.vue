@@ -1,18 +1,50 @@
 <template>
   <view :class="$style['page']" v-if="!pending && orderData" :style="$globalColors">
+    <view style="margin: 12px; font-weight: bold">订单编号: {{ orderData['order_number'] }}</view>
+    <view :class="$style['section']" @tap="vouchersDrawerVisible=true">
+      <view>礼品卡支付</view>
+      <view style="margin-left: auto; margin-right: 0.5em;" :class="$style['textTip']">
+        <template v-if="+voucherPaidAmount">{{ voucherPaidAmount|currency({keepZero: true}) }}</template>
+        <template
+          v-else-if="paymentPayload['voucher']['voucher_id']"
+        >已选择: {{ paymentPayload['voucher']['amount']|currency({keepZero: true}) }}</template>
+        <template v-else>选择礼品卡</template>
+      </view>
+      <view :class="$style['caret']"><text class="el-icon-arrow-right"></text></view>
+    </view>
+    <view :class="$style['section']">
+      <view>微信小程序支付</view>
+      <view style="margin-left: auto; margin-right: 0.5em;">
+        <price :price="paymentPayload['wx_lite']['amount']" :highlight="true" :keepZero="true"></price>
+      </view>
+    </view>
     <view :class="$style['footer']">
       <view>
         <text>未付款金额:</text>
-        <price
-          :class="$style['totalPrice']"
-          :price="orderData.payable_price" :highlight="true" :keepZero="true"
-        ></price>
+        <price :price="orderData['payable_price']" :highlight="true" :keepZero="true"></price>
       </view>
       <button
         :class="['button', 'button--round', 'button--primary']"
         :disabled="paymentPending" @tap="pay"
       >{{ paymentPending ? '正在支付...' : '支付' }}</button>
     </view>
+    <drawer
+      position="bottom" header="礼品卡" :class="$style['drawer']"
+      :visible.sync="vouchersDrawerVisible" @open="fetchVouchers"
+    >
+      <view v-if="vouchers.pending" :class="$style['loading']"><text class="el-icon-more"></text></view>
+      <view v-else :class="$style['vouchersList']">
+        <view
+          v-for="(voucher, index) in vouchers.data" :key="`${voucher.id}-${index}`"
+          :class="[$style['vouchersItem'], paymentPayload['voucher']['voucher_id'] === voucher.id && 'is-selected']"
+          @tap="() => handleSelectVoucher(voucher)"
+        >
+          <view :class="$style['title']">{{ voucher.title }}</view>
+          <view :class="$style['balance']">{{ voucher.balance|currency({keepZero: true}) }}</view>
+          <icon type="success" size="20" :color="$globalColors['--color-primary']" :class="$style['check']"></icon>
+        </view>
+      </view>
+    </drawer>
   </view>
   <view v-else :class="$style['loading']"><text class="el-icon-more"></text></view>
 </template>
@@ -23,15 +55,21 @@ import Taro, { getCurrentInstance } from '@tarojs/taro'
 import { mapState } from 'vuex'
 import { API } from '@/utils/api'
 import Price from '@/components/Price'
+import Drawer from '@/components/Drawer'
 
 export default {
   name: 'Pay',
   components: {
     Price,
+    Drawer,
   },
   data() {
     const { id } = getCurrentInstance().router.params
     const paymentPayload = {
+      'voucher': {
+        'voucher_id': null,
+        'amount': 0,
+      },
       'wx_lite': {
         'order_id': id,
         'channel': 'wx_lite',
@@ -45,10 +83,18 @@ export default {
       orderId: id,
       orderData: null,
       paymentPayload,
+      vouchersDrawerVisible: false,
+      vouchers: {
+        pending: false,
+        data: [],
+      }
     }
   },
   computed: {
     ...mapState(['customer']),
+    voucherPaidAmount() {
+      //
+    }
   },
   mounted() {
     if (!this.customer.isAuthenticated) {
@@ -59,8 +105,15 @@ export default {
   },
   methods: {
     updateAmount() {
-      // TODO 还要减去礼品卡的金额
-      this.paymentPayload['wx_lite']['amount'] = this.orderData.payable_price
+      let amount = +this.orderData['payable_price']
+      const voucherPayload = this.paymentPayload['voucher']
+      if (voucherPayload['voucher_id']) {
+        if (amount < +voucherPayload['amount']) {
+          voucherPayload['amount'] = amount
+        }
+        amount -= (+voucherPayload['amount'])
+      }
+      this.paymentPayload['wx_lite']['amount'] = amount
     },
     async fetchOrder() {
       this.pending = true
@@ -76,6 +129,28 @@ export default {
         })
       }
       this.pending = false
+    },
+    async fetchVouchers() {
+      this.vouchers.pending = true
+      try {
+        const res = await API.get(`/customers/voucher/`)
+        this.vouchers.data = res.data.results
+      } catch(err) {
+        console.log(err)
+      }
+      this.vouchers.pending = false
+    },
+    handleSelectVoucher(voucher) {
+      const voucherPayload = this.paymentPayload['voucher']
+      if (voucherPayload['voucher_id'] !== voucher.id) {
+        voucherPayload['voucher_id'] = voucher.id
+        voucherPayload['amount'] = voucher.balance
+      } else {
+        voucherPayload['voucher_id'] = null
+        voucherPayload['amount'] = 0
+      }
+      this.updateAmount()
+      this.vouchersDrawerVisible = false
     },
     async pay() {
       if (this.paymentPending) {
@@ -118,6 +193,18 @@ export default {
 @import '@/styles/variables';
 .page {
   padding-bottom: 64px;
+  overflow: hidden;
+  min-height: 100vh;
+  background-color: $color-bg-gray;
+}
+.section {
+  border-radius: 6px;
+  background-color: #fff;
+  margin: 8px;
+  padding: 16px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
 }
 .footer {
   position: fixed;
@@ -137,5 +224,38 @@ export default {
   padding: 20px;
   font-size: 2em;
   color: $color-text-lighter;
+}
+.textTip {
+  font-size: 0.85em;
+  color: $color-text-lighter;
+}
+.caret {
+  color: $color-text-lighter;
+}
+.vouchersList {
+  min-height: 200px;
+  overflow: hidden;
+  background-color: $color-bg-gray;
+}
+.vouchersItem {
+  background-color: #fff;
+  margin: 8px;
+  padding: 15px 12px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  .balance {
+    margin-left: auto;
+    margin-right: 0.5em;
+  }
+  .check {
+    opacity: 0
+  }
+  &:global(.is-selected) {
+    .check {
+      opacity: 1
+    }
+  }
 }
 </style>

@@ -213,12 +213,10 @@ export default {
 
 <style lang="scss" module>
 @import '@/styles/variables';
-page {
-  background-color: $color-bg-gray;
-}
 .page {
   overflow: hidden;
   padding-bottom: 80px;
+  background-color: $color-bg-gray;
 }
 /* section */
 .section {
@@ -227,11 +225,11 @@ page {
   margin: 8px;
   padding: 12px;
 }
-.sectionHeader {
-  margin-bottom: 12px;
-  // font-size: 0.95em;
-  font-weight: bold;
-}
+// .sectionHeader {
+//   margin-bottom: 12px;
+//   // font-size: 0.95em;
+//   font-weight: bold;
+// }
 .priceLine {
   display: flex;
   justify-content: space-between;

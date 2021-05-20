@@ -211,11 +211,11 @@ export default {
 <style lang="scss" module>
 @import '@/styles/mixins';
 @import '@/styles/variables';
-page {
-  background-color: $color-bg-gray;
-}
 .page {
   padding-bottom: 64px;
+  overflow: hidden;
+  min-height: 100vh;
+  background-color: $color-bg-gray;
   > .section {
     border-radius: 6px;
     background-color: #fff;

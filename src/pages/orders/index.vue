@@ -210,11 +210,11 @@ export default {
 // @import './index.module.scss'
 @import '@/styles/mixins';
 @import '@/styles/variables';
-page {
-  background-color: $color-bg-gray;
-}
 .page {
   padding-top: 40px;
+  overflow: hidden;
+  min-height: 100vh;
+  background-color: $color-bg-gray;
 }
 .tabs {
   position: fixed;
