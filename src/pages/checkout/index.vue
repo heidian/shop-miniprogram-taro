@@ -58,8 +58,8 @@
       </view>
       <button
         :class="[$style['buttonPayForOrder'], 'button', 'button--round', 'button--primary']"
-        :disabled="paymentPending" @tap="pay"
-      >{{ paymentPending ? '正在支付...' : '立即支付' }}</button>
+        :disabled="placeOrderPending" @tap="handlePlaceOrder"
+      >{{ placeOrderPending ? '正在提交...' : '去支付' }}</button>
     </view>
     <available-coupon-codes :visible.sync="couponCodesDrawerVisible"></available-coupon-codes>
     <checkout-products :visible.sync="productsDrawerVisible"></checkout-products>
@@ -87,7 +87,7 @@ export default {
     const { token } = getCurrentInstance().router.params
     return {
       token,
-      paymentPending: false,
+      placeOrderPending: false,
       productsDrawerVisible: false,
       couponCodesDrawerVisible: false
     }
@@ -160,46 +160,19 @@ export default {
         return false
       }
     },
-    async pay() {
-      if (!this.checkShippingAddress() || this.paymentPending) {
+    async handlePlaceOrder() {
+      if (!this.checkShippingAddress() || this.placeOrderPending) {
         return
       }
-      this.paymentPending = true
+      this.placeOrderPending = true
       const openid = await this.$store.dispatch('customer/getOpenID')
-      let orderId
       try {
         const orderData = await this.$store.dispatch('checkout/placeOrder')
-        orderId = orderData.id
+        Taro.redirectTo({ url: `/pages/orders/pay?id=${orderData.id}` })
       } catch(err) {
-        Taro.showModal({ title: '发起支付失败', content: '' + err, showCancel: false })
-        this.paymentPending = false
-        return
+        Taro.showModal({ title: '提交订单失败', content: '' + err, showCancel: false })
       }
-      let res
-      try {
-        res = await API.post('/pingxx/charge_for_order/', {
-          voucher_ids: [],
-          order_token: this.token,
-          openid: openid,
-          channel: 'wx_lite'
-        })
-        this.paymentPending = false
-      } catch(err) {
-        Taro.showModal({ title: '发起支付失败', content: '' + err, showCancel: false })
-        this.paymentPending = false
-        return
-      }
-      const credential = _.get(res.data, 'charge.charge_essentials.credential.wx_lite')
-      // console.log(credential)
-      Taro.requestPayment({
-        ...credential,
-        success: (res) => { console.log(res) },
-        fail: (res) => { console.log(res) },
-        complete: () => {
-          // 支付成功或者失败都跳转订单页面
-          this.redirectToOrder(orderId)
-        }
-      })
+      this.placeOrderPending = false
     },
     getField(path, defaultValue) {
       return _.get(this.checkout.data, path, defaultValue)
@@ -216,6 +189,7 @@ export default {
 .page {
   overflow: hidden;
   padding-bottom: 80px;
+  min-height: 100vh;
   background-color: $color-bg-gray;
 }
 /* section */

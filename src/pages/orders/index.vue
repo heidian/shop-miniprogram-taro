@@ -116,7 +116,7 @@ export default {
       this.updateDefaultParams({
         'fields': ['id', 'order_status', 'financial_status', 'fulfillment_status',
                    'lines', 'total_price', 'created_at'].join(','),
-        'fields[lines]': ['id', 'image', 'title', 'variant'].join(','),
+        'fields[lines]': ['id', 'image', 'title', 'variant', 'quantity'].join(','),
       }, { fetch: false })
       this.fetchOrders()
     }

@@ -1,12 +1,18 @@
 <template>
   <view :class="$style['page']" v-if="!pending && orderData" :style="$globalColors">
     <view style="margin: 12px; font-weight: bold">订单编号: {{ orderData['order_number'] }}</view>
-    <view :class="$style['section']" @tap="vouchersDrawerVisible=true">
+    <view :class="$style['section']" v-if="+voucherPaidAmount">
       <view>礼品卡支付</view>
       <view style="margin-left: auto; margin-right: 0.5em;" :class="$style['textTip']">
-        <template v-if="+voucherPaidAmount">{{ voucherPaidAmount|currency({keepZero: true}) }}</template>
+        <text>已支付</text>
+        <price :price="+voucherPaidAmount" :highlight="true" :keepZero="true"></price>
+      </view>
+    </view>
+    <view :class="$style['section']" v-else @tap="vouchersDrawerVisible=true">
+      <view>礼品卡支付</view>
+      <view style="margin-left: auto; margin-right: 0.5em;" :class="$style['textTip']">
         <template
-          v-else-if="paymentPayload['voucher']['voucher_id']"
+          v-if="paymentPayload['voucher']['voucher_id']"
         >已选择: {{ paymentPayload['voucher']['amount']|currency({keepZero: true}) }}</template>
         <template v-else>选择礼品卡</template>
       </view>
@@ -15,6 +21,7 @@
     <view :class="$style['section']">
       <view>微信小程序支付</view>
       <view style="margin-left: auto; margin-right: 0.5em;">
+        <text>待支付</text>
         <price :price="paymentPayload['wx_lite']['amount']" :highlight="true" :keepZero="true"></price>
       </view>
     </view>
@@ -67,8 +74,10 @@ export default {
     const { id } = getCurrentInstance().router.params
     const paymentPayload = {
       'voucher': {
-        'voucher_id': null,
+        'order_id': id,
+        'channel': 'voucher',
         'amount': 0,
+        'voucher_id': null,
       },
       'wx_lite': {
         'order_id': id,
@@ -93,7 +102,9 @@ export default {
   computed: {
     ...mapState(['customer']),
     voucherPaidAmount() {
-      //
+      const transactions = _.get(this.orderData, 'transactions') || []
+      const voucherTransactions = _.filter(transactions, { status: 'success', channel: 'voucher' })
+      return _.sumBy(voucherTransactions, (transaction) => +transaction.amount)
     }
   },
   mounted() {
@@ -152,11 +163,19 @@ export default {
       this.updateAmount()
       this.vouchersDrawerVisible = false
     },
-    async pay() {
-      if (this.paymentPending) {
+    async payVoucher() {
+      const payload = { ...this.paymentPayload['voucher'] }
+      if (!payload['voucher_id']) {
         return
       }
-      this.paymentPending = true
+      try {
+        const res = await API.post('/payments/pay_for_order/', payload)
+      } catch(err) {
+        Taro.showModal({ title: '礼品卡支付失败', showCancel: false })
+        throw err
+      }
+    },
+    async payWxLite() {
       const openid = await this.$store.dispatch('customer/getOpenID')
       const payload = {
         ...this.paymentPayload['wx_lite'],
@@ -168,15 +187,24 @@ export default {
         credential = _.get(res.data, 'charge.charge_essentials.credential.wx_lite')
       } catch(err) {
         Taro.showModal({ title: '发起支付失败', showCancel: false })
+        throw err
       }
       if (credential) {
-        try {
-          await Taro.requestPayment({ ...credential })
-          this.redirectToOrder()
-        } catch(err) {
-          console.log(err)
-          this.fetchOrder()
-        }
+        await Taro.requestPayment(credential)
+      }
+    },
+    async pay() {
+      if (this.paymentPending) {
+        return
+      }
+      this.paymentPending = true
+      try {
+        await this.payVoucher()
+        await this.payWxLite()
+        this.redirectToOrder()
+      } catch(err) {
+        console.log(err)
+        this.fetchOrder()
       }
       this.paymentPending = false
     },
