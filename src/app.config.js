@@ -24,6 +24,7 @@ export default {
     'pages/addresses/edit',
     'pages/orders/index',
     'pages/orders/detail',
+    'pages/orders/pay',
     'pages/static/index',
     'pages/static/tab',
     'pages/blog/index',
