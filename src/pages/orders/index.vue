@@ -43,12 +43,18 @@
         </view>
       </view>
       <view :class="$style['footer']">
+        <template v-if="canContinuePay(order)">
+          <button
+            class="button button--primary button--mini button--round button--outline"
+            @tap.stop="handleCancelOrder(order)"
+          >取消订单</button>
+          <button
+            class="button button--primary button--mini button--round"
+            @tap.stop="handlePay(order)"
+          >继续支付</button>
+        </template>
         <button
-          v-if="canContinuePay(order)"
-          class="button button--primary button--mini button--round button--outline"
-          @tap.stop="handleCancelOrder(order)"
-        >取消订单</button>
-        <button
+          v-else
           class="button button--primary button--mini button--round button--outline"
           @tap.stop="handleAddToCart(order)"
         >再来一单</button>
@@ -193,6 +199,9 @@ export default {
         confirmColor: this.$globalColors['--color-primary'],
       })
     },
+    handlePay(order) {
+      Taro.navigateTo({ url: `/pages/orders/pay?id=${order.id}` })
+    }
   }
 }
 </script>

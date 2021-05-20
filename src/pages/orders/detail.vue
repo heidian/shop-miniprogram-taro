@@ -72,10 +72,7 @@
           :price="orderData.payable_price" :highlight="true" :keepZero="true"
         ></price>
       </view>
-      <button
-        :class="[$style['buttonPayForOrder'], 'button', 'button--round', 'button--primary']"
-        :disabled="paymentPending" @tap="pay"
-      >{{ paymentPending ? '正在支付...' : '继续付款' }}</button>
+      <button :class="['button', 'button--round', 'button--primary']" @tap="handlePay">继续付款</button>
     </view>
     <infinite-products></infinite-products>
   </view>
@@ -103,7 +100,6 @@ export default {
     const { id } = getCurrentInstance().router.params
     return {
       pending: false,
-      paymentPending: false,
       orderId: id,
       orderData: null,
       OrderStatus,
@@ -166,38 +162,8 @@ export default {
       }
       this.pending = false
     },
-    async pay() {
-      if (this.paymentPending) {
-        return
-      }
-      this.paymentPending = true
-      const openid = await this.$store.dispatch('customer/getOpenID')
-      let res
-      try {
-        res = await API.post('/pingxx/charge_for_order/', {
-          voucher_ids: [],
-          order_token: this.orderData.token,
-          openid: openid,
-          channel: 'wx_lite'
-        })
-        this.paymentPending = false
-      } catch(err) {
-        Taro.showModal({ title: '发起支付失败', showCancel: false })
-        this.paymentPending = false
-        return
-      }
-      const credential = _.get(res.data, 'charge.charge_essentials.credential.wx_lite')
-      const orderId = _.get(res.data, 'order.id')
-      // console.log(credential)
-      Taro.requestPayment({
-        ...credential,
-        success: (res) => { console.log(res) },
-        fail: (res) => { console.log(res) },
-        complete: () => {
-          // 支付成功或者失败都跳转订单页面
-          this.fetchOrder()
-        }
-      })
+    handlePay() {
+      Taro.navigateTo({ url: `/pages/orders/pay?id=${this.orderId}` })
     },
     handleCancelOrder() {
       const cancel = async () => {
