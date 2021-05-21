@@ -12,7 +12,7 @@
       <view>礼品卡支付</view>
       <view style="margin-left: auto; margin-right: 0.5em;" :class="$style['textTip']">
         <template
-          v-if="paymentPayload['voucher']['voucher_id']"
+          v-if="+paymentPayload['voucher']['amount']"
         >已选择: {{ paymentPayload['voucher']['amount']|currency({keepZero: true}) }}</template>
         <template v-else>选择礼品卡</template>
       </view>
@@ -73,6 +73,12 @@ export default {
   data() {
     const { id } = getCurrentInstance().router.params
     const paymentPayload = {
+      'points': {
+        'order_id': id,
+        'channel': 'points',
+        'amount': 0,
+        'points': 0,
+      },
       'voucher': {
         'order_id': id,
         'channel': 'voucher',
@@ -115,15 +121,23 @@ export default {
     }
   },
   methods: {
+    resetVoucherAndPoints() {
+      this.paymentPayload['points']['amount'] = 0
+      this.paymentPayload['points']['points'] = 0
+      this.paymentPayload['voucher']['amount'] = 0
+      this.paymentPayload['voucher']['voucher_id'] = null
+    },
     updateAmount() {
       let amount = +this.orderData['payable_price']
+      /* voucher */
       const voucherPayload = this.paymentPayload['voucher']
-      if (voucherPayload['voucher_id']) {
+      if (+voucherPayload['amount']) {
         if (amount < +voucherPayload['amount']) {
           voucherPayload['amount'] = amount
         }
         amount -= (+voucherPayload['amount'])
       }
+      /* wx_lite */
       this.paymentPayload['wx_lite']['amount'] = amount
     },
     async fetchOrder() {
@@ -131,6 +145,7 @@ export default {
       try {
         const res = await API.get(`/customers/order/${this.orderId}/`)
         this.orderData = res.data
+        this.resetVoucherAndPoints()
         this.updateAmount()
       } catch(err) {
         Taro.showModal({
@@ -163,9 +178,16 @@ export default {
       this.updateAmount()
       this.vouchersDrawerVisible = false
     },
+    async payPoints() {
+      const payload = { ...this.paymentPayload['points'] }
+      if (!+payload['amount']) {
+        return
+      }
+      /* TODO! */
+    },
     async payVoucher() {
       const payload = { ...this.paymentPayload['voucher'] }
-      if (!payload['voucher_id']) {
+      if (!+payload['amount']) {
         return
       }
       try {
@@ -176,11 +198,12 @@ export default {
       }
     },
     async payWxLite() {
-      const openid = await this.$store.dispatch('customer/getOpenID')
-      const payload = {
-        ...this.paymentPayload['wx_lite'],
-        openid
+      const payload = { ...this.paymentPayload['wx_lite'] }
+      if (!+payload['amount']) {
+        return
       }
+      const openid = await this.$store.dispatch('customer/getOpenID')
+      payload['openid'] = openid
       let credential = null
       try {
         const res = await API.post('/payments/pay_for_order/', payload)
@@ -199,6 +222,7 @@ export default {
       }
       this.paymentPending = true
       try {
+        await this.payPoints()
         await this.payVoucher()
         await this.payWxLite()
         this.redirectToOrder()
