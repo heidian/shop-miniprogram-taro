@@ -111,7 +111,7 @@
           </view>
         </view>
         <view v-for="(tagValueOptions, tagGroup) in tagFilterOptions" :key="tagGroup" :class="$style['filterSection']">
-          <template v-if="tagValueOptions.length && tagGroup !== '颜色'">
+          <template v-if="tagGroupVisible(tagGroup)">
             <view :class="$style['filterTitle']">{{ tagGroup }}</view>
             <view :class="$style['filterBodyRows']">
               <!-- <view
@@ -186,22 +186,24 @@ export default {
       activeRootCategoryId: null,
       subCategoryDrawerVisible: false,
       fixFineTuningOnTop: false,
-      // TODO 这部分只是给 joyberry 用的
+      // TODO 这部分只是给 joyberry 用的, 但是其实并没有在代码里体现, 只是假设只有 joyberry 后台有这些标签
       colorOptionTitle: '',
       colorOptionImages: {}, // { optionValue: imageSrc, ... }
       tagFilterOptions: {
         // tags 过滤选项
         '颜色': [],
         '场景': [],
-        '面料': [],
         '支撑度': [],
+        '长度': [],
+        '面料': [],
       },
       tagFilterValues: {
         // products 参数中的 tags 过滤值
         '颜色': [],
         '场景': [],
-        '面料': [],
         '支撑度': [],
+        '长度': [],
+        '面料': [],
       },
       orderByOptions: [
         { title: '新品', value: '-published_at' },
@@ -314,6 +316,20 @@ export default {
       this.orderByIndex = +e.detail.value
       const orderBy = _.get(this.orderByOptions[this.orderByIndex], 'value')
       this.updateOrderBy(orderBy, { fetch: true })
+    },
+    tagGroupVisible(tagGroup) {
+      if (_.isEmpty(this.tagFilterOptions[tagGroup])) {
+        return false
+      }
+      const whiteList = {
+        'all': ['场景', '面料'],
+        '51527': ['面料'],  // 春夏系列
+        '1359': ['长度', '面料'],  // 裸感裤
+        '50950': ['支撑度', '面料'],  // 运动文胸
+        '50955': ['面料'],  // 上衣外套
+        '51719': [],  // 配件
+      }[(this.activeRootCategoryId || 'all') + ''] || []
+      return whiteList.indexOf(tagGroup) >= 0
     },
     fetchTagFilters() {
       API.get('/shopfront/product_tag/', {

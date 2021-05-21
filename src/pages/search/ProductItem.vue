@@ -59,7 +59,11 @@ export default {
       productTag: {},
     }
   },
-  computed: {},
+  computed: {
+    ...mapState({
+      shopName: (state) => state.config.shopname
+    }),
+  },
   created() {},
   mounted() {
     this.getProductColorOptions()
@@ -92,14 +96,22 @@ export default {
       this.productColorOptions = _.filter(results, (item) => !!item.image)
     },
     getProductTag() {
-      return {}
-      // const days = dayjs().diff(dayjs(this.product.published_at), 'day')
-      // if (days <= 7) {
-      //   this.productTag = {
-      //     value: 'New',
-      //     color: '#ff0000',
-      //   }
-      // } else {}
+      if (this.shopName !== 'joyberry') {
+        // 只为 joyberry 计算 tag
+        return {}
+      }
+      const days = dayjs().diff(dayjs(this.product.published_at), 'day')
+      if (+this.product.compare_at_price > +this.product.price) {
+        this.productTag = {
+          value: 'Sale',
+          color: '#960704',
+        }
+      } else if (days <= 7) {
+        this.productTag = {
+          value: 'New',
+          color: '#BCAD84',
+        }
+      } else {}
     },
     handleZoom() {
       Taro.showLoading({})
