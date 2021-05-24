@@ -23,7 +23,9 @@ export default {
     FloatingButtons,
   },
   data() {
-    return {}
+    return {
+      filterReady: false
+    }
   },
   computed: {
     ...mapState(['categories', 'system']),
@@ -50,8 +52,9 @@ export default {
       // 'fields[variants]': ['id', 'options'].join(','),
     }
     const filter = {}
-    const { category } = getCurrentInstance().router.params
+    const { category = '', tag = '' } = getCurrentInstance().router.params
     filter.category = category
+    filter.tag__in = tag
     // 因为要处理 activeCategory, 这里先 await 一下, categories 全局只取一次, 这样问题不大
     await this.$store.dispatch('categories/list')
     // 去掉这个默认分类的处理
@@ -60,6 +63,7 @@ export default {
     //   filter.category = this.categories.data[0].id
     // }
     this.$store.commit('lists/products/setParams', { filter, defaultParams })
+    this.filterReady = true
     this.fetchProducts()
   },
   methods: {

@@ -259,6 +259,9 @@ export default {
     this.fetchTagFilters()
     this.configColorOptions()
   },
+  mounted() {
+    this.setActiveTags()
+  },
   methods: {
     optimizeImage,
     backgroundImageUrl,
@@ -343,6 +346,16 @@ export default {
           }
         })
       }).catch((err) => { console.log(err) })
+    },
+    setActiveTags() {
+      const tagFilter = this.getFilter('tag__in', 'Array')
+      _.forEach(tagFilter, tag => {
+        const [group, value] = tag.split(':')
+        if (group && this.tagFilterValues[group]) {
+          // 只处理 tagFilterValues 存在的 key
+          this.tagFilterValues[group].push(value)
+        }
+      })
     },
     inTagFilter(group, value) {
       const tag = `${group}:${value}`

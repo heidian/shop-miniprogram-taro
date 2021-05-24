@@ -6,6 +6,7 @@
     ></custom-nav> -->
 
     <search-filters
+      v-if="filterReady"
       ref="searchFilters"
       :products="products"
       :getFilter="getFilter"
