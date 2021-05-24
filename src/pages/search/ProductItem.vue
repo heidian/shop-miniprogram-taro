@@ -30,6 +30,26 @@
       ></image>
       <view v-if="productColorOptions.length > 6" :class="[$style['colorOptionsItem'], 'el-icon-plus']"></view>
     </view>
+    <view
+      :class="$style['imageSwiperWrapper']"
+      v-if="swiperVisible"
+      @tap.stop="() => {}">
+      <swiper
+        :class="$style['imageSwiper']"
+        circular
+        autoplay
+        :current="current">
+        <swiper-item v-for="imageItem in images" :key="`product-${product.id}-image-${imageItem.id}`">
+          <image
+            :class="$style['swiperImage']" mode="aspectFit" :lazy-load="true"
+            :src="optimizeImage(imageItem, 800)"
+          ></image>
+        </swiper-item>
+      </swiper>
+      <view :class="$style['swiperIcon']" @tap.stop="swiperVisible = false">
+        <text class="el-icon-close"></text>
+      </view>
+    </view>
   </view>
 </template>
 
@@ -57,6 +77,9 @@ export default {
       colorNameToImage: {},
       productColorOptions: [],
       productTag: {},
+      swiperVisible: false,
+      images: [],
+      current: null
     }
   },
   computed: {
@@ -113,20 +136,18 @@ export default {
         }
       } else {}
     },
-    handleZoom() {
-      Taro.showLoading({})
-      API.get(`/shopfront/product/${this.product.id}/`, {
-        params: { fields: 'id,images' }
-      }).then((res) => {
-        const images = res.data.images
-        if (images.length) {
-          const urls = _.map(images, (image) => this.optimizeImage(image))
-          Taro.previewImage({ current: urls[0], urls })
-        }
+    async handleZoom() {
+      if (this.images.length == 0) {
+        try {
+          Taro.showLoading({})
+          const res = await API.get(`/shopfront/product/${this.product.id}/`, { params: { fields: 'id,images' }})
+          const images = res.data.images
+          if (images.length) this.images = images
+        } catch (error) {}
         Taro.hideLoading()
-      }).catch((err) => {
-        Taro.hideLoading()
-      })
+      }
+      this.swiperVisible = true
+      this.current = 0
     }
   },
 }
@@ -204,6 +225,45 @@ export default {
   color: $color-text-light;
   + .colorOptionsItem {
     margin-left: 5px;
+  }
+}
+.imageSwiperWrapper {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  padding: 15px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: $z-index-dialog;
+  background-color: rgba(0, 0, 0, 0.4);
+}
+.imageSwiper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+.swiperImage {
+  width: 100%;
+  height: 100%;
+}
+.swiperIcon {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  font-size: 20px;
+  color: #ffffff;
+  z-index: 10;
+  width: 30px;
+  height: 30px;
+  padding: 4px;
+  border: 1px solid #ffffff;
+  border-radius: 50%;
+  text {
+    line-height: 20px;
+    display: block;
   }
 }
 </style>
