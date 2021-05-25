@@ -23,9 +23,7 @@ export default {
     FloatingButtons,
   },
   data() {
-    return {
-      filterReady: false
-    }
+    return {}
   },
   computed: {
     ...mapState(['categories', 'system']),
@@ -63,7 +61,6 @@ export default {
     //   filter.category = this.categories.data[0].id
     // }
     this.$store.commit('lists/products/setParams', { filter, defaultParams })
-    this.filterReady = true
     this.fetchProducts()
   },
   methods: {

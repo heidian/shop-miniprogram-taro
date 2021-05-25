@@ -145,7 +145,7 @@
 
 <script>
 import _ from 'lodash'
-import Taro from '@tarojs/taro'
+import Taro, { getCurrentInstance } from '@tarojs/taro'
 import { mapState, mapGetters } from 'vuex'
 import { API } from '@/utils/api'
 import { optimizeImage, backgroundImageUrl } from '@/utils/image'
@@ -260,7 +260,10 @@ export default {
     this.configColorOptions()
   },
   mounted() {
-    this.setActiveTags()
+    const { tag } = getCurrentInstance().router.params
+    if (tag) {
+      this.setActiveTags(tag)
+    }
   },
   methods: {
     optimizeImage,
@@ -347,15 +350,12 @@ export default {
         })
       }).catch((err) => { console.log(err) })
     },
-    setActiveTags() {
-      const tagFilter = this.getFilter('tag__in', 'Array')
-      _.forEach(tagFilter, tag => {
-        const [group, value] = tag.split(':')
-        if (group && this.tagFilterValues[group]) {
-          // 只处理 tagFilterValues 存在的 key
-          this.tagFilterValues[group].push(value)
-        }
-      })
+    setActiveTags(tag) {
+      const [group, value] = tag.split(':')
+      if (group && this.tagFilterValues[group]) {
+        // 只处理 tagFilterValues 存在的 key
+        this.tagFilterValues[group].push(value)
+      }
     },
     inTagFilter(group, value) {
       const tag = `${group}:${value}`
