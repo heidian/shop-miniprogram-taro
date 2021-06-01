@@ -17,11 +17,18 @@
 
     <view :class="$style['productGrids']">
       <view v-for="product in products.data" :key="product.id" :class="$style['gridWrapper']">
-        <product-item :product="product"></product-item>
+        <product-item :product="product" @preview="() => onPreview(product.id)"></product-item>
       </view>
     </view>
 
     <view v-if="products.pending" :class="$style['loading']"><text class="el-icon-more"></text></view>
+
+    <product-preview
+      :visible.sync="previewVisible"
+      :product="currentProduct"
+      :variant="currentVariant"
+      @close="handleClosePreview"
+    />
   </view>
 </template>
 

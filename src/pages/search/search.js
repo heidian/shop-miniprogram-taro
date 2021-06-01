@@ -1,11 +1,13 @@
 import _ from 'lodash'
 import Taro, { getCurrentInstance } from '@tarojs/taro'
 import { mapState, mapGetters } from 'vuex'
+import { API } from '@/utils/api'
 import { optimizeImage, backgroundImageUrl } from '@/utils/image'
 import CustomNav from './CustomNav'
 import ProductItem from './ProductItem'
 import SearchFilters from './SearchFilters'
 import FloatingButtons from '@/components/FloatingButtons/FloatingButtons'
+import ProductPreview from './ProductPreview'
 
 import ListTable from '@/mixins/ListTable'
 // const listTableMixin = ListTable('products', { urlRoot: '/shopfront/product/' })
@@ -20,10 +22,15 @@ export default {
     CustomNav,
     SearchFilters,
     ProductItem,
+    ProductPreview,
     FloatingButtons,
   },
   data() {
-    return {}
+    return {
+      currentProduct: {},
+      currentVariant: {},
+      previewVisible: false
+    }
   },
   computed: {
     ...mapState(['categories', 'system']),
@@ -85,6 +92,23 @@ export default {
     //   this.updateFilter({ q }, { partial: false, fetch: true })
     //   // this.fetchProducts()
     // },
+    async onPreview(productId) {
+      // 预览商品，获取商品data，作为传入子组件的属性
+      if (!productId) return;
+      if (+productId !== this.currentProduct.id) {
+        Taro.showLoading({})
+        const { data: currentProduct } = await API.get(`/shopfront/product/${productId}/`, { params: { fields: 'id,title,images,variants,options' }})
+        const currentVariant = _.find(currentProduct.variants || [], { is_available: true }) || currentProduct.variants[0]
+        this.currentProduct = currentProduct
+        this.currentVariant = currentVariant
+        Taro.hideLoading()
+        this.previewVisible = true
+      }
+    },
+    handleClosePreview() {
+      this.currentProduct = {}
+      this.currentVariant = {}
+    }
   },
   watch: {
     'products.pending': {
