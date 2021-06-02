@@ -23,7 +23,7 @@
       <view
         class="accordion__content taro_html"
         :style="settingsData.contentBackgroundColor ? { 'backgroundColor': settingsData.contentBackgroundColor } : {}"
-        v-html="getHtmlValue(item.content)"
+        v-html="getHtmlValue(item)"
       ></view>
     </view>
   </view>
@@ -48,7 +48,11 @@ export default {
         contentBackgroundColor: null,
         dividerColor: null,
       })
-    }
+    },
+    product: {
+      type: Object,
+      required: false
+    },
   },
   data() {
     return {
@@ -65,8 +69,13 @@ export default {
     getTextStyle(textObj) {
       return _.get(textObj, 'style', {})
     },
-    getHtmlValue(htmlObj) {
-      return sanitizeHtml(_.get(htmlObj, 'html', ''))
+    getHtmlValue(item) {
+      if (item.joyberryContents) {
+        const result = this.getHtmlValueForProduct(item.joyberryContents)
+        return sanitizeHtml(result)
+      } else {
+        return sanitizeHtml(_.get(item.content, 'html', ''))
+      }
     },
     onTapTitle(index) {
       if (this.expandedIndex === index) {
@@ -74,7 +83,14 @@ export default {
       } else {
         this.expandedIndex = index
       }
-    }
+    },
+    getHtmlValueForProduct(joyberryContents) {
+      const productTitle = _.get(this.product, 'title') || ''
+      const content = _.find(joyberryContents, ({ title }) => {
+        return productTitle.toLowerCase().indexOf(title.toLowerCase()) >= 0
+      })
+      return _.get(content, 'html', '')
+    },
   }
 }
 </script>
@@ -94,7 +110,7 @@ export default {
     justify-content: space-between;
   }
   .accordion__content {
-    padding: 15px;
+    padding: 5px 15px 15px;
     display: none;
   }
   .accordion__item.expanded .accordion__content {

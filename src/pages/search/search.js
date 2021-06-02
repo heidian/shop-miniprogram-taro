@@ -5,9 +5,9 @@ import { API } from '@/utils/api'
 import { optimizeImage, backgroundImageUrl } from '@/utils/image'
 import CustomNav from './CustomNav'
 import ProductItem from './ProductItem'
+import ProductPreview from './ProductPreview'
 import SearchFilters from './SearchFilters'
 import FloatingButtons from '@/components/FloatingButtons/FloatingButtons'
-import ProductPreview from './ProductPreview'
 
 import ListTable from '@/mixins/ListTable'
 // const listTableMixin = ListTable('products', { urlRoot: '/shopfront/product/' })
