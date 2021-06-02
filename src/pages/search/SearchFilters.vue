@@ -6,8 +6,11 @@
         :class="$style['searchInput']" type="text" placeholder="搜索商品关键词"
         confirm-type="search" :value="getFilter('q')"
         @confirm="(e) => updateFilter({ q: e.detail.value }, { partial: false })"
-      />
-      <text class="el-icon-close" v-if="getFilter('q')" @tap="updateFilter({ q: '' }, { partial: false })"></text>
+      ></input>
+      <text
+        v-if="getFilter('q')" class="el-icon-close"
+        @tap="updateFilter({ q: '' }, { partial: false })"
+      ></text>
     </view>
     <view :class="$style['categoriesBar']" :style="{'top': categoriesBarTop}">
       <scroll-view
@@ -63,7 +66,10 @@
     </view>
 
     <!-- 因为这个页面用了自定义 navbar, 需要修改 drawer 的样式 -->
-    <drawer :visible.sync="subCategoryDrawerVisible" position="right" header="筛选" :style="filtersDrawerStyle">
+    <drawer
+      position="right" header="筛选" :style="filtersDrawerStyle"
+      :visible.sync="subCategoryDrawerVisible" @close="onDrawerClose"
+    >
       <view :class="$style['drawerFilter']">
         <!-- <view :class="$style['filterSection']">
           <view :class="$style['filterTitle']">排序</view>
@@ -78,12 +84,12 @@
           </view>
         </view> -->
         <!-- 二级分类 -->
-        <view v-if="!!activeRootCategoryId && activeSubCategories.length" :class="$style['filterSection']">
+        <view v-if="activeSubCategories.length" :class="$style['filterSection']">
           <view :class="$style['filterTitle']">分类 (多选)</view>
           <view :class="$style['filterBodyRows']">
             <view
-              @tap="() => filterRootCategory(activeRootCategoryId)"
-              :class="[$style['filterItem'], (activeRootCategoryId === +getFilter('category')) && 'is-active']"
+              @tap="() => filterSubCategory(null)"
+              :class="[$style['filterItem'], !(getFilter('category__in', 'CSV') || []).length && 'is-active']"
             >全部</view>
             <view
               v-for="item in activeSubCategories" :key="item.id" @tap="() => filterSubCategory(item.id)"
@@ -240,8 +246,12 @@ export default {
       }
     },
     activeSubCategories() {
-      const category = _.find(this.categories.data, { id: this.activeRootCategoryId })
-      return category ? category.children : []
+      if (this.activeRootCategoryId) {
+        const category = _.find(this.categories.data, { id: this.activeRootCategoryId })
+        return category ? category.children : []
+      } else {
+        return [ ...this.categories.data ]
+      }
     },
     activeRootCategoryImage() {
       const category = _.find(this.categories.data, { id: this.activeRootCategoryId })
@@ -276,48 +286,52 @@ export default {
       }))
     },
     getRootCategoryId() {
-      // this.activeRootCategoryId = this.getRootCategoryId(this.getFilter('category'))
-      const getRootCategoryId = this.$store.getters['categories/getRootCategoryId']
-      const category = this.getFilter('category')
-      const categoryIn = this.getFilter('category__in', 'CSV') || []
-      this.activeRootCategoryId = getRootCategoryId(category || categoryIn[0])
+      this.activeRootCategoryId = +this.getFilter('category') || null
+      // const getParentCategoryId = this.$store.getters['categories/getParentCategoryId']
+      // const category = this.getFilter('category')
+      // const categoryIn = this.getFilter('category__in', 'CSV') || []
+      // this.activeRootCategoryId = getParentCategoryId(category || categoryIn[0])
     },
     filterRootCategory(categoryId) {
       // this.subCategoryDrawerVisible = false
-      // 虽然 updateFilter 以后再通过 watch 机制回来也会计算 activeRootCategoryId, 但这里早点设置也没事
       this.activeRootCategoryId = categoryId
-      // 因为有 partial: false, 这里其实不需要专门把其他参数置为空
+      // 因为有 partial: false, 这里不需要在把其他参数置为空
       this.updateFilter({ category: categoryId }, { partial: false, fetch: true })
     },
     filterSubCategory(categoryId) {
       // this.subCategoryDrawerVisible = false
-      categoryId = '' + categoryId
-      const categories = this.getFilter('category__in', 'CSV') || []
-      const index = categories.indexOf(categoryId)
-      if (index >= 0) {
-        categories.splice(index, 1)
+      let categories = this.getFilter('category__in', 'CSV') || []
+      // categoryId 如果是 null 则表示清空
+      if (categoryId === null) {
+        categories = []
       } else {
-        categories.push(categoryId)
+        categoryId = '' + categoryId
+        const index = categories.indexOf(categoryId)
+        if (index >= 0) {
+          categories.splice(index, 1)
+        } else {
+          categories.push(categoryId)
+        }
       }
       if (categories.length) {
         this.updateFilter({
           'category__in': { value: categories, type: 'CSV' },
           'category': '',
-        }, { partial: true, fetch: true })
+        }, { partial: true, fetch: false })
       } else {
         this.updateFilter({
           'category__in': '',
           'category': this.activeRootCategoryId,
-        }, { partial: true, fetch: true })
+        }, { partial: true, fetch: false })
       }
     },
-    onClickOrderBy(orderBy) {
-      // this.subCategoryDrawerVisible = false
-      if (this.products.orderBy === orderBy) {
-        orderBy = ''
-      }
-      this.updateOrderBy(orderBy, { fetch: true })
-    },
+    // onClickOrderBy(orderBy) {
+    //   // this.subCategoryDrawerVisible = false
+    //   if (this.products.orderBy === orderBy) {
+    //     orderBy = ''
+    //   }
+    //   this.updateOrderBy(orderBy, { fetch: true })
+    // },
     onPickOrderBy(e) {
       this.orderByIndex = +e.detail.value
       const orderBy = _.get(this.orderByOptions[this.orderByIndex], 'value')
@@ -389,14 +403,18 @@ export default {
           value: tagIn.slice(0, 3),  // 只支持3项, 直接忽略更多的
           type: 'Array'
         }
-      }, { partial: true, fetch: true })
+      }, { partial: true, fetch: false })
     },
     clearFilters() {
       for (let key in this.tagFilterValues) {
         this.tagFilterValues[key] = []
       }
-      this.updateFilter({}, { partial: false, fetch: true })
+      this.updateFilter({}, { partial: false, fetch: false })
       this.subCategoryDrawerVisible = false
+    },
+    onDrawerClose() {
+      // partial: true, fetch: true 相当于 fetchList
+      this.updateFilter({}, { partial: true, fetch: true })
     },
     handlePageScroll(scrollTop) {
       Taro.pxTransform(this.customNavHeight)
@@ -411,12 +429,12 @@ export default {
       },
       deep: true,
     },
-    'products.filter': {
-      handler: function(newVal) {
-        this.getRootCategoryId()
-      },
-      deep: true
-    }
+    // 'products.filter': {
+    //   handler: function(newVal) {
+    //     this.getRootCategoryId()
+    //   },
+    //   deep: true
+    // }
   }
 }
 </script>

@@ -58,15 +58,10 @@ export default {
     }
     const filter = {}
     const { category = '', tag = '' } = getCurrentInstance().router.params
-    filter.category = category
+    filter.category__in = category
     filter.tag__in = tag
     // 因为要处理 activeCategory, 这里先 await 一下, categories 全局只取一次, 这样问题不大
     await this.$store.dispatch('categories/list')
-    // 去掉这个默认分类的处理
-    // if (!filter.category) {
-    //   // 默认一定要选中一个分类, 这个版本 search 页面不能显示全部商品, 之后再支持更多过滤
-    //   filter.category = this.categories.data[0].id
-    // }
     this.$store.commit('lists/products/setParams', { filter, defaultParams })
     this.fetchProducts()
   },

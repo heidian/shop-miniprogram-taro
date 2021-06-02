@@ -4,7 +4,7 @@ import { API } from '@/utils/api'
 const state = () => {
   return {
     _fetched: false,  // categories 只运行一次
-    _rootCategory: {},
+    // _parentCategory: {},
     pending: false,
     error: {},
     data: []
@@ -12,11 +12,11 @@ const state = () => {
 }
 
 const getters = {
-  getRootCategoryId(state) {
-    return (categoryId) => {
-      return state._rootCategory[categoryId] || null
-    }
-  }
+  // getParentCategoryId(state) {
+  //   return (categoryId) => {
+  //     return state._parentCategory[categoryId] || null
+  //   }
+  // }
 }
 
 const mutations = {
@@ -35,14 +35,14 @@ const mutations = {
   setData(state, { data } = {}) {
     state._fetched = true
     state.data = _.cloneDeep(data || [])
-    const rootCategory = {}
-    _.forEach(state.data, (category) => {
-      rootCategory[category.id] = category.id
-      _.forEach(category.children || [], (subCategory) => {
-        rootCategory[subCategory.id] = category.id
-      })
-    })
-    state._rootCategory = rootCategory
+    // const parentCategory = {}
+    // _.forEach(state.data, (category) => {
+    //   parentCategory[category.id] = null
+    //   _.forEach(category.children || [], (subCategory) => {
+    //     parentCategory[subCategory.id] = category.id
+    //   })
+    // })
+    // state._parentCategory = parentCategory
   }
 }
 
