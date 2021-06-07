@@ -58,8 +58,8 @@ export default {
     }
     const filter = {}
     const { category = '', tag = '' } = getCurrentInstance().router.params
-    filter.category__in = category
-    filter.tag__in = tag
+    filter.category__in = decodeURIComponent(category)
+    filter.tag__in = decodeURIComponent(tag)
     // 因为要处理 activeCategory, 这里先 await 一下, categories 全局只取一次, 这样问题不大
     await this.$store.dispatch('categories/list')
     this.$store.commit('lists/products/setParams', { filter, defaultParams })

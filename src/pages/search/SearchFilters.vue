@@ -272,7 +272,7 @@ export default {
   mounted() {
     const { tag } = getCurrentInstance().router.params
     if (tag) {
-      this.setActiveTags(tag)
+      this.setActiveTags(decodeURIComponent(tag))
     }
   },
   methods: {
