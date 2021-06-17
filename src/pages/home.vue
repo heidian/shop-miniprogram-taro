@@ -19,6 +19,7 @@
       :class="'_block_' + block.id"
     ></component>
     <floating-buttons />
+    <global-layer />
   </view>
 </template>
 
@@ -28,6 +29,7 @@ import Taro, { getCurrentInstance } from '@tarojs/taro'
 import { mapState } from 'vuex'
 import ThemeBlocks from '@/mixins/ThemeBlocks'
 import FloatingButtons from '@/components/FloatingButtons/FloatingButtons'
+import GlobalLayer from '@/components/GlobalLayer/GlobalLayer'
 import { syncTabBarStyleWithTheme } from '@/utils'
 
 export default {
@@ -37,6 +39,7 @@ export default {
   ],
   components: {
     FloatingButtons,
+    GlobalLayer,
   },
   data() {
     return {
