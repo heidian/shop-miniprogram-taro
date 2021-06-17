@@ -1,5 +1,6 @@
 <template>
   <view :class="$style['page']" :style="{'paddingTop': pagePaddingTop, ...$globalColors}">
+    <!--
     <view :class="$style['navWrapper']" :style="{'paddingTop': navWrapperPaddingTop}">
       <view :class="$style['navbar']">
         <view :class="$style['navbarLeft']">
@@ -12,6 +13,7 @@
         <view :class="$style['navbarRight']"></view>
       </view>
     </view>
+  -->
     <component
       v-for="(block, index) in blocks" :key="index"
       :is="block.componentClass"
@@ -55,7 +57,8 @@ export default {
       return 44
     },
     pagePaddingTop() {
-      return Taro.pxTransform(this.statusBarHeight + this.navbarHeight)
+      // return Taro.pxTransform(this.statusBarHeight + this.navbarHeight)
+      return 0
     },
     navWrapperPaddingTop() {
       return Taro.pxTransform(this.statusBarHeight)
