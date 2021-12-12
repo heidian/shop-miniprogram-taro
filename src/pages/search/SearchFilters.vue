@@ -32,9 +32,9 @@
           ><text :class="$style['categoryText']">{{ category.title }}</text></view>
         </view>
       </scroll-view>
-      <!-- <view :class="$style['categoriesFilterButton']" @tap="subCategoryDrawerVisible = !subCategoryDrawerVisible">
+      <view :class="$style['categoriesFilterButton']" @tap="subCategoryDrawerVisible = !subCategoryDrawerVisible">
         <text :class="{ 'is-dirty': isFiltersDirty }">筛选</text>
-      </view> -->
+      </view>
     </view>
 
     <view
@@ -42,7 +42,8 @@
       :class="$style['categoryImage']"
       :style="{'backgroundImage': backgroundImageUrl(activeRootCategoryImage, 400)}"
     ></view>
-    <view :class="$style['fineTuningButtonsWrapper']">
+
+    <!-- <view :class="$style['fineTuningButtonsWrapper']">
       <view
         :class="[$style['fineTuningButtonsInner'], fixFineTuningOnTop && 'is-fixed']"
         :style="fixFineTuningOnTop ? { 'top': fineTuningBarTop } : {}"
@@ -51,19 +52,16 @@
           :class="[$style['fineTuningButton'], isFiltersDirty && 'is-dirty']"
           @tap="subCategoryDrawerVisible = !subCategoryDrawerVisible"
         ><text class="el-icon-s-operation"></text> 筛选</view>
-        <!-- <view
-          :class="[$style['fineTuningButton'], (!!products.orderBy) && 'is-dirty']"
-        ><text class="el-icon-sort"></text> 排序</view> -->
         <picker :class="$style['fineTuningButton']" mode="selector"
           @change="onPickOrderBy" :value="orderByIndex" :range="orderByOptions" range-key="title"
         >
           <view class="picker">
-            <!-- {{ orderByOptions[orderByIndex].title }} -->
+            {{ orderByOptions[orderByIndex].title }}
             <text class="el-icon-sort"></text> 排序
           </view>
         </picker>
       </view>
-    </view>
+    </view> -->
 
     <!-- 因为这个页面用了自定义 navbar, 需要修改 drawer 的样式 -->
     <drawer
@@ -71,7 +69,7 @@
       :visible.sync="subCategoryDrawerVisible" @close="onDrawerClose"
     >
       <view :class="$style['drawerFilter']">
-        <!-- <view :class="$style['filterSection']">
+        <view :class="$style['filterSection']">
           <view :class="$style['filterTitle']">排序</view>
           <view :class="$style['filterBodyPills']">
             <view
@@ -82,7 +80,7 @@
               @tap="onClickOrderBy(field)"
             >{{ title }}</view>
           </view>
-        </view> -->
+        </view>
         <!-- 二级分类 -->
         <view v-if="activeSubCategories.length" :class="$style['filterSection']">
           <view :class="$style['filterTitle']">分类 (多选)</view>
@@ -211,12 +209,12 @@ export default {
         '长度': [],
         '面料': [],
       },
-      orderByOptions: [
-        { title: '新品', value: '-published_at' },
-        { title: '价格', value: 'price' },
-        { title: '销量', value: '-sold_quantity' }
-      ],
-      orderByIndex: 0,
+      // orderByOptions: [
+      //   { title: '新品', value: '-published_at' },
+      //   { title: '价格', value: 'price' },
+      //   { title: '销量', value: '-sold_quantity' }
+      // ],
+      // orderByIndex: 0,
     }
   },
   computed: {
@@ -325,18 +323,18 @@ export default {
         }, { partial: true, fetch: false })
       }
     },
-    // onClickOrderBy(orderBy) {
-    //   // this.subCategoryDrawerVisible = false
-    //   if (this.products.orderBy === orderBy) {
-    //     orderBy = ''
-    //   }
-    //   this.updateOrderBy(orderBy, { fetch: true })
-    // },
-    onPickOrderBy(e) {
-      this.orderByIndex = +e.detail.value
-      const orderBy = _.get(this.orderByOptions[this.orderByIndex], 'value')
+    onClickOrderBy(orderBy) {
+      // this.subCategoryDrawerVisible = false
+      if (this.products.orderBy === orderBy) {
+        orderBy = ''
+      }
       this.updateOrderBy(orderBy, { fetch: true })
     },
+    // onPickOrderBy(e) {
+    //   this.orderByIndex = +e.detail.value
+    //   const orderBy = _.get(this.orderByOptions[this.orderByIndex], 'value')
+    //   this.updateOrderBy(orderBy, { fetch: true })
+    // },
     tagGroupVisible(tagGroup) {
       if (_.isEmpty(this.tagFilterOptions[tagGroup])) {
         return false
