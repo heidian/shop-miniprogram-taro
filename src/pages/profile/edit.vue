@@ -26,8 +26,9 @@
       </view>
     </form>
     <view :class="$style['buttonsWrapper']">
-      <button @tap="getUserProfile" :class="['button', $style['wechatBtn']]" type="primary">
-        <image :class="$style['buttonIcon']" src="https://up.img.heidiancdn.com/o_1cgtnj1nadol7n31b8n1lfidgb0wechat.png"></image>使用微信信息
+      <button @tap="getUserProfile" :class="['button', $style['wechatBtn']]">
+        <!-- <image :class="$style['buttonIcon']" src="https://up.img.heidiancdn.com/o_1cgtnj1nadol7n31b8n1lfidgb0wechat.png"></image> -->
+        使用微信信息
       </button>
       <button class="button button--dark" @tap="submitForm">保存</button>
     </view>
@@ -185,6 +186,12 @@ page {
 }
 .wechatBtn {
   margin-bottom: 15px;
+  border: 1px solid #1aad19;
+  color: #1aad19;
+  background-color: transparent;
+  &.button-hover {
+    opacity: 0.7;
+  }
   .buttonIcon {
     width: 16px;
     height: 16px;

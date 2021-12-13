@@ -57,7 +57,7 @@
       </template>
     </view>
     <view :class="$style['buttonWrapper']" v-if="customer.isAuthenticated">
-      <button class="button" type="warn" @tap="handleLogout">登出</button>
+      <button class="button button--primary button--outline" @tap="handleLogout">登出</button>
     </view>
     <hs-dialog :visible.sync="qrDialogVisible">
       <view :class="$style['dialogHeader']" slot="header">会员扫码</view>
@@ -189,6 +189,7 @@ export default {
   font-size: 15px;
   margin-bottom: 2px;
   max-width: 100px;
+  font-weight: bold;
   @include ellipsis();
 }
 .cardQrCode {
@@ -198,6 +199,7 @@ export default {
 .loginLink {
   flex: 1;
   padding: 10px 0;
+  font-weight: bold;
 }
 
 .gridMenus {
