@@ -1,6 +1,13 @@
 <template>
   <view :class="$style['page']" v-if="!pending && orderData" :style="$globalColors">
     <view :class="$style['section']">
+      <swiper v-if="orderData.fulfillments" :class="$style['fulfillmentsSwiper']" :circular="true">
+        <swiper-item v-for="(item, index) in orderData.fulfillments" :key="index">
+          <view :class="$style['fulfillmentItem']"></view>
+        </swiper-item>
+      </swiper>
+    </view>
+    <view :class="$style['section']">
       <view :class="$style['nameAndMobile']">{{ nameAndMobile }}</view>
       <view :class="$style['address']">{{ fullAddress }}</view>
     </view>
@@ -273,6 +280,14 @@ export default {
     right: 0;
   }
 }
+/* fulfillments */
+.fulfillmentsSwiper {
+  //
+}
+.fulfillmentItem {
+  padding: 5px;
+}
+/* summary */
 .dividerHorizontal {
   margin: 15px auto;
   height: 1px;
