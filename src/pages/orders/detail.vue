@@ -1,11 +1,11 @@
 <template>
   <view :class="$style['page']" v-if="!pending && orderData" :style="$globalColors">
-    <view :class="$style['section']" style="padding-bottom:0;">
+    <view
+      v-if="orderData.fulfillments.filter(item=>item.status!=='cancelled').length"
+      :class="$style['section']" style="padding-bottom:0;"
+    >
       <view :class="$style['sectionHeader']">物流信息</view>
-      <swiper
-        v-if="orderData.fulfillments.filter(item=>item.status!=='cancelled').length"
-        :class="$style['fulfillmentsSwiper']" :circular="true" :indicator-dots="true"
-      >
+      <swiper :class="$style['fulfillmentsSwiper']" :circular="true" :indicator-dots="true">
         <swiper-item v-for="(item, i) in orderData.fulfillments.filter(item=>item.status!=='cancelled')" :key="i">
           <view :class="$style['fulfillmentItem']">
             <view>
