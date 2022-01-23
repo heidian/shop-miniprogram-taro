@@ -1,91 +1,94 @@
 {
-  "miniprogramRoot": "dist/",
-  "projectname": "shopmini_taro",
-  "description": "商家小程序 Taro 版",
-  "appid": "wx87e4fac3e2962375",
-  "setting": {
-    "urlCheck": true,
-    "es6": false,
-    "enhance": false,
-    "postcss": false,
-    "preloadBackgroundData": false,
-    "minified": false,
-    "newFeature": true,
-    "coverView": true,
-    "nodeModules": false,
-    "autoAudits": false,
-    "showShadowRootInWxmlPanel": true,
-    "scopeDataCheck": false,
-    "uglifyFileName": false,
-    "checkInvalidKey": true,
-    "checkSiteMap": false,
-    "uploadWithSourceMap": true,
-    "compileHotReLoad": false,
-    "useMultiFrameRuntime": true,
-    "useApiHook": true,
-    "useApiHostProcess": true,
-    "babelSetting": {
-      "ignore": [],
-      "disablePlugins": [],
-      "outputPath": ""
-    },
-    "enableEngineNative": false,
-    "useIsolateContext": false,
-    "useCompilerModule": false,
-    "userConfirmedUseCompilerModuleSwitch": true,
-    "userConfirmedBundleSwitch": false,
-    "packNpmManually": false,
-    "packNpmRelationList": [],
-    "minifyWXSS": false
-  },
-  "compileType": "miniprogram",
-  "simulatorType": "wechat",
-  "simulatorPluginLibVersion": {},
-  "libVersion": "2.10.4",
-  "condition": {
-    "plugin": {
-      "list": []
-    },
-    "game": {
-      "list": []
-    },
-    "gamePlugin": {
-      "list": []
-    },
-    "miniprogram": {
-      "list": [
-        {
-          "id": 1,
-          "name": "pages/home with scene",
-          "pathName": "pages/home",
-          "query": "scene=r%3Dpdt%26id%3D84858%26s%3Dshare%26c%3Drff439",
-          "scene": null
+    "miniprogramRoot": "dist/",
+    "projectname": "shopmini_taro",
+    "description": "商家小程序 Taro 版",
+    "appid": "wx87e4fac3e2962375",
+    "setting": {
+        "urlCheck": true,
+        "es6": false,
+        "enhance": false,
+        "postcss": false,
+        "preloadBackgroundData": false,
+        "minified": false,
+        "newFeature": true,
+        "coverView": true,
+        "nodeModules": false,
+        "autoAudits": false,
+        "showShadowRootInWxmlPanel": true,
+        "scopeDataCheck": false,
+        "uglifyFileName": false,
+        "checkInvalidKey": true,
+        "checkSiteMap": false,
+        "uploadWithSourceMap": true,
+        "compileHotReLoad": false,
+        "lazyloadPlaceholderEnable": false,
+        "useMultiFrameRuntime": true,
+        "useApiHook": true,
+        "useApiHostProcess": true,
+        "babelSetting": {
+            "ignore": [],
+            "disablePlugins": [],
+            "outputPath": ""
         },
-        {
-          "name": "pages/index/index",
-          "pathName": "pages/index/index",
-          "query": "",
-          "scene": null
+        "enableEngineNative": false,
+        "useIsolateContext": false,
+        "userConfirmedBundleSwitch": false,
+        "packNpmManually": false,
+        "packNpmRelationList": [],
+        "minifyWXSS": false,
+        "disableUseStrict": false,
+        "showES6CompileOption": false,
+        "useCompilerPlugins": false,
+        "minifyWXML": true
+    },
+    "compileType": "miniprogram",
+    "simulatorType": "wechat",
+    "simulatorPluginLibVersion": {},
+    "libVersion": "2.10.4",
+    "condition": {
+        "plugin": {
+            "list": []
         },
-        {
-          "name": "pages/search/index",
-          "pathName": "pages/search/index",
-          "query": "",
-          "scene": null
+        "game": {
+            "list": []
         },
-        {
-          "name": "pages/product/reviews-fitting/index",
-          "pathName": "pages/product/reviews-fitting/index",
-          "query": "product=88148",
-          "scene": null
+        "gamePlugin": {
+            "list": []
         },
-        {
-          "name": "pages/product/index",
-          "pathName": "pages/product/index",
-          "query": "name=ideal-basic-pants-alloy-grey&__key_=16178559512842",
-          "scene": null
+        "miniprogram": {
+            "list": [
+                {
+                    "id": 1,
+                    "name": "pages/home with scene",
+                    "pathName": "pages/home",
+                    "query": "scene=r%3Dpdt%26id%3D84858%26s%3Dshare%26c%3Drff439",
+                    "scene": null
+                },
+                {
+                    "name": "pages/index/index",
+                    "pathName": "pages/index/index",
+                    "query": "",
+                    "scene": null
+                },
+                {
+                    "name": "pages/search/index",
+                    "pathName": "pages/search/index",
+                    "query": "",
+                    "scene": null
+                },
+                {
+                    "name": "pages/product/reviews-fitting/index",
+                    "pathName": "pages/product/reviews-fitting/index",
+                    "query": "product=88148",
+                    "scene": null
+                },
+                {
+                    "name": "pages/product/index",
+                    "pathName": "pages/product/index",
+                    "query": "name=ideal-basic-pants-alloy-grey&__key_=16178559512842",
+                    "scene": null
+                }
+            ]
         }
-      ]
     }
-  }
 }
