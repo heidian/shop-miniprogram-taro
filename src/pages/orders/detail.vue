@@ -1,9 +1,23 @@
 <template>
   <view :class="$style['page']" v-if="!pending && orderData" :style="$globalColors">
-    <view :class="$style['section']">
-      <swiper v-if="orderData.fulfillments" :class="$style['fulfillmentsSwiper']" :circular="true">
-        <swiper-item v-for="(item, index) in orderData.fulfillments" :key="index">
-          <view :class="$style['fulfillmentItem']"></view>
+    <view :class="$style['section']" style="padding-bottom:0;">
+      <view :class="$style['sectionHeader']">物流信息</view>
+      <swiper
+        v-if="orderData.fulfillments.filter(item=>item.status!=='cancelled').length"
+        :class="$style['fulfillmentsSwiper']" :circular="true" :indicator-dots="true"
+      >
+        <swiper-item v-for="(item, i) in orderData.fulfillments.filter(item=>item.status!=='cancelled')" :key="i">
+          <view :class="$style['fulfillmentItem']">
+            <view>
+              <view style="font-size:0.8em;opacity:0.8;">{{ item.created_at | datetime }}</view>
+              <view>{{ item.tracking_company }}</view>
+              <view>{{ item.tracking_number }}</view>
+            </view>
+            <view :class="$style['fulfillmentTrack']" @tap="() => copyTrackingNumber(item)">
+              <!-- <text class="el-icon-truck"></text> -->
+              <text class="el-icon-copy-document"></text>
+            </view>
+          </view>
         </swiper-item>
       </swiper>
     </view>
@@ -211,6 +225,14 @@ export default {
         })
       }
     },
+    copyTrackingNumber(fulfillment) {
+      const data = `${fulfillment.tracking_company} ${fulfillment.tracking_number}`
+      Taro.setClipboardData({ data }).then(() => {
+        Taro.showToast({ title: '快递单号已复制' })
+      }).catch((err) => {
+        Taro.showToast({ title: '复制失败' })
+      })
+    }
   }
 }
 </script>
@@ -228,6 +250,11 @@ export default {
     background-color: #fff;
     margin: 8px;
     padding: 15px;
+  }
+  .sectionHeader {
+    font-size: 1.1em;
+    font-weight: bold;
+    margin-bottom: 10px;
   }
 }
 .nameAndMobile {
@@ -282,10 +309,17 @@ export default {
 }
 /* fulfillments */
 .fulfillmentsSwiper {
-  //
-}
-.fulfillmentItem {
-  padding: 5px;
+  height: 80px;
+  .fulfillmentItem {
+    padding-bottom: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .fulfillmentTrack {
+    font-size: 20px;
+    padding: 5px 10px;
+  }
 }
 /* summary */
 .dividerHorizontal {
