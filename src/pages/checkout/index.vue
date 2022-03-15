@@ -36,6 +36,15 @@
         <view :class="$style['caret']"><text class="el-icon-arrow-right"></text></view>
       </view>
     </view>
+    <view :class="$style['section']">
+      <view :class="$style['noteSummary']" @tap="noteDrawerVisible=true">
+        <view style="width: 100px;">备注</view>
+        <view style="margin-left: auto; margin-right: 0.5em;" :class="$style['textTip']">
+          {{ getField('note') }}
+        </view>
+        <view :class="$style['caret']"><text class="el-icon-arrow-right"></text></view>
+      </view>
+    </view>
     <!-- <view class="section">支付方式, 因为没法选择, 这个不显示</view> -->
     <view :class="$style['section']">
       <view :class="$style['priceLine']">
@@ -63,6 +72,7 @@
     </view>
     <available-coupon-codes :visible.sync="couponCodesDrawerVisible"></available-coupon-codes>
     <checkout-products :visible.sync="productsDrawerVisible"></checkout-products>
+    <checkout-note :visible.sync="noteDrawerVisible"></checkout-note>
   </view>
 </template>
 
@@ -75,12 +85,14 @@ import { optimizeImage, backgroundImageUrl } from '@/utils/image'
 import Price from '@/components/Price'
 import AvailableCouponCodes from './AvailableCouponCodes'
 import CheckoutProducts from './CheckoutProducts'
+import CheckoutNote from './CheckoutNote'
 
 export default {
   name: 'Checkout',
   components: {
     Price,
     CheckoutProducts,
+    CheckoutNote,
     AvailableCouponCodes
   },
   data() {
@@ -89,6 +101,7 @@ export default {
       token,
       placeOrderPending: false,
       productsDrawerVisible: false,
+      noteDrawerVisible: false,
       couponCodesDrawerVisible: false
     }
   },
@@ -248,6 +261,14 @@ export default {
   justify-content: flex-start;
   padding: 16px 0;
   margin-bottom: -12px;
+}
+.noteSummary {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 16px 0;
+  margin-bottom: -12px;
+  margin-top: -12px;
 }
 /* footer */
 .footer {

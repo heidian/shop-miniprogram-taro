@@ -137,6 +137,16 @@ const actions = {
     }
     dispatch('fetch')
   },
+  async updateNote({ commit, state, dispatch }, { note } = {}) {
+    const paylod = { note: note }
+    const url = `/checkout/${state.checkoutToken}/`
+    try {
+      await API.put(url, paylod)
+    } catch(err) {
+      throw err
+    }
+    dispatch('fetch')
+  },
   async placeOrder({ commit, state, dispatch }) {
     const url = `/checkout/${state.checkoutToken}/place_order/`
     try {
