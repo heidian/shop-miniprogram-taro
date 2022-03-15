@@ -6,6 +6,10 @@
         <view :class="$style['area']">{{ getField('shipping_address.province') }} {{ getField('shipping_address.city') }} {{ getField('shipping_address.district') }}</view>
         <view :class="$style['address']">{{ getField('shipping_address.address1') }}{{ getField('shipping_address.address2') }}</view>
         <view :class="$style['contact']">{{ getField('shipping_address.full_name') }} {{ getField('shipping_address.mobile') }}</view>
+        <view
+          v-if="$store.state.config.shopname === 'tasty-goods'"
+          :class="$style['contact']" style="margin-top:0.2em;"
+        >抖音账号UID: {{ getField('shipping_address.identification_number') }}</view>
       </view>
       <view v-else>
         <text class="el-icon-circle-plus-outline" style="margin-right: 10px"></text>

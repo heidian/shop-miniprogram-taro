@@ -21,6 +21,10 @@
         <view class="label">详细地址</view>
         <input class="input" v-model="addressData.address1" type="text" placeholder="请输入收货地址"/>
       </view>
+      <view class="form-item" v-if="$store.state.config.shopname === 'tasty-goods'">
+        <view class="label">抖音账号UID</view>
+        <input class="input" v-model="addressData.identification_number" type="text" placeholder="请输入抖音账号UID"/>
+      </view>
       <!-- <view>设为默认地址</view> -->
     </form>
     <view :class="$style['buttonsWrapper']">
@@ -45,6 +49,7 @@ export default {
         district: '',
         address1: '',
         address2: '',
+        identification_number: '',
         full_name: '',
         mobile: ''
       },
