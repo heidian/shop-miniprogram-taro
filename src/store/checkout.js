@@ -150,7 +150,9 @@ const actions = {
   async placeOrder({ commit, state, dispatch }) {
     const url = `/checkout/${state.checkoutToken}/place_order/`
     try {
-      const res = await API.post(url)
+      const res = await API.post(url, {
+        succeed_on_zero_total_price: true
+      })
       return res.data
     } catch(err) {
       throw err

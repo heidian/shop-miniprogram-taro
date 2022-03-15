@@ -145,8 +145,13 @@ export default {
       try {
         const res = await API.get(`/customers/order/${this.orderId}/`)
         this.orderData = res.data
-        this.resetVoucherAndPoints()
-        this.updateAmount()
+        if (this.orderData.financial_status !== 'pending' &&
+            this.orderData.financial_status !== 'partially_paid') {
+          this.redirectToOrder()
+        } else {
+          this.resetVoucherAndPoints()
+          this.updateAmount()
+        }
       } catch(err) {
         Taro.showModal({
           title: '出错了',
