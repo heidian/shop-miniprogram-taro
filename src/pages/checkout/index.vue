@@ -152,7 +152,7 @@ export default {
       Taro.reLaunch({ url: `/pages/account/index?redirect=${redirect}` })
     },
     async fetchCheckout() {
-      Taro.showLoading({})
+      Taro.showLoading({ title: '加载中...' })
       try {
         await this.$store.dispatch('checkout/fetch')
       } catch(err) {

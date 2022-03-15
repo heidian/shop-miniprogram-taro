@@ -8,7 +8,7 @@
       <view :class="$style['textWrapper']">
         <textarea
           v-model="inputContent"
-          :auto-focus="true"
+          :auto-focus="false"
           :class="$style['textarea']"
           placeholder="请输入备注"
           placeholder-style="color: #d8d8d8;"
