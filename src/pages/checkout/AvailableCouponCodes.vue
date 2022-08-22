@@ -14,7 +14,11 @@
           v-for="(couponCode, index) in availableCouponCodes" :key="`${couponCode.id}-${index}`"
           :class="$style['item']" @tap="() => handleSelect(couponCode.id)"
         >
-          <image :class="$style['image']"></image>
+          <image
+            v-if="couponCode.coupon.description_image"
+            :class="$style['image']"
+            :src="optimizeImage(couponCode.coupon.description_image, 50)"
+          ></image>
           <view :class="$style['caption']">
             <view :class="$style['title']">{{ couponCode.title }}</view>
             <view :class="$style['verboseTitle']">{{ couponCode.verbose_title }}</view>
@@ -70,6 +74,8 @@ export default {
     })
   },
   methods: {
+    optimizeImage,
+    backgroundImageUrl,
     formatDateTime,
     onClose() {
       // 这个组件不需要触发 open/close 事件, 纯粹把 visible 状态和页面同步就行

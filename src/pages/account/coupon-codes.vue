@@ -4,7 +4,11 @@
       v-for="couponCode in couponCodes.data" :key="couponCode.id"
       :class="$style['couponCodeItem']"
     >
-      <image :class="$style['couponImage']"></image>
+      <image
+        v-if="couponCode.coupon.description_image"
+        :class="$style['couponImage']"
+        :src="optimizeImage(couponCode.coupon.description_image, 50)"
+      ></image>
       <view :class="$style['textWrapper']">
         <view :class="$style['couponTitle']">{{ couponCode.title }}</view>
         <view :class="$style['verboseTitle']">{{ couponCode.verbose_title }}</view>
