@@ -209,17 +209,49 @@ export default {
       }
       const openid = await this.$store.dispatch('customer/getOpenID')
       payload['openid'] = openid
-      let credential = null
+      let credential = null, charge = null
       try {
         const res = await API.post('/payments/pay_for_order/', payload)
         credential = _.get(res.data, 'charge.charge_essentials.credential.wx_lite')
+        charge = _.get(res.data, 'charge')
       } catch(err) {
         Taro.showModal({ title: '发起支付失败', showCancel: false })
         throw err
       }
       if (credential) {
-        await Taro.requestPayment(credential)
+        try {
+          await Taro.requestPayment(credential)
+          // this._trackTezignEventPay(charge, openid)
+        } catch(err) {
+          throw err
+        }
       }
+    },
+    async _trackTezignEventPay(charge, openid) {
+      const payload = {
+        mchid: this.$store.state.config.mchid,
+        order_id: this.orderData.order_number,
+        open_id: openid,
+        transaction_id: charge.merchant_order_no,
+        currency: 'CNY',
+        payer_currency: 'CNY',
+        order_line: _.map(this.orderData.lines, (orderLine) => {
+          return {
+            sub_order_id: orderLine.id,
+            pay_status: 'SUCCESS',
+            sku_id: orderLine.sku,
+            sku_name: orderLine.title,
+            spu_id: _.get(orderLine, 'product.name'),
+            spu_name: orderLine.product_title,
+            goods_amount: parseInt(orderLine.price * 100),
+            goods_num: orderLine.quantity,
+            payment_amount: parseInt(orderLine.total_price * 100),
+          }
+        })
+        // end order_line
+      }
+      // this.$tezignWxTrack.track('Pay', payload)
+      this.$tezignWxTrack.trackRaw('Pay', payload)
     },
     async pay() {
       if (this.paymentPending) {

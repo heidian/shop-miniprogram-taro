@@ -5,6 +5,8 @@ import Taro from '@tarojs/taro'
 import { syncTabBarStyleWithTheme } from '@/utils'
 import { API } from '@/utils/api'
 
+// const PREVIEW_THEME_ID = 13768  // TODO 上线以后要删掉
+
 function lightenColors(colorName, value) {
   const colors = { [colorName]: value }
   _.forEach([1, 2, 3, 4, 5], (level) => {
@@ -155,7 +157,7 @@ const actions = {
     const params = {
       'fields[shop]': 'id,theme',
       'scope': 'miniprogram',
-      // 'preview_theme_id': PREVIEW_THEME_ID,  // 上线以后要删掉
+      // 'preview_theme_id': PREVIEW_THEME_ID,  // TODO 上线以后要删掉, // 已删除
     }
     const res = await API.get('/shopfront/shop/', { params })
     const themeSettingsData = _.get(res.data, 'shop.theme.settings_data')
@@ -170,7 +172,7 @@ const actions = {
       'fields[page]': 'id,title,pageconfig,body_html',
       // body_html 在 static/index.vue 里面要用, 主要是给 PageSingleBodyHtml 板块
       'scope': 'miniprogram',
-      // 'preview_theme_id': PREVIEW_THEME_ID,  // 上线以后要删掉
+      // 'preview_theme_id': PREVIEW_THEME_ID,  // TODO 上线以后要删掉, // 已删除
       'page_type': pageType
     }
     if (pageName) {

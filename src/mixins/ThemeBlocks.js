@@ -35,7 +35,6 @@ import JoyberryProductSingleColors from '@/components/blocks/misc/JoyberryProduc
 import JoyberryProductSingleReviews from '@/components/blocks/misc/JoyberryProductSingleReviews'
 
 // import getTestPageConfig from './_getTestPageConfig'
-// const PREVIEW_THEME_ID = 13390
 
 const BLOCKS_MAP = {
   'blocks/header': Header,

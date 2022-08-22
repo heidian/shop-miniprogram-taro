@@ -44,6 +44,7 @@
     "dayjs": "^1.9.8",
     "lodash": "^4.17.19",
     "qs": "^6.9.4",
+    "tezign-track-sdk-wx": "^1.1.9",
     "tinycolor2": "^1.4.2",
     "vue": "^2.5.0",
     "vue-template-compiler": "^2.5.0",

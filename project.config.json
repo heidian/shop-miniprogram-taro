@@ -2,7 +2,7 @@
   "miniprogramRoot": "dist/",
   "projectname": "shop-miniprogram-taro",
   "description": "商家小程序 Taro 版",
-  "appid": "wx87e4fac3e2962375",
+  "appid": "wx1fb6c7249b2d47a6",
   "setting": {
     "urlCheck": true,
     "es6": false,

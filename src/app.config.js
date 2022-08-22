@@ -42,11 +42,17 @@ export default {
         'selectedIconPath': 'assets/images/tabbar/home-active.png',
         'text': '首页'
       },
+      // {
+      //   'pagePath': 'pages/categories/index',
+      //   'iconPath': 'assets/images/tabbar/category.png',
+      //   'selectedIconPath': 'assets/images/tabbar/category-active.png',
+      //   'text': '分类'
+      // },
       {
-        'pagePath': 'pages/categories/index',
+        'pagePath': 'pages/search/tab',
         'iconPath': 'assets/images/tabbar/category.png',
         'selectedIconPath': 'assets/images/tabbar/category-active.png',
-        'text': '分类'
+        'text': '商品'
       },
       {
         'pagePath': 'pages/cart/index',

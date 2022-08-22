@@ -25,11 +25,19 @@ const state = () => {
     shopname: '',
     shopid: '',
     appid: '',
+    mchid: '',
   }
   if (Taro.getEnv() === Taro.ENV_TYPE.WEAPP) {
     // config/dev.js 里面定义了 API_URL, 但小程序的 apiroot 取的是 ext.json 的
-    const { extAppid, apiroot, shopname, shopid } = Taro.getExtConfigSync()
+    const { extAppid, mchid, apiroot, shopname, shopid } = {
+      'extAppid': 'wx1fb6c7249b2d47a6',
+      'mchid': '1350593201',
+      'shopname': 'xxl',
+      'shopid': 6855,
+      'apiroot': 'https://heidianapi.com/api',
+    }// Taro.getExtConfigSync()
     config.appid = extAppid
+    config.mchid = mchid
     config.apiroot = apiroot
     config.shopname = shopname
     config.shopid = shopid

@@ -177,6 +177,25 @@ export default {
         return false
       }
     },
+    async _trackTezignEventOrder(orderId) {
+      try {
+        const res = await API.get(`/customers/order/${orderId}/`)
+        const orderData = res.data
+        this.$tezignWxTrack.track('Order', {
+          mchid: this.$store.state.config.mchid,
+          order_id: orderData.order_number,
+          order_line: _.map(orderData.lines, (orderLine) => {
+            return {
+              sub_order_id: '' + orderLine.id,
+              order_amount: parseInt((+orderLine.price) * (+orderLine.quantity) * 100),
+              pay_amount: parseInt((+orderLine.total_price) * 100),
+            }
+          })
+        })
+      } catch(err) {
+        console.log(err)
+      }
+    },
     async handlePlaceOrder() {
       if (!this.checkShippingAddress() || this.placeOrderPending) {
         return
@@ -185,6 +204,7 @@ export default {
       const openid = await this.$store.dispatch('customer/getOpenID')
       try {
         const orderData = await this.$store.dispatch('checkout/placeOrder')
+        this._trackTezignEventOrder(orderData.id)
         Taro.redirectTo({ url: `/pages/orders/pay?id=${orderData.id}` })
       } catch(err) {
         Taro.showModal({ title: '提交订单失败', content: '' + err, showCancel: false })

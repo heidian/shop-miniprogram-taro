@@ -1,6 +1,8 @@
 import _ from 'lodash'
 import Taro from '@tarojs/taro'
 import { API } from '@/utils/api'
+import TezignWxTrack from 'tezign-track-sdk-wx'
+
 import store from '../store/index'
 
 const WRITEKEY = 'DdM5HrcuKbuhKJlUKKhNodF2M8SAbHDp'
@@ -109,7 +111,7 @@ class Analytics {
   }
 
   _anonymousId() {
-    store.dispatch('customer/getOpenID').then((openid) => {
+    return store.dispatch('customer/getOpenID').then((openid) => {
       return 'openid-' + openid
     }).catch((err) => { console.log(err) })
   }

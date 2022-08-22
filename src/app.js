@@ -1,10 +1,14 @@
 import _ from 'lodash'
+import dayjs from 'dayjs'
 import Vue from 'vue'
 import Taro, { getCurrentInstance } from '@tarojs/taro'
 import store from './store/index'
-import parseScene from './utils/parseScene'
-import analytics from './utils/analytics'
+import parseScene from '@/utils/parseScene'
+import analytics from '@/utils/analytics'
+import { API } from '@/utils/api'
 // Vue.config.productionTip = false
+
+import TezignWxTrack from 'tezign-track-sdk-wx'
 
 /*
  * Plugins 一些全局的配置
@@ -51,10 +55,70 @@ if (Taro.getEnv() === Taro.ENV_TYPE.WEAPP) {
         if (redirect) {
           Taro.navigateTo({ url: redirect })
         }
+      } else {
+        analytics.listenToRoute()
       }
     }
   })
 }
+
+
+/* 初始化特赞埋点SDK */
+(async function _initTezignSDK() {
+  const isDev = false
+  const sr = new TezignWxTrack()
+  const appid = store.state.config.appid
+  const sdkConfig = isDev ? {
+    env: 'dev',
+    token: 'dDI=',
+    app_id: appid,
+  } : {
+    env: 'prod',
+    token: 'dDU=',
+    app_id: appid,
+  }
+  sr.init(sdkConfig)
+  const exchangeOpenID = ({ code }) => {
+    API.post('/clients/wechat-auth-openid/', {
+      js_code: code,
+      appid: appid
+    }).then((res) => {
+      const { appid, openid, unionid } = res.data
+      sr.setUser({
+        app_id: appid,
+        open_id: openid,
+        union_id: unionid,
+      })
+      /* 直接 resolve(openid), 这样就可以 return await promise */
+    }).catch((err) => {})
+  }
+  Taro.login({ success: exchangeOpenID })
+  /**
+   * put sdk instance in vue component
+   */
+  sr.trackRaw = async (event, payload) => {
+    try {
+      const url = isDev ?
+        'https://test-track-api.tezign.com/trackEvent' :
+        `https://track-api.tezign.com/trackEvent`
+      const res = await API.post(url, {
+        event_type_code: `Content_WXapp_${event}`,
+        tenant_id: sdkConfig.token,
+        user_agent: 'undefined',
+        event_time: dayjs().format('YYYY-MM-DD HH:mm:ss.SSS'),
+        source_from: 'server',
+        event_properties: {
+          tenant_key: 'content-wx-sdk',
+          app_id: sdkConfig.app_id,
+          ...payload,
+        }
+      })
+    } catch(err) {
+      console.log(err)
+    }
+  }
+  Vue.prototype.$tezignWxTrack = sr
+})();
 
 
 /*

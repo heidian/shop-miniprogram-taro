@@ -139,11 +139,18 @@ export default {
       const referralCode = this.customer.data.referral_code
       shareScene += `&s=share&c=${referralCode}`
     }
-    return {
+    const shareOptions = {
       title: this.product.title,
       path: `/pages/home?scene=${encodeURIComponent(shareScene)}`,
       imageUrl: this.optimizeImage(this.product.image, 400),
     }
+    this.$tezignWxTrack.track('Share', {
+      share_from: 'menu',
+      share_title: shareOptions.title,
+      share_path: shareOptions.path,
+      share_image_url: shareOptions.imageUrl
+    })
+    return shareOptions
   },
   methods: {
     optimizeImage,

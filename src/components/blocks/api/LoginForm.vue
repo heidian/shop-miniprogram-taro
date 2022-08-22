@@ -95,6 +95,7 @@ export default {
           iv: iv,
           grant_type: 'wechat_mini_phone'
         })
+        this.$tezignWxTrack.track('Login', {})
         this.pending = false
         Taro.hideLoading()
         const pages = getCurrentPages()
