@@ -50,13 +50,30 @@ taro doctor
   [!] 依赖 eslint-config-taro 可更新到最新版本 3.0.11，当前安装版本为 3.0.5
 ```
 
-1. `npm install -g @tarojs/cli@3.0.11`  升级全局taro版本；
-2. 逐个更新本地项目中的taro相关依赖版本。
-
 目前固定 taro 版本到最新的稳定版 3.0.9, 新的 3.0.11 版本的 initPxTransform 有问题, 应该是改过规则了
-目前 taro 已经更新到 3.0.28, Taro.initPxTransform 的规则改了, 得把 375 设置成 2 才行
+
+1. `npm install -g @tarojs/cli@3.0.28`  升级全局taro版本
+2. 逐个更新本地项目中的taro相关依赖版本
+
+更新: 目前 taro 已经更新到 3.0.28, Taro.initPxTransform 的规则改了, 得设置 { 375: 2 } 才行
 
 
 ### H5 版本启动方式
 H5 版本因为无法读取 ext.json, 可以通过环境变量的方式来指定本地测试的店铺, 只需要指定 api root 就行了
 `API_URL=https://normal.heidianer.com/api/ npm run dev:h5`
+
+
+### node-sass
+
+- node-sass 依赖 python 2, 但是 MacOS m1 上没有, 需要用 pyenv 引入一下
+- node-sass 不支持 node16, 这个项目只能用 node14 或者更早的版本
+
+```shell
+# 切换当前 shell 环境的 python 版本
+pyenv shell 2.7.18
+
+# 重新安装
+pnpm install
+# or
+pnpm add -D node-sass
+```

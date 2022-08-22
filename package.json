@@ -66,5 +66,8 @@
     "stylelint": "9.3.0",
     "vue-loader": "^15.9.2",
     "webpack-config-dump-plugin": "^3.0.1"
+  },
+  "engines": {
+    "node": ">=14.0.0 <15.0.0"
   }
 }
